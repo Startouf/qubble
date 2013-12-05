@@ -15,20 +15,31 @@ import javax.swing.JPanel;
  */
 public class MainPanel extends JPanel
 {
-	private App app;
-	private TableViewPanel tableViewPanel;
-	private ButtonsPanel buttonsPanel;
+	private final App app;
+	private final TableViewPanel tableViewPanel;
+	private final ButtonsPanel buttonsPanel;
 	
 	public MainPanel(App app)
 	{
 		super();
+		this.app = app;
 		
 		this.setPreferredSize(new Dimension(512, 256));
 		this.setLayout(new BorderLayout());
 		
-		this.add(tableViewPanel = new TableViewPanel(this.app), BorderLayout.CENTER);
-		this.add(buttonsPanel = new ButtonsPanel(this.app), BorderLayout.SOUTH);
-		
-		this.app = app;
+		this.add(tableViewPanel = new TableViewPanel(app), BorderLayout.CENTER);
+		this.add(buttonsPanel = new ButtonsPanel(app), BorderLayout.SOUTH);
+	}
+
+	public App getApp() {
+		return app;
+	}
+
+	public TableViewPanel getTableViewPanel() {
+		return tableViewPanel;
+	}
+
+	public ButtonsPanel getButtonsPanel() {
+		return buttonsPanel;
 	}
 }

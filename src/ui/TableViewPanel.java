@@ -14,15 +14,17 @@ import debug.ExampleTableAnimation;
  * -> Cursor position
  * -> Elements that are on the table (simple 2D shapes, or maybe even just dots, crosses,...)
  * 
- * Contient aussi un paramètre time qui correspond à la position du curseur sur l'axe du temps
- * (Le temps total est pris égal à 60s)
+ * Also contains a field corresponding to the current time 
+ * ...and the total period of the table
  *
  */
 public class TableViewPanel extends JPanel
 {
 	private final App app;
 	private final ExampleTableAnimation anim = new ExampleTableAnimation(this);
+	//Set a time and a period
 	private float time = 0;
+	private float period = 60;
 
 	public TableViewPanel(App app)
 	{
@@ -36,13 +38,18 @@ public class TableViewPanel extends JPanel
 
 	@Override
 	protected void paintComponent(Graphics g){
+		//Incrementing time so it's enough to resize the table to get
+		this.time = (time+1) % period;
+		
 		super.paintComponent(g);
 		this.anim.paint(g);
 	}
+	
+	public void setTime(float time){
+		this.time = time % period;
+	}
 
 	public float getTime() {
-		//Fonction time à générer correctement. Le code ci-dessous est de la "bullshit"
-		this.time = (time+1) % 60;
 		return this.time;
 	}
 }

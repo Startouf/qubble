@@ -5,6 +5,8 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import debug.ExampleMoveForwardButton;
+
 public class ButtonsPanel extends JPanel
 {
 	private final App app;
@@ -14,7 +16,7 @@ public class ButtonsPanel extends JPanel
 		super();
 		this.app = app;
 		
-		
+		this.add(new ExampleMoveForwardButton(app));
 
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(512,64));

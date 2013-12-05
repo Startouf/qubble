@@ -24,4 +24,12 @@ public class App extends JFrame
 		pack();
 		setVisible(true);
 	}
+
+	public MenuBar getMenu() {
+		return menu;
+	}
+
+	public MainPanel getMainPanel() {
+		return mainPanel;
+	}
 }
