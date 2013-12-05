@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
@@ -15,12 +16,18 @@ import javax.swing.JPanel;
 public class MainPanel extends JPanel
 {
 	private App app;
+	private TableViewPanel tableViewPanel;
+	private ButtonsPanel buttonsPanel;
 	
 	public MainPanel(App app)
 	{
 		super();
 		
-		this.setPreferredSize(new Dimension(256, 256));
+		this.setPreferredSize(new Dimension(512, 256));
+		this.setLayout(new BorderLayout());
+		
+		this.add(tableViewPanel = new TableViewPanel(this.app), BorderLayout.CENTER);
+		this.add(buttonsPanel = new ButtonsPanel(this.app), BorderLayout.SOUTH);
 		
 		this.app = app;
 	}
