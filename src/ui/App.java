@@ -2,10 +2,14 @@ package ui;
 
 import javax.swing.JFrame;
 
+import table.ExampleIncrementTimeAction;
+
 public class App extends JFrame
 {
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
+	private final ExampleIncrementTimeAction incrementTimeAction 
+		= new ExampleIncrementTimeAction(this);
 
 	public App()
 	{
@@ -19,7 +23,7 @@ public class App extends JFrame
 		setContentPane(mainPanel);
 
 		//End window
-		
+				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -32,4 +36,9 @@ public class App extends JFrame
 	public MainPanel getMainPanel() {
 		return mainPanel;
 	}
+
+	public ExampleIncrementTimeAction getIncrementTimeAction() {
+		return incrementTimeAction;
+	}
+	
 }

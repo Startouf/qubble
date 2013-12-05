@@ -1,4 +1,4 @@
-package debug;
+package ui;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -6,7 +6,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.Action;
 import javax.swing.JButton;
 
-import ui.App;
+import table.ExampleIncrementTimeAction;
+
+
 
 public class ExampleMoveForwardButton extends JButton
 {
@@ -14,9 +16,9 @@ public class ExampleMoveForwardButton extends JButton
 	
 	public ExampleMoveForwardButton(App app)
 	{
-		super(new ExampleMoveForwardAction(app));
+		super(app.getIncrementTimeAction());
 		this.app = app;
-		this.setText("Avancer le curseur (redimensionner la fenêtre marche aussi)");
+		this.setText("Avancer le curseur");
 	}
 	
 }

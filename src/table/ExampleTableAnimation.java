@@ -1,4 +1,4 @@
-package debug;
+package table;
 
 import java.awt.*;
 import java.util.Timer;
@@ -7,7 +7,7 @@ import ui.TableViewPanel;
 
 public class ExampleTableAnimation
 {
-	private TableViewPanel panel;
+	private final TableViewPanel panel;
 	private Dimension tableDim;
 	//échantillonage en temps sur 60 000 ms
 	private float time;
@@ -24,12 +24,16 @@ public class ExampleTableAnimation
 	}
 	
 	private void paintFixedObjects(Graphics g){
-		//Afficher les bords de la table épaiseur 5
-		//Note : on est obligé de caster g en g2d car sinon g ne possède pas la méthode (changer l'épaisseur du trait)
+		//Draw edges with thickness of 5 px
+		//Note : g must be cast to g2d because Graphics class cannot change thickness
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(5));
 		g.drawRect(0, 0, this.tableDim.width-1, this.tableDim.height-1);
 		g2d.setStroke(new BasicStroke(1));
+		
+		//Assume there is...  Figure (X, Y, size) X,Y in % of the table dimensions 
+		//A square ( 0.25%, 0.75%, 15px) 
+		//A Circle ( 0.75%, 0.5%, 15px)
 		
 		//Afficher un carré au 1/4 de la table au 3/4 en haut, de coté 15 pixels en rouge
 		g.setColor(Color.RED);
@@ -46,7 +50,9 @@ public class ExampleTableAnimation
 	}
 	
 	private void paintCursor(Graphics g){
-		this.time = panel.getTime();
+		//Note : this method is here for DEMO purposes
+		playSounds();
+		
 		Graphics2D g2d = (Graphics2D) g;
 		
 		//Tracer le curseur 
@@ -57,4 +63,38 @@ public class ExampleTableAnimation
 		g.setColor(Color.BLACK);
 		g2d.setStroke(new BasicStroke(1));
 	}
+	
+	private void playSounds(){
+		//A square ( t=0.25period) 
+		if (Math.abs((time/period)-0.25) <0.00001){
+			ExampleTableSounds.playSound(Figures.SQUARE);
+		}
+		
+		//A Circle ( t = 0.75period)
+		else if (Math.abs((time/period)-0.75) <0.00001){
+			ExampleTableSounds.playSound(Figures.CIRCLE);
+		}
+		
+	}
+
+	public float getTime() {
+		return time;
+	}
+
+	public void setTime(float time) {
+		this.time = time;
+	}
+
+	public float getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(float period) {
+		this.period = period;
+	}
+
+	public TableViewPanel getPanel() {
+		return panel;
+	}
+
 }

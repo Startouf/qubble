@@ -5,7 +5,6 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
-import debug.ExampleMoveForwardButton;
 
 public class ButtonsPanel extends JPanel
 {

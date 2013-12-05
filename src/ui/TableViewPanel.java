@@ -6,7 +6,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import debug.ExampleTableAnimation;
+import table.ExampleTableAnimation;
+
 
 /**
  * @author Cyril
@@ -22,6 +23,8 @@ public class TableViewPanel extends JPanel
 {
 	private final App app;
 	private final ExampleTableAnimation anim = new ExampleTableAnimation(this);
+	
+	//Note : time values are "stored" here temporarily (until appropriate model is created)
 	//Set a time and a period
 	private float time = 0;
 	private float period = 60;
@@ -29,7 +32,6 @@ public class TableViewPanel extends JPanel
 	public TableViewPanel(App app)
 	{
 		super();
-
 		this.app = app;
 
 		setBackground(Color.WHITE);
@@ -38,18 +40,37 @@ public class TableViewPanel extends JPanel
 
 	@Override
 	protected void paintComponent(Graphics g){
-		//Incrementing time so it's enough to resize the table to get
-		this.time = (time+1) % period;
-		
 		super.paintComponent(g);
 		this.anim.paint(g);
 	}
-	
+
 	public void setTime(float time){
 		this.time = time % period;
+		this.anim.setTime(this.time);
 	}
 
 	public float getTime() {
 		return this.time;
 	}
+
+	public float getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(float period) {
+		this.period = period;
+	}
+
+	public App getApp() {
+		return app;
+	}
+
+	public ExampleTableAnimation getAnim() {
+		return anim;
+	}
+
+	public void incrementTime() {
+		this.setTime(time+1);
+	}
+	
 }
