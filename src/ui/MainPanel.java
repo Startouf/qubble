@@ -17,6 +17,7 @@ public class MainPanel extends JPanel
 {
 	private final App app;
 	private final TableViewPanel tableViewPanel;
+	private final SettingsPanel settingsPanel;
 	private final ButtonsPanel buttonsPanel;
 	
 	public MainPanel(App app)
@@ -28,6 +29,7 @@ public class MainPanel extends JPanel
 		this.setLayout(new BorderLayout());
 		
 		this.add(tableViewPanel = new TableViewPanel(app), BorderLayout.CENTER);
+		this.add(settingsPanel = new SettingsPanel(app), BorderLayout.NORTH);
 		this.add(buttonsPanel = new ButtonsPanel(app), BorderLayout.SOUTH);
 	}
 
