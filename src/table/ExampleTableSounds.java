@@ -9,14 +9,14 @@ import ui.TableViewPanel;
 
 public class ExampleTableSounds
 {
-	private static final  Hashtable<Figures, File> sounds = new Hashtable<Figures, File>();
+	private static final  Hashtable<Pattern, File> sounds = new Hashtable<Pattern, File>();
 	private static final  String SOUNDSPATH = "data/sound/";
 	static{
-		sounds.put(Figures.SQUARE, new File(SOUNDSPATH + "hit-01.wav"));
-		sounds.put(Figures.CIRCLE, new File(SOUNDSPATH + "hit-02.wav"));
+		sounds.put(Pattern.SQUARE, new File(SOUNDSPATH + "hit-01.wav"));
+		sounds.put(Pattern.CIRCLE, new File(SOUNDSPATH + "hit-02.wav"));
 	}
 	
-	public static void playSound(Figures figure){
+	public static void playSound(Pattern figure){
 		ExampleWAVReading.ReadWav(sounds.get(figure));
 	}
 }

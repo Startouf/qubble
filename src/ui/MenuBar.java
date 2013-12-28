@@ -6,11 +6,11 @@ public class MenuBar extends JMenuBar
 {
 	private App app;
     private FileMenu fileMenu;
-    private YAxisMenu yAxisMenu;
+    private SettingsMenu settingsMenu;
 
     public MenuBar(App app){
 	this.app = app;
 	add(fileMenu = new FileMenu(app, "File", "File Menu", java.awt.event.KeyEvent.VK_F));
-	add(yAxisMenu = new YAxisMenu(app, "Y-Axis", "Set table Y-Axis effect", java.awt.event.KeyEvent.VK_Y));
+	add(settingsMenu = new SettingsMenu(app, "Settings", "Set settings for patterns", java.awt.event.KeyEvent.VK_S));
     }
 }

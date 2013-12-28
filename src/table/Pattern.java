@@ -1,5 +1,5 @@
 package table;
 
-public enum Figures {
+public enum Pattern {
 	SQUARE, CIRCLE, RECTANGLE, STAR
 }

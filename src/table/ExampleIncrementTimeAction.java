@@ -16,8 +16,8 @@ public class ExampleIncrementTimeAction extends AbstractAction
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		 this.app.getMainPanel().getTableViewPanel().incrementTime();
-		 this.app.getMainPanel().getTableViewPanel().repaint();
+//		 this.app.getMainPanel().getTableViewPanel().incrementTime();
+//		 this.app.getMainPanel().getTableViewPanel().repaint();
 		 //Otherstuff
 	}
 

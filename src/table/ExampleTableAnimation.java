@@ -67,12 +67,12 @@ public class ExampleTableAnimation
 	private void playSounds(){
 		//A square ( t=0.25period) 
 		if (Math.abs((time/period)-0.25) <0.00001){
-			ExampleTableSounds.playSound(Figures.SQUARE);
+			ExampleTableSounds.playSound(Pattern.SQUARE);
 		}
 		
 		//A Circle ( t = 0.75period)
 		else if (Math.abs((time/period)-0.75) <0.00001){
-			ExampleTableSounds.playSound(Figures.CIRCLE);
+			ExampleTableSounds.playSound(Pattern.CIRCLE);
 		}
 		
 	}
