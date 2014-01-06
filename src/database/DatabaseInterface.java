@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public interface DatabaseInterface {
 	//Pattern recognition 
-	public ArrayList<ImagePatternInterface> getImagePatterns();
+	public ArrayList<PatternInterface> getImagePatterns();
 	
 	//UI settings
 	public SettingsInterface getPreviousSettings();

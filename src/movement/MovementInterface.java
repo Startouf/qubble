@@ -3,7 +3,8 @@ package movement;
 import java.awt.Point;
 import java.util.Hashtable;
 
-import table.Pattern;
+import database.Pattern;
+
 
 public interface MovementInterface {
 	

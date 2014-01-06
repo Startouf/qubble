@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import database.Pattern;
 import database.PatternModifierInterface;
-import table.Pattern;
 
 /**
  * @author Cyril

@@ -3,6 +3,8 @@ package table;
 import java.io.File;
 import java.util.Hashtable;
 
+import database.Pattern;
+
 import audio.ExampleWAVReading;
 
 import ui.TableViewPanel;

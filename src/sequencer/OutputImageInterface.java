@@ -3,9 +3,10 @@ package sequencer;
 import java.awt.Point;
 import java.util.Hashtable;
 
-import table.Pattern;
+import database.Pattern;
 
-public interface ImageInterface {
+
+public interface OutputImageInterface {
 	
 	float getCursorPosition();
 	

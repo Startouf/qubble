@@ -3,13 +3,15 @@ package table;
 import java.awt.*;
 import java.util.Timer;
 
+import database.Pattern;
+
 import ui.TableViewPanel;
 
 public class ExampleTableAnimation
 {
 	private final TableViewPanel panel;
 	private Dimension tableDim;
-	//échantillonage en temps sur 60 000 ms
+	//ï¿½chantillonage en temps sur 60 000 ms
 	private float time;
 	private float period = 60;
 	
@@ -35,7 +37,7 @@ public class ExampleTableAnimation
 		//A square ( 0.25%, 0.75%, 15px) 
 		//A Circle ( 0.75%, 0.5%, 15px)
 		
-		//Afficher un carré au 1/4 de la table au 3/4 en haut, de coté 15 pixels en rouge
+		//Afficher un carrï¿½ au 1/4 de la table au 3/4 en haut, de cotï¿½ 15 pixels en rouge
 		g.setColor(Color.RED);
 		g.drawRect((int)Math.floor(this.tableDim.width/4), 
 				(int)Math.floor(this.tableDim.height)*3/4, 15, 15);

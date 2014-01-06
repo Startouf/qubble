@@ -6,8 +6,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import database.Pattern;
 import database.PatternModifierInterface;
-import table.Pattern;
 
 public class SelectorButton extends JButton {
 	

@@ -3,7 +3,8 @@ package shape_detection;
 import java.awt.Point;
 import java.util.Hashtable;
 
-import table.Pattern;
+import database.Pattern;
+
 
 public interface PositionInterface {
 	

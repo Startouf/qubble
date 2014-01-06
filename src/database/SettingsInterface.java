@@ -5,8 +5,6 @@ import java.util.Hashtable;
 
 import opengl.AnimationInterface;
 import audio.SoundEffectInterface;
-import sequencer.SoundInterface;
-import table.Pattern;
 
 public interface SettingsInterface {
 	

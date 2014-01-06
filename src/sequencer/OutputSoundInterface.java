@@ -3,9 +3,10 @@ package sequencer;
 import java.awt.Point;
 import java.util.Hashtable;
 
-import table.Pattern;
+import database.Pattern;
 
-public interface SoundInterface {
+
+public interface OutputSoundInterface {
 	
 	Hashtable<Pattern, Point> getPositions();
 	Hashtable<Pattern, Double> getRotations();

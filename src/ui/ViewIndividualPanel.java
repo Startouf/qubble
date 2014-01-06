@@ -7,8 +7,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import database.Pattern;
 import database.PatternModifierInterface;
-import table.Pattern;
 
 /**
  * @author Cyril
@@ -42,7 +42,7 @@ public class ViewIndividualPanel extends JPanel {
 		add(new Selector(app, "Pattern", currentPattern), c);
 		
 		//TODO : Replace nulls by default choices
-		addOption("Sample Associé", currentPattern, null);
+		addOption("Sample Associï¿½", currentPattern, null);
 		addOption("Effet Axe Y", currentPattern, null);
 		addOption("Rotation", currentPattern, null);
 		addOption("Animation", currentPattern, null);
