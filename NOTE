@@ -1,3 +1,5 @@
-Le dossier PAN2 doit �tre configurer comme un dossier source
+Le dossier PAN2 doit  être configuré comme un dossier source
 
 Pour cela faire clic-droit sur PACT > properties > Java build Path > Add folder > tick sur PAN2
+
+Pour le charset, Window > Preferences > General > Workspace > UTF - 8
