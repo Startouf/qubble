@@ -1,0 +1,3 @@
+Le dossier PAN2 doit être configurer comme un dossier source
+
+Pour cela faire clic-droit sur PACT > properties > Java build Path > Add folder > tick sur PAN2

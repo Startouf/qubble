@@ -1,3 +1,5 @@
+package opengl;
+
 import java.io.FileInputStream;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11.*;
