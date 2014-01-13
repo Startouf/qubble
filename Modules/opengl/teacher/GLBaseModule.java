@@ -1,4 +1,4 @@
-package opengl;
+package teacher;
 
 import java.io.FileInputStream;
 import org.lwjgl.opengl.GL11;

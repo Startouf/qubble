@@ -1,4 +1,5 @@
-package opengl;
+package ex1;
+
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -10,7 +11,7 @@ import org.lwjgl.util.Point;
 //The static imports all classes without the need to write class name each time (here GL11)
 import static org.lwjgl.opengl.GL11.*;
 
-public class Ex1_1
+public class ProjectionPerspective
 {
 	private Point coords = new Point(100,100);
 	
@@ -123,7 +124,7 @@ public class Ex1_1
 	}
 	
 	public static void main(String[] args){
-        Ex1_1 app = new Ex1_1();
+        ProjectionPerspective app = new ProjectionPerspective();
         app.start();
     }
 }
