@@ -4,11 +4,7 @@ import java.io.File;
 
 import opengl.AnimationInterface;
 
-public enum Animation implements AnimationInterface {
-	FISSURE("fissure", "fissure.anim"),
-	WAVE("Onde", "wave.anim"),
-	SHRAPNEL("Eclats", "eclats.anim");
-	
+public class Animation implements AnimationInterface {
 	private final String name;
 	private final File file;
 	
@@ -26,5 +22,4 @@ public enum Animation implements AnimationInterface {
 	public File getFile() {
 		return file;
 	}
-	
 }

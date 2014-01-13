@@ -27,7 +27,7 @@ public class ViewIndividualPanel extends JPanel {
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
-		this.currentPattern = Pattern.SQUARE;
+		this.currentPattern = (Pattern) this.app.getPatterns().get(0);
 		
 		this.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);

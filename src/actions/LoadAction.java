@@ -15,8 +15,7 @@ public class LoadAction extends AbstractAction
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
+		this.app.setProjectOpened(true);
+		//TODO
 	}
-
 }

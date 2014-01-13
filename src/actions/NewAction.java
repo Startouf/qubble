@@ -14,11 +14,10 @@ public class NewAction extends AbstractAction
 		this.app = app;
 	}
 	
-	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
+		this.app.setProjectOpened(true);
+		//TODO
 	}
 
 }

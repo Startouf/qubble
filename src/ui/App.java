@@ -1,11 +1,17 @@
 package ui;
 
+import java.util.ArrayList;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
+import database.Animation;
+import database.PatternInterface;
+
 import actions.*;
-import table.ExampleIncrementTimeAction;
+import audio.SampleInterface;
+import audio.SoundEffectInterface;
 
 /**
  * @author Cyril|duchon
@@ -18,23 +24,30 @@ import table.ExampleIncrementTimeAction;
  */
 public class App extends JFrame
 {
+	//ArrayLists
+	private final ArrayList<PatternInterface> patterns = new ArrayList<PatternInterface>();
+	private final ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
+	private final ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
+	private final ArrayList<Animation> animations = new ArrayList<Animation>();
+	
 	//Note : create actions first because menus need them!
+	private boolean projectOpened = false;
+	private PatternSelectionFrame patternSelectionFrame = null;
+	private SampleSelectionFrame sampleSelectionFrame = null;
+	private final MenuBar menu;
+	private final MainPanel mainPanel;
+	
 	private final NewAction newAction = new NewAction(this);
 	private final LoadAction loadAction = new LoadAction(this);
 	private final OpenIndividualSettingsAction openIndividualSettingsAction 
 		= new OpenIndividualSettingsAction(this);
-	
-	private PatternSelectionFrame patternSelectionFrame = null;
-	private SampleSelectionFrame sampleSelectionFrame = null;
-	private final MenuBar menu = new MenuBar(this);
-	private final MainPanel mainPanel= new MainPanel(this);
 
 	public App()
 	{
 		super("DJ-Table");
 
-		setJMenuBar(menu);
-		setContentPane(mainPanel);
+		setJMenuBar(menu = new MenuBar(this));
+		setContentPane(mainPanel = new MainPanel(this));
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -81,6 +94,30 @@ public class App extends JFrame
 			sampleSelectionFrame = new SampleSelectionFrame(this);
 			return sampleSelectionFrame;
 		}
+	}
+
+	public boolean isProjectOpened() {
+		return projectOpened;
+	}
+
+	public void setProjectOpened(boolean projectOpened) {
+		this.projectOpened = projectOpened;
+	}
+
+	public ArrayList<PatternInterface> getPatterns() {
+		return patterns;
+	}
+
+	public ArrayList<SoundEffectInterface> getSoundEffects() {
+		return soundEffects;
+	}
+
+	public ArrayList<Animation> getAnimations() {
+		return animations;
+	}
+
+	public void setPatternSelectionFrame(PatternSelectionFrame patternSelectionFrame) {
+		this.patternSelectionFrame = patternSelectionFrame;
 	}
 	
 }
