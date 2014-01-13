@@ -1,5 +1,9 @@
-Le dossier PAN2 doit  être configuré comme un dossier source
+#1 Les fichiers utilisent le charset UFT-8
+	Sous Eclipse Window > Preferences > General > Workspace > UTF - 8
+	
+#2 Le dossier Modules doit  être configuré comme un dossier source
+	clic-droit sur PACT > properties > Java build Path > Add folder > tick sur Modules
 
-Pour cela faire clic-droit sur PACT > properties > Java build Path > Add folder > tick sur PAN2
-
-Pour le charset, Window > Preferences > General > Workspace > UTF - 8
+#3 For Lwjgl, you must pick the OS-relevant natives
+	clic-droit sur PACT > Java build path > librairies > expand lwjgl > select natives libs from workspace (/lib/lwjgl/natives/[OS])
+	(Note : this can also be achieved by adding the corresponding natives.jar - Just make only one the right one is active at a time)

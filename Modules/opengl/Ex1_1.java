@@ -70,21 +70,21 @@ public class Ex1_1
 		glColor3f(0.5f,0.5f,1.0f);
 		
 		//draw
-		draw_square(100f, 100f, 0, 100f);
+		draw_square(coords.getX(), coords.getY(), 100f);
 	}
 	
 	private long getTime(){ //Sys.getTime returns time in nanoticks (with TimerResolutions = ticks/sec)
 		return (Sys.getTime()*1000)/Sys.getTimerResolution();
 	}
 	
-	private void draw_square(float x, float y, float z, float s){
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glNormal3f(0f,0f,1f);
-        GL11.glVertex3f(x, y, z);
-        GL11.glVertex3f(x+s, y, z);
-        GL11.glVertex3f(x+s, y+s, z);
-        GL11.glVertex3f(x, y+s, z);
-        GL11.glEnd();
+	private void draw_square(float x, float y, float s){
+        glBegin(GL_QUADS);
+        //GL11.glNormal3f(0f,0f,1f);
+        glVertex2f(x, y);
+        glVertex2f(x+s, y);
+        glVertex2f(x+s, y+s);
+        glVertex2f(x, y+s);
+        glEnd();
     }
 	
 	private void pollInputs(){
@@ -103,7 +103,15 @@ public class Ex1_1
 				}
 				else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT){
 					System.out.println("LEFT pressed");
-					coords.translate((int)-delta, 0);
+					coords.translate((int) -delta, 0);
+				}
+				else if (Keyboard.getEventKey() == Keyboard.KEY_UP){
+					System.out.println("LEFT pressed");
+					coords.translate(0, (int) delta);
+				}
+				else if (Keyboard.getEventKey() == Keyboard.KEY_DOWN){
+					System.out.println("LEFT pressed");
+					coords.translate(0, (int) -delta);
 				}
 			}
 			else{ //key released
@@ -115,18 +123,8 @@ public class Ex1_1
 	}
 	
 	public static void main(String[] args){
-        GLBaseModule app = new GLBaseModule();
-        /*parse our args*/
-        for (int i=0; i<args.length; i++) {
-            if (args[i].equals("-vbo")) {
-                app.use_vbo = true;
-            }
-            else if (args[i].equals("-shader")) {
-                app.use_shader = true;
-            }
-        }
-        
-        app.Run();
+        Ex1_1 app = new Ex1_1();
+        app.start();
     }
 }
 
