@@ -5,6 +5,9 @@ import javax.swing.JMenu;
 public class FileMenu extends JMenu
 {
 	private final App app;
+	
+	private final NewMenuItem newProject;
+	private final LoadMenuItem load;
 	private final ExitMenuItem exit;
 
 	public FileMenu(App app, String name, String description, Integer key)
@@ -17,6 +20,8 @@ public class FileMenu extends JMenu
 		}
 		this.getAccessibleContext().setAccessibleDescription(description);
 
+		add(newProject = new NewMenuItem(app));
+		add(load = new LoadMenuItem(app));
 		add(exit = new ExitMenuItem(app));
 	}
 }
