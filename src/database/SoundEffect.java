@@ -4,15 +4,12 @@ import java.io.File;
 
 import audio.SoundEffectInterface;
 
-public enum SoundEffect implements SoundEffectInterface{
-	DISTORTION("Distortion", "distortion.se"),
-	VOLUME("Volume", "volume.se"),
-	PITCH("Hauteur", "pitch.se");
+public class SoundEffect implements SoundEffectInterface{
 	
 	private final String name;
 	private final File file;
 	
-	private SoundEffect(String name, String file){
+	public SoundEffect(String name, String file){
 		this.name = name;
 		this.file = new File("/data/sound effect/" + file);
 	}

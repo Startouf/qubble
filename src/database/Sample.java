@@ -4,11 +4,7 @@ import java.io.File;
 
 import audio.SampleInterface;
 
-public enum Sample implements SampleInterface{
-	DONG("Dong", "dong"),
-	DING("Ding", "ding"),
-	PAF("Paf", "paf"),
-	CRAC("Crac", "crac");
+public class Sample implements SampleInterface{
 	
 	private String name;
 	private File file;
