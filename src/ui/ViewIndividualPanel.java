@@ -42,7 +42,7 @@ public class ViewIndividualPanel extends JPanel {
 		add(new Selector(app, "Pattern", currentPattern), c);
 		
 		//TODO : Replace nulls by default choices
-		addOption("Sample Associ�", currentPattern, null);
+		addOption("Sample Associé", currentPattern, null);
 		addOption("Effet Axe Y", currentPattern, null);
 		addOption("Rotation", currentPattern, null);
 		addOption("Animation", currentPattern, null);
