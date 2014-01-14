@@ -13,12 +13,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class ProjectionPerspective
 {
-	private Point coords = new Point(100,100);
-	
-	private int fps =0;
-	private long lastFrameTime = getTime();
-	private long delta;
-	private long lastFPSDisplay = getTime(); 
+	private Point coords = new Point(300,300);
 	
 	public void start(){
 		initDisplay();		
@@ -26,30 +21,24 @@ public class ProjectionPerspective
 		
 		while (!Display.isCloseRequested()){
 			renderGL();
-			
-			pollInputs();
-			updateFPSDelta();
-			Display.update(); //Handles double buffer and mouse/keyb poll
-			Display.sync(60); //Handles FPS
+			Display.update(); 
+			Display.sync(60); 
 		}
 		Display.destroy();
-	}
-	
-	private void updateFPSDelta(){
-		fps++;
-		delta = getTime() - lastFrameTime;
-		lastFrameTime = getTime();
-		if (getTime()-lastFPSDisplay > 1000){
-			System.out.println("FPS : "+ fps);
-			fps = 0;
-			lastFPSDisplay = lastFrameTime;
-		}
 	}
 	
 	private void initGL(){
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 1, -1);
+		//glOrtho(0, 800, 0, 600, -1, 30);	//Orthonormal projection
+		glFrustum(0, 800, 0, 600, 10, 30);	//Perspective projection
+		//Note : l'axe z sort de l'écran, 
+		//	et les deux derniers params. de glFrustum : distance de l'origine aux "plans de la pyramide coupée" 
+		
+//		( 2n/(r-l)    0       (r+l)/(r-l)     0      )
+//		(   0       2n/(t-b)  (t+b)/(t-b)     0      ) Matrice de passage en perspective
+//		(   0         0       (f+n)/(n-f)  2fn/(n-f) )
+//		(   0         0           -1          0      )
 		glMatrixMode(GL_MODELVIEW);
 	}
 	
@@ -71,57 +60,18 @@ public class ProjectionPerspective
 		glColor3f(0.5f,0.5f,1.0f);
 		
 		//draw
-		draw_square(coords.getX(), coords.getY(), 100f);
-	}
-	
-	private long getTime(){ //Sys.getTime returns time in nanoticks (with TimerResolutions = ticks/sec)
-		return (Sys.getTime()*1000)/Sys.getTimerResolution();
+		draw_square(coords.getX(), coords.getY(), 200);
 	}
 	
 	private void draw_square(float x, float y, float s){
         glBegin(GL_QUADS);
-        //GL11.glNormal3f(0f,0f,1f);
-        glVertex2f(x, y);
-        glVertex2f(x+s, y);
-        glVertex2f(x+s, y+s);
-        glVertex2f(x, y+s);
+        glNormal3f(0f,0f,1f); //Normal Vector
+        glVertex3f(x, y, -20);
+        glVertex3f(x, 2*y, -20);
+        glVertex3f(2*x, 2*y, -20);
+        glVertex3f(2*x, y, -20);
         glEnd();
     }
-	
-	private void pollInputs(){
-		if (Mouse.isButtonDown(0)){ //Will generate as many lines as FPS
-			int x = Mouse.getX();
-			int y = Mouse.getY();
-			
-			System.out.println("Mouse @ (" + x+", " +y+")");
-		}
-		
-		while(Keyboard.next()){ //Will generate only one line per event
-			if (Keyboard.getEventKeyState()){ //Key pressed
-				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT){
-					System.out.println("Right pressed");
-					coords.translate((int) delta,0);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT){
-					System.out.println("LEFT pressed");
-					coords.translate((int) -delta, 0);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_UP){
-					System.out.println("LEFT pressed");
-					coords.translate(0, (int) delta);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_DOWN){
-					System.out.println("LEFT pressed");
-					coords.translate(0, (int) -delta);
-				}
-			}
-			else{ //key released
-				if (Keyboard.getEventKey() == Keyboard.KEY_A){
-					System.out.println("A released");
-				}
-			}
-		}
-	}
 	
 	public static void main(String[] args){
         ProjectionPerspective app = new ProjectionPerspective();
