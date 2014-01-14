@@ -8,10 +8,7 @@ import audio.SampleInterface;
 
 /**
  * @author duchon
- * List of the patterns that will be used 
- * Patterns are QR-codes identified by a sequence of 0 and 1
- * Therefore they have an attribute bitIdentifier that must be >= to short (2^16)
- * (An int was chosen instead)
+ * NOTE : class should be renamed "Cube" or "Polyhedron" !!!
  *
  */
 public class Pattern implements PatternInterface {

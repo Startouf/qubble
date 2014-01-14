@@ -24,24 +24,24 @@ import audio.SoundEffectInterface;
  */
 public class App extends JFrame
 {
-	//ArrayLists
-	private final ArrayList<PatternInterface> patterns = new ArrayList<PatternInterface>();
-	private final ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
-	private final ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
-	private final ArrayList<Animation> animations = new ArrayList<Animation>();
+	//ArrayLists = données. Eventuellement à mettre ailleurs
+	private ArrayList<PatternInterface> patterns = new ArrayList<PatternInterface>();
+	private ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
+	private ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
+	private ArrayList<Animation> animations = new ArrayList<Animation>();
 	
 	//Note : create actions first because menus need them!
+	private final NewAction newAction = new NewAction(this);
+	private final LoadAction loadAction = new LoadAction(this);
+	private final OpenIndividualSettingsAction openIndividualSettingsAction 
+		= new OpenIndividualSettingsAction(this);
+	
 	private boolean projectOpened = false;
 	private PatternSelectionFrame patternSelectionFrame = null;
 	private SampleSelectionFrame sampleSelectionFrame = null;
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
 	
-	private final NewAction newAction = new NewAction(this);
-	private final LoadAction loadAction = new LoadAction(this);
-	private final OpenIndividualSettingsAction openIndividualSettingsAction 
-		= new OpenIndividualSettingsAction(this);
-
 	public App()
 	{
 		super("DJ-Table");

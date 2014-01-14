@@ -1,24 +1,18 @@
 package database;
 
-import java.io.File;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Properties;
 
-import opengl.AnimationInterface;
-import audio.SoundEffectInterface;
-
+/**
+ * @author Cyril
+ * All settings are contained in the Pattern classes
+ *
+ */
 public interface SettingsInterface {
 	
-	//Basic functions of the table
-	public double getPeriod();
-
-	//Not really sure about those 2 being here :
-	public void PlayPause();
-	public void setCurrentTime(double time);
+	public ArrayList<Pattern> getAllPatterns();
+	public ArrayList<Pattern> getPatternsOnTable();
 	
-	//Pattern Maps
-	public Hashtable<Pattern, File> getSoundMap();
-	public Hashtable<Pattern, SoundEffectInterface> getYAxisEffectMap();
-	public Hashtable<Pattern, AnimationInterface> getAnimationMap();
-	
-
+	public void newPatternOnTable(PatternInterface pattern);
+	public void patternRemovedFromTable(PatternInterface pattern);
 }

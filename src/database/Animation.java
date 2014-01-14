@@ -8,9 +8,9 @@ public class Animation implements AnimationInterface {
 	private final String name;
 	private final File file;
 	
-	private Animation(String name, String file){
+	public Animation(String name, File file){
 		this.name = name;
-		this.file = new File("/data/animation/" + file);
+		this.file = file;
 	}
 
 	@Override

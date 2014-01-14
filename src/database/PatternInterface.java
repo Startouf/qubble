@@ -4,6 +4,11 @@ import java.io.File;
 
 import audio.SampleInterface;
 
+/**
+ * @author Cyril
+ * Note : class should be renamed "CubeInterface" or "PolyhedronInterface"
+ *
+ */
 public interface PatternInterface {
 	
 	public boolean isHere();

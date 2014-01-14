@@ -4,9 +4,31 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
+/**
+ * @author Cyril
+ * Note : should implement DataInterface interface, 
+ * however java 1.6 and 1.7 don't allow implementing static methods !
+ *
+ */
 public class Initialise
 {
-	public static ArrayList<SoundEffect> initialiseSoundEffects(){
+	public static ArrayList<Sample> loadSamples(){
+		Properties prop;
+		File[] files = getFiles("/data/sound_effects/.");
+		ArrayList<Sample> list = new ArrayList<Sample>(files.length);
+		for (File entry : files){ //TODO : use fileInputStream
+			prop = new Properties();
+			try {
+				prop.load(new FileInputStream(entry));	
+				list.add(new Sample(prop.getProperty("name"), new File(prop.getProperty("file"))));
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
+	public static ArrayList<SoundEffect> loadSoundEffects(){
 		Properties prop;
 		File[] files = getFiles("/data/sound_effects/.");
 		ArrayList<SoundEffect> list = new ArrayList<SoundEffect>(files.length);
@@ -22,9 +44,20 @@ public class Initialise
 		return list;
 	}
 	
-	public static ArrayList<Animation> initialiseAnimations(){
-		//TODO
-		return null;
+	public static ArrayList<Animation> loadAnimations(){
+		Properties prop;
+		File[] files = getFiles("/data/animation/.");
+		ArrayList<Animation> list = new ArrayList<Animation>(files.length);
+		for (File entry : files){ //TODO : use fileInputStream
+			prop = new Properties();
+			try {
+				prop.load(new FileInputStream(entry));	
+				list.add(new Animation(prop.getProperty("name"), new File(prop.getProperty("file"))));
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return list;
 	}
 	
 	public static File[] getFiles(String directory){
