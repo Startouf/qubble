@@ -8,3 +8,46 @@ Cette biblio se fera tout au long de votre module, et comprendra de manière suc
 ##5 Principes de base de OpenGL: Expliquez les différences entre DisplayList, VeretxArray et VertexBufferObject
 
 ##1 OpenGL Rendering Pipeline and the GPU
+
+##2 Principes de base de OpenGL: Représentation des données et des transformations géometriques: 
+	Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
+
+== Les données de base OpenGL	
+Les objets que OpenGl sait bien traiter s'appelle les primitives (points, lignes et polygones).
+Il est très facile de créer des surfaces à partir de triangles. Ainsi l'approximation de surfaces courbées se fait grâce à une décomposition en triangles, 
+dont qualité est définie par la subdivision.
+
+Ces points sont définis de manière absolue dans l'espace grâce à des coordonnées cartésiennes. 
+En revanche, si on se contentait d'afficher tel quel ces objets sur l'écran, cela reviendrait a dessiner un paysage 2D sans perspective.
+Il convient donc d'effectuer certaines transformation sur les objets afin d'en donner une vue réaliste
+
+== Les transformations (produits matriciels)
+Les transformations Viewing 
+Analogie : positioner et viser avec la caméra
+Faire un reset des transformations (matrice identité :) glLoadIdentity()
+Choisir la translation de la caméra glTranslate[fdl]()
+Choisir la direction : [glu]LookAt()
+
+Les transformations Modeling
+Analogie : placer les éléments sur la scène
+Positioner, orienter et scaler le modèle utilisé
+Ce qu'on draw entre glBegin() et glEnd() // Pas exact je pense
+
+Note : "modeling and viewing transformations are included in the display() routine"
+
+La transformation de projection
+
+Projection Perspective :
+Analogie : choisir la lentille de la caméra
+Spécifier la transformation qui rend les objets plus petits quand il sont loin, et borner l'espace qui sera rendu
+glFrustum(-x1,x1,-y1,y1, distance au plan1, distance au plan2) 
+
+Projection Orthonormale :
+Analogie : Observation à l'infini
+glOrtho(-x,x,-y,y-,z,z)
+
+
+La transformation viewport
+Permet d'afficher tout ça sur un écran en 2D
+glViewPort() 
+glReshape()
