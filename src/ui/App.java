@@ -79,7 +79,7 @@ public class App extends JFrame
 			patternSelectionFrame.setVisible(true);
 			return patternSelectionFrame;
 		}
-		else{
+		else{ 
 			patternSelectionFrame = new PatternSelectionFrame(this);
 			return patternSelectionFrame;
 		}

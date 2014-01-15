@@ -46,7 +46,7 @@ public class Selector extends JPanel {
 		add(new JLabel(title), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
 		//TODO : show a clickable arrow that pops-up a custom file chooser menu with BorderLayer.EAST
-		add(new SelectorButton(pattern), BorderLayout.EAST);
+		add(new SelectorButton(app,pattern), BorderLayout.EAST);
 
 	}
 	
