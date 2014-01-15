@@ -28,6 +28,8 @@ public class WaveForm extends JFrame implements Observer {
 	private File file;
 	private Recorder recorder;
 	
+	private audioThread stopper;
+	
 	private PlayButton play;
 	private JMenuBar menuBar;
 	private JMenu menu;
@@ -117,31 +119,32 @@ public class WaveForm extends JFrame implements Observer {
 		Player.play(file);
 	}
 	
-	public void startRecording() {
-		file = new File("/Users/vincentcouteaux/wavs/test.wav");
+	public void startRecording(File file) {
+		this.file = file;
 		recorder = new Recorder(file);
-		Thread stopper = new Thread(new Runnable() {// Creer un nouveau thread
+		
+		stopper = new audioThread(recorder);
+		stopper.start();
+		/*
+		stopper = new Thread(new Runnable() {// Creer un nouveau thread
 					// qui attend RecordTime
 					// avant de s'arreter
 					public void run() {
 						
-						try {
-							Thread.sleep(10000);
-						} catch (InterruptedException ex) {
-							ex.printStackTrace();
-						}
-						
-						recorder.finish();
+						recorder.start();
+						//recorder.finish();
 
 					}
 
 				});
 		stopper.start();
-		recorder.start();
+		*/
+		//recorder.start();
 	}
 	
 	public void stopRecording() {
 		recorder.finish();
+		stopper.stopRecord();
 		update(null, file);
 	}
 }

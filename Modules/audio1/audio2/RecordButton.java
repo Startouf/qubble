@@ -1,11 +1,15 @@
 package audio2;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class RecordButton extends JButton implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	private final WaveForm window;
 	private boolean recording;
 	
@@ -18,13 +22,30 @@ public class RecordButton extends JButton implements ActionListener {
 	}
 	
 	public final void actionPerformed(ActionEvent evt) {
-		//window.play();
+		
+		//stopper.start();
 		if (!recording) {
-			this.setText("Stop");
-			recording = true;
-			window.startRecording();
-		}
-		else {
+			
+			
+			final JFileChooser fc = new JFileChooser();
+
+			int returnVal = fc.showSaveDialog(this);
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				
+				window.update(null, file);
+				System.out.println("Opening: " + file.getName() + ".");
+				
+				window.startRecording(file);
+				this.setText("Stop");
+				recording = true;
+			} else {
+				System.out.println("Open command cancelled by user.");
+			}
+			
+			
+		} else {
 			this.setText("Record");
 			recording = false;
 			window.stopRecording();
