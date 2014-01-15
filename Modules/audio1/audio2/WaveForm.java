@@ -26,6 +26,7 @@ public class WaveForm extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	
 	private File file;
+	private Recorder recorder;
 	
 	private PlayButton play;
 	private JMenuBar menuBar;
@@ -35,6 +36,7 @@ public class WaveForm extends JFrame implements Observer {
 	
 	private QuitMenuItem quitMenuItem;
 	private SelectMenuItem selectMenuItem;
+	private RecordButton recordButton;
 	//private JFileChooser chooser;
 	
 	public WaveForm(String title) {
@@ -52,6 +54,7 @@ public class WaveForm extends JFrame implements Observer {
 		setJMenuBar(menuBar);
 		
 		play = new PlayButton(this);
+		recordButton = new RecordButton(this);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -65,6 +68,7 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.setLayout(new BoxLayout(windowPanel, BoxLayout.PAGE_AXIS));
 		windowPanel.add(chartPanel);
 		windowPanel.add(play);
+		windowPanel.add(recordButton);
 		
 		setContentPane(windowPanel);
 		
@@ -111,5 +115,33 @@ public class WaveForm extends JFrame implements Observer {
 
 	public void play() {
 		Player.play(file);
+	}
+	
+	public void startRecording() {
+		file = new File("/Users/vincentcouteaux/wavs/test.wav");
+		recorder = new Recorder(file);
+		Thread stopper = new Thread(new Runnable() {// Creer un nouveau thread
+					// qui attend RecordTime
+					// avant de s'arreter
+					public void run() {
+						
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException ex) {
+							ex.printStackTrace();
+						}
+						
+						recorder.finish();
+
+					}
+
+				});
+		stopper.start();
+		recorder.start();
+	}
+	
+	public void stopRecording() {
+		recorder.finish();
+		update(null, file);
 	}
 }
