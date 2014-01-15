@@ -3,6 +3,7 @@ package ui;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Label;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ public class PatternSelectionFrame extends JFrame
 	private App app;
 	private final JPanel patternSelection = new JPanel();
     GridLayout patternLayout = new GridLayout(6,2);
-    
+    private ArrayList<JButton> listCube;
 	public PatternSelectionFrame(App app) {
 		
 		super("Selection de pattern");
@@ -41,8 +42,11 @@ public class PatternSelectionFrame extends JFrame
 		
 		for (int i =0;i<12;i++)
 		{
-		String cube = "Cube "+(i+1);
-        patternSelection.add(new JButton(cube));
+		JButton cube = new JButton("Cube "+Integer.toString(i+1));
+        patternSelection.add(cube);
+        listCube.add(cube);
+        
+        //TODO: faire le "retour" des cube
 		}
 	}
 }
