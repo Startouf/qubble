@@ -153,7 +153,7 @@ public class WaveForm extends JFrame implements Observer {
 	}
 	
 	public void synthesize(File file) {
-		synth = new Synthesizer(Synthesizer.triangle, 2000, 2500, 44000);
+		synth = new Synthesizer(Synthesizer.sine, 220, 2500, 44000);
 		synth.writeFile(file, 3);
 		update(null, file);
 	}

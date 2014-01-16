@@ -74,7 +74,7 @@ public class Synthesizer {
 			}
 			break;
 		case Synthesizer.triangle:
-			System.out.println("TRIAAANNGLE");
+			
 			for (int i = 0; i < numberOfSamples; i++) {
 				int x = i % samplesIn1Period;
 				if (x < samplesIn1Period / 2) {
@@ -91,22 +91,27 @@ public class Synthesizer {
 		ArrayList<Integer> samples = generate(length);
 		//WavFile wavFile = null;
 		try {
-			WavFile wavFile = WavFile.newWavFile(file, 2, samples.size(), 16, bitrate);
-			int buffer[][] = new int[2][100];
+			WavFile wavFile = WavFile.newWavFile(file, 1, samples.size(), 16, bitrate);
+			//int buffer[][] = new int[2][10000];
+			int buffer[] = new int[samples.size()];
 			
+			for (int i = 0; i < samples.size() ; i++) {
+				buffer[i] = samples.get(i);
+			}
+			/*
 			int frameCounter = 0;
 			
 			while (frameCounter < samples.size()) {
 				long remaining = wavFile.getFramesRemaining();
-				int toWrite = (remaining > 100) ? 100 : (int) remaining;
+				int toWrite = (remaining > 10000) ? 10000 : (int) remaining;
 				
 				for (int i = 0 ; i < toWrite ; i++, frameCounter++) {
 					buffer[0][i] = samples.get(frameCounter);
 					buffer[1][i] = samples.get(frameCounter);
 				}
-				
-				wavFile.writeFrames(buffer, toWrite);
-			}
+				*/
+				wavFile.writeFrames(buffer, samples.size());
+			//}
 			
 			wavFile.close();
  		}
