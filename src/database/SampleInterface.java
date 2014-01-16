@@ -1,8 +1,8 @@
-package audio;
+package database;
 
 import java.io.File;
 
-public interface SampleInterface
+public interface SampleInterface extends PatternModifierInterface
 {
 	public File getFile();
 	public String getName();

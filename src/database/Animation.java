@@ -2,7 +2,6 @@ package database;
 
 import java.io.File;
 
-import opengl.AnimationInterface;
 
 public class Animation implements AnimationInterface {
 	private final String name;

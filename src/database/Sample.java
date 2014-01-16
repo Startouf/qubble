@@ -2,7 +2,6 @@ package database;
 
 import java.io.File;
 
-import audio.SampleInterface;
 
 public class Sample implements SampleInterface{
 	

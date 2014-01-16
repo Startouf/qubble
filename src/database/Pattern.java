@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.lwjgl.util.Point;
 
-import audio.SampleInterface;
 
 /**
  * @author duchon

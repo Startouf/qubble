@@ -1,6 +1,5 @@
-package opengl;
+package database;
 
-import database.PatternModifierInterface;
 
 public interface AnimationInterface extends PatternModifierInterface {
 	

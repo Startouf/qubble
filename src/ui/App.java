@@ -7,10 +7,11 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 
 import database.Animation;
+import database.Pattern;
 import database.PatternInterface;
+import database.SampleInterface;
 
 import actions.*;
-import audio.SampleInterface;
 import audio.SoundEffectInterface;
 
 /**
@@ -25,7 +26,7 @@ import audio.SoundEffectInterface;
 public class App extends JFrame
 {
 	//ArrayLists = données. Eventuellement à mettre ailleurs
-	private ArrayList<PatternInterface> patterns = new ArrayList<PatternInterface>();
+	private ArrayList<PatternInterface> patterns;
 	private ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
 	private ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
 	private ArrayList<Animation> animations = new ArrayList<Animation>();
@@ -46,6 +47,10 @@ public class App extends JFrame
 	{
 		super("DJ-Table");
 
+		//Test :
+		 patterns = new ArrayList<PatternInterface>();
+			patterns.add(new Pattern("Alpha", 1111000));
+		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
 
