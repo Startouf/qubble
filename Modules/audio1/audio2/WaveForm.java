@@ -27,10 +27,12 @@ public class WaveForm extends JFrame implements Observer {
 	
 	private File file;
 	private Recorder recorder;
+	private Synthesizer synth;
 	
 	private audioThread stopper;
 	
 	private PlayButton play;
+	private SynthButton synthButton;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ChartPanel chartPanel;
@@ -57,6 +59,7 @@ public class WaveForm extends JFrame implements Observer {
 		
 		play = new PlayButton(this);
 		recordButton = new RecordButton(this);
+		synthButton = new SynthButton(this);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -71,6 +74,7 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.add(chartPanel);
 		windowPanel.add(play);
 		windowPanel.add(recordButton);
+		windowPanel.add(synthButton);
 		
 		setContentPane(windowPanel);
 		
@@ -145,6 +149,12 @@ public class WaveForm extends JFrame implements Observer {
 	public void stopRecording() {
 		recorder.finish();
 		stopper.stopRecord();
+		update(null, file);
+	}
+	
+	public void synthesize(File file) {
+		synth = new Synthesizer(Synthesizer.triangle, 2000, 2500, 44000);
+		synth.writeFile(file, 3);
 		update(null, file);
 	}
 }
