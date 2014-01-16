@@ -9,6 +9,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.Point;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.glu.GLU;
 
 //The static imports all classes without the need to write class name each time (here GL11)
 import static org.lwjgl.opengl.GL11.*;
@@ -16,48 +19,48 @@ import static org.lwjgl.opengl.GL11.*;
 public class ManySquares
 {
 	private Point coords = new Point(100,100);
-	
-	private int fps =0;
-	private long lastFrameTime = getTime();
-	private long delta;
-	private long lastFPSDisplay = getTime(); 
+	private static int WIDTH = 800;
+	private static int HEIGHT = 600;
 	
 	public void start(){
 		initDisplay();		
-		initGL();
-		
+
 		while (!Display.isCloseRequested()){
+			glClear(GL_COLOR_BUFFER_BIT | 
+					GL_DEPTH_BUFFER_BIT);
+			initGL();
 			renderGL();
-			
-			pollInputs();
-			updateFPSDelta();
+			initGL2();
+			renderGL();
 			Display.update(); 
 			Display.sync(60); 
 		}
 		Display.destroy();
 	}
 	
-	private void updateFPSDelta(){
-		fps++;
-		delta = getTime() - lastFrameTime;
-		lastFrameTime = getTime();
-		if (getTime()-lastFPSDisplay > 1000){
-			System.out.println("FPS : "+ fps);
-			fps = 0;
-			lastFPSDisplay = lastFrameTime;
-		}
-	}
-	
 	private void initGL(){
+		glViewport(0,0,WIDTH/2, HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 0, 300);	//Orthonormal projection
+		glOrtho(0, 800, 0, 600, 0, -300);	//Othronormal projection
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	
+	private void initGL2(){
+		glViewport(WIDTH/2,0,WIDTH/2, HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, 800, 0, 600, 0, -300);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
+
 	}
 	
 	private void initDisplay(){
 		try{
-			Display.setDisplayMode(new DisplayMode(800,600));
+			Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
 			Display.create();
 		} catch (LWJGLException e){
 			e.printStackTrace();
@@ -65,9 +68,6 @@ public class ManySquares
 	}
 	
 	private void renderGL(){
-		//Clear screen and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | 
-				GL_DEPTH_BUFFER_BIT);
 		
 		//Set color of quad (R,G,B,A)
 		glColor3f(0.5f,0.5f,1.0f);
@@ -77,10 +77,6 @@ public class ManySquares
 		squareFromFan(4*coords.getX(), coords.getY(), 200);
 		squareFromStrip(coords.getX(), (float)3.1*coords.getY(), 200);
 		cube(4*coords.getX(), (float)3.1*coords.getY(), -5, 200);
-	}
-	
-	private long getTime(){ //Sys.getTime returns time in nanoticks (with TimerResolutions = ticks/sec)
-		return (Sys.getTime()*1000)/Sys.getTimerResolution();
 	}
 	
 	private void squareFromQuad(float x, float y, float s){
@@ -116,90 +112,40 @@ public class ManySquares
 	}
 	
 	private void cube(float x, float y, float z, float s){
-		//Use Matrix
-		glEnableClientState(GL_VERTEX_ARRAY);
-		FloatBuffer vertexArray = BufferUtils.createFloatBuffer(3*8);
-		float[] vertices = {
-				//4 sommets de devant
-				x,y,z,
-				x+s,y,z,
-				x+s,y+s,z,
-				x,y+s,z,
-				//4 sommets de derrière
-				x,y,z+s,
-				x+s,y,z+s,
-				x+s,y+s,z+s,
-				x,y+s,z+s
-		};
-		vertexArray.put(vertices);
-		glVertexPointer(3, 0, vertexArray);
+		//Four faces with QUAD_Strip (front, top, back, bottom)
+		//Normals must be sent before the vertex that finish a face
+		float[][] v = {
+				{x,y,-z}, {x+s,y,-z}, {x+s,y+s,-z}, {x,y+s,-z},
+				{x,y,-z-s}, {x+s,y,-z-s}, {x+s,y+s,-z-s}, {x,y+s,-z-s}
+				};
 		
-		glBegin(GL_QUAD_STRIP);
-		glArrayElement(0);
-		glArrayElement(3);
-		glArrayElement(1);
-		glArrayElement(2);
-		glColor3f(1f,1f,0f);
-		glArrayElement(5);
-		glArrayElement(6);
-		glColor3f(0f,1f,1f);
-		glArrayElement(4);
-		glArrayElement(7);
-		glColor3f(1f,0f,1f);
-		glArrayElement(0);
-		glArrayElement(3);
-		glEnd();
+		glColor3f(0,0,1f); //front face :blue 
+		square3D(v[0],v[1],v[2],v[3]);
 		
-		glBegin(GL_QUADS); //could be a separate function but this one is a square on the xoz plane
-		glColor3f(1f,0,0);
-		glArrayElement(0);
-		glArrayElement(1);
-		glArrayElement(4);
-		glArrayElement(5);
-		glEnd();
+		glColor3f(1f,0,0); //top face :red
+		square3D(v[2], v[3], v[6], v[7]);
 		
-		glBegin(GL_QUADS);
-		glColor3f(0,1f,0);
-		glArrayElement(3);
-		glArrayElement(2);
-		glArrayElement(6);
-		glArrayElement(7);
-		glEnd();
+		glColor3f(0,1f,0); //back face : green
+		square3D(v[4],v[5],v[6],v[7]);
+		
+		glColor3f(1f,1f,0); //bottom face : yellow
+		square3D(v[0],v[1], v[5], v[4]);
+
+		glColor3f(1f,0,1f); //left face magenta
+		square3D(v[0], v[4], v[7], v[3]);
+
+		glColor3f(0,1f,1f); //right face Cyan
+		square3D(v[1], v[2], v[6], v[5]);
+		
 	}
 	
-	private void pollInputs(){
-		if (Mouse.isButtonDown(0)){ //Will generate as many lines as FPS
-			int x = Mouse.getX();
-			int y = Mouse.getY();
-			
-			System.out.println("Mouse @ (" + x+", " +y+")");
-		}
-		
-		while(Keyboard.next()){ //Will generate only one line per event
-			if (Keyboard.getEventKeyState()){ //Key pressed
-				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT){
-					System.out.println("Right pressed");
-					coords.translate((int) delta,0);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT){
-					System.out.println("LEFT pressed");
-					coords.translate((int) -delta, 0);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_UP){
-					System.out.println("LEFT pressed");
-					coords.translate(0, (int) delta);
-				}
-				else if (Keyboard.getEventKey() == Keyboard.KEY_DOWN){
-					System.out.println("LEFT pressed");
-					coords.translate(0, (int) -delta);
-				}
-			}
-			else{ //key released
-				if (Keyboard.getEventKey() == Keyboard.KEY_A){
-					System.out.println("A released");
-				}
-			}
-		}
+	private void square3D(float[] v1, float[]v2, float[] v3, float[] v4){
+		glBegin(GL_QUADS);
+		glVertex3f(v1[0], v1[1], v1[2]);
+		glVertex3f(v2[0], v2[1], v2[2]);
+		glVertex3f(v3[0], v3[1], v3[2]);
+		glVertex3f(v4[0], v4[1], v4[2]);
+		glEnd();
 	}
 	
 	public static void main(String[] args){
