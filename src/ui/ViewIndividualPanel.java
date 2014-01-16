@@ -27,7 +27,7 @@ public class ViewIndividualPanel extends JPanel {
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
-		this.currentPattern = (Pattern) this.app.getPatterns().get(0);
+		this.currentPattern = (Pattern) this.app.getPatterns().get(0); //test
 		
 		this.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);
@@ -41,7 +41,7 @@ public class ViewIndividualPanel extends JPanel {
 		c.gridx = 1;
 		add(new Selector(app, "Pattern", currentPattern), c);
 		
-		//TODO : Replace nulls by default choices
+		//TODO : Replace nulls by default choices (this.app.getXXX.get(0) for example)
 		addOption("Sample Associé", currentPattern, null);
 		addOption("Effet Axe Y", currentPattern, null);
 		addOption("Rotation", currentPattern, null);

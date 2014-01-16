@@ -30,7 +30,7 @@ import database.PatternModifierInterface;
 public class Selector extends JPanel {
 	
 	private final App app;
-	//Return the specific object (pattern or patternmodifier)
+	//change the specific object (pattern or patternmodifier)
 	private Object selectedObject;
 	
 	public Selector(App app, String title, Pattern pattern){
