@@ -25,11 +25,11 @@ de naviguer dans cet espace 3D et de choisir un point d'observation.
 On peut alors, à l'aide de transformations matricielles, projeter ce qu'on voit depuis ce point d'observation sur un écran 2D. 
 
 == Les transformations (produits matriciels)
-La transformation viewport
+#La transformation viewport
 Permet d'indiquer sur quelle partie de la fenêtre on va occuper
 glViewPort() 
 
-La transformation de projection (définit l'espace qui sera rendu)
+#La transformation de projection (définit l'espace qui sera rendu)
 
 Projection Perspective :
 Analogie : choisir la lentille de la caméra
@@ -40,13 +40,13 @@ Projection Orthonormale :
 Analogie : Observation à l'infini
 glOrtho(-x,x,-y,y-,z,z)
 
-Les transformations Viewing 
+#Les transformations Viewing 
 Analogie : positioner et viser avec la caméra
 Faire un reset des transformations (matrice identité :) glLoadIdentity()
 Choisir la translation de la caméra glTranslate[fdl]() et la rotation associée
-OU utiliser la routine glu : gluLookAt()
+OU utiliser la routine glu : gluLookAt() : spécifier la position de la caméra, un pt de référence, et le "haut" de la caméra
 
-Les transformations Modeling
+#Les transformations Modeling
 Analogie : placer les éléments sur la scène
 Positioner, orienter et scaler le modèle utilisé
 On utilise les matrices de transformations entre glBegin() et glEnd()
@@ -55,3 +55,37 @@ On utilisera le stack des matrices glMatrixPush et glMatrixPop
 Note : Si l'on considère un repère absolu, considérer les transformations en ordre inverse
 
 ##3 Principes de base de OpenGL: Texture et système de coordonnées
+
+##4 Principes de base de OpenGL: Modèle de lumière
+OpenGL raisonne sur des sources de lumières en RVB            
+Division de l'éclairage en 4 : lumière  émissive, ambiante, diffuse, spéculaire
+
+#Ambient illumination
+Phénomène physique réel : réflection de la lumière sur les surfaces banales (murs, objects non réfléchissants, etc.)
+Approximation OpenGL : impossible de déterminer l'origine des sources, donc on considère un niveau global de lumière dans l'espace
+Elle est éparpillée dans toutes les directions
+
+#Diffuse light
+Phénomène physique réel : modèle facile utilisé par les télécom, réflection par les isolants
+OpenGL : Lumière qui arrive d'une direction particulière, mais qui est réfléchie dans toutes les directions au contact d'un objet
+
+#Specular light
+Phénomène physique réel : exemple : effet de peau dans les métaux
+OpenGL : Lumière qui arrive d'une direction particulière, et est renvoyée dans une autre direction particulière
+C'est ce qu'on utilisera pour les points lumineux sur les objets
+
+#Emissive color : 
+Fonction de gain sur la lumière reçue et éclairement de base, sans augmenter la lumière renvoyée dans l'environnement.
+
+#Affichage de la couleur
+OpenGL gère l'absorption de fréquences via l'absorption de R, V et B de l'objet. La couleur affichée sera en taux de R,V, et B renvoyée par les objets.
+Pour les flux lumineux/sources, (R,V,B) définissent l'intensité de la lumière (~quantité d'énergie, maximum = tous les pixels allumés, blanc)
+Pour les objets, (R,V,B) définissent la partie réfléchie
+Addition des couleurs renvoyées par chaque objet
+
+#Rendering light :
+Définir les vecteur normaux pour chaque surface (vers l'extérieur !)
+Définir des sources
+Choisir un modèle de lumière (lumière ambiante, etc.)
+Définir les propriétés des matériaux
+

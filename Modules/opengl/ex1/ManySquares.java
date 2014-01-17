@@ -9,7 +9,7 @@ import org.lwjgl.util.glu.GLU;
 import static org.lwjgl.opengl.GL11.*;
 
 //Routines are there :
-import static routines.SquareRoutines.*;
+import static routines.Squares.*;
 
 public class ManySquares
 {
@@ -72,7 +72,7 @@ public class ManySquares
 		squareFromQuad(coords.getX(), coords.getY(), 200);
 		squareFromFan(4*coords.getX(), coords.getY(), 200);
 		squareFromStrip(coords.getX(), (float)3.1*coords.getY(), 200);
-		cube(4*coords.getX(), (float)3.1*coords.getY(), -5, 200);
+		drawCubef(4*coords.getX(), (float)3.1*coords.getY(), -5, 200);
 	}
 	
 	public static void main(String[] args){

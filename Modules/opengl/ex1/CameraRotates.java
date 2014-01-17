@@ -1,7 +1,7 @@
 package ex1;
 
 import static org.lwjgl.opengl.GL11.*;
-import static routines.SquareRoutines.*;
+import static routines.Squares.*;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -63,11 +63,11 @@ private static int WIDTH = 800, HEIGHT = 600;
 	}
 
 	private void renderGL(){
-		cube(coords.getX(), coords.getY(), -5, 200);
+		drawCubef(coords.getX(), coords.getY(), -5, 200);
 	}
 	
 	private void renderGL2(){
-		cube(coords.getX(), coords.getY(), -5, 200);
+		drawCubef(coords.getX(), coords.getY(), -5, 200);
 	}
 	
 	private void pollInputs(){

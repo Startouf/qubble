@@ -3,7 +3,7 @@ package routines;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
-public class GridRoutines
+public class Grids
 {
 	public static void drawAxis(){
 		glColor3f(1f,1f,1f);

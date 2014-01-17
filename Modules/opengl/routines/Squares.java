@@ -1,19 +1,8 @@
 package routines;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glNormal3f;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.*;
 
-public class SquareRoutines
+public class Squares
 {
 	public static void squareFromQuad(float x, float y, float s){
         glBegin(GL_QUADS);
@@ -47,7 +36,7 @@ public class SquareRoutines
 		glEnd();
 	}
 	
-	public static void cube(float x, float y, float z, float s){
+	public static void drawCubef(float x, float y, float z, float s){
 		//Four faces with QUAD_Strip (front, top, back, bottom)
 		//Normals must be sent before the vertex that finish a face
 		float[][] v = {
@@ -64,6 +53,7 @@ public class SquareRoutines
 		 */
 		
 		glColor3f(0,0,1f); //front face :blue 
+		
 		square3D(v[0],v[1],v[2],v[3]);
 		
 		glColor3f(1f,0,0); //top face :red

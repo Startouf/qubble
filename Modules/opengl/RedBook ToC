@@ -9,7 +9,7 @@ Librairies
 Animations
 
 
-Chapter 2
+Chapter 2 Drawing
 
 State variables
 Basic functions for drawing Polygons, Lines, points
@@ -20,13 +20,17 @@ Vertex Arrays
 Attribute groups
 Hints to make good polygon subdivision of surfaces
 
-Chapter 3
+Chapter 3 Matrix transformations
 
 Viewing, Modeling and Projection, and Viewport Transformation
 Matrix stacks
 Clipping planes
 Reverse transformations
 
-Chapter 4
+Chapter 4 Colors and Shading
 Colors
 Shading Model
+
+Chapter 5 : Lighting
+Removing hidden surfaces
+OpenGL Lighting

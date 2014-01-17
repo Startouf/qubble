@@ -11,8 +11,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
-import static routines.SquareRoutines.*;
-import static routines.GridRoutines.*;
+import static routines.Squares.*;
+import static routines.Grids.*;
 
 public class CubeRotates
 {
@@ -62,7 +62,7 @@ public class CubeRotates
 		glTranslatef(+coords.getX()+100, +coords.getY()+100, -200);
 		glRotated(angleUser, 0.0, 1.0, 0.0);
 		glTranslatef(-100, -100, +100);
-		cube(0, 0, 0, 200);
+		drawCubef(0, 0, 0, 200);
 		glPopMatrix();
 	}
 	
@@ -71,7 +71,7 @@ public class CubeRotates
 		glTranslatef(coords.getX()+100, coords.getY()+100, -200);
 		glRotated(angle, 0.0, 1.0, 0.0);
 		glTranslatef(-100, -100, 100);
-		cube(0, 0, 0, 200);
+		drawCubef(0, 0, 0, 200);
 		glPopMatrix();
 	}
 	
