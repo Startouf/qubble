@@ -13,29 +13,21 @@ Cette biblio se fera tout au long de votre module, et comprendra de manière suc
 	Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
 
 == Les données de base OpenGL	
-Les objets que OpenGl sait bien traiter s'appelle les primitives (points, lignes et polygones).
-Il est très facile de créer des surfaces à partir de triangles. Ainsi l'approximation de surfaces courbées se fait grâce à une décomposition en triangles, 
+Les objets que OpenGl et le GPU savent bien traiter s'appellent les primitives (points, lignes et polygones). 
+Elles crées à partir de sommets, dont on donne coordonnées spatiales entre les instructions glBegin() et glEnd().
+La plupart des surfaces sont construites à partir de triangles. Ainsi l'approximation de surfaces courbées se fait grâce à une décomposition en triangles, 
 dont qualité est définie par la subdivision.
 
-Ces points sont définis de manière absolue dans l'espace grâce à des coordonnées cartésiennes. 
-En revanche, si on se contentait d'afficher tel quel ces objets sur l'écran, cela reviendrait a dessiner un paysage 2D sans perspective.
-Il convient donc d'effectuer certaines transformation sur les objets afin d'en donner une vue réaliste
+L'intérêt d'OpenGL est de représenter ces primitives dans un espace 3D, 
+de naviguer dans cet espace 3D et de choisir un point d'observation.
+On peut alors, à l'aide de transformations matricielles, projeter ce qu'on voit depuis ce point d'observation sur un écran 2D. 
 
 == Les transformations (produits matriciels)
-Les transformations Viewing 
-Analogie : positioner et viser avec la caméra
-Faire un reset des transformations (matrice identité :) glLoadIdentity()
-Choisir la translation de la caméra glTranslate[fdl]()
-Choisir la direction : [glu]LookAt()
+La transformation viewport
+Permet d'indiquer sur quelle partie de la fenêtre on va occuper
+glViewPort() 
 
-Les transformations Modeling
-Analogie : placer les éléments sur la scène
-Positioner, orienter et scaler le modèle utilisé
-Ce qu'on draw entre glBegin() et glEnd() // Pas exact je pense
-
-Note : "modeling and viewing transformations are included in the display() routine"
-
-La transformation de projection
+La transformation de projection (définit l'espace qui sera rendu)
 
 Projection Perspective :
 Analogie : choisir la lentille de la caméra
@@ -46,8 +38,16 @@ Projection Orthonormale :
 Analogie : Observation à l'infini
 glOrtho(-x,x,-y,y-,z,z)
 
+Les transformations Viewing 
+Analogie : positioner et viser avec la caméra
+Faire un reset des transformations (matrice identité :) glLoadIdentity()
+Choisir la translation de la caméra glTranslate[fdl]() et la rotation associée
+OU utiliser la routine glu : gluLookAt()
 
-La transformation viewport
-Permet d'afficher tout ça sur un écran en 2D
-glViewPort() 
-glReshape()
+Les transformations Modeling
+Analogie : placer les éléments sur la scène
+Positioner, orienter et scaler le modèle utilisé
+On utilise les matrices de transformations entre glBegin() et glEnd()
+On utilisera le stack des matrices glMatrixPush et glMatrixPop 
+
+Note : Si l'on considère un repère absolu, considérer les transformations en ordre inverse
