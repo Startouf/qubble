@@ -1,6 +1,7 @@
 package ex1;
 
 import static org.lwjgl.opengl.GL11.*;
+import static routines.SquareRoutines.*;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -11,12 +12,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
-import static routines.SquareRoutines.*;
-import static routines.GridRoutines.*;
-
-public class CubeRotates
+public class CameraRotates
 {
-	private static int WIDTH = 800, HEIGHT = 600;
+private static int WIDTH = 800, HEIGHT = 600;
 	
 	private Point coords = new Point(200,200);
 	private int angle = 0, angleUser = 0;
@@ -29,50 +27,47 @@ public class CubeRotates
 	
 	public void start(){
 		initDisplay();		
-		glEnable(GL_CULL_FACE);
 		
 		while (!Display.isCloseRequested()){
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_CULL_FACE);
+			
 			initGL();
+			viewTransform();
 			renderGL();
 			
 			initGL2();
-			renderGL2();
+			view2Transform();
+			renderGL();
 			
 			pollInputs();
 			updateFPSDelta();
 			
 			Display.update(); 
-			//Manual FPS control
-			try {
-				//Experimental *2 factor
-				Thread.sleep(2*sleep);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Display.sync(60);
 		}
 		Display.destroy();
 	}
+	
+	private void viewTransform(){ //User moves it
+		glTranslatef(+coords.getX()+100, +coords.getY()+100, -105);
+		glRotated(angleUser, 0.0, 1.0, 0.0);
+		glTranslatef(-coords.getX()-100, -coords.getY()-100, +105);
+	}
+	
+	private void view2Transform(){ //Auto move
+		glTranslatef(+coords.getX()+100, +coords.getY()+100, -105);
+		glRotated(angle, 0.0, 1.0, 0.0);
+		glTranslatef(-coords.getX()-100, -coords.getY()-100, +105);
+	}
 
 	private void renderGL(){
-		drawBasis();
-		glPushMatrix();
-		glTranslatef(+coords.getX()+100, +coords.getY()+100, -200);
-		glRotated(angleUser, 0.0, 1.0, 0.0);
-		glTranslatef(-100, -100, +100);
-		cube(0, 0, 0, 200);
-		glPopMatrix();
+		cube(coords.getX(), coords.getY(), -5, 200);
 	}
 	
 	private void renderGL2(){
-		glPushMatrix();
-		glTranslatef(coords.getX()+100, coords.getY()+100, -200);
-		glRotated(angle, 0.0, 1.0, 0.0);
-		glTranslatef(-100, -100, 100);
-		cube(0, 0, 0, 200);
-		glPopMatrix();
+		cube(coords.getX(), coords.getY(), -5, 200);
 	}
 	
 	private void pollInputs(){
@@ -113,10 +108,6 @@ public class CubeRotates
 	private void updateFPSDelta(){
 		fps++;
 		delta = getTime() - lastFrameTime;
-		sleep = (1000/60 - delta*1000);
-		if (sleep<0)
-			sleep = 0;
-
 		angle = (int) ((angle + delta/10) % 360);
 		lastFrameTime = getTime();
 		if (getTime()-lastFPSDisplay > 1000){
@@ -143,10 +134,10 @@ public class CubeRotates
 		glViewport(0,0,WIDTH/2, HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 300, -300);	//Othronormal projection
+		glOrtho(0, 800, 0, 600, 300, -300);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		GLU.gluLookAt(50f, 50f, +50, 35f, 35f, -50f, 0f, 1f, 0f);
+		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	
 	private void initGL2(){
@@ -156,11 +147,11 @@ public class CubeRotates
 		glOrtho(0, 800, 0, 600, 300, -300);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		GLU.gluLookAt(50f, 50f, +50f, 35f, 35f, -50f, 0f, 1f, 0f);
+		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	
 	public static void main(String[] args){
-        CubeRotates app = new CubeRotates();
+        CameraRotates app = new CameraRotates();
         app.start();
     }
 }
