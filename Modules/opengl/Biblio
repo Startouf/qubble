@@ -9,6 +9,8 @@ Cette biblio se fera tout au long de votre module, et comprendra de manière suc
 
 ##1 OpenGL Rendering Pipeline and the GPU
 
+TODO par Pierre Lorin de Reure
+
 ##2 Principes de base de OpenGL: Représentation des données et des transformations géometriques: 
 	Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
 
@@ -51,3 +53,5 @@ On utilise les matrices de transformations entre glBegin() et glEnd()
 On utilisera le stack des matrices glMatrixPush et glMatrixPop 
 
 Note : Si l'on considère un repère absolu, considérer les transformations en ordre inverse
+
+##3 Principes de base de OpenGL: Texture et système de coordonnées

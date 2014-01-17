@@ -18,7 +18,8 @@ public class ManySquares
 	private static int HEIGHT = 600;
 	
 	public void start(){
-		initDisplay();		
+		initDisplay();
+		glEnable(GL_CULL_FACE);
 
 		while (!Display.isCloseRequested()){
 			glClear(GL_COLOR_BUFFER_BIT | 

@@ -1,0 +1,32 @@
+OpenGL RedBook
+http://www.glprogramming.com/red/
+
+Chapter 1
+Basics of OpenGL
+Command Syntax
+OpenGL Rendering Pipeline
+Librairies 
+Animations
+
+
+Chapter 2
+
+State variables
+Basic functions for drawing Polygons, Lines, points
+Stipling (dash pattern)
+Hide some polygon outlines : Marking Polygon Boundary Edges
+Normal vectors
+Vertex Arrays
+Attribute groups
+Hints to make good polygon subdivision of surfaces
+
+Chapter 3
+
+Viewing, Modeling and Projection, and Viewport Transformation
+Matrix stacks
+Clipping planes
+Reverse transformations
+
+Chapter 4
+Colors
+Shading Model
