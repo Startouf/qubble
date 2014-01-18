@@ -1,6 +1,13 @@
 package routines;
 
 import static org.lwjgl.opengl.GL11.*;
+import static routines.someMath.*;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBVertexBufferObject;
+import org.lwjgl.opengl.GL15;
 
 public class Squares
 {
@@ -76,6 +83,54 @@ public class Squares
 	public static void square3D(float[] v1, float[]v2, float[] v3, float[] v4){
 		glBegin(GL_QUADS);
 		
+		glVertex3f(v1[0], v1[1], v1[2]);
+		glVertex3f(v2[0], v2[1], v2[2]);
+		glVertex3f(v3[0], v3[1], v3[2]);
+		glVertex3f(v4[0], v4[1], v4[2]);
+		glEnd();
+	}
+	
+	public static void drawCubeWithNormals(float x, float y, float z, float s){
+		//Four faces with QUAD_Strip (front, top, back, bottom)
+		//Normals must be sent before the vertex that finish a face
+		float[][] v = {
+				{x,y,-z}, {x+s,y,-z}, {x+s,y+s,-z}, {x,y+s,-z},
+				{x,y,-z-s}, {x+s,y,-z-s}, {x+s,y+s,-z-s}, {x,y+s,-z-s}
+				};
+		/*
+		 * 3________2	7_______6
+		 * |		|	|		|
+		 * |		|	|		|
+		 * |		|	|		|
+		 * |________|	|_______|
+		 * 0		1	4		5
+		 */
+		
+		//!!!! Must define sides counterclockwise for normals !
+		
+		glColor3f(0,0,1f); //front face :blue 
+		square3DWithNormal(v[0],v[1],v[2],v[3], getNormal(v[0], v[1], v[3]));
+		
+		glColor3f(1f,0,0); //top face :red
+		square3DWithNormal(v[3], v[2], v[6], v[7], getNormal(v[3], v[2], v[7]));
+		
+		glColor3f(0,1f,0); //back face : green
+		square3DWithNormal(v[5],v[4],v[7],v[6], getNormal(v[5], v[4], v[6]));
+		
+		glColor3f(1f,1f,0); //bottom face : yellow
+		square3DWithNormal(v[1],v[0], v[4], v[5], getNormal(v[1], v[0], v[5]));
+
+		glColor3f(1f,0,1f); //left face magenta
+		square3DWithNormal(v[0], v[3], v[7], v[4], getNormal(v[0], v[3], v[4]));
+
+		glColor3f(0,1f,1f); //right face Cyan
+		square3DWithNormal(v[1], v[5], v[6], v[2], getNormal(v[1], v[6], v[2]));
+		
+	}
+	
+	public static void square3DWithNormal(float[] v1, float[]v2, float[] v3, float[] v4, float[] n){
+		glBegin(GL_QUADS);
+		glNormal3f(n[0], n[1], n[2]);
 		glVertex3f(v1[0], v1[1], v1[2]);
 		glVertex3f(v2[0], v2[1], v2[2]);
 		glVertex3f(v3[0], v3[1], v3[2]);

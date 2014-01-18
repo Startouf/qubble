@@ -114,6 +114,7 @@ public class CubeRotates
 		fps++;
 		delta = getTime() - lastFrameTime;
 		sleep = (1000/60 - delta*1000);
+		//manual FPS control
 		if (sleep<0)
 			sleep = 0;
 
@@ -127,7 +128,7 @@ public class CubeRotates
 	}
 	
 	private long getTime(){ //Sys.getTime returns time in nanoticks (with TimerResolutions = ticks/sec)
-		return (Sys.getTime()*1000)/Sys.getTimerResolution();
+		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
 	
 	private void initDisplay(){
