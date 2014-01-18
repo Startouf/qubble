@@ -11,8 +11,12 @@ import javax.swing.JPanel;
 import ex1.*;
 import ex2.*;
 
-
-
+/**
+ * @author Cyril
+ * Quick window to launch any of the exercices
+ * Written in an ugly manner, but does the job
+ *
+ */
 public class BrowseExercices
 {
 	private static JButton ex11;
@@ -23,8 +27,6 @@ public class BrowseExercices
 	private static JButton ex21;
 	private static JButton ex23;
 	private static JButton ex24;
-
-
 	
 	public static void main(String[] args){
 		
@@ -34,8 +36,7 @@ public class BrowseExercices
 		ex11 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ProjectionPerspective app = new ProjectionPerspective();
-				app.start();
+				ProjectionPerspective.main(null);
 			}
 		}));
 		ex11.setText("Ex 1.1 Projection Perspective");
@@ -43,17 +44,15 @@ public class BrowseExercices
 		ex12 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ManySquares app = new ManySquares();
-				app.start();
+				ManySquares.main(null);
 			}
 		}));
-		ex12.setText("Ex 1.2 Affichage de carrés");
+		ex12.setText("Ex 1.2 et 1.3 Affichage de carrés");
 		
 		ex14 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				CubeRotates app = new CubeRotates();
-				app.start();
+				CubeRotates.main(null);
 			}
 		}));
 		ex14.setText("Ex 1.4 Rotation de Modèles");
@@ -61,27 +60,31 @@ public class BrowseExercices
 		ex15 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				CameraRotates app = new CameraRotates();
-				app.start();
+				CameraRotates.main(null);
 			}
 		}));
 		ex15.setText("Ex 1.5 Rotation de Camera");
 		
+		ex21 = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				SingleTexture.main(null);
+			}
+		}));
+		ex21.setText("Ex 2.1 Textures");
 		
 		ex23 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Lighting app = new Lighting();
-				app.start();
+				Lighting.main(null);
 			}
 		}));
-		ex23.setText("Ex 2.1 Lumière");
+		ex23.setText("Ex 2.3 Lumière");
 		
 		ex24 = (new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				NotNormalBehaviour app = new NotNormalBehaviour();
-				app.start();
+				NotNormalBehaviour.main(null);
 			}
 		}));
 		ex24.setText("Ex 2.1 Normales fluctuantes");
@@ -90,6 +93,7 @@ public class BrowseExercices
 	panel.add(ex12);
 	panel.add(ex14);
 	panel.add(ex15);
+	panel.add(ex21);
 	panel.add(ex23);
 	panel.add(ex24);
 	
