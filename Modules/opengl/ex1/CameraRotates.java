@@ -24,7 +24,7 @@ public class CameraRotates
 {
 private static int WIDTH = 800, HEIGHT = 600;
 	
-	private Point coords = new Point(200,200);
+	private Point coords = new Point(200,500);
 	private int angle = 0, angleUser = 0;
 	
 	private int fps =0;
@@ -145,6 +145,7 @@ private static int WIDTH = 800, HEIGHT = 600;
 		glOrtho(0, 800, 0, 600, 300, -300);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glScalef(1f, 0.5f, 1f);
 		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	
@@ -155,6 +156,7 @@ private static int WIDTH = 800, HEIGHT = 600;
 		glOrtho(0, 800, 0, 600, 300, -300);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glScalef(1f, 0.5f, 1f);
 		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	

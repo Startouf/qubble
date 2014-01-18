@@ -30,7 +30,7 @@ public class CubeRotates
 {
 	private static int WIDTH = 800, HEIGHT = 600;
 	
-	private Point coords = new Point(200,200);
+	private Point coords = new Point(200,400);
 	private int angle = 0, angleUser = 0;
 	
 	private int fps =0;
@@ -159,6 +159,7 @@ public class CubeRotates
 		glOrtho(0, 800, 0, 600, 300, -300);	//Othronormal projection
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glScalef(1f, 0.5f, 1f);
 		GLU.gluLookAt(50f, 50f, +50, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	
@@ -169,6 +170,7 @@ public class CubeRotates
 		glOrtho(0, 800, 0, 600, 300, -300);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glScalef(1f, 0.5f, 1f);
 		GLU.gluLookAt(50f, 50f, +50f, 35f, 35f, -50f, 0f, 1f, 0f);
 	}
 	
