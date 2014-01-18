@@ -2,7 +2,7 @@ package routines;
 
 import org.lwjgl.Sys;
 
-public class Time
+public final class Time
 {
 	private static long lastFrameTime = getTime(), angle = 0;
 	

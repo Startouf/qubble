@@ -9,7 +9,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL15;
 
-public class Squares
+public final class Squares
 {
 	public static void squareFromQuad(float x, float y, float s){
         glBegin(GL_QUADS);
@@ -125,7 +125,6 @@ public class Squares
 
 		glColor3f(0,1f,1f); //right face Cyan
 		square3DWithNormal(v[1], v[5], v[6], v[2], getNormal(v[1], v[6], v[2]));
-		
 	}
 	
 	public static void square3DWithNormal(float[] v1, float[]v2, float[] v3, float[] v4, float[] n){

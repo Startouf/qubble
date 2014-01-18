@@ -9,9 +9,6 @@ import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
 import routines.Time;
-import routines.someMath;
-
-import ex1.ManySquares;
 
 import static routines.Buffers.*;
 import static routines.Init.*;
@@ -19,10 +16,9 @@ import static routines.Squares.*;
 
 public class Lighting
 {
-	private Point coords = new Point(100,100);
+	private Point coords = new Point(400,400);
 	private static int WIDTH = 800;
 	private static int HEIGHT = 600;
-	private long lastFrameTime = Time.getTime(), angle =0;
 
 	public void start(){
 		initDisplay();

@@ -14,6 +14,18 @@ import org.lwjgl.util.glu.GLU;
 import static routines.Squares.*;
 import static routines.Grids.*;
 
+/**
+ * @author Cyril
+ * Ex 1.4: 
+     - Sans changer votre caméra (gluLookat), faites tourner un cube sur lui-même
+     - manuellement via le clavier (flêches de direction)
+     - de maniere automatique en faisant un tour par seconde
+     Vous ferez pour cela un contrôle de la vitesse de rafraichissement en décidant de la fréquence des trames affichées. Ceci est 
+     classiquement appelé "frame rate", "FPS" ou "Frame Per Second"? Les jeux utilisent classiquement des fréquences de trames 
+     entre 30 et 60Hz.
+     Votre rotation se fera à l'aide en modifiant la matrice de modèle courante via une matrice de rotation.
+ *
+ */
 public class CubeRotates
 {
 	private static int WIDTH = 800, HEIGHT = 600;

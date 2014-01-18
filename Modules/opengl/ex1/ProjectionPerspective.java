@@ -1,6 +1,4 @@
 package ex1;
-
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -11,6 +9,13 @@ import org.lwjgl.util.Point;
 //The static imports all classes without the need to write class name each time (here GL11)
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * @author Cyril
+ * Ex 1.1: 
+     - utilisez une projection perspective au lieu d'une projection orthogonale
+     - expliquez la différence entre les modes de projections
+ *
+ */
 public class ProjectionPerspective
 {
 	private Point coords = new Point(300,300);

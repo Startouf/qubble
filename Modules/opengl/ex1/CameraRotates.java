@@ -12,6 +12,14 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
+/**
+ * @author Cyril
+ * Ex 1.5: 
+     - Sans changer les coordonnées de vos objets, animer le point de vue de votre caméra virtuelle
+     - manuellement via le clavier (fleches de direction)
+     - de maniere automatique en faisant un tour par seconde
+ *
+ */
 public class CameraRotates
 {
 private static int WIDTH = 800, HEIGHT = 600;

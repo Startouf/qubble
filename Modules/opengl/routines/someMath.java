@@ -1,11 +1,23 @@
 package routines;
 
+import java.util.Random;
+
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
-public class someMath
+public final class someMath
 {
+	private static Random random = new Random();
+	
+	public static float[] getRandomNormal(){
+		return normalize(new float[] {random.nextFloat(), random.nextFloat(), random.nextFloat()});
+	}
+	
 	public static float[] getNormal(float[]vtx1, float[]vtx2, float[]vtx3){
+		return ( normalize(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1))));
+	}
+	
+	public static float[] getWeirdNormal(float[]vtx1, float[]vtx2, float[]vtx3){
 		return ( normalize(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1))));
 	}
 	

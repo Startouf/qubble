@@ -11,6 +11,23 @@ import static org.lwjgl.opengl.GL11.*;
 //Routines are there :
 import static routines.Squares.*;
 
+/**
+ * @author Cyril
+ Ex 1.2: 
+ - Dessinez un carré
+ - Dessinez un carré à l'aide d'un "éventail" de triangles (Triangle Fan), puis à l'aide d'un "ruban" (Triangle Strip)
+ - Dessinez un cube au lieu d'un triangle, avec une couleur par face, puis une sphère ou tout autre objet
+
+ Il est possible (recommandé) de passer aux exercices 3.1 -> 3.3 sur les shaders pour les groupes travaillant sur les shaders
+
+ 
+ Ex 1.3: 
+ - modifier cette routine pour afficher votre scène d'au moins deux points de vues en même temps, en partageant 
+ votre zone d'affichage en plusieurs zones via glViewport. Vous devrez rendre votre scène une fois par point de 
+ vue. Ceci vous sera utile dans votre projet pour gérer des zones d'affichages différentes, pour débugger votre contenu
+ ou afficher des barres d'outils indépendantes de votre transformation de point de vue
+ *
+ */
 public class ManySquares
 {
 	private Point coords = new Point(100,100);
