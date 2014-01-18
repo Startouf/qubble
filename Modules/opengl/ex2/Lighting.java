@@ -14,9 +14,18 @@ import static routines.Buffers.*;
 import static routines.Init.*;
 import static routines.Squares.*;
 
+/**
+ * @author Cyril
+ * Ex 2.3: 
+     - Petit travail biblio: comment marche le modèle de lumière en OpenGL. Faites en particulier attention à vos définitions de normales !
+     - Placez une lumière dans votre scène (sans texture) éclairant un cube placé au centre de la scène
+     - modifiez les parametres de materiel pour changer l'apparence de votre cube
+     - faites tourner votre cube ou votre lumière pour visualiser les changements liés à l'éclairage.
+ *
+ */
 public class Lighting
 {
-	private Point coords = new Point(400,400);
+	private Point coords = new Point(200,200);
 	private static int WIDTH = 800;
 	private static int HEIGHT = 600;
 
@@ -59,7 +68,7 @@ public class Lighting
 	}
 	
 	private void renderGL(){
-		drawCubeWithNormals(100f, 100f, -30f, 200f);
+		drawCubeWithNormals(coords.getX(), coords.getY(), -30f, 200f);
 	}
 	
 	private void viewTransform(){

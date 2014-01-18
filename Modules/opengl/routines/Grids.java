@@ -2,10 +2,9 @@ package routines;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.lwjgl.opengl.GL11;
 public final class Grids
 {
-	public static void drawAxis(){
+	public static void drawAxis(){ //Not working ATM
 		glColor3f(1f,1f,1f);
 		//x
 		glBegin(GL_LINES);
@@ -24,7 +23,7 @@ public final class Grids
 		glEnd();
 	}
 	
-	public static void drawBasis(){
+	public static void drawBasis(){ //Not Working ATM
 		glColor3f(1f,1f,1f);
 		//x
 		glBegin(GL_LINES);

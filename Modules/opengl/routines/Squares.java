@@ -3,12 +3,6 @@ package routines;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.someMath.*;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBVertexBufferObject;
-import org.lwjgl.opengl.GL15;
-
 public final class Squares
 {
 	public static void squareFromQuad(float x, float y, float s){
@@ -97,13 +91,15 @@ public final class Squares
 				{x,y,-z}, {x+s,y,-z}, {x+s,y+s,-z}, {x,y+s,-z},
 				{x,y,-z-s}, {x+s,y,-z-s}, {x+s,y+s,-z-s}, {x,y+s,-z-s}
 				};
-		/*
-		 * 3________2	7_______6
-		 * |		|	|		|
-		 * |		|	|		|
-		 * |		|	|		|
-		 * |________|	|_______|
-		 * 0		1	4		5
+		/*	
+		 * 							  7 ___________ 6
+		 * 							   /|		  /|
+		 * 3________2	7_______6    3/_|________/ |
+		 * |		|	|		|    |  |		|2 |
+		 * |front	|	|back	|	 | 4|_______|__| 5
+		 * |face	|	|face	|	 | /		| /
+		 * |________|	|_______|    |/_________|/
+		 * 0		1	4		5	0			1
 		 */
 		
 		//!!!! Must define sides counterclockwise for normals !
@@ -125,6 +121,31 @@ public final class Squares
 
 		glColor3f(0,1f,1f); //right face Cyan
 		square3DWithNormal(v[1], v[5], v[6], v[2], getNormal(v[1], v[6], v[2]));
+	}
+	
+	public static void drawCubeWithFluctuatingNormals(float x, float y, float z, float s, float freq, float delta){
+		float[][] v = {
+				{x,y,-z}, {x+s,y,-z}, {x+s,y+s,-z}, {x,y+s,-z},
+				{x,y,-z-s}, {x+s,y,-z-s}, {x+s,y+s,-z-s}, {x,y+s,-z-s}
+				};		
+		
+		glColor3f(0,0,1f); //front face :blue 
+		square3DWithNormal(v[0],v[1],v[2],v[3], getFluctuatingNormal(v[0], v[1], v[3],freq, delta));
+		
+		glColor3f(1f,0,0); //top face :red
+		square3DWithNormal(v[3], v[2], v[6], v[7], getFluctuatingNormal(v[3], v[2], v[7],freq, delta));
+		
+		glColor3f(0,1f,0); //back face : green
+		square3DWithNormal(v[5],v[4],v[7],v[6], getFluctuatingNormal(v[5], v[4], v[6],freq, delta));
+		
+		glColor3f(1f,1f,0); //bottom face : yellow
+		square3DWithNormal(v[1],v[0], v[4], v[5], getFluctuatingNormal(v[1], v[0], v[5],freq, delta));
+
+		glColor3f(1f,0,1f); //left face magenta
+		square3DWithNormal(v[0], v[3], v[7], v[4], getFluctuatingNormal(v[0], v[3], v[4],freq, delta));
+
+		glColor3f(0,1f,1f); //right face Cyan
+		square3DWithNormal(v[1], v[5], v[6], v[2], getFluctuatingNormal(v[1], v[6], v[2],freq, delta));
 	}
 	
 	public static void square3DWithNormal(float[] v1, float[]v2, float[] v3, float[] v4, float[] n){

@@ -2,23 +2,29 @@ package routines;
 
 import java.util.Random;
 
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.GL11;
-
 public final class someMath
 {
 	private static Random random = new Random();
+	private static float[] someRandoms = new float[]
+			{random.nextFloat(), random.nextFloat(), random.nextFloat()};
 	
 	public static float[] getRandomNormal(){
-		return normalize(new float[] {random.nextFloat(), random.nextFloat(), random.nextFloat()});
+		return normalize(new float[] {
+				random.nextFloat(), random.nextFloat(), random.nextFloat()});
+	}
+	
+	public static float[] getFluctuatingNormal(float[]vtx1, float[]vtx2, float[]vtx3, float freq, float delta){
+		return ( normalize(fluctuateNormal(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1)), freq, delta)));
 	}
 	
 	public static float[] getNormal(float[]vtx1, float[]vtx2, float[]vtx3){
 		return ( normalize(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1))));
 	}
 	
-	public static float[] getWeirdNormal(float[]vtx1, float[]vtx2, float[]vtx3){
-		return ( normalize(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1))));
+	public static float[] fluctuateNormal(float[] n, float freq, float delta){
+		//TODO : fluctuate around the normal with frequency f and delta 
+		//(Might need another parameter)
+		return getRandomNormal();
 	}
 	
 	public static float[] normalize(float[] v){

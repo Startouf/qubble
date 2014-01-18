@@ -11,14 +11,21 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
-import routines.Time;
-import routines.someMath;
 
-//Petit jeu de mot sur le titre de la classe ^^
-
+/**
+ * @author Cyril
+ * 
+ * Petit jeu de mot sur le nom de la classe ^^"
+ * 
+ * Ex 2.4:
+     - Sans modifier vos paramètres de lumières (source de lumière et materiel de l'objet), 
+     animer ***légèrement*** la normale de chaque face du cube (une légère rotation autour de la vraie normale)
+     et observer le résultat
+ *
+ */
 public class NotNormalBehaviour
 {
-	private Point coords = new Point(400,400);
+	private Point coords = new Point(200,200);
 	private static int WIDTH = 800;
 	private static int HEIGHT = 600;
 
@@ -59,41 +66,10 @@ public class NotNormalBehaviour
 	}
 	
 	private void renderGL(){
-		drawCubeWithWeirdNormals(100f, 100f, -30f, 200f);
-	}
-
-	private void drawCubeWithWeirdNormals(float x, float y, float z, float s){
-
-		float[][] v = {
-				{x,y,-z}, {x+s,y,-z}, {x+s,y+s,-z}, {x,y+s,-z},
-				{x,y,-z-s}, {x+s,y,-z-s}, {x+s,y+s,-z-s}, {x,y+s,-z-s}
-				};
-		
-		float[] n;
-		
-		glColor3f(0,0,1f); //front face :blue 
-		n = someMath.getRandomNormal(); //:P you asked for it !
-		square3DWithNormal(v[0],v[1],v[2],v[3],n);
-		
-		glColor3f(1f,0,0); //top face :red
-		n = someMath.getRandomNormal();
-		square3DWithNormal(v[3], v[2], v[6], v[7],n);
-		
-		glColor3f(0,1f,0); //back face : green
-		n = someMath.getRandomNormal();
-		square3DWithNormal(v[5],v[4],v[7],v[6],n);
-		
-		glColor3f(1f,1f,0); //bottom face : yellow
-		n = someMath.getRandomNormal();
-		square3DWithNormal(v[1],v[0], v[4], v[5],n);
-
-		glColor3f(1f,0,1f); //left face magenta
-		n = someMath.getRandomNormal();
-		square3DWithNormal(v[0], v[3], v[7], v[4],n);
-
-		glColor3f(0,1f,1f); //right face Cyan
-		n = someMath.getRandomNormal();
-		square3DWithNormal(v[1], v[5], v[6], v[2],n);
+		//(x,y,z, size, delta)
+		//Note : currently using random normals
+		//Find appropriate function for fluctuation and modify someMath.fluctuateNormal
+		drawCubeWithFluctuatingNormals(coords.getX(), coords.getY(), -30f, 200f, 2, 10);
 	}
 	
 	private void initGL(){
