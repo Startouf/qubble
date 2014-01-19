@@ -56,6 +56,20 @@ Note : Si l'on considère un repère absolu, considérer les transformations en 
 
 ##3 Principes de base de OpenGL: Texture et système de coordonnées
 
+#Texture de base
+Une texture est un objet 2D que l'on va "plaquer" sur un objet 3D. 
+
+On associe un repère à la texture :
+Le système de coordonnées des textures est parfois appelé "UV coordinates". U et V sont compris entre 0 et 1.
+
+Il faut préciser à OpenGL quelle partie de la texture on souhaite plaquer sur telle surface
+Il suffira de donner pour chaque vertex, à quel niveau de la texture on se situe, et OpenGL fait le reste
+
+#Mipmaps et filtres
+//TODO
+#Texture et shaders
+//TODO
+
 ##4 Principes de base de OpenGL: Modèle de lumière
 OpenGL raisonne sur des sources de lumières en RVB            
 Division de l'éclairage en 4 : lumière  émissive, ambiante, diffuse, spéculaire
@@ -89,3 +103,47 @@ Définir des sources
 Choisir un modèle de lumière (lumière ambiante, etc.)
 Définir les propriétés des matériaux
 
+
+##5 Principes de base de OpenGL: Expliquez les différences entre DisplayList, VeretxArray et VertexBufferObject
+
+#DisplayList
+
+#VertexArray
+
+#VertexBufferedObject
+Permet de stocker des données de vertex dans la VRAM (mémoire GPU)
+Permet un accès très rapide par le GPU et évite les échanges CPU <--> GPU qui sont souvent sources de lenteur
+
+¤¤Création d'un VBO
+¤Sous lwjgl, il faut recréer l'équivalent des GLint, GLfloat, etc...
+	Créer un [Type]Buffer en spécifiant la taille ou un tableau déjà rempli (BufferUtils.create[TYPE]Buffer(SIZE || Float[]);
+¤Réserver un buffer GPU (et récupérer son ID) à l'aide de glGenBuffersARB(buffer) (méthode de ARBVertexBufferObject)
+	(renvoi d'un int id)				OU avec glGenBuffers(buffer) (méthode de GL15)
+¤Choisir le buffer GPU actif à l'aide de l'ID généré si le GPU sait faire *
+	GL15/ARB.glBindBuffer(GL15/ARB.GL_ARRAY_BUFFER, id); 
+¤Envoyer les données dans le Buffer GPU (équivalent java : [Type]Buffer)
+ ...En précisant l'utilisation des données et la fréquence de leur usage/modif**
+	GL15/ARB.glBufferData(GL15/ARB.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+	
+**On peut demander si le GPU sait faire avec :
+if(GLContext.getCapabilities().GL_ARB_vertex_buffer_object)	(équivalent GL15 aussi ?)
+*	GL_(STATIC | STREAM | DYNAMIC)_(DRAW | READ | COPY). From the OpenGL docs:
+STATIC - The data store contents will be modified once and used many times.
+STREAM - The data store contents will be modified once and used at most a few times.
+DYNAMIC - The data store contents will be modified repeatedly and used many times.
+DRAW - The data store contents are modified by the application, and used as the source for GL drawing and image specification commands.
+READ - The data store contents are modified by reading data from the GL, and used to return that data when queried by the application.
+COPY - The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.
+
+¤¤Utilisation d'un VBO (render)
+¤Dire au client d'activer les vertexArray, colorArray, etc...
+glEnableClientState(int param) param = GL_VERTEX_ARRAY, GL_COLOR_ARRAY, etc.
+	Pour les Shaders, utiliser glEnableVertexAttribArray(int index)
+¤Spécifier le type d'objet à rendre (Vertex, etc...) et sa position dans l'array
+gl(Vertex|Color|Normal)Pointer(int size, int type, int stride, long offset)
+	size = dimension (2,3,4), type = GL_[type], stride = distance entre 2 objets du même type (for interleawed arrays), offset = position du premier objet cherché
+	Version shaders : glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
+¤Dire de tracer :
+glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
+	pour les IBO : glDrawElements(int mode, int count, int type, long offset)
+	(Il existe aussi d'autres fonctions : glDrawRangeElements, glMultiDrawArray, glMultiDrawElements

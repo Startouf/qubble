@@ -27,6 +27,12 @@ public final class Time
 		return angle;
 	}
 	
+	public static long uniformRotation(float freq){
+		angle = (long) ((angle + delta(lastFrameTimeAngle)/(1/freq)) % 360);
+		lastFrameTimeAngle = getTime();
+		return angle;
+	}
+	
 	public static long uniformTranslation(){
 		long delta = delta(lastFrameTimeTranslate);
 		//Cannot go over max value for variables
@@ -53,4 +59,6 @@ public final class Time
 		
 		return (long) (translate%(max-min)+min);
 	}
+	
+	
 }

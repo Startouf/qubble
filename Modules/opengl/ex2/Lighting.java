@@ -32,8 +32,6 @@ public class Lighting
 	public void start(){
 		initDisplay();
 		glEnable(GL_CULL_FACE);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_VERTEX_ARRAY);
 		
 		while (!Display.isCloseRequested()){
 			glClear(GL_COLOR_BUFFER_BIT | 
@@ -72,9 +70,9 @@ public class Lighting
 	}
 	
 	private void viewTransform(){
-		glTranslatef(+coords.getX()+100, +coords.getY()+100, -105);
+		glTranslatef(+coords.getX()+100, +coords.getY()+130, -105);
 		glRotated(Time.uniformRotation(), 0.0, 1.0, 0.0);
-		glTranslatef(-coords.getX()-100, -coords.getY()-100, +105);
+		glTranslatef(-coords.getX()-100, -coords.getY()-130, +105);
 	}
 	
 	private void initGL(){
