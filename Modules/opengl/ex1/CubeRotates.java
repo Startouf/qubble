@@ -85,6 +85,13 @@ public class CubeRotates
 		glTranslatef(-100, -100, 100);
 		drawCubef(0, 0, 0, 200);
 		glPopMatrix();
+		
+		glPushMatrix();
+		glTranslatef(coords.getX()+100, 2*coords.getY()+100, -200);
+		glRotated(angle, 0.0, 1.0, 0.0);
+		glTranslatef(-100, -100, 100);
+		drawCubef(0, 0, 0, 200);
+		glPopMatrix();
 	}
 	
 	private void pollInputs(){

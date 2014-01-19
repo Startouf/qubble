@@ -15,15 +15,15 @@ import org.lwjgl.util.glu.GLU;
 import routines.Time;
 
 import static org.lwjgl.opengl.GL11.*;
-import static routines.VBO.*;
+import static routines.IBO.*;
 import static routines.Init.*;
 
-public class CubeVBO
+public class CubeIBO
 {
-	private Point coords = new Point(300,300);
+	private Point coords = new Point(200,200);
 	private static int WIDTH = 800;
 	private static int HEIGHT = 600;
-	private int cubeVBO;
+	private int[] CubeIboIDs = null;
 	
 	private void start(){
         initDisplay();
@@ -31,7 +31,7 @@ public class CubeVBO
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
         
-        loadVBOs();
+        loadIBOs();
         
         while(!Display.isCloseRequested()){   
         	glClear(GL_COLOR_BUFFER_BIT | 
@@ -49,17 +49,17 @@ public class CubeVBO
     }
 	
 	private void viewTransform(){
-		glTranslatef(+coords.getX(), +coords.getY(), -200);
+		glTranslatef(+coords.getX()+100, +coords.getY()+130, -200);
 		glRotated(Time.uniformRotation(), 0.0, 1.0, 0.0);
 		glTranslatef(-100, -100, +100);
 	}
 	
-	private void loadVBOs(){
-		cubeVBO = loadCubeVBOTriangles(0, 0, 0, 200);
+	private void loadIBOs(){
+		CubeIboIDs = loadCubeIBOTriangles3f(0, 0, 0, 200);
 	}
 	
 	private void render(){    
-        drawCubeVBOTriangles(cubeVBO, 0);
+        drawIBOTriangles3f(CubeIboIDs);
 	}
 
 	private void initGL(){    
@@ -73,7 +73,7 @@ public class CubeVBO
 	}
 	
 	public static void main(String[] args){
-		CubeVBO app = new CubeVBO();
+		CubeIBO app = new CubeIBO();
 		app.start();
 	}
 }
