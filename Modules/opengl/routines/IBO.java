@@ -65,8 +65,8 @@ public class IBO
 		 */
 		float[] vertices = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 							x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
-		int[] indices = { 1,2,4,	4,2,3,	2,6,3,	3,6,7,	7,6,5,	5,8,7,	1,4,5,	5,4,8,	
-							4,3,7,	7,8,4};
+		int[] indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
+							3,2,6,	6,7,3};
 		return getIBO_IDs(vertices, indices);
 	}
 	
