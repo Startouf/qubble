@@ -28,7 +28,7 @@ public final class someMath
 	}
 	
 	public static float[] normalize(float[] v){
-		float norm = (float) Math.sqrt(v[0]*v[0]+v[0]*v[0]+v[0]*v[0]);
+		float norm = (float) Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
 		return(new float[] { v[0]/norm, v[1]/norm, v[2]/norm});
 	}
 	
