@@ -152,11 +152,11 @@ public final class VBO
 		 * 			6^	
 		 */
 		int vbo_id = load_float_vbo(new float[]{
-				x,y,z,	x+s,y,z, 	x,y+s,z,	x,y+s,z,	x,y+s,z,	x,y,z,
-				x+s,y,z,	x+s,y+s,z+s,	x+s,y+s,z,		x+s,y+s,z,	x+s,y,z+s,	x+s,y+s,z+s,
+				x,y,z,	x+s,y,z, 	x,y+s,z,	x,y+s,z,	x+s,y,z,	x+s,y+s,z+s,
+				x+s,y,z,	x+s,y,z+s,	x+s,y+s,z,		x+s,y+s,z,	x+s,y,z+s,	x+s,y+s,z+s,
 				x+s,y,z+s,	x,y,z+s,	x,y+s,z+s,	x,y+s,z+s,	x+s,y+s,z+s,	x+s,y,z+s,
 				x,y,z,	x,y+s,z,	x,y+s,z+s,	x,y+s,z+s,	x,y,z+s,	x,y,z,
-				x,y+s,z,	x+s,y+s,z,	x+s,y+s,z+s,	x+s,y+s,z+s,	x,y+s,z+s,	x,y+s,z+s,
+				x,y+s,z,	x+s,y+s,z,	x+s,y+s,z+s,	x+s,y+s,z+s,	x,y+s,z+s,	x,y+s,z,
 				x,y,z,	x,y,z+s,	x+s,y,z+s,	x+s,y,z+s,	x+s,y,z,	x,y,z
 		});
 		return vbo_id;
@@ -177,8 +177,7 @@ public final class VBO
 			glColorPointer(4, GL11.GL_FLOAT, 0, 0);
 		}
 
-		glDrawArrays(GL11.GL_TRIANGLES, 0, 6*2); //elements = number of triangles or vertices ?
-
+		glDrawArrays(GL11.GL_TRIANGLES, 0, 3*6*2); //count = number of vertices ! (not triangles!)
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
 		if (color_vbo_id != 0) GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
