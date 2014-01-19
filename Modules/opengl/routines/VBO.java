@@ -22,7 +22,7 @@ public final class VBO
 	{
 		//chargeons les données dans un FloatBuffer
 		FloatBuffer verticesBuffer = FB(values);
-		
+
 		//creons un VBO dans la mémoire du GPU (pas encore de données associées))
 		int vbo_id = createVBOID();
 
@@ -32,53 +32,28 @@ public final class VBO
 
 		return vbo_id;
 	}
-	
+
+	//Shortcut
+	public static int getVBO_ID(float[] values){
+		return (load_float_vbo(values));
+	}
+
 	//drawArray Overload (not IBO)
 	public static void loadTriangleVBO(float w, float h, float d, Integer vertex_vbo_id) {
-	      //si nous avons déja crée le VBO, inutile de recommencer ...
-	      if (vertex_vbo_id != 0) return;
+		//si nous avons déja crée le VBO, inutile de recommencer ...
+		if (vertex_vbo_id != 0) return;
 
-	      //creons un VBO qui contient nos vertex - nous avons besoin de 3 sommets
-	      w/=2; h/=2; d/=2;
-	      float[] vertices = new float[] {
-	        -w, h, d,
-	        w, h, d,
-	        w, -h, d,
-	      };
-	      vertex_vbo_id = load_float_vbo(vertices);
-	    }
-	
-	//Indexed overload
-	public static void drawTriangleVBO(int vertex_vbo_id, int index_vbo_id, int color_vbo_id, int nb_indices) { //TODO : add params for ID
-		if (vertex_vbo_id==0) return;
-		if (index_vbo_id==0) return;
-
-//		if (use_shader) {
-//			ARBShaderObjects.glUseProgramObjectARB(program);
-//		}
-
-		glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, vertex_vbo_id);
-		glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
-
-		if (color_vbo_id != 0) {
-			glEnableClientState(GL11.GL_COLOR_ARRAY);
-			ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, color_vbo_id);
-			glColorPointer(4, GL11.GL_FLOAT, 0, 0);
-		}
-
-		//attachons le buffer d'indices comme le buffer 'ELEMENT_ARRAY', i.e. celui utilisé pour glDrawElements
-		ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, index_vbo_id);
-
-		glDrawElements(GL11.GL_TRIANGLES, nb_indices, GL11.GL_UNSIGNED_INT, 0);
-
-		glDisableClientState(GL11.GL_VERTEX_ARRAY);
-		if (color_vbo_id != 0) GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-
-//		if (use_shader) {
-//			ARBShaderObjects.glUseProgramObjectARB(0);
-//		}
+		//creons un VBO qui contient nos vertex - nous avons besoin de 3 sommets
+		w/=2; h/=2; d/=2;
+		float[] vertices = new float[] {
+				-w, h, d,
+				w, h, d,
+				w, -h, d,
+		};
+		vertex_vbo_id = load_float_vbo(vertices);
 	}
+
+
 
 	/**
 	 * Assumes drawCubeVBO method is used (nb_vertices known by the function)
@@ -109,9 +84,9 @@ public final class VBO
 		});
 		return vbo_id;
 	}
-	
+
 	//advanced overload : vertices, color and normal interleaved
-	
+
 	//Non-indexed overload, only vertices
 	public static void drawCubeVBOTriangles(int vertex_vbo_id, int color_vbo_id){
 		if (vertex_vbo_id==0) return;
@@ -130,7 +105,7 @@ public final class VBO
 		if (color_vbo_id != 0) GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-	
+
 	//Interleave triangle vertices, color and normal
 	// 3 vertices => 9 floats
 	//Should be in someMath ?

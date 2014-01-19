@@ -43,4 +43,27 @@ public final class someMath
 				v1[0]*v2[1]-v1[1]*v1[0]
 		});
 	}
+	
+	/**
+	 * Retrieves a vector float[3] from a list of vectorCoords {x1,y1,z1,	x2,y2,z2...}
+	 * @param vertexCoordList An Array of VectorCoords  {x1,y1,z1,	x2,y2,z2...}
+	 * @param vertex	position of the Vector in the VertexCoords list (Starts from 0!!)
+	 * @return 
+	 */
+	public static float[] getVertexFromCoords3f(float[] vertexCoordList, int vertex){
+		return new float[] {vertexCoordList[3*vertex],
+				vertexCoordList[3*vertex+1],
+				vertexCoordList[3*vertex+2]};
+	}
+	/**
+	 * Inverse of getVertexFromCoords3f
+	 * @param vertexCoords 
+	 * @param vertex
+	 * @param position Starts from 0 ! (the ith vector)
+	 */
+	public static void mapVectorToCoords3f(float[] vertex, float[] vertexCoords, int position){
+		for(int i =0; i<3;i++){
+			vertexCoords[3*position] = vertex[i];
+		}
+	}
 }

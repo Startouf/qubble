@@ -12,7 +12,7 @@ public final class Buffers
 {
 	//fast macro.
 	//When coding is finished, should use the case-sensitive find and replace to replace FB by makeFLoatBuffer
-	public static FloatBuffer FB(float [] values){
+	public static FloatBuffer FB(float [] values){ 
 		return makeFloatBuffer(values);
 	}
 	

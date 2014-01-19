@@ -14,6 +14,9 @@ import static routines.Buffers.*;
 
 public final class Init
 {
+	public static int WIDTH = 800;
+	public static int HEIGHT = 600;
+	
 	public static void initDisplay(){
 		try{
 			Display.setDisplayMode(new DisplayMode(800,600));

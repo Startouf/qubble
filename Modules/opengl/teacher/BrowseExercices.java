@@ -31,6 +31,8 @@ public class BrowseExercices
 	private static JButton ex24;
 	
 	private static JButton ex31;
+	private static JButton ex31bis;
+	private static JButton ex32;
 	
 	public static void main(String[] args){
 		
@@ -109,6 +111,14 @@ public class BrowseExercices
 		}));
 		ex31.setText("Ex 3.1 Cube en VBO");
 		
+		ex31bis = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CubeIBO.main(null);
+			}
+		}));
+		ex31bis.setText("Ex 3.1 Cube en IBO");
+		
 	panel.setLayout(new GridLayout(3,4));	
 	panel.add(ex11);
 	panel.add(ex12);
@@ -119,6 +129,7 @@ public class BrowseExercices
 	panel.add(ex23);
 	panel.add(ex24);
 	panel.add(ex31);
+	panel.add(ex31bis);
 	
 	frame.setContentPane(panel);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
