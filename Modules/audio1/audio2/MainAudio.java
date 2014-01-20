@@ -5,7 +5,7 @@ import java.io.*;
 //import javax.sound.sampled.*;
 import java.util.*;
 
-public class Main {
+public class MainAudio {
 
 	public static void main(String[] args) {
 		try {
