@@ -20,6 +20,8 @@ public final class Init
 	public static int WIDTH = 800;
 	public static int HEIGHT = 600;
 	public static int program, vertexShader, fragmentShader;
+	public static int xmin = 0, xmax = WIDTH, 
+			ymin =0, ymax = HEIGHT, zmin = 300, zmax = -700;
 	
 	public static void initDisplay(){
 		try{
@@ -37,6 +39,58 @@ public final class Init
 		} catch (LWJGLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Initialise an othronormal projection on the full screen
+	 * Base clipping planes defined by static [x|y|z][min|max]
+	 */
+	public static void initOrthoView(){  
+		glViewport(0, 0, WIDTH, HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(xmin, xmax, ymin, ymax, zmin, zmax);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	
+	/**
+	 * Configurable overload
+	 * @param edges = {xmin, xmax, ymin, ymax, zmin, zmax}
+	 */
+	public static void initOrthoView(double [] edges){  
+		glViewport(0, 0, WIDTH, HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(edges[0], edges[1], edges[2], edges[3], edges[4], edges[5]);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	
+	/**
+	 * Orthonormal projection, uses scales y-axis by 0.5
+	 */
+	public static void initVerticalSplitScreen1(){  
+		glViewport(0, 0, WIDTH/2, HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(xmin, xmax, ymin, ymax, zmin, zmax);
+		glScalef(1f, 0.5f, 1f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	
+	/**
+	 * See initVerticalSplitSceen1
+	 */
+	public static void initVerticalSplitScreen2(){  
+		glViewport( WIDTH/2, 0, WIDTH, HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(xmin, xmax, ymin, ymax, zmin, zmax);
+		glMatrixMode(GL_MODELVIEW);
+		glScalef(1f, 0.5f, 1f);
+		glLoadIdentity();
 	}
 	
 	public static void initLighting(){

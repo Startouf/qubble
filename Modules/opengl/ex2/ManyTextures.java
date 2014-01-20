@@ -19,6 +19,7 @@ import static routines.Squares.*;
 
 /**
  * @author Cyril
+ *TODO
  * Ex 2.1: 
      - chargez une image à l'aide de l'objet TextureLoader et dessinez l'image sous forme d'un rectangle
      !! vous ferez attention à ne pas déformer l'image

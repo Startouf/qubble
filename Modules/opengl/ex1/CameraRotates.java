@@ -24,7 +24,7 @@ public class CameraRotates
 {
 private static int WIDTH = 800, HEIGHT = 600;
 	
-	private Point coords = new Point(200,500);
+	private Point coords = new Point(200,300);
 	private int angle = 0, angleUser = 0;
 	
 	private int fps =0;
@@ -34,12 +34,12 @@ private static int WIDTH = 800, HEIGHT = 600;
 	public long sleep;
 	
 	public void start(){
-		initDisplay();		
+		initDisplay();
+		glEnable(GL_CULL_FACE);
 		
 		while (!Display.isCloseRequested()){
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-			glEnable(GL_CULL_FACE);
 			
 			initGL();
 			viewTransform();
@@ -72,10 +72,12 @@ private static int WIDTH = 800, HEIGHT = 600;
 
 	private void renderGL(){
 		drawCubef(coords.getX(), coords.getY(), -5, 200);
+		drawCubef(2*coords.getX(), 2*coords.getY(), -5, 200);
 	}
 	
 	private void renderGL2(){
 		drawCubef(coords.getX(), coords.getY(), -5, 200);
+		drawCubef(2*coords.getX(), 2*coords.getY(), -5, 200);
 	}
 	
 	private void pollInputs(){
@@ -142,7 +144,7 @@ private static int WIDTH = 800, HEIGHT = 600;
 		glViewport(0,0,WIDTH/2, HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 300, -300);
+		glOrtho(0, 800, 0, 600, 600, -600);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glScalef(1f, 0.5f, 1f);
@@ -153,7 +155,7 @@ private static int WIDTH = 800, HEIGHT = 600;
 		glViewport(WIDTH/2,0,WIDTH/2, HEIGHT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 300, -300);
+		glOrtho(0, 800, 0, 600, 600, -600);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glScalef(1f, 0.5f, 1f);

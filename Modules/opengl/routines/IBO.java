@@ -25,6 +25,12 @@ public class IBO
 		return vbo_id;
 	}
 
+	/**
+	 * Returns an IBO
+	 * @param vertices VertexCoords
+	 * @param indices index indexes
+	 * @return int {float VBO ID, index IBO ID, number of indexes}
+	 */
 	public static int[] getIBO_IDs(float[] vertices, int[] indices){
 		if (vertices == null || indices == null){
 			System.out.println("NULL IBO ID");
@@ -34,6 +40,7 @@ public class IBO
 	}
 
 	/**
+	 * Pasted from GLBaseModule
 	 * @param w
 	 * @param h
 	 * @param d
@@ -58,6 +65,14 @@ public class IBO
 		return getIBO_IDs(vertices, indices);
 	}
 
+	/**
+	 * Load an IBO cube
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param s side
+	 * @return IBO IDs = int[] {Vertex VBO, index IBO, number of indexes}
+	 */
 	public static int[] loadCubeIBOTriangles3f(float x, float y, float z, float s){
 		/*			
 		 * 	  7____________ 6
@@ -77,7 +92,7 @@ public class IBO
 	}
 
 	/**
-	 * Colored cube (interleaved)
+	 * Colored cube IBO (not lighted, not interleaved)
 	 * Colors sent for each side as float[][]
 	 * Orders for the sides : front - right - back - left - top - bottom
 	 * @param x
@@ -85,34 +100,44 @@ public class IBO
 	 * @param z
 	 * @param s side
 	 * @param color
-	 * @return
+	 * @return { {Vertex VBO, index IBO, # of indexes}, {color VBO}, null }
 	 */
 	public static int[][] loadColoredCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
+		//TODO Not working as it should
 		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
 		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
 				3,2,6,	6,7,3,	0,5,1,	0,4,5};
-		float[] colorsCoords = new float[6*2*3*3];
+		float[] colorsCoords = new float[6*2*3*3]; //Expecting one color3f per vertex ?
 		for (int i=0; i<6;i++){
 			for (int j=0; j<6; j++){
 				mapVectorToCoords3f(colors[i], colorsCoords, i*6+j);
 			}
 		}
-			
 		return new int[][] {getIBO_IDs(vertexCoords, vtx_indices), new int[]{getVBO_ID(colorsCoords)}, null};
 	}
 
+	/**
+	 * Cube IBO with color and normals (not interleaved)
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param s
+	 * @param colors
+	 * @return
+	 */
 	public static int[][] loadLightedCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
+		//TODO not working as intended
 		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
 		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
 				3,2,6,	6,7,3,	0,5,1,	0,4,5}; // total = 3*2*6 = 6*6 (=>last index 35)
-		//expecting per-triangle normals ?
+		//expecting per-triangle normals ? or per-Vertex ?
 		float[] normalsCoords = new float[6*3*2];
 		float[] colorsCoords = new float[6*3*2];
 		float[] currentNormal = new float[3];
 
-		//get Normals should be moved to someMath ?
+		//following should be moved to someMath ?
 		for (int i=0; i<6;i++){
 			currentNormal = getNormal(getVertexFromCoords3f(vertexCoords, vtx_indices[6*i]),
 					getVertexFromCoords3f(vertexCoords, vtx_indices[6*i+1]),
@@ -127,7 +152,7 @@ public class IBO
 	}
 
 	/**
-	 * Simple overload : only vertices
+	 * Base overload : only vertices
 	 * Draw an IBO given its vertex ID, index ID and number of vertices
 	 * @param IDs = int[] {vertex_VBO_id, index_VBO_id, number of vertices}
 	 */

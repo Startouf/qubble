@@ -69,7 +69,6 @@ public class CubeRotates
 	}
 
 	private void renderGL(){
-		drawBasis();
 		glPushMatrix();
 		glTranslatef(+coords.getX()+100, +coords.getY()+100, -200);
 		glRotated(angleUser, 0.0, 1.0, 0.0);

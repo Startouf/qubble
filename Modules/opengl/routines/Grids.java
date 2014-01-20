@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public final class Grids
 {
-	public static void drawAxis(){ //Not working ATM
+	public static void drawInfifiteAxis(){ //Not working ATM
 		glColor3f(1f,1f,1f);
 		//x
 		glBegin(GL_LINES);
@@ -23,22 +23,22 @@ public final class Grids
 		glEnd();
 	}
 	
-	public static void drawBasis(){ //Not Working ATM
+	public static void drawFiniteAxis(float length){ //Not Working ATM
 		glColor3f(1f,1f,1f);
 		//x
 		glBegin(GL_LINES);
 		glVertex3f(0, 0, 0);
-		glVertex3f(100, 0, 0);
+		glVertex3f(length, 0, 0);
 		glEnd();
 		
 		glBegin(GL_LINES);
 		glVertex3f(0,0,0);
-		glVertex3f(0,100,0);
+		glVertex3f(0,length,0);
 		glEnd();
 		
 		glBegin(GL_LINES);
 		glVertex3f(0,0,0);
-		glVertex3f(0,0,100);
+		glVertex3f(0,0,length);
 		glEnd();
 	}
 }

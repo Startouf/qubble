@@ -10,8 +10,11 @@ import org.lwjgl.opengl.GLContext;
 
 public final class Buffers
 {
-	//fast macro.
-	//When coding is finished, should use the case-sensitive find and replace to replace FB by makeFLoatBuffer
+	/**
+	 * Fast Macro that makes a float buffer
+	 * @param values
+	 * @return
+	 */
 	public static FloatBuffer FB(float [] values){ 
 		return makeFloatBuffer(values);
 	}
@@ -35,8 +38,8 @@ public final class Buffers
 		return buffer;
 	}
 	
-	//ARB VBOID and checking if it's possible
 	public static int createARBVBOID() {
+		//ARB VBO_ID and checking if it's possible
 		if (GLContext.getCapabilities().GL_ARB_vertex_buffer_object) {
 			IntBuffer buffer = BufferUtils.createIntBuffer(1);
 			ARBVertexBufferObject.glGenBuffersARB(buffer);
@@ -50,7 +53,11 @@ public final class Buffers
 		return GL15.glGenBuffers();
 	}
 	
-	//Easily switch between GL15 and ARB with this :
+	/**
+	 * Uses either GL or ARB
+	 * (currently GL)
+	 * @return VBO ID
+	 */
 	public static int createVBOID() {
 		return createGL15VBOID();
 	}

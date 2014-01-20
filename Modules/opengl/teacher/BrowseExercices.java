@@ -119,6 +119,14 @@ public class BrowseExercices
 		}));
 		ex31bis.setText("Ex 3.1 Cube en IBO");
 		
+		ex32 = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EnhancedCubesIBO.main(null);
+			}
+		}));
+		ex32.setText("Ex 3.2 Cubes en IBO avec COuleurs/normales");
+		
 	panel.setLayout(new GridLayout(3,4));	
 	panel.add(ex11);
 	panel.add(ex12);
@@ -130,6 +138,7 @@ public class BrowseExercices
 	panel.add(ex24);
 	panel.add(ex31);
 	panel.add(ex31bis);
+	panel.add(ex32);
 	
 	frame.setContentPane(panel);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

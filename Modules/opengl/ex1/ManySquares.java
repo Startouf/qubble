@@ -67,9 +67,9 @@ public class ManySquares
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, 800, 0, 600, 0, -400);
+		glScalef(1f, 0.5f, 1f);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glScalef(1f, 0.5f, 1f);
 		GLU.gluLookAt(50f, 50f, 0, 35f, 35f, -50f, 0f, 1f, 0f);
 
 	}
