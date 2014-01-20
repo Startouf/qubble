@@ -87,31 +87,43 @@ public class IBO
 	 * @param color
 	 * @return
 	 */
-	public static int[][] loadColoredCubeIBOTriangles3f(float x, float y, float z, float s, float [] colors){
-		float[] vertices = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
-				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
-		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
-				3,2,6,	6,7,3,	0,5,1,	0,4,5};
-		return new int[][] {getIBO_IDs(vertices, vtx_indices), new int[]{getVBO_ID(colors)}, null};
-	}
-
-	public static int[][] loadLightedCubeIBOTriangles3f(float x, float y, float z, float s, float [] colors){
+	public static int[][] loadColoredCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
 		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
 		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
 				3,2,6,	6,7,3,	0,5,1,	0,4,5};
-		float[] normals = new float[2*6*3];
+		float[] colorsCoords = new float[6*2*3*3];
+		for (int i=0; i<6;i++){
+			for (int j=0; j<6; j++){
+				mapVectorToCoords3f(colors[i], colorsCoords, i*6+j);
+			}
+		}
+			
+		return new int[][] {getIBO_IDs(vertexCoords, vtx_indices), new int[]{getVBO_ID(colorsCoords)}, null};
+	}
+
+	public static int[][] loadLightedCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
+		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
+				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
+		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
+				3,2,6,	6,7,3,	0,5,1,	0,4,5}; // total = 3*2*6 = 6*6 (=>last index 35)
+		//expecting per-triangle normals ?
+		float[] normalsCoords = new float[6*3*2];
+		float[] colorsCoords = new float[6*3*2];
 		float[] currentNormal = new float[3];
 
-		//get Normals should be moved to someMath
+		//get Normals should be moved to someMath ?
 		for (int i=0; i<6;i++){
-			currentNormal = getNormal(getVertexFromCoords3f(vertexCoords, i),
-					getVertexFromCoords3f(vertexCoords, i),
-					getVertexFromCoords3f(vertexCoords, i));
-			mapVectorToCoords3f(currentNormal, normals, 2*i);
-			mapVectorToCoords3f(currentNormal, normals, 2*i+1);
+			currentNormal = getNormal(getVertexFromCoords3f(vertexCoords, vtx_indices[6*i]),
+					getVertexFromCoords3f(vertexCoords, vtx_indices[6*i+1]),
+					getVertexFromCoords3f(vertexCoords, vtx_indices[6*i+2]));
+				mapVectorToCoords3f(currentNormal, normalsCoords, 2*i);
+				mapVectorToCoords3f(colors[i], colorsCoords, 2*i);
+				mapVectorToCoords3f(currentNormal, normalsCoords, 2*i+1);
+				mapVectorToCoords3f(colors[i], colorsCoords, 2*i+1);
 		}
-		return new int[][] {getIBO_IDs(vertexCoords, vtx_indices), null, new int[] {getVBO_ID(normals)}};
+	return new int[][] {getIBO_IDs(vertexCoords, vtx_indices), 
+			new int[] {getVBO_ID(colorsCoords)}, new int[] {getVBO_ID(normalsCoords)}};
 	}
 
 	/**
@@ -152,7 +164,7 @@ public class IBO
 			glBindBuffer(GL_ARRAY_BUFFER, vboIDs[1][0]);
 			glColorPointer(3, GL_FLOAT, 0, 0);
 		}
-		if(vboIDs[2] != null){
+		if (vboIDs[2] != null){
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glBindBuffer(GL_ARRAY_BUFFER, vboIDs[2][0]);
 			glNormalPointer(GL_FLOAT, 0, 0); //no size parameter

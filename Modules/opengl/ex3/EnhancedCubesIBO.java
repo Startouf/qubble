@@ -22,16 +22,16 @@ import static routines.Transformations.*;
 public class EnhancedCubesIBO
 {
 	private Point coords = new Point(200,200);
+	private float z = -100;
 	private int side = 200;
-	private int[][] coolCubeIboIDs = null,  normalCubeIboIDs = null, 
+	private int[][] coloredCubeIboIDs = null,  normalCubeIboIDs = null, 
 			lightedCubeIboIDs = null, texturedCubeIboIDs = null, awesomeCubeIboIDs = null;
 	
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_VERTEX_ARRAY);
         initLighting();
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         loadIBOs();
         
         while(!Display.isCloseRequested()){   
@@ -54,21 +54,26 @@ public class EnhancedCubesIBO
 	}
 	
 	private void loadIBOs(){
-//		coolCubeIboIDs = loadColoredCubeIBOTriangles3f(0, 0, 0, 200, new float[]{
-//				1f,0f,0f,	0f,1f,0f,	0f,0f,1f,	1f,1f,0f,
-//				0f,1f,1f,	1f,0f,1f});
-		lightedCubeIboIDs = loadLightedCubeIBOTriangles3f(0, 0, 0, 200, new float[]{
-				1f,0f,0f,0f,1f,0f,0f,0f,1f,1f,1f,0f,
-				0f,1f,1f,1f,0f,1f});
+		coloredCubeIboIDs = loadColoredCubeIBOTriangles3f(0, 0, 0, side, new float[][]{
+				{1f,0f,0f},	{0f,1f,0f},	{0f,0f,1f},	{1f,1f,0f},
+				{0f,1f,1f},	{1f,0f,1f}});
+		lightedCubeIboIDs = loadLightedCubeIBOTriangles3f(0, 0, 0, side, new float[][]{
+				{1f,0f,0f},	{0f,1f,0f},	{0f,0f,1f},	{1f,1f,0f},
+				{0f,1f,1f},	{1f,0f,1f}});
 	}
 	
 	private void render(){   
-//		glPushMatrix();
-//		putObjectAt(new float[] {coords.getX(), coords.getY(), -200}, 
-//				Time.uniformRotation(), new float[] {side, side, side});
-//		drawIBOTriangles3f(coolCubeIboIDs);
-//		glPopMatrix();
+		glPushMatrix();
+		putObjectAt(new float[] {coords.getX(), coords.getY(), z}, 
+				Time.uniformRotation(), new float[] {side/2, side/2, -side/2});
+		drawIBOTriangles3f(coloredCubeIboIDs);
+		glPopMatrix();
+		
+		glPushMatrix();
+		putObjectAt(new float[] {2*coords.getX(), 2*coords.getY(), 2*z}, 
+				Time.uniformRotation(), new float[] {side/2, side/2, -side/2});
 		drawIBOTriangles3f(lightedCubeIboIDs);
+		glPopMatrix();
 	}
 
 	private void initGL(){    

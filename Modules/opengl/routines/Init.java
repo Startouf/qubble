@@ -6,6 +6,9 @@ import static routines.Buffers.FB;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.ARBFragmentShader;
+import org.lwjgl.opengl.ARBShaderObjects;
+import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -16,6 +19,7 @@ public final class Init
 {
 	public static int WIDTH = 800;
 	public static int HEIGHT = 600;
+	public static int program, vertexShader, fragmentShader;
 	
 	public static void initDisplay(){
 		try{
@@ -73,4 +77,49 @@ public final class Init
      	GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, makeFloatBuffer(new float[]{1f, 0f, 0f,1f}));       
         GL11.glEnable(GL11.GL_LIGHTING);
 	}
+	
+	public static void initShaders() {
+        /*init openGL shaders*/
+        program = ARBShaderObjects.glCreateProgramObjectARB();
+        if (program==0) {
+            System.out.println("Error: OpenGL shaders not supported");
+            System.exit(0);
+        }
+        vertexShader=ARBShaderObjects.glCreateShaderObjectARB(ARBVertexShader.GL_VERTEX_SHADER_ARB);
+        String vertexCode=""+
+        "void main(void)" + 
+        "{" + 
+        "	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;" +  
+        "}";
+        
+        ARBShaderObjects.glShaderSourceARB(vertexShader, vertexCode);
+        ARBShaderObjects.glCompileShaderARB(vertexShader);
+        if (ARBShaderObjects.glGetObjectParameteriARB(vertexShader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
+        {
+            System.out.println("Vertex shader not compiled: " + getLogInfo(vertexShader) );
+        }
+        
+        fragmentShader=ARBShaderObjects.glCreateShaderObjectARB(ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+        String fragmentCode="" +
+        "void main(void) {" +
+        "	gl_FragColor = vec4 (0.0, 1.0, 0.0, 1.0);" +
+        "}";
+        
+        ARBShaderObjects.glShaderSourceARB(fragmentShader, fragmentCode);
+        ARBShaderObjects.glCompileShaderARB(fragmentShader);
+        if (ARBShaderObjects.glGetObjectParameteriARB(fragmentShader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
+        {
+            System.out.println("Fragment shader not compiled: " + getLogInfo(fragmentShader) );
+        }
+        
+        
+        ARBShaderObjects.glAttachObjectARB(program, vertexShader);
+        ARBShaderObjects.glAttachObjectARB(program, fragmentShader);
+        ARBShaderObjects.glLinkProgramARB(program);
+        ARBShaderObjects.glValidateProgramARB(program);
+    }
+	
+	private static String getLogInfo(int obj) {
+        return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects.glGetObjectParameteriARB(obj, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
+    }
 }

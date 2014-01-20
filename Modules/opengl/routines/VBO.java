@@ -94,11 +94,11 @@ public final class VBO
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo_id);
 		glVertexPointer(3, GL_FLOAT, 0, 0); //3D
 
-		if (color_vbo_id != 0) {
-			glEnableClientState(GL11.GL_COLOR_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, color_vbo_id);
-			glColorPointer(4, GL11.GL_FLOAT, 0, 0);
-		}
+//		if (color_vbo_id != 0) {
+//			glEnableClientState(GL11.GL_COLOR_ARRAY);
+//			glBindBuffer(GL_ARRAY_BUFFER, color_vbo_id);
+//			glColorPointer(4, GL11.GL_FLOAT, 0, 0);
+//		}
 
 		glDrawArrays(GL11.GL_TRIANGLES, 0, 3*6*2); //count = number of vertices ! (not triangles!)
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);

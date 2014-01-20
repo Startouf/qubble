@@ -63,7 +63,7 @@ public final class someMath
 	 */
 	public static void mapVectorToCoords3f(float[] vertex, float[] vertexCoords, int position){
 		for(int i =0; i<3;i++){
-			vertexCoords[3*position] = vertex[i];
+			vertexCoords[3*position+i] = vertex[i];
 		}
 	}
 }
