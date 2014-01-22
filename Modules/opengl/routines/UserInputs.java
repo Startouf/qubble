@@ -8,23 +8,21 @@ public class UserInputs
 {
 	private static long lastFrame = Time.getTime();
 	
-	public static void rotate(Point coords, float angleUser, float delta){
-		if (Mouse.isButtonDown(0)){ //Will generate as many lines as FPS
-			int x = Mouse.getX();
-			int y = Mouse.getY();
-
-			System.out.println("Mouse @ (" + x+", " +y+")");
-		}
-
+	/**
+	 * Modifies a given variable with left and right arrow keys
+	 * @param var variable to modify
+	 * @param delta amount to add/substract
+	 */
+	public static float incrementWithArrowKeys(float var, float delta){
 		while(Keyboard.next()){ //Will generate only one line per event
 			if (Keyboard.getEventKeyState()){ //Key pressed
 				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT){
 					System.out.println("Right pressed");
-					angleUser = (int) ((angleUser + delta) % 360);
+					var += delta;
 				}
 				else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT){
 					System.out.println("LEFT pressed");
-					angleUser = (int) ((angleUser - delta) % 360);
+					var -= delta;
 				}
 			}
 			else{ //key released
@@ -32,6 +30,16 @@ public class UserInputs
 					System.out.println("A released");
 				}
 			}
+		}
+		return var;
+	}
+	
+	public void forLater(){
+		if (Mouse.isButtonDown(0)){ //Will generate as many lines as FPS
+			int x = Mouse.getX();
+			int y = Mouse.getY();
+
+			System.out.println("Mouse @ (" + x+", " +y+")");
 		}
 	}
 }

@@ -10,10 +10,11 @@ import org.lwjgl.Sys;
 public final class Time
 {
 	private static long lastFrameTimeAngle = getTime(), angle = 0;
-	private static long lastFrameTimeTranslate = getTime(), translate = 0;
+	private static long lastFrameTimeTranslate = getTime();
+	private static float translate = 0;
 	private static long tempDelta;
 	public static int FPS;
-	
+
 	private static float modulo = 10000;
 
 	/**
@@ -34,7 +35,7 @@ public final class Time
 	}
 
 	/**
-	 * TODO should be changed to int or float
+	 * TODO should be changed to float
 	 * Used to make objects revolve (period is about 7 seconds for one loop)
 	 * Special case of UniformModulusTranslation
 	 * @return an Automatically variated long
@@ -57,10 +58,6 @@ public final class Time
 	public static float uniformModulusTranslation(float min, float max, float freq){
 		translate += freq*getDelta(lastFrameTimeTranslate);
 		lastFrameTimeTranslate = getTime();
-		
-		System.out.println((float) ((translate)/1000f*(max-min))%(max-min)+min);
 		return (float) ((translate)/1000f*(max-min))%(max-min)+min;
 	}
-
-
 }

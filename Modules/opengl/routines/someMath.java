@@ -9,22 +9,54 @@ public final class someMath
 			{random.nextFloat(), random.nextFloat(), random.nextFloat()};
 	
 	public static float[] getRandomNormal(){
-		return normalize(new float[] {
-				random.nextFloat(), random.nextFloat(), random.nextFloat()});
+		return normalize(new float[] {random.nextFloat(), random.nextFloat(), random.nextFloat()});
 	}
 	
 	public static float[] getFluctuatingNormal(float[]vtx1, float[]vtx2, float[]vtx3, float freq, float delta){
-		return ( normalize(fluctuateNormal(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1)), freq, delta)));
+		float[] v1=sub(vtx2, vtx1), v2=sub(vtx3, vtx1);
+		return ( normalize(fluctuateNormal(crossprod(v1, v2), v1,v2,freq, delta)));
 	}
 	
 	public static float[] getNormal(float[]vtx1, float[]vtx2, float[]vtx3){
 		return ( normalize(crossprod(sub(vtx2, vtx1), sub(vtx3, vtx1))));
 	}
 	
-	public static float[] fluctuateNormal(float[] n, float freq, float delta){
-		//TODO : fluctuate around the normal with frequency f and delta 
-		//(Might need another parameter)
-		return getRandomNormal();
+	/**
+	 * Edit method to change the effect
+	 * @param n
+	 * @param v1
+	 * @param v2
+	 * @param freq
+	 * @param delta
+	 * @return
+	 */
+	public static float[] fluctuateNormal(float[] n, float[] v1, float[] v2, float freq, float delta){
+		//Choose among one of the desired effects :
+		return (rotateVector(n,v1,v2,freq,delta));
+	}
+	
+	/**
+	 * Move away a vector and make it revolve around its previous axis
+	 * 
+	 * <--> delta (angle)
+	 * n   n'	
+	 * |__/
+	 * | /
+	 * |/______b1		(b1,b2,n) define a 3D space
+	 *  \
+	 *   \ 
+	 *    \b2
+	 * @param n vector to rotate (and the axis)
+	 * @param b1 a vector of the plane perpendiculat to the axis
+	 * @param b2 an other such vector (not colinear)
+	 * @param freq frequency
+	 * @param delta move away vector by delta angle
+	 * @return
+	 *
+	 */
+	public static float[] rotateVector(float[] n, float[] b1, float[] b2, float freq, float delta){
+		//TODO
+		return n;
 	}
 	
 	public static float[] normalize(float[] v){

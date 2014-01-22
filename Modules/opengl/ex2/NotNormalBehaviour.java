@@ -2,7 +2,7 @@ package ex2;
 
 import static org.lwjgl.opengl.GL11.*;
 import static routines.Buffers.FB;
-import static routines.Init.initDisplay;
+import static routines.Init.*;
 import static routines.Squares.*;
 
 import java.nio.FloatBuffer;
@@ -11,11 +11,14 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
+import routines.UserInputs;
+
 
 /**
  * @author Cyril
  * 
  * Petit jeu de mot sur le nom de la classe ^^"
+ * Flèches directionnelles pour augmenter le changement des normales
  * 
  * Ex 2.4:
      - Sans modifier vos paramètres de lumières (source de lumière et materiel de l'objet), 
@@ -26,8 +29,7 @@ import org.lwjgl.util.glu.GLU;
 public class NotNormalBehaviour
 {
 	private Point coords = new Point(200,200);
-	private static int WIDTH = 800;
-	private static int HEIGHT = 600;
+	private float normalsDelta =2f, delta = 1f;
 
 	public void start(){
 		initDisplay();
@@ -38,6 +40,8 @@ public class NotNormalBehaviour
 		while (!Display.isCloseRequested()){
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
+			userInput();
+			System.out.println(normalsDelta);
 			initGL();
 			initLights();
 			
@@ -67,9 +71,13 @@ public class NotNormalBehaviour
 	
 	private void renderGL(){
 		//(x,y,z, size, delta)
-		//Note : currently using random normals
 		//Find appropriate function for fluctuation and modify someMath.fluctuateNormal
-		drawCubeWithFluctuatingNormals(coords.getX(), coords.getY(), -30f, 200f, 2, 10);
+		drawCubeWithFluctuatingNormals(coords.getX(), coords.getY(), -30f, 200f, 2, normalsDelta);
+	}
+	
+	private void userInput(){
+		//exponential increase in normals
+		normalsDelta = UserInputs.incrementWithArrowKeys(normalsDelta, delta);
 	}
 	
 	private void initGL(){
