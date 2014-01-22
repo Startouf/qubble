@@ -10,19 +10,22 @@ import java.nio.FloatBuffer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Point;
 
+import routines.Grids;
 import routines.IBO;
+import routines.Init;
+import routines.Squares;
+import routines.Transformations;
 import static routines.Time.*;
-import ex2.SingleTexture;
 
 public class MovingLight
 {
 	/*		 /y		Light ¤ --> moves along x axis
-	 * 		/______________________________
-	 * 	   /							  /|
-	 * 	  /								 / |
-	 * 	 /								/  |
-	 * 	/______________________________/__________x
-	 *  |							  |
+	 * 		/_____________|_________________
+	 * 	   /			  |				  /|
+	 * 	  /				 _|_			 / |
+	 * 	 /				 / \			/  |
+	 * 	/______________________________/__________\x
+	 *  |							  |			  /
 	 *  |							  |
 	 *  |							  |
 	 */
@@ -38,7 +41,7 @@ public class MovingLight
 		initDisplay();
 		glEnable(GL_CULL_FACE);
 		
-		routines.Init.initOrthoView(new double[]{0,WIDTH, 0, HEIGHT, +300d, 0});
+		Init.initOrthoView(new double[]{-5,WIDTH, -5, HEIGHT, +300d, -10d});
 		loadQubjectVBOs();
 		selectStartingPositions();
 		
@@ -64,12 +67,13 @@ public class MovingLight
 	}
 	
 	private void renderTable(){
-		
+		//Should be a display list : 
+		Grids.drawGrid3f(new float[]{0f,WIDTH,0f,HEIGHT,0f,0f}, new float[]{50f,50f,50f});
 	}
 	
 	private void renderCubes(){
 		for (int i=0; i<qubjects.length; i++){
-			routines.IBO.drawIBOTriangles3f(qubjects[i]);
+			IBO.drawIBOTriangles3f(qubjects[i]);
 		}
 	}
 	
