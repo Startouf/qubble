@@ -183,6 +183,23 @@ Les étapes sont :
     glEndList();
     //finish creating the display list
 
+¤Render : on demande au GPU de rendre une ou plusieurs listes
+	(transformations)
+	glCallList(theTorus);
+	glFlush();
+	(/transformations)
+
+	- executing multiple display lists 
+		glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
+	
+¤ La ou on gagne avec les DisplayLists : si des routines complexes sont utilisées
+	- Opérations matricielles
+	- Rasterisation bitmaps et images
+	- Textures (utilisation objet Texture > opengl 1.1)
+	- Propriétés du matériaux / lighting
+	- Pattern polygone pointillés (stipple)
+	- Le texte affiché à l'écran (load fonts)
+
 # VertexArray
 
 //TODO
