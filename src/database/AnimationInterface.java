@@ -1,6 +1,6 @@
 package database;
 
 
-public interface AnimationInterface extends PatternModifierInterface {
+public interface AnimationInterface extends QubjectModifierInterface {
 	
 }

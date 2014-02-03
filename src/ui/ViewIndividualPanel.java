@@ -7,8 +7,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import database.Pattern;
-import database.PatternModifierInterface;
+import database.Qubject;
+import database.QubjectModifierInterface;
 
 /**
  * @author Cyril
@@ -21,13 +21,13 @@ import database.PatternModifierInterface;
 public class ViewIndividualPanel extends JPanel {
 
 	private final App app;
-	private Pattern currentPattern;
+	private Qubject currentPattern;
 	private int patternModifiers = 0;
 	private final GridBagConstraints c = new GridBagConstraints();
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
-		this.currentPattern = (Pattern) this.app.getPatterns().get(0);
+		this.currentPattern = (Qubject) this.app.getPatterns().get(0);
 		
 		this.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);
@@ -48,8 +48,8 @@ public class ViewIndividualPanel extends JPanel {
 		addOption("Animation", currentPattern, null);
 	}
 	
-	private void addOption(String title, Pattern pattern, 
-		PatternModifierInterface modifier){
+	private void addOption(String title, Qubject pattern, 
+		QubjectModifierInterface modifier){
 		c.gridy = patternModifiers+2;
 		c.gridx = 0;
 		add(new JLabel(title), c);

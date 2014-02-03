@@ -8,20 +8,20 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import database.Pattern;
-import database.PatternModifierInterface;
+import database.Qubject;
+import database.QubjectModifierInterface;
 
 public class SelectorButton extends JButton implements ActionListener{
 	
 	//Constructor for the select pattern selector
-	public SelectorButton(Pattern pattern) {
+	public SelectorButton(Qubject pattern) {
 		super(new ImageIcon("data/ui/arrow.png"));
 		//TODO : add action listener with the pattern
 		setPreferredSize(new Dimension(35,35));
 	}
 	
 	//Constructor for the select modifier selector
-	public SelectorButton(Pattern pattern, PatternModifierInterface modifier){
+	public SelectorButton(Qubject pattern, QubjectModifierInterface modifier){
 		super(new ImageIcon("data/ui/arrow.png"));
 		//TODO : add action listener with the pattern modifier
 		setPreferredSize(new Dimension(35,35));

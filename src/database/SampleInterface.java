@@ -2,7 +2,7 @@ package database;
 
 import java.io.File;
 
-public interface SampleInterface extends PatternModifierInterface
+public interface SampleInterface extends QubjectModifierInterface
 {
 	public File getFile();
 	public String getName();

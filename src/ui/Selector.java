@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
-import database.Pattern;
-import database.PatternModifierInterface;
+import database.Qubject;
+import database.QubjectModifierInterface;
 
 /**
  * @author Cyril
@@ -33,7 +33,7 @@ public class Selector extends JPanel {
 	//Return the specific object (pattern or patternmodifier)
 	private Object selectedObject;
 	
-	public Selector(App app, String title, Pattern pattern){
+	public Selector(App app, String title, Qubject pattern){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(pattern);
 		
@@ -50,7 +50,7 @@ public class Selector extends JPanel {
 
 	}
 	
-	public Selector(App app, Pattern pattern, PatternModifierInterface modifier){
+	public Selector(App app, Qubject pattern, QubjectModifierInterface modifier){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(modifier);
 		

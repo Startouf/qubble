@@ -1,8 +1,8 @@
 package audio;
 
-import database.PatternModifierInterface;
+import database.QubjectModifierInterface;
 
-public interface SoundEffectInterface extends PatternModifierInterface {
+public interface SoundEffectInterface extends QubjectModifierInterface {
 
 	
 }

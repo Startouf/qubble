@@ -10,9 +10,9 @@ import java.util.Properties;
  */
 public interface SettingsInterface {
 	
-	public ArrayList<Pattern> getAllPatterns();
-	public ArrayList<Pattern> getPatternsOnTable();
+	public ArrayList<Qubject> getAllQubjects();
+	public ArrayList<Qubject> getQubjectsOnTable();
 	
-	public void newPatternOnTable(PatternInterface pattern);
-	public void patternRemovedFromTable(PatternInterface pattern);
+	public void newQubjectOnTable(QRInterface pattern);
+	public void patternRemovedFromTable(QRInterface pattern);
 }
