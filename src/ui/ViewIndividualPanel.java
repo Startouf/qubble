@@ -7,8 +7,9 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import database.Qubject;
-import database.QubjectModifierInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+
 
 /**
  * @author Cyril

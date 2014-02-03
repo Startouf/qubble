@@ -1,4 +1,4 @@
-package database;
+package qubject;
 
 
 public interface AnimationInterface extends QubjectModifierInterface {

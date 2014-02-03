@@ -6,13 +6,14 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
-import database.Animation;
-import database.Qubject;
-import database.QRInterface;
-import database.SampleInterface;
+import qubject.Animation;
+import qubject.QRInterface;
+import qubject.Qubject;
+import qubject.SampleInterface;
+import qubject.SoundEffectInterface;
+
 
 import actions.*;
-import audio.SoundEffectInterface;
 
 /**
  * @author Cyril|duchon

@@ -10,7 +10,7 @@ public class InitialiseTools
 	/**
 	 * Returns the files of the current directory that match the saveFormat defined in this class
 	 * @param directory
-	 * @return
+	 * @return list of files in the directory filtered by filename (current : *.properties)
 	 */
 	public static File[] getFiles(String directory){
 		File dir = new File(directory);

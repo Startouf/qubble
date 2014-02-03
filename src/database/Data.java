@@ -3,22 +3,32 @@ package database;
 import java.io.File;
 import java.util.ArrayList;
 
-import audio.SoundEffectInterface;
+import qubject.AnimationInterface;
+import qubject.Qubject;
+import qubject.SampleInterface;
+import qubject.SoundEffectInterface;
+import sequencer.QubbleInterface;
+
 /**
  * Holds the assets of Qubble
  * 
  * @author duchon
  *
  */
-public class Data implements DataInterface
+public final class Data implements DataInterface
 {
-	private ArrayList<Qubject> qubjects = new ArrayList<Qubject>();
-	private ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
-	private ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
-	private ArrayList<AnimationInterface> animations = new ArrayList<AnimationInterface>();
+	//NOTE : there should be a difference Between the qubjects of this list and the qubjects of a saved project
+	private final ArrayList<Qubject> qubjects;
+	private final ArrayList<SampleInterface> samples;
+	private final ArrayList<SoundEffectInterface> soundEffects;
+	private final ArrayList<AnimationInterface> animations;
 
 	public Data(){
 		super();
+		qubjects = InitialiseAssets.loadQubjects();
+		samples = InitialiseAssets.loadSamples();
+		soundEffects = InitialiseAssets.loadSoundEffects();
+		animations = InitialiseAssets.loadAnimations();
 	}
 	
 	@Override
@@ -42,28 +52,14 @@ public class Data implements DataInterface
 	}
 
 	@Override
-	public ArrayList<SettingsInterface> getPreviousSettings() {
+	public ArrayList<QubbleInterface> getPreviousSettings() {
+		//TODO
 		return null;
 	}
 
-	public void setQubjects(ArrayList<Qubject> qubjects) {
-		this.qubjects = qubjects;
-	}
-
-	public void setSamples(ArrayList<SampleInterface> samples) {
-		this.samples = samples;
-	}
-
-	public void setSoundEffects(ArrayList<SoundEffectInterface> soundEffects) {
-		this.soundEffects = soundEffects;
-	}
-
-	public void setAnimations(ArrayList<AnimationInterface> animations) {
-		this.animations = animations;
-	}
-
 	@Override
-	public SettingsInterface getSettings(File file) {
+	public QubbleInterface getSettings() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

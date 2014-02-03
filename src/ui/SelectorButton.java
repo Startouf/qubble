@@ -8,8 +8,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import database.Qubject;
-import database.QubjectModifierInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+
 
 public class SelectorButton extends JButton implements ActionListener{
 	

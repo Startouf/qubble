@@ -1,6 +1,5 @@
-package audio;
+package qubject;
 
-import database.QubjectModifierInterface;
 
 public interface SoundEffectInterface extends QubjectModifierInterface {
 

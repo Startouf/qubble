@@ -1,11 +1,10 @@
-package database;
+package qubject;
 
 import java.io.File;
 import java.util.Properties;
 
 import org.lwjgl.util.Point;
 
-import audio.SoundEffectInterface;
 
 
 /**

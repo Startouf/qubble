@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import qubject.Qubject;
+
 public class InitialiseProject
 {
 	public static ArrayList<Qubject> loadQubjectsFromPath(String savePath){
@@ -38,8 +40,7 @@ public class InitialiseProject
 				);
 	}
 
-	private static Qubject loadNewQubjects(){
+	private static void loadNewQubjects(){
 		//TODO
-		return null;
 	}
 }

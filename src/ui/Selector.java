@@ -11,8 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
-import database.Qubject;
-import database.QubjectModifierInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+
 
 /**
  * @author Cyril

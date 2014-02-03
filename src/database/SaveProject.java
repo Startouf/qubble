@@ -3,28 +3,30 @@ package database;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
+import qubject.Qubject;
+import sequencer.Qubble;
+import sequencer.QubbleInterface;
+
 /**
  * @author duchon
  * Note : using a static-method-in-interface trick would really be helpful here
  *
  */
 public class SaveProject
-{
-	private Data data;
-	
-	public void saveTo(String path){
-		saveQubjects(path);
-		saveGlobalParams(path);
+{	
+	public static void saveTo(String path, QubbleInterface qubble){
+		saveQubjects(path, qubble);
+		saveGlobalParams(path, qubble);
 	}
 	
-	private void saveQubjects(String path){
+	private static void saveQubjects(String path, QubbleInterface qubble){
 		String QubjectPath = path + "/qubject";
-		for (Qubject qubject : data.getQubjects()){
+		for (Qubject qubject : qubble.getAllQubjects()){
 			saveQubject(qubject, QubjectPath);
 		}
 	}
 	
-	private void saveQubject(Qubject qubject, String path){
+	private static void saveQubject(Qubject qubject, String path){
 		Properties prop = new Properties();
 		 //TODO
 //		try {
@@ -41,7 +43,7 @@ public class SaveProject
 //		}
 	}
 
-	private void saveGlobalParams(String path){
-		
+	private static void saveGlobalParams(String path, QubbleInterface qubble){
+		//TODO
 	}
 }
