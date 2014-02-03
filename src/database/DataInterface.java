@@ -15,11 +15,11 @@ import audio.SoundEffectInterface;
 public interface DataInterface {
 	//Load entities
 	//Interface methods can't be declared static in JAVA 1.6 and 1.7 !!!!!
-	public ArrayList<Qubject> getQubject();
+	public ArrayList<Qubject> getQubjects();
 	public ArrayList<SampleInterface> getSamples();
 	public ArrayList<SoundEffectInterface> getSoundEffects();
 	public ArrayList<AnimationInterface> getAnimations();
-	
+
 	//Load user configs
 	public ArrayList<SettingsInterface> getPreviousSettings(); //Show a list of recent projects
 	public SettingsInterface getSettings(File file);

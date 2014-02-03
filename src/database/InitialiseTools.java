@@ -6,10 +6,9 @@ import java.io.FilenameFilter;
 public class InitialiseTools
 {
 	private static final String saveFormat = ".properties" ;
-	
+
 	/**
 	 * Returns the files of the current directory that match the saveFormat defined in this class
-	 * (todo : return only .properties files)
 	 * @param directory
 	 * @return
 	 */
@@ -17,12 +16,12 @@ public class InitialiseTools
 		File dir = new File(directory);
 		File [] files = dir.listFiles(
 				new FilenameFilter() 
-					{
-					    @Override
-					    public boolean accept(File dir, String name) {
-					        return name.endsWith(saveFormat);
-					    }
-					});
+				{
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith(saveFormat);
+					}
+				});
 		return files;
 	}
 

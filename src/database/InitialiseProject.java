@@ -23,22 +23,22 @@ public class InitialiseProject
 		}
 		return list;
 	}	
-	
+
 	public static ArrayList<Qubject> loadQubjectsForNewProject(){
 		//TODO
 		return null;
 	}
-	
+
 	private static Qubject loadQubjectFromProps(Properties prop){
 		//TODO add try-catch
-		//TODO add
+		//TODO add other params
 		return new Qubject(
 				prop.getProperty("name"),
 				Integer.parseInt(prop.getProperty("bitIdentifier"))
 				);
 	}
-	
-	private static Qubject loadNewQubject(){
+
+	private static Qubject loadNewQubjects(){
 		//TODO
 		return null;
 	}

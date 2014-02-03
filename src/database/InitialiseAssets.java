@@ -22,7 +22,11 @@ public class InitialiseAssets
 	 * Note : cannot factorise more without using Class objects
 	 * 	The instructions inside the try/catch block should be different for every Object type
 	 */
-	
+
+	/**
+	 * Currently loaded props : name and file
+	 * @return
+	 */
 	public static ArrayList<Sample> loadSamples(){
 		Properties prop;
 		File[] files = InitialiseTools.getFiles("/data/sound_effects/.");
@@ -39,7 +43,11 @@ public class InitialiseAssets
 		}
 		return list;
 	}
-	
+
+	/**
+	 * Currently loaded props : name and file
+	 * @return
+	 */
 	public static ArrayList<SoundEffect> loadSoundEffects(){
 		Properties prop;
 		File[] files = InitialiseTools.getFiles("/data/sound_effects/.");
@@ -56,7 +64,11 @@ public class InitialiseAssets
 		}
 		return list;
 	}
-	
+
+	/**
+	 * Currently loaded props : name and file
+	 * @return
+	 */
 	public static ArrayList<Animation> loadAnimations(){
 		Properties prop;
 		File[] files = InitialiseTools.getFiles("/data/animation/.");
@@ -73,12 +85,10 @@ public class InitialiseAssets
 		}
 		return list;
 	}
-	
-	/*
-	 * The following method should only be used when starting a new blank project
-	 */
+
 	/**
 	 * Load Qubjects from the available Qubjects list, and initialise them with default settings
+	 * !! Should only be used when starting a new blank project !!
 	 * @return Qubject ArrayList
 	 */
 	public static ArrayList<Qubject> loadQubjects(){

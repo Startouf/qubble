@@ -7,22 +7,22 @@ import audio.SoundEffectInterface;
 /**
  * Holds the assets of Qubble
  * 
- * NOTE : this class assumes only one project can be opened at a time !
- * (therefore methods are declared static)
- * 
  * @author duchon
  *
  */
 public class Data implements DataInterface
 {
-	private static ArrayList<Qubject> qubjects = new ArrayList<Qubject>();
-	private static ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
-	private static ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
-	private static ArrayList<AnimationInterface> animations = new ArrayList<AnimationInterface>();
+	private ArrayList<Qubject> qubjects = new ArrayList<Qubject>();
+	private ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
+	private ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
+	private ArrayList<AnimationInterface> animations = new ArrayList<AnimationInterface>();
 
+	public Data(){
+		super();
+	}
 	
 	@Override
-	public ArrayList<Qubject> getQubject() {
+	public ArrayList<Qubject> getQubjects() {
 		return qubjects;
 	}
 
@@ -33,25 +33,37 @@ public class Data implements DataInterface
 
 	@Override
 	public ArrayList<SoundEffectInterface> getSoundEffects() {
-		return null;
+		return soundEffects;
 	}
 
 	@Override
 	public ArrayList<AnimationInterface> getAnimations() {
-		// TODO Auto-generated method stub
-		return null;
+		return animations;
 	}
 
 	@Override
 	public ArrayList<SettingsInterface> getPreviousSettings() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setQubjects(ArrayList<Qubject> qubjects) {
+		this.qubjects = qubjects;
+	}
+
+	public void setSamples(ArrayList<SampleInterface> samples) {
+		this.samples = samples;
+	}
+
+	public void setSoundEffects(ArrayList<SoundEffectInterface> soundEffects) {
+		this.soundEffects = soundEffects;
+	}
+
+	public void setAnimations(ArrayList<AnimationInterface> animations) {
+		this.animations = animations;
 	}
 
 	@Override
 	public SettingsInterface getSettings(File file) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

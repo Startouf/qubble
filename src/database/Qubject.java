@@ -10,7 +10,7 @@ import audio.SoundEffectInterface;
 
 /**
  * @author duchon
- * NOTE : class should be renamed "Cube" or "Polyhedron" !!!
+ * The Qubject class
  *
  */
 public final class Qubject implements QRInterface, MediaInterface {
