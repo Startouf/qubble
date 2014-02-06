@@ -1,9 +1,29 @@
-#1 Les fichiers utilisent le charset UFT-8
+#### Table des matières
+
+##1 Remarques générales
+##1.1 Charset
+##1.2 Modules : configurer les sous-dossier de /Modules en src folder
+
+##2 Librairies
+##2.1 lwjgl (OpenGL librairy)
+
+
+##1 Remarques générales
+
+##1.2 	Les fichiers utilisent le charset UFT-8
 	Sous Eclipse Window > Preferences > General > Workspace > UTF - 8
 	
-#2 Le dossier Modules doit  être configuré comme un dossier source
-	clic-droit sur PACT > properties > Java build Path > Add folder > tick sur Modules
+##1.2	Organisation des modules : créez une branche sur Git, puis créez un dossier [votre module] dans /Modules/	
+====>Les sous-dossier de Modules ainsi crées doivent être configurés comme des dossiers source :
+		clic-droit sur PACT > properties > Java build Path > Add folder > tick sur votre sous-dossier de /Modules/
 
-#3 For Lwjgl, you must pick the OS-relevant natives
-	clic-droit sur PACT > Java build path > librairies > expand lwjgl > select natives libs from workspace (/lib/lwjgl/natives/[OS])
-	(Note : this can also be achieved by adding the corresponding natives.jar - Just make only one the right one is active at a time)
+
+
+##2 Librairies
+	Pour plus de simplicité, les librairies doivent être placées dans le dossier /lib/[votre nom de librairie]
+	Ensuite, vous les ajoutez à votre projet en faisant clic-droit sur PACT > properties > JAVA build path > add JAR librairies (PAS EXTERNAL!)
+	...Puis vous déroulez PACT > lib > [votre dossier librairies] > sélectionner vos librairies
+
+###2.1	For Lwjgl, you must pick the OS-relevant natives
+	4 libs are needed : lwjgl.jar, lwjgj-utils.jar, slick.jar, [OS natives].jar
+	(or alternatively, you can add the first 3 and then, expand lwjgl (in build path) and add natives path /lib/lwjgl/natives/[os])

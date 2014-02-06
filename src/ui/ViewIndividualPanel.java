@@ -7,8 +7,9 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import database.Pattern;
-import database.PatternModifierInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+
 
 /**
  * @author Cyril
@@ -21,13 +22,15 @@ import database.PatternModifierInterface;
 public class ViewIndividualPanel extends JPanel {
 
 	private final App app;
-	private Pattern currentPattern;
+	private final ProjectController project;
+	private Qubject currentQubject;
 	private int patternModifiers = 0;
 	private final GridBagConstraints c = new GridBagConstraints();
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
-		this.currentPattern = Pattern.SQUARE;
+		this.project = app.getActiveProject();
+		this.currentQubject = (Qubject) project.getQubjects().get(0);
 		
 		this.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);
@@ -39,17 +42,17 @@ public class ViewIndividualPanel extends JPanel {
 		c.gridx = 0;
 		add(new JLabel("Options pour :"), c);
 		c.gridx = 1;
-		add(new Selector(app, "Pattern", currentPattern), c);
+		add(new Selector(app, "Pattern", currentQubject), c);
 		
-		//TODO : Replace nulls by default choices
-		addOption("Sample Associ�", currentPattern, null);
-		addOption("Effet Axe Y", currentPattern, null);
-		addOption("Rotation", currentPattern, null);
-		addOption("Animation", currentPattern, null);
+		//TODO : Replace nulls by default choices (this.app.getXXX.get(0) for example)
+		addOption("Sample Associé", currentQubject, null);
+		addOption("Effet Axe Y", currentQubject, null);
+		addOption("Rotation", currentQubject, null);
+		addOption("Animation", currentQubject, null);
 	}
 	
-	private void addOption(String title, Pattern pattern, 
-		PatternModifierInterface modifier){
+	private void addOption(String title, Qubject pattern, 
+		QubjectModifierInterface modifier){
 		c.gridy = patternModifiers+2;
 		c.gridx = 0;
 		add(new JLabel(title), c);
