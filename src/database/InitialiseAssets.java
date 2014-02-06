@@ -37,7 +37,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SampleInterface> loadSamples(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("/data/sound_effects/");
+		File[] files = InitialiseTools.getFiles("data/sound_effects/");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -58,7 +58,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SoundEffectInterface> loadSoundEffects(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("/data/sound_effects/");
+		File[] files = InitialiseTools.getFiles("data/sound_effects/");
 		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -74,12 +74,12 @@ public class InitialiseAssets
 	}
 
 	/**
-	 * Currently loaded props : name and file
+	 * Currently loaded props : name and file from data/animations
 	 * @return
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("/data/animation/");
+		File[] files = InitialiseTools.getFiles("data/animations/");
 		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -101,7 +101,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<Qubject> loadQubjects(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("/data/qubjects/");
+		File[] files = InitialiseTools.getFiles("data/qubjects/");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();

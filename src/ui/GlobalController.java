@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import qubject.Animation;
 import qubject.SampleInterface;
 import qubject.SoundEffectInterface;
-public class GlobalController {
+public class GlobalController implements GlobalControllerInterface {
 	
 	private final App app;
 	private final ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();

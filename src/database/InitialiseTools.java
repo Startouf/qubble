@@ -14,6 +14,8 @@ public class InitialiseTools
 	 */
 	public static File[] getFiles(String directory){
 		File dir = new File(directory);
+		//test
+		boolean ok = dir.isDirectory();
 		File [] files = dir.listFiles(
 				new FilenameFilter() 
 				{

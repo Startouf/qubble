@@ -6,6 +6,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
+import org.lwjgl.util.glu.Project;
+
 import qubject.Animation;
 import qubject.MediaInterface;
 import qubject.QRInterface;
@@ -41,7 +43,7 @@ public class App extends JFrame
 	/**
 	 * Contient références vers les samples, soundEffects... 
 	 */
-	private final GlobalController globalController = new GlobalController(this);
+	private final GlobalControllerInterface globalController = new GlobalController(this);
 	/**
 	 * Références vers les projets chargés (liste des Qubject configurés)
 	 */
@@ -69,6 +71,23 @@ public class App extends JFrame
 	{
 		super("Qubble");
 		
+		setJMenuBar(menu = new MenuBar(this));
+		setContentPane(mainPanel = new MainPanel(this));
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setVisible(true);
+	}
+	
+	/**
+	 * Debug Overload
+	 * @return
+	 */
+	public App(ProjectController project)
+	{
+		super("Qubble");
+		this.activeProject = project;
+		this.projects.add(project);
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
 
@@ -145,7 +164,7 @@ public class App extends JFrame
 			projects.add(project);
 	}
 
-	public GlobalController getGlobalController() {
+	public GlobalControllerInterface getGlobalController() {
 		return globalController;
 	}
 
@@ -165,7 +184,7 @@ public class App extends JFrame
 		this.projectOpened = projectOpened;
 	}
 
-	public ArrayList<MediaInterface> getQubjects() {
+	public ArrayList<Qubject> getQubjects() {
 		return activeProject.getQubjects();
 	}
 

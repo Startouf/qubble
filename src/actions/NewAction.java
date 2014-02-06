@@ -19,8 +19,8 @@ public class NewAction extends AbstractAction
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
 		String path = null;
-		//TODO : display fileBrowser for a path
-		this.app.setActiveProject(new ProjectController(app, path));
+		//TODO : display fileBrowser for a path and load a qubble
+		this.app.setActiveProject(new ProjectController(app, null));
 	}
 
 }

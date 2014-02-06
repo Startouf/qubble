@@ -3,25 +3,24 @@ package ui;
 import java.util.ArrayList;
 
 import qubject.MediaInterface;
+import qubject.Qubject;
+import sequencer.QubbleInterface;
 
-public class ProjectController
+public class ProjectController implements ProjectControllerInterface
 {
 	private final App app;
-	private final ArrayList<MediaInterface> qubjects;
-	public ProjectController(App app, String path){
+	private final QubbleInterface qubble;
+	
+	public ProjectController(App app, QubbleInterface qubble){
 		this.app=app;
-		
-		//TODO: Load Qubjects
-
-		//TODO
-		qubjects = new ArrayList<MediaInterface>();
+		this.qubble = qubble;
 	}
 
 	public App getApp() {
 		return app;
 	}
 
-	public ArrayList<MediaInterface> getQubjects() {
-		return qubjects;
+	public ArrayList<Qubject> getQubjects() {
+		return qubble.getAllQubjects();
 	}
 }
