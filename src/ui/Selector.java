@@ -11,8 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
-import database.Pattern;
-import database.PatternModifierInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+
 
 /**
  * @author Cyril
@@ -30,10 +31,10 @@ import database.PatternModifierInterface;
 public class Selector extends JPanel {
 	
 	private final App app;
-	//Return the specific object (pattern or patternmodifier)
+	//change the specific object (pattern or patternmodifier)
 	private Object selectedObject;
 	
-	public Selector(App app, String title, Pattern pattern){
+	public Selector(App app, String title, Qubject pattern){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(pattern);
 		
@@ -46,11 +47,11 @@ public class Selector extends JPanel {
 		add(new JLabel(title), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
 		//TODO : show a clickable arrow that pops-up a custom file chooser menu with BorderLayer.EAST
-		add(new SelectorButton(pattern), BorderLayout.EAST);
+		add(new SelectorButton(app,pattern), BorderLayout.EAST);
 
 	}
 	
-	public Selector(App app, Pattern pattern, PatternModifierInterface modifier){
+	public Selector(App app, Qubject pattern, QubjectModifierInterface modifier){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(modifier);
 		

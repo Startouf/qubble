@@ -11,7 +11,7 @@ public class ExitMenuItem extends JMenuItem
 
 	public ExitMenuItem(App app) 
 	{
-		super("Quit");
+		super("Quitter");
 		this.app = app;
 		
 		//Note : The following code terminates the JVM (exits the program). 
