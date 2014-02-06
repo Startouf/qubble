@@ -17,7 +17,7 @@ public class NewAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
-		//TODO
+		this.app.changeProject(new ProjectController(app));
 	}
 
 }

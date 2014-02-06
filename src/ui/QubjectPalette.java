@@ -14,14 +14,14 @@ import javax.swing.JPanel;
  * @author bertoli
  *
  */
-public class PatternSelectionFrame extends JFrame
+public class QubjectPalette extends JFrame
 {
 
 	private App app;
 	private final JPanel patternSelection = new JPanel();
     GridLayout patternLayout = new GridLayout(6,2);
     private ArrayList<JButton> listCube;
-	public PatternSelectionFrame(App app) {
+	public QubjectPalette(App app) {
 		
 		super("Selection de pattern");
 		this.app=app;

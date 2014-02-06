@@ -36,16 +36,21 @@ import audio.SoundEffectInterface;
  */
 public class App extends JFrame
 {
-	/*
-	 * ArrayLists pour les paramètres des cubes stockées ici temporairement
-	 * Devraient être déplacées ailleurs plus tard
+	/**
+	 * Contient références vers les samples, soundEffects... 
 	 */
-	private final ArrayList<PatternInterface> patterns = new ArrayList<PatternInterface>();
-	private final ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
-	private final ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
-	private final ArrayList<Animation> animations = new ArrayList<Animation>();
+	private final GlobalController globalController = new GlobalController(this);
+	/**
+	 * Références vers les projets chargés (liste des Qubject configurés)
+	 */
+	private final ArrayList<ProjectController> projects = new ArrayList<ProjectController>();
+	private ProjectController activeProject = null;
 	
-	//Commandes pour ouvrir/ffermet le projet
+	
+	/*
+	 * Actions
+	 */
+	//Commandes pour ouvrir/fermer le projet
 	private final NewAction newAction = new NewAction(this);
 	private final LoadAction loadAction = new LoadAction(this);
 	//Ouverture du menu settings individuel dans un onglet
@@ -53,8 +58,8 @@ public class App extends JFrame
 		= new OpenIndividualSettingsAction(this);
 	
 	private boolean projectOpened = false;
-	private PatternSelectionFrame patternSelectionFrame = null;
-	private SampleSelectionFrame sampleSelectionFrame = null;
+	private QubjectPalette qubjectSelectionFrame = null;
+	private SamplePalette sampleSelectionFrame = null;
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
 
@@ -96,32 +101,54 @@ public class App extends JFrame
 	}
 
 	/**
-	 * Ouverture des frames de sélection :
-	 * Idéé : la frame existe toujours, mais est cachée/révélée quand on en a besoin
+	 * Ouverture des Palettes de sélection :
+	 * Idéé : la palette existe toujours, mais est cachée/révélée quand on en a besoin
 	 * le getter est parfois uniquement utilisé pour sa fonction setVisible
 	 * 
-	 * @return Frame de sélection de paramètre
+	 * @return palette de sélection de Qubject
 	 */
-	public PatternSelectionFrame getPatternSelectionFrame() {
-		if(patternSelectionFrame != null){
-			patternSelectionFrame.setVisible(true);
-			return patternSelectionFrame;
+	public QubjectPalette getPatternSelectionFrame() {
+		if(qubjectSelectionFrame != null){
+			qubjectSelectionFrame.setVisible(true);
+			return qubjectSelectionFrame;
 		}
 		else{ 
-			patternSelectionFrame = new PatternSelectionFrame(this);
-			return patternSelectionFrame;
+			qubjectSelectionFrame = new QubjectPalette(this);
+			return qubjectSelectionFrame;
 		}
 	}
 
-	public SampleSelectionFrame getSampleSelectionFrame() {
+	public SamplePalette getSampleSelectionFrame() {
 		if(sampleSelectionFrame != null){
 			sampleSelectionFrame.setVisible(true);
 			return sampleSelectionFrame;
 		}
 		else{
-			sampleSelectionFrame = new SampleSelectionFrame(this);
+			sampleSelectionFrame = new SamplePalette(this);
 			return sampleSelectionFrame;
 		}
+	}
+	
+	public ProjectController getActiveProject() {
+		return activeProject;
+	}
+
+	public void setActiveProject(ProjectController project) {
+		this.activeProject = project;
+		if (!this.projects.contains(project))
+			projects.add(project);
+	}
+
+	public GlobalController getGlobalController() {
+		return globalController;
+	}
+
+	public ArrayList<ProjectController> getProjets() {
+		return projects;
+	}
+
+	public QubjectPalette getQubjectSelectionFrame() {
+		return qubjectSelectionFrame;
 	}
 
 	public boolean isProjectOpened() {
@@ -133,19 +160,25 @@ public class App extends JFrame
 	}
 
 	public ArrayList<PatternInterface> getPatterns() {
-		return patterns;
+		return activeProject.getPatterns();
 	}
 
 	public ArrayList<SoundEffectInterface> getSoundEffects() {
-		return soundEffects;
+		return globalController.getSoundEffects();
 	}
 
 	public ArrayList<Animation> getAnimations() {
-		return animations;
+		return globalController.getAnimations();
 	}
 
-	public void setPatternSelectionFrame(PatternSelectionFrame patternSelectionFrame) {
-		this.patternSelectionFrame = patternSelectionFrame;
+	public void setPatternSelectionFrame(QubjectPalette patternSelectionFrame) {
+		this.qubjectSelectionFrame = patternSelectionFrame;
 	}
 	
+	/**
+	 * TEMP
+	 */
+	public static void main(String[] args){
+		App DJTable = new App();
+	}
 }

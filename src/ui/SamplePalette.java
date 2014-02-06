@@ -2,10 +2,10 @@ package ui;
 
 import javax.swing.JFrame;
 
-public class SampleSelectionFrame extends JFrame
+public class SamplePalette extends JFrame
 {
 
-	public SampleSelectionFrame(App app) {
+	public SamplePalette(App app) {
 		// TODO Auto-generated constructor stub
 	}
 
