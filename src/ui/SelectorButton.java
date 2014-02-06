@@ -43,7 +43,7 @@ public class SelectorButton extends JButton implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		if (isPattern=true)
 		{
-			app.getPatternSelectionFrame();
+			app.getQubjectPalette();
 		}
 		
 		

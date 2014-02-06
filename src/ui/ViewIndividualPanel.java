@@ -19,7 +19,7 @@ import qubject.QubjectModifierInterface;
  * https://docs.google.com/drawings/d/1NOopF11r3Y56fjHIWkAm6jW3N124hpSTVYJpzmWgv50/edit?usp=sharing
  *	
  */
-public class ViewIndividualPanel extends JPanel {
+public class ViewIndividualPanel extends ViewQubjects {
 
 	private final App app;
 	private final ProjectController project;

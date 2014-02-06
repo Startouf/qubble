@@ -54,16 +54,15 @@ public class App extends JFrame
 	/*
 	 * Actions
 	 */
-	//Commandes pour ouvrir/fermer le projet
 	private final NewAction newAction = new NewAction(this);
 	private final LoadAction loadAction = new LoadAction(this);
-	//Ouverture du menu settings individuel dans un onglet
 	private final OpenIndividualSettingsAction openIndividualSettingsAction 
 		= new OpenIndividualSettingsAction(this);
 	
 	private boolean projectOpened = false;
-	private QubjectPalette qubjectSelectionFrame = null;
-	private SamplePalette sampleSelectionFrame = null;
+	//TODO The palettes should be final. 
+	private QubjectPalette qubjectPalette = null;
+	private SamplePalette samplePalette = null;
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
 
@@ -128,25 +127,25 @@ public class App extends JFrame
 	 * 
 	 * @return palette de sélection de Qubject
 	 */
-	public QubjectPalette getPatternSelectionFrame() {
-		if(qubjectSelectionFrame != null){
-			qubjectSelectionFrame.setVisible(true);
-			return qubjectSelectionFrame;
+	public QubjectPalette getQubjectPalette() {
+		if(qubjectPalette != null){
+			qubjectPalette.setVisible(true);
+			return qubjectPalette;
 		}
 		else{ 
-			qubjectSelectionFrame = new QubjectPalette(this);
-			return qubjectSelectionFrame;
+			qubjectPalette = new QubjectPalette(this);
+			return qubjectPalette;
 		}
 	}
 
-	public SamplePalette getSampleSelectionFrame() {
-		if(sampleSelectionFrame != null){
-			sampleSelectionFrame.setVisible(true);
-			return sampleSelectionFrame;
+	public SamplePalette getSamplePalette() {
+		if(samplePalette != null){
+			samplePalette.setVisible(true);
+			return samplePalette;
 		}
 		else{
-			sampleSelectionFrame = new SamplePalette(this);
-			return sampleSelectionFrame;
+			samplePalette = new SamplePalette(this);
+			return samplePalette;
 		}
 	}
 	
@@ -173,7 +172,7 @@ public class App extends JFrame
 	}
 
 	public QubjectPalette getQubjectSelectionFrame() {
-		return qubjectSelectionFrame;
+		return qubjectPalette;
 	}
 
 	public boolean isProjectOpened() {
@@ -196,8 +195,8 @@ public class App extends JFrame
 		return globalController.getAnimations();
 	}
 
-	public void setPatternSelectionFrame(QubjectPalette patternSelectionFrame) {
-		this.qubjectSelectionFrame = patternSelectionFrame;
+	public void setQubjectPalette(QubjectPalette patternSelectionFrame) {
+		this.qubjectPalette = patternSelectionFrame;
 	}
 	
 	/**
@@ -205,5 +204,10 @@ public class App extends JFrame
 	 */
 	public static void main(String[] args){
 		App DJTable = new App();
+	}
+
+	public ViewQubjects getActiveTab() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
