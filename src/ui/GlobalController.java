@@ -2,10 +2,9 @@ package ui;
 
 import java.util.ArrayList;
 
-import audio.SampleInterface;
-import audio.SoundEffectInterface;
-import database.Animation;
-
+import qubject.Animation;
+import qubject.SampleInterface;
+import qubject.SoundEffectInterface;
 public class GlobalController {
 	
 	private final App app;

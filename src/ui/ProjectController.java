@@ -2,29 +2,26 @@ package ui;
 
 import java.util.ArrayList;
 
-import audio.SampleInterface;
-import audio.SoundEffectInterface;
-import database.Animation;
-import database.PatternInterface;
+import qubject.MediaInterface;
 
 public class ProjectController
 {
 	private final App app;
-	private final ArrayList<PatternInterface> patterns;
+	private final ArrayList<MediaInterface> qubjects;
 	public ProjectController(App app, String path){
 		this.app=app;
 		
 		//TODO: Load Qubjects
 
 		//TODO
-		patterns = new ArrayList<PatternInterface>();
+		qubjects = new ArrayList<MediaInterface>();
 	}
 
 	public App getApp() {
 		return app;
 	}
 
-	public ArrayList<PatternInterface> getPatterns() {
-		return patterns;
+	public ArrayList<MediaInterface> getQubjects() {
+		return qubjects;
 	}
 }

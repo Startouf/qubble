@@ -9,6 +9,7 @@ public class FichierProp
 {
 
 	/**
+	 * Génère un exemple de fichier .properties
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -40,6 +41,4 @@ public class FichierProp
 		ex.printStackTrace();
     }
 	}
-
-
 }

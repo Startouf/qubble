@@ -1,8 +1,7 @@
-package database;
+package qubject;
 
 import java.io.File;
 
-import audio.SoundEffectInterface;
 
 public class SoundEffect implements SoundEffectInterface{
 	

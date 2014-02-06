@@ -14,17 +14,15 @@
 	Sous Eclipse Window > Preferences > General > Workspace > UTF - 8
 	
 ##1.2	Organisation des modules : créez une branche sur Git, puis créez un dossier [votre module] dans /Modules/	
-	Les sous-dossier de Modules ainsi crées doivent être configurés comme des dossiers source :
-		clic-droit sur PACT > properties > Java build Path > Add folder > tick sur Modules
-
-
-
+====>Les sous-dossier de Modules ainsi crées doivent être configurés comme des dossiers source :
+		clic-droit sur PACT > properties > Java build Path > Add folder > tick sur votre sous-dossier de /Modules/
 
 
 
 ##2 Librairies
 	Pour plus de simplicité, les librairies doivent être placées dans le dossier /lib/[votre nom de librairie]
 	Ensuite, vous les ajoutez à votre projet en faisant clic-droit sur PACT > properties > JAVA build path > add JAR librairies (PAS EXTERNAL!)
+	...Puis vous déroulez PACT > lib > [votre dossier librairies] > sélectionner vos librairies
 
 ###2.1	For Lwjgl, you must pick the OS-relevant natives
 	4 libs are needed : lwjgl.jar, lwjgj-utils.jar, slick.jar, [OS natives].jar

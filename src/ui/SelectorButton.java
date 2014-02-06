@@ -8,19 +8,18 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import database.Pattern;
-import database.PatternInterface;
-import database.PatternModifierInterface;
+import qubject.MediaInterface;
+import qubject.Qubject;
+import qubject.QubjectModifierInterface;
 
-public class SelectorButton extends JButton implements ActionListener {
+
+public class SelectorButton extends JButton implements ActionListener{
 	
 	private App app;
-	private Pattern pattern;
-	private PatternModifierInterface patterModifier;
-	private  boolean isPattern;
-	
+	private boolean isPattern;
+
 	//Constructor for the select pattern selector
-	public SelectorButton(App app, PatternInterface pattern) {
+	public SelectorButton(App app, MediaInterface Qubject) {
 		super(new ImageIcon("data/ui/arrow.png"));
 		addActionListener(this);
 		
@@ -33,7 +32,7 @@ public class SelectorButton extends JButton implements ActionListener {
 	}
 
 	//Constructor for the select modifier selector
-	public SelectorButton(Pattern pattern, PatternModifierInterface modifier){
+	public SelectorButton(Qubject pattern, QubjectModifierInterface modifier){
 		super(new ImageIcon("data/ui/arrow.png"));
 		isPattern=false;
 		//TODO : add action listener with the pattern modifier

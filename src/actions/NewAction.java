@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import ui.App;
+import ui.ProjectController;
 
 public class NewAction extends AbstractAction
 {
@@ -17,7 +18,9 @@ public class NewAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
-		this.app.changeProject(new ProjectController(app));
+		String path = null;
+		//TODO : display fileBrowser for a path
+		this.app.setActiveProject(new ProjectController(app, path));
 	}
 
 }

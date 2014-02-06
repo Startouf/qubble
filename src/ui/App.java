@@ -6,12 +6,14 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
-import database.Animation;
-import database.PatternInterface;
+import qubject.Animation;
+import qubject.MediaInterface;
+import qubject.QRInterface;
+import qubject.Qubject;
+import qubject.SampleInterface;
+import qubject.SoundEffectInterface;
 
 import actions.*;
-import audio.SampleInterface;
-import audio.SoundEffectInterface;
 
 /**
  * @author Cyril|duchon
@@ -65,8 +67,8 @@ public class App extends JFrame
 
 	public App()
 	{
-		super("DJ-Table");
-
+		super("Qubble");
+		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
 
@@ -133,6 +135,10 @@ public class App extends JFrame
 		return activeProject;
 	}
 
+	/**
+	 * Change the active project and adds it (if not already done) in the projectsList
+	 * @param project
+	 */
 	public void setActiveProject(ProjectController project) {
 		this.activeProject = project;
 		if (!this.projects.contains(project))
@@ -159,8 +165,8 @@ public class App extends JFrame
 		this.projectOpened = projectOpened;
 	}
 
-	public ArrayList<PatternInterface> getPatterns() {
-		return activeProject.getPatterns();
+	public ArrayList<MediaInterface> getQubjects() {
+		return activeProject.getQubjects();
 	}
 
 	public ArrayList<SoundEffectInterface> getSoundEffects() {

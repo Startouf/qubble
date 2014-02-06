@@ -1,17 +1,16 @@
-package database;
+package qubject;
 
 import java.io.File;
 
-import audio.SampleInterface;
 
 public class Sample implements SampleInterface{
 	
 	private String name;
 	private File file;
 	
-	private Sample(String name, String file){
+	public Sample(String name, File file){
 		this.name = name;
-		this.file = new File("/data/sample/" + file);
+		this.file = file;
 	}
 
 	@Override
