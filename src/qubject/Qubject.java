@@ -77,6 +77,4 @@ public final class Qubject implements QRInterface, MediaInterface {
 	public Animation getAnimationWhenPlayed() {
 		return whenPlayed;
 	}
-	
-	
 }

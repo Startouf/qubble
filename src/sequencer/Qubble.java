@@ -32,7 +32,7 @@ public class Qubble implements QubbleInterface {
 	public Qubble(Data data, String path){
 		super();
 		this.data = data;
-		configuredQubjects = InitialiseProject.loadQubjectsFromPath(path);
+		configuredQubjects = InitialiseProject.loadQubjectsFromProject(path);
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 	}
 

@@ -10,7 +10,7 @@ import qubject.Qubject;
 
 public class InitialiseProject
 {
-	public static ArrayList<Qubject> loadQubjectsFromPath(String savePath){
+	public static ArrayList<Qubject> loadQubjectsFromProject(String savePath){
 		Properties prop;
 		File[] files = InitialiseTools.getFiles(savePath);
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
@@ -23,12 +23,14 @@ public class InitialiseProject
 				ex.printStackTrace();
 			}
 		}
+		//Check for new crafted qubjects
+		loadNewQubjects(list);
 		return list;
 	}	
 
 	public static ArrayList<Qubject> loadQubjectsForNewProject(){
-		//TODO
-		return null;
+		return InitialiseAssets.loadQubjects();
+		//TODO : initialise default values for Qubjects ?
 	}
 
 	private static Qubject loadQubjectFromProps(Properties prop){
@@ -40,7 +42,10 @@ public class InitialiseProject
 				);
 	}
 
-	private static void loadNewQubjects(){
+	/**
+	 * Update the Qubject lists of old projects, if some new Qubjects are ever added to Qubble (crafted by our hands :) )
+	 */
+	private static void loadNewQubjects(ArrayList<Qubject> list){
 		//TODO
 	}
 }
