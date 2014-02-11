@@ -1,5 +1,6 @@
 package qubject;
 
+import java.awt.Point;
 import java.io.File;
 
 
@@ -31,4 +32,9 @@ public interface QRInterface {
 	 */
 	public String getName();
 
+	/**
+	 * 
+	 * @return Pixel coordinates of the point on the table
+	 */
+	public Point getCoords();
 }

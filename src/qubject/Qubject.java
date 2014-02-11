@@ -3,7 +3,7 @@ package qubject;
 import java.io.File;
 import java.util.Properties;
 
-import org.lwjgl.util.Point;
+import java.awt.Point;
 
 
 
@@ -14,10 +14,10 @@ import org.lwjgl.util.Point;
  */
 public final class Qubject implements QRInterface, MediaInterface {
 
-	private final Point coords = null;
 	private final String name;
 	private final int bitIdentifier;
 	private boolean isHere = false;
+	private Point coords = null;
 	
 	private Sample sampleWhenPlayed;
 	private SoundEffect yAxisModifier;
@@ -76,5 +76,10 @@ public final class Qubject implements QRInterface, MediaInterface {
 	@Override
 	public Animation getAnimationWhenPlayed() {
 		return whenPlayed;
+	}
+
+	@Override
+	public java.awt.Point getCoords() {
+		return coords;
 	}
 }

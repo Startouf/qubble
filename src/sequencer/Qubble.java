@@ -12,6 +12,7 @@ public class Qubble implements QubbleInterface {
 	private final Data data;
 	private final ArrayList<Qubject> configuredQubjects;
 	private final ArrayList<Qubject> qubjectsOnTable;
+	private float period;
 
 	/**
 	 * New project overload
