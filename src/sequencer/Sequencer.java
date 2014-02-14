@@ -25,8 +25,6 @@ import qubject.Qubject;
 public class Sequencer
 {
 	//TODO : store these variables somewhere else
-	private static final int TABLE_LENGTH = 800;
-	private static final int TABLE_HEIGHT = 800;
 	private final int NUM_THREADS = 1;
 	private final ScheduledExecutorService fScheduler;
 	/**
@@ -46,6 +44,11 @@ public class Sequencer
 	private final ArrayList<ScheduledFuture<?>> scheduledQubjects = 
 			new ArrayList<ScheduledFuture<?>>(this.qubble.getAllQubjects().size());
 	
+	/**
+	 * 
+	 * @param qubble
+	 * @param tempo
+	 */
 	public Sequencer(Qubble qubble, float tempo){
 		this.qubble = qubble;
 		this.period = tempo;
@@ -66,22 +69,11 @@ public class Sequencer
 		this.scheduledQubjects.clear();
 		for (Qubject qubject : this.qubble.getQubjectsOnTable()){
 			//Schedule when the Qubject should be played
-			Runnable qubjectTask = new QubjectTask(qubject);
+			Runnable qubjectTask = new QubjectTask(qubble, qubject);
 		    ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
-		      qubjectTask, getQubjectStartingTime(qubject), (long)period*1000, TimeUnit.MILLISECONDS
+		      qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)period*1000, TimeUnit.MILLISECONDS
 		    );
 		}
-	}
-	
-	/**
-	 * 
-	 * @param qubject
-	 * @return time in MILLISECONDS
-	 */
-	private long getQubjectStartingTime(Qubject qubject){
-		//TODO : Quantify !
-		//dividing double by double !
-		return (long) (qubject.getCoords().getX()/(double)TABLE_LENGTH*period);
 	}
 
 	/**
@@ -96,8 +88,41 @@ public class Sequencer
 		}
 
 	}
-	
-	private void playPause(){
-		
+	/**
+	 * Should be called before closing a project
+	 * TODO: Does the garbage collector handle this task well ?
+	 */
+	public void terminate(){
+		fScheduler.shutdownNow();
 	}
+	
+	/**
+	 * TODO :
+	 * Stop all tasks and restart them or...
+	 * Find a way to Pause all tasks ?
+	 */
+	public void playPause(){
+		//TODO
+	}
+
+	/**
+	 * If both period and current time are changed, please use another method
+	 * (otherwise, would recalculate 2 times the schedule)
+	 * @param period
+	 */
+	public void setPeriod(double period) {
+		this.period = period;
+		recalculate();
+	}
+
+	/**
+	 * If both period and current time are changed, please use another method
+	 * (otherwise, would recalculate 2 times the schedule)
+	 * @param currentTime
+	 */
+	public void setCurrentTime(float currentTime) {
+		this.currentTime = currentTime;
+		recalculate();
+	}
+	
 }

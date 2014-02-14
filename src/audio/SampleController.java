@@ -1,6 +1,5 @@
 package audio;
 
-public interface SampleController
-{
+public class SampleController implements SampleControllerInterface {
 
 }

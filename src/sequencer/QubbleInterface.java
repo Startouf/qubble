@@ -38,4 +38,9 @@ public interface QubbleInterface {
 	 * @param qubject Absent qubject
 	 */
 	public void qubjectRemovedFromTable(QRInterface qubject);
+	/**
+	 * Trigger all the effects of a given Qubject when it is activated by the cursor
+	 * @param qubject
+	 */
+	public void playQubject(Qubject qubject);
 }
