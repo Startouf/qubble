@@ -58,6 +58,10 @@ public class App extends JFrame
 	private final LoadProjectAction loadAction = new LoadProjectAction(this);
 	private final OpenIndividualSettingsAction openIndividualSettingsAction 
 		= new OpenIndividualSettingsAction(this);
+	private final ChangeQubjectAction changeQubjectAction 
+		= new ChangeQubjectAction(this);
+	private final ChangeQubjectModifierAction changeQubjectModifierAction 
+		= new ChangeQubjectModifierAction(this);
 	
 	private boolean projectOpened = false;
 	//TODO The palettes should be final and initialised
@@ -68,6 +72,9 @@ public class App extends JFrame
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
 
+	/**
+	 * Normal Overload that should be used in the prototype/final project
+	 */
 	public App()
 	{
 		super("Qubble");
@@ -82,7 +89,7 @@ public class App extends JFrame
 	
 	/**
 	 * Debug Overload
-	 * @return
+	 * 
 	 */
 	public App(ProjectController project)
 	{
@@ -228,6 +235,15 @@ public class App extends JFrame
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public ChangeQubjectAction getChangeQubjectAction() {
+		return changeQubjectAction;
+	}
+
+	public ChangeQubjectModifierAction getChangeQubjectModifierAction() {
+		return changeQubjectModifierAction;
+	}
+
 	/**
 	 * DEBUG --> Use debug.DebugLaunch
 	 */

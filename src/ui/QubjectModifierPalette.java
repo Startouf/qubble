@@ -17,8 +17,6 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	private final JPanel itemSelctionPanel = new JPanel();
 	private QubjectModifierInterface selectedModifier;
     protected ArrayList<JButton> modifierList;
-    private final ChangeQubjectModifierAction changeQubjectModifierAction =
-    		new ChangeQubjectModifierAction(app);
     
 	public QubjectModifierPalette(App app) {
 		super("Selection de Qubject");
@@ -31,7 +29,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
          * Le bouton valider déclenche l'action de cette classe qui change le modifier du Qubject Actif
          */
         JButton validate = new JButton("Valider");
-        validate.setAction(this.changeQubjectModifierAction);
+        validate.setAction(this.app.getChangeQubjectModifierAction());
         
         setContentPane(itemSelctionPanel);
         pack();

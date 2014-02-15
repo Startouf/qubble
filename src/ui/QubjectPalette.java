@@ -31,8 +31,6 @@ public class QubjectPalette extends JFrame implements ActionListener
 	private final JPanel qubjectSelection = new JPanel();
 	private MediaInterface selectedQubject;
     private final ArrayList<ReferenceButton> qubjectList;
-    private final ChangeQubjectAction changeQubjectAction =
-    		new ChangeQubjectAction(app);
     
 	public QubjectPalette(App app) {
 		super("Selection de Qubject");
@@ -46,7 +44,7 @@ public class QubjectPalette extends JFrame implements ActionListener
          * TODO Le Qubject actif sera mis en surbrillance
          */
         JButton validate = new JButton("Valider");
-        validate.setAction(this.changeQubjectAction);
+        validate.setAction(this.app.getChangeQubjectAction());
         
         setContentPane(qubjectSelection);
         pack();
