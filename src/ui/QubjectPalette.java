@@ -20,7 +20,8 @@ import qubject.QRInterface;
 
 /**
  * @author bertoli
- *
+ * @author duchon
+ * Not really sure this palette should extend the generic Palette class, which is more designed for QubjectModifiers. 
  */
 public class QubjectPalette extends JFrame implements ActionListener
 {
@@ -28,7 +29,7 @@ public class QubjectPalette extends JFrame implements ActionListener
 	private App app;
 	private final JPanel qubjectSelection = new JPanel();
 	private MediaInterface selectedQubject;
-    private ArrayList<JButton> listCube;
+    private ArrayList<JButton> qubjectList;
     private final ChangeQubjectAction changeQubjectAction =
     		new ChangeQubjectAction(app);
     
@@ -39,6 +40,10 @@ public class QubjectPalette extends JFrame implements ActionListener
 		
 		qubjectSelection.setLayout(new GridLayout());
         this.listQubjects();
+        /**
+         * Le bouton valider déclenche l'action de cette classe qui change la référence du qubject actif
+         * Le Qubject actif sera mis en surbrillance
+         */
         JButton validate = new JButton("Valider");
         validate.setAction(this.changeQubjectAction);
         
@@ -54,7 +59,7 @@ public class QubjectPalette extends JFrame implements ActionListener
 			ReferenceButton cube = new ReferenceButton(qubject.getName(), qubject);
 			cube.addActionListener(this);
 			qubjectSelection.add(cube);
-			listCube.add(cube);
+			qubjectList.add(cube);
 		}
 	}
 
@@ -62,12 +67,16 @@ public class QubjectPalette extends JFrame implements ActionListener
 		return selectedQubject;
 	}
 
+	/**
+	 * Change the active qubject
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == ReferenceButton.class){
 			ReferenceButton Rbutton = (ReferenceButton) e.getSource();
-			//Note should also check if the referencedbutton indeed contains a MediaInterface reference
+			//Note should also check if the referencedButton indeed contains a MediaInterface reference
 			//but this should be the case
+			//(the reference button may contain a reference to something else than a qubject)
 			this.selectedQubject = (MediaInterface) Rbutton.getReference();
 		}
 	}

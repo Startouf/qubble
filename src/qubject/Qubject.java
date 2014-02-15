@@ -23,7 +23,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private SoundEffect yAxisModifier;
 	private SoundEffect rotationModifier;
 	private Animation whenPutOnTable;
-	private Animation whenPlayed;
+	private Animation animationwhenPlayed;
 	
 	public Qubject(String name, int bitIdentifier){
 		this.name = name;
@@ -70,11 +70,11 @@ public final class Qubject implements QRInterface, MediaInterface {
 
 	@Override
 	public void setAnimationWhenPlayed(AnimationInterface animation) {
-		this.whenPlayed = (Animation) animation;
+		this.animationwhenPlayed = (Animation) animation;
 	}
 
 	@Override
 	public Animation getAnimationWhenPlayed() {
-		return whenPlayed;
+		return animationwhenPlayed;
 	}
 }

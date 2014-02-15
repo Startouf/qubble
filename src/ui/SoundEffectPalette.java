@@ -1,11 +1,9 @@
 package ui;
 
-import javax.swing.JFrame;
 
-public class SamplePalette extends Palette
-{
+public class SoundEffectPalette extends Palette {
 
-	public SamplePalette(App app) {
+	public SoundEffectPalette(App app) {
 		super(app);
 		// TODO Auto-generated constructor stub
 	}
@@ -13,7 +11,7 @@ public class SamplePalette extends Palette
 	@Override
 	protected void listModifiers() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

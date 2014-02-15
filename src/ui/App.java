@@ -60,9 +60,11 @@ public class App extends JFrame
 		= new OpenIndividualSettingsAction(this);
 	
 	private boolean projectOpened = false;
-	//TODO The palettes should be final. 
+	//TODO The palettes should be final and initialised
 	private QubjectPalette qubjectPalette = null;
 	private SamplePalette samplePalette = null;
+	private SoundEffectPalette soundEffectPalette = null;
+	private AnimationPalette animationPalette = null;
 	private final MenuBar menu;
 	private final MainPanel mainPanel;
 
@@ -146,6 +148,28 @@ public class App extends JFrame
 		else{
 			samplePalette = new SamplePalette(this);
 			return samplePalette;
+		}
+	}
+	
+	public AnimationPalette getAnimationPalette() {
+		if(animationPalette != null){
+			animationPalette.setVisible(true);
+			return animationPalette;
+		}
+		else{
+			animationPalette = new AnimationPalette(this);
+			return animationPalette;
+		}
+	}
+	
+	public SoundEffectPalette getSoundEffectPalette() {
+		if(soundEffectPalette != null){
+			soundEffectPalette.setVisible(true);
+			return soundEffectPalette;
+		}
+		else{
+			soundEffectPalette = new SoundEffectPalette(this);
+			return soundEffectPalette;
 		}
 	}
 	
