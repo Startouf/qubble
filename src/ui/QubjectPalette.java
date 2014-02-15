@@ -21,7 +21,8 @@ import qubject.QRInterface;
 /**
  * @author bertoli
  * @author duchon
- * Not really sure this palette should extend the generic Palette class, which is more designed for QubjectModifiers. 
+ * Not really sure this palette should extend a generic Palette class, 
+ * (The QubjectModifierPalette abstract class is more designed for QubjectModifiers). 
  */
 public class QubjectPalette extends JFrame implements ActionListener
 {
@@ -29,7 +30,7 @@ public class QubjectPalette extends JFrame implements ActionListener
 	private App app;
 	private final JPanel qubjectSelection = new JPanel();
 	private MediaInterface selectedQubject;
-    private ArrayList<JButton> qubjectList;
+    private final ArrayList<ReferenceButton> qubjectList;
     private final ChangeQubjectAction changeQubjectAction =
     		new ChangeQubjectAction(app);
     
@@ -37,12 +38,12 @@ public class QubjectPalette extends JFrame implements ActionListener
 		super("Selection de Qubject");
 		this.app=app;
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
+		qubjectList = new ArrayList<ReferenceButton>();
 		qubjectSelection.setLayout(new GridLayout());
         this.listQubjects();
         /**
          * Le bouton valider déclenche l'action de cette classe qui change la référence du qubject actif
-         * Le Qubject actif sera mis en surbrillance
+         * TODO Le Qubject actif sera mis en surbrillance
          */
         JButton validate = new JButton("Valider");
         validate.setAction(this.changeQubjectAction);

@@ -2,17 +2,18 @@ package ui;
 
 import java.util.ArrayList;
 
+import database.Data;
 import qubject.Animation;
+import qubject.AnimationInterface;
 import qubject.SampleInterface;
 import qubject.SoundEffectInterface;
 public class GlobalController implements GlobalControllerInterface {
 	
 	private final App app;
-	private final ArrayList<SampleInterface> samples = new ArrayList<SampleInterface>();
-	private final ArrayList<SoundEffectInterface> soundEffects = new ArrayList<SoundEffectInterface>();
-	private final ArrayList<Animation> animations = new ArrayList<Animation>();
+	private final Data data;
 	
 	public GlobalController(App app){
+		this.data = new Data();
 		this.app=app;
 	}
 
@@ -21,15 +22,20 @@ public class GlobalController implements GlobalControllerInterface {
 	}
 
 	public ArrayList<SampleInterface> getSamples() {
-		return samples;
+		return data.getSamples();
 	}
 
 	public ArrayList<SoundEffectInterface> getSoundEffects() {
-		return soundEffects;
+		return data.getSoundEffects();
 	}
 
-	public ArrayList<Animation> getAnimations() {
-		return animations;
+	public ArrayList<AnimationInterface> getAnimations() {
+		return data.getAnimations();
+	}
+
+	@Override
+	public Data getData() {
+		return data;
 	}
 
 }

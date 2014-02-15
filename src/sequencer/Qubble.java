@@ -57,13 +57,13 @@ public class Qubble implements QubbleInterface {
 	public Qubble(Data data){
 		super();
 		this.data = data;
-		sequencer = new Sequencer(this, period);
 		player = new Player();
 		projection = new ProjectorOutput();
 		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		initialiseSampleControllers();
+		sequencer = new Sequencer(this, period);
 	}
 
 	/**

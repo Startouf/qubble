@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import qubject.QubjectModifierInterface;
 import actions.ChangeQubjectModifierAction;
 
-public abstract class Palette extends JFrame implements ActionListener{
+public abstract class QubjectModifierPalette extends JFrame implements ActionListener{
 	private App app;
 	private final JPanel itemSelctionPanel = new JPanel();
 	private QubjectModifierInterface selectedModifier;
@@ -20,7 +20,7 @@ public abstract class Palette extends JFrame implements ActionListener{
     private final ChangeQubjectModifierAction changeQubjectModifierAction =
     		new ChangeQubjectModifierAction(app);
     
-	public Palette(App app) {
+	public QubjectModifierPalette(App app) {
 		super("Selection de Qubject");
 		this.app=app;
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

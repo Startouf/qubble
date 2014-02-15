@@ -9,12 +9,12 @@ import javax.swing.JFrame;
 import org.lwjgl.util.glu.Project;
 
 import qubject.Animation;
+import qubject.AnimationInterface;
 import qubject.MediaInterface;
 import qubject.QRInterface;
 import qubject.Qubject;
 import qubject.SampleInterface;
 import qubject.SoundEffectInterface;
-
 import actions.*;
 
 /**
@@ -54,8 +54,8 @@ public class App extends JFrame
 	/*
 	 * Actions
 	 */
-	private final NewAction newAction = new NewAction(this);
-	private final LoadAction loadAction = new LoadAction(this);
+	private final NewProjectAction newAction = new NewProjectAction(this);
+	private final LoadProjectAction loadAction = new LoadProjectAction(this);
 	private final OpenIndividualSettingsAction openIndividualSettingsAction 
 		= new OpenIndividualSettingsAction(this);
 	
@@ -114,11 +114,11 @@ public class App extends JFrame
 		return openIndividualSettingsAction;
 	}
 
-	public NewAction getNewAction() {
+	public NewProjectAction getNewAction() {
 		return newAction;
 	}
 
-	public LoadAction getLoadAction() {
+	public LoadProjectAction getLoadAction() {
 		return loadAction;
 	}
 
@@ -185,6 +185,7 @@ public class App extends JFrame
 		this.activeProject = project;
 		if (!this.projects.contains(project))
 			projects.add(project);
+		mainPanel.getGlobalSettingsPanel().setActiveProjectName(project.getProjectName());
 	}
 
 	public GlobalControllerInterface getGlobalController() {
@@ -215,7 +216,7 @@ public class App extends JFrame
 		return globalController.getSoundEffects();
 	}
 
-	public ArrayList<Animation> getAnimations() {
+	public ArrayList<AnimationInterface> getAnimations() {
 		return globalController.getAnimations();
 	}
 
@@ -223,15 +224,14 @@ public class App extends JFrame
 		this.qubjectPalette = patternSelectionFrame;
 	}
 	
-	/**
-	 * TEMP
-	 */
-	public static void main(String[] args){
-		App DJTable = new App();
-	}
-
 	public ViewQubjects getActiveTab() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	/**
+	 * DEBUG --> Use debug.DebugLaunch
+	 */
+	public static void main(String[] args){
+		App DJTable = new App();
 	}
 }

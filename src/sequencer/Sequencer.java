@@ -41,8 +41,8 @@ public class Sequencer
 	 * Initialise with the number of qubjects 
 	 * (and eventually multiply if they need more tasks)
 	 */
-	private final ArrayList<ScheduledFuture<?>> scheduledQubjects = 
-			new ArrayList<ScheduledFuture<?>>(this.qubble.getAllQubjects().size());
+	private final ArrayList<ScheduledFuture<?>> scheduledQubjects;
+			
 	
 	/**
 	 * 
@@ -53,7 +53,7 @@ public class Sequencer
 		this.qubble = qubble;
 		this.period = tempo;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
-		
+		scheduledQubjects = new ArrayList<ScheduledFuture<?>>(qubble.getAllQubjects().size());
 		recalculate();
 		
 		//TODO : loop that waits for changes to be detected

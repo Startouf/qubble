@@ -10,6 +10,7 @@ public class ProjectController implements ProjectControllerInterface
 {
 	private final App app;
 	private final QubbleInterface qubble;
+	private String projectName = "New Project";
 	
 	public ProjectController(App app, QubbleInterface qubble){
 		this.app=app;
@@ -22,5 +23,18 @@ public class ProjectController implements ProjectControllerInterface
 
 	public ArrayList<Qubject> getQubjects() {
 		return qubble.getAllQubjects();
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+		//TODO : change the JLabels of globalPanel + title of tabs
+	}
+
+	public QubbleInterface getQubble() {
+		return qubble;
 	}
 }

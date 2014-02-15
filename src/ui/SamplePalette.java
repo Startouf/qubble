@@ -2,7 +2,7 @@ package ui;
 
 import javax.swing.JFrame;
 
-public class SamplePalette extends Palette
+public class SamplePalette extends QubjectModifierPalette
 {
 
 	public SamplePalette(App app) {

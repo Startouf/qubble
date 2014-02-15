@@ -1,6 +1,6 @@
 package ui;
 
-public class AnimationPalette extends Palette {
+public class AnimationPalette extends QubjectModifierPalette {
 
 	public AnimationPalette(App app) {
 		super(app);

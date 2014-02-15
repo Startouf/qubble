@@ -4,23 +4,23 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import sequencer.Qubble;
+import sequencer.QubbleInterface;
 import ui.App;
 import ui.ProjectController;
 
-public class NewAction extends AbstractAction
+public class NewProjectAction extends AbstractAction
 {
 	private App app;
 	
-	public NewAction(App app){
+	public NewProjectAction(App app){
 		this.app = app;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
-		String path = null;
-		//TODO : display fileBrowser for a path and load a qubble
-		this.app.setActiveProject(new ProjectController(app, null));
+		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble(app.getGlobalController().getData())));
 	}
 
 }

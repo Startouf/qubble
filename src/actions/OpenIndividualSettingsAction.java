@@ -17,7 +17,8 @@ public class OpenIndividualSettingsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		app.getMainPanel().getSettingsTabs().addTab("Individual Settings", new ViewIndividualPanel(app));
+		app.getMainPanel().getSettingsTabs().addTab(
+				"Config. indiv. "+app.getActiveProject().getProjectName(), new ViewIndividualPanel(app));
 	}
 
 }

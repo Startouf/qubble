@@ -1,7 +1,7 @@
 package ui;
 
 
-public class SoundEffectPalette extends Palette {
+public class SoundEffectPalette extends QubjectModifierPalette {
 
 	public SoundEffectPalette(App app) {
 		super(app);

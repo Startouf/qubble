@@ -18,6 +18,8 @@ import qubject.QubjectModifierInterface;
  * This is the panel that can be seen in :
  * https://docs.google.com/drawings/d/1NOopF11r3Y56fjHIWkAm6jW3N124hpSTVYJpzmWgv50/edit?usp=sharing
  *	
+ * TODO : Better design
+ * TODO : Close tab button
  */
 public class ViewIndividualPanel extends ViewQubjects {
 

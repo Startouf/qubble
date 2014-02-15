@@ -23,9 +23,7 @@ public class DebugLaunch
 		JPanel choices = new JPanel();
 		choices.setLayout(new GridLayout());
 		
-		JButton quickProject = new JButton();
-		quickProject.setText("Quick New Project with a loaded Qubble");
-		quickProject.setAction(new AbstractAction(){
+		JButton quickProject = new JButton(new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				App debug = new App(
@@ -33,6 +31,7 @@ public class DebugLaunch
 								new Qubble(new Data())));
 				}
 		});
+		quickProject.setText("Quick New Project with a loaded Qubble");
 		quickProject.setPreferredSize(new Dimension (256, 256));
 		
 		choices.add(quickProject);
@@ -40,12 +39,5 @@ public class DebugLaunch
 		debug.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		debug.pack();
 		debug.setVisible(true);
-		
-		try {
-			debug.wait();
-		} catch (InterruptedException e) {
-			System.exit(0);
-		}
-		
 	}
 }
