@@ -26,8 +26,13 @@ public class WaveForm extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	
 	private File file;
+	private Recorder recorder;
+	private Synthesizer synth;
+	
+	private audioThread stopper;
 	
 	private PlayButton play;
+	private SynthButton synthButton;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ChartPanel chartPanel;
@@ -35,6 +40,7 @@ public class WaveForm extends JFrame implements Observer {
 	
 	private QuitMenuItem quitMenuItem;
 	private SelectMenuItem selectMenuItem;
+	private RecordButton recordButton;
 	//private JFileChooser chooser;
 	
 	public WaveForm(String title) {
@@ -52,6 +58,8 @@ public class WaveForm extends JFrame implements Observer {
 		setJMenuBar(menuBar);
 		
 		play = new PlayButton(this);
+		recordButton = new RecordButton(this);
+		synthButton = new SynthButton(this);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -65,6 +73,8 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.setLayout(new BoxLayout(windowPanel, BoxLayout.PAGE_AXIS));
 		windowPanel.add(chartPanel);
 		windowPanel.add(play);
+		windowPanel.add(recordButton);
+		windowPanel.add(synthButton);
 		
 		setContentPane(windowPanel);
 		
@@ -111,5 +121,40 @@ public class WaveForm extends JFrame implements Observer {
 
 	public void play() {
 		Player.play(file);
+	}
+	
+	public void startRecording(File file) {
+		this.file = file;
+		recorder = new Recorder(file);
+		
+		stopper = new audioThread(recorder);
+		stopper.start();
+		/*
+		stopper = new Thread(new Runnable() {// Creer un nouveau thread
+					// qui attend RecordTime
+					// avant de s'arreter
+					public void run() {
+						
+						recorder.start();
+						//recorder.finish();
+
+					}
+
+				});
+		stopper.start();
+		*/
+		//recorder.start();
+	}
+	
+	public void stopRecording() {
+		recorder.finish();
+		stopper.stopRecord();
+		update(null, file);
+	}
+	
+	public void synthesize(File file) {
+		synth = new Synthesizer(Synthesizer.sine, 220, 2500, 44000);
+		synth.writeFile(file, 3);
+		update(null, file);
 	}
 }

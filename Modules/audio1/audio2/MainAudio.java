@@ -5,7 +5,7 @@ import java.io.*;
 //import javax.sound.sampled.*;
 import java.util.*;
 
-public class Main {
+public class MainAudio {
 
 	public static void main(String[] args) {
 		try {
@@ -22,6 +22,10 @@ public class Main {
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
+		//Synthesizer synth = new Synthesizer(Synthesizer.sine, 880, 2500, 44000);
+		//synth.writeFile(new File("/Users/vincentcouteaux/wavs/synthe.wav"), 3);
+		//synth.print(synth.generate(3));
 	}
 
 }
