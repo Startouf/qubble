@@ -85,7 +85,7 @@ public class CubeShaders
 	}
 
 	private void loadIBOs(){
-		CubeIboIDs = loadCubeIBOTriangles3f(0, 0, 0, 200);
+		CubeIboIDs = loadCubeTriangles3f(0, 0, 0, 200);
 	}
 
 	private void loadShaders(){

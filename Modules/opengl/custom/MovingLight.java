@@ -79,7 +79,7 @@ public class MovingLight
 	
 	private void loadQubjectVBOs(){
 		for (int i=0; i<qubjects.length; i++){
-			qubjects[i]=IBO.loadLightedCubeIBOTriangles3f(0f, 0f, 0f, 0f, colors);
+			qubjects[i]=IBO.loadLightedCubeTriangles3f(0f, 0f, 0f, 0f, colors);
 		}
 	}
 	

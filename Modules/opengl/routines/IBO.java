@@ -38,9 +38,13 @@ public class IBO
 
 		return new int[] {load_float_vbo(vertices), load_index_vbo(indices), indices.length};
 	}
+	
+	/***********************************
+	 * LOAD PREDEFINED IBOs
+	 **********************************/
 
 	/**
-	 * Pasted from GLBaseModule
+	 * Pasted from GLBaseModule (Jean Le Feuvre)
 	 * @param w
 	 * @param h
 	 * @param d
@@ -73,7 +77,7 @@ public class IBO
 	 * @param s side
 	 * @return IBO IDs = int[] {Vertex VBO, index IBO, number of indexes}
 	 */
-	public static int[] loadCubeIBOTriangles3f(float x, float y, float z, float s){
+	public static int[] loadCubeTriangles3f(float x, float y, float z, float s){
 		/*			
 		 * 	  7____________ 6
 		 * 	  / 		  /|
@@ -87,7 +91,7 @@ public class IBO
 		float[] vertices = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
 		int[] indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
-				3,2,6,	6,7,3};
+				3,2,6,	6,7,3,	0,5,1,	0,4,5};
 		return getIBO_IDs(vertices, indices);
 	}
 
@@ -102,15 +106,15 @@ public class IBO
 	 * @param color
 	 * @return { {Vertex VBO, index IBO, # of indexes}, {color VBO}, null }
 	 */
-	public static int[][] loadColoredCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
+	public static int[][] loadColoredCubeTriangles3f(float x, float y, float z, float s, float [][] colors){
 		//TODO Not working as it should
 		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
 		int[] vtx_indices = { 0,1,3,	3,1,2,	1,5,2,	2,5,6,	6,5,4,	4,7,6,	0,3,4,	4,3,7,	
 				3,2,6,	6,7,3,	0,5,1,	0,4,5};
 		float[] colorsCoords = new float[6*2*3*3]; //Expecting one color3f per vertex ?
-		for (int i=0; i<6;i++){
-			for (int j=0; j<6; j++){
+		for (int i=0; i<6;i++){ //For each face
+			for (int j=0; j<6; j++){ //For each vertex of the 2 triangles making a face
 				mapVectorToCoords3f(colors[i], colorsCoords, i*6+j);
 			}
 		}
@@ -126,7 +130,7 @@ public class IBO
 	 * @param colors
 	 * @return
 	 */
-	public static int[][] loadLightedCubeIBOTriangles3f(float x, float y, float z, float s, float [][] colors){
+	public static int[][] loadLightedCubeTriangles3f(float x, float y, float z, float s, float [][] colors){
 		//TODO not working as intended
 		float[] vertexCoords = {x,y,z,	x+s,y,z,	x+s,y+s,z,	x,y+s,z,
 				x,y,z-s,	x+s,y,z-s,	x+s,y+s,z-s,	x,y+s,z-s};
@@ -152,6 +156,25 @@ public class IBO
 	}
 
 	/**
+	 * Cube IBO drawn with the textures of a FBO
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param s
+	 * @param IBO_ID
+	 * @return
+	 */
+	public static int[][] loadFBOCubeQuads3f(float x, float y, float z, float s, int FBO_ID){
+		//TODO
+		return null;
+	}
+	
+	
+	/********************
+	 * DRAW IBOs
+	 ********************/
+
+	/**
 	 * Base overload : only vertices
 	 * Draw an IBO given its vertex ID, index ID and number of vertices
 	 * @param IDs = int[] {vertex_VBO_id, index_VBO_id, number of vertices}
@@ -159,15 +182,14 @@ public class IBO
 	public static void drawIBOTriangles3f(int[] vboIDs){
 
 		if (vboIDs == null){
+			System.out.println("NULL IBO ID");
 			return;
 		}
-		glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, vboIDs[0]);
-		glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
 
-		//attachons le buffer d'indices comme le buffer 'ELEMENT_ARRAY', i.e. celui utilisé pour glDrawElements
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIDs[1]);
-
 		glDrawElements(GL_TRIANGLES, vboIDs[2], GL_UNSIGNED_INT, 0);
 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
@@ -176,7 +198,7 @@ public class IBO
 	/**
 	 * Colors and Normals Overload (Not interleaved)
 	 * @param vboIDs = {{vtx_IboIDs}, {color_VBOID}, {normals_VBO}}
-	 * Send null if you do not want to specify either color or normals
+	 * Send null if you do not want to specify either color or normals or both
 	 */
 	public static void drawIBOTriangles3f(int[][] vboIDs){
 

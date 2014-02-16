@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
+import routines.IBO;
 import routines.Time;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.IBO.*;
@@ -54,10 +55,10 @@ public class EnhancedCubesIBO
 	}
 	
 	private void loadIBOs(){
-		coloredCubeIboIDs = loadColoredCubeIBOTriangles3f(0, 0, 0, side, new float[][]{
+		coloredCubeIboIDs = IBO.loadColoredCubeTriangles3f(0, 0, 0, side, new float[][]{
 				{1f,0f,0f},	{0f,1f,0f},	{0f,0f,1f},	{1f,1f,0f},
 				{0f,1f,1f},	{1f,0f,1f}});
-		lightedCubeIboIDs = loadLightedCubeIBOTriangles3f(0, 0, 0, side, new float[][]{
+		lightedCubeIboIDs = IBO.loadLightedCubeTriangles3f(0, 0, 0, side, new float[][]{
 				{1f,0f,0f},	{0f,1f,0f},	{0f,0f,1f},	{1f,1f,0f},
 				{0f,1f,1f},	{1f,0f,1f}});
 	}
