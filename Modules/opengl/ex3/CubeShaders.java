@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
+import routines.Buffers;
 import routines.IBO;
 import routines.Shaders;
 import routines.Time;
@@ -35,7 +36,7 @@ public class CubeShaders
 	private static String SHADER_PATH = "data/opengl/shaders/";
 	private int rotation =0;
 	private float colorRed =0;
-	private int colorRedAddress, rotationAddress;
+	private int colorRedAddress, rotationAddress, positionAddress;
 	
 	private void start(){
         initDisplay();
@@ -45,6 +46,8 @@ public class CubeShaders
 		//In this class, it would be better to use the shader here
         loadShaders();
         loadIBOs();
+        
+        setObjectPosition();
         
         while(!Display.isCloseRequested()){   
         	glClear(GL_COLOR_BUFFER_BIT | 
@@ -84,6 +87,12 @@ public class CubeShaders
 	private void render(){    
         IBO.drawTriangles3f(CubeIboIDs, shader[2]);
 	}
+	
+	private void setObjectPosition(){
+		FloatBuffer posMat = Buffers.IdentityMatrix();
+		Buffers.setPos(posMat, 100, 100, -100);
+		GL20.glUniformMatrix4(positionAddress, false, posMat);
+	}
 
 	private void loadIBOs(){
 		CubeIboIDs = loadCubeTriangles3f(-100, -100, -100, 200);
@@ -94,7 +103,8 @@ public class CubeShaders
 		shader = Shaders.loadShadersGL(SHADER_PATH + "RotatingCube.vp", SHADER_PATH + "ChangeRed.fp", attrib);
 		//Must get the Uniform locations only once ?
 		rotationAddress = GL20.glGetUniformLocation(shader[2], "rotation"); 
-		colorRedAddress = GL20.glGetUniformLocation(shader[2], "playerPos");
+		colorRedAddress = GL20.glGetUniformLocation(shader[2], "colorRed");
+		positionAddress = GL20.glGetUniformLocation(shader[2],  "pos");
 	}
 
 	private void setView(){    
