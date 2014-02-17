@@ -78,6 +78,12 @@ public final class Buffers
 								0f,0f,1f,0f,
 								0f,0f,0f,1f,});
 	}
+	
+	public static FloatBuffer vec3(){
+		FloatBuffer FB = BufferUtils.createFloatBuffer(3);
+		FB.flip();
+		return FB;
+	}
 
 	/**
 	 * Sets the x,y,z position in a (Position) FloatBuffer 4x4Matrix
@@ -91,6 +97,7 @@ public final class Buffers
 		FB.put(12,x);
 		FB.put(13,y);
 		FB.put(14,z);
+		FB.flip(); //Not sure this has to be done
 	}
 
 	/**
@@ -105,5 +112,6 @@ public final class Buffers
 		FB.put(1,sin);
 		FB.put(4,-sin);
 		FB.put(4,cos);
+		FB.flip(); //Not sure this has to be done
 	}
 }

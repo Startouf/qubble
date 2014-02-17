@@ -15,6 +15,7 @@ import org.lwjgl.util.glu.GLU;
 
 import routines.Buffers;
 import routines.IBO;
+import routines.Init;
 import routines.Shaders;
 import routines.Time;
 import routines.UserInputs;
@@ -39,9 +40,12 @@ public class CubeShaders
 	private int colorRedAddress, rotationAddress, positionAddress;
 	
 	private void start(){
-        initDisplay();
+        Init.initDisplay();
         glEnable(GL_CULL_FACE);
 		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glShadeModel(GL_SMOOTH);
 		//Note : either use shader here OR just before rendering (if different shaders are used, better doing that during render() )
 		//In this class, it would be better to use the shader here
         loadShaders();
@@ -56,7 +60,7 @@ public class CubeShaders
         	
         	updateVariables(); //Increment Red component of colors with arrow keys
             updateShaders(); //Send this info to the shader uniform variables
-            viewTransform(); //Note : doing the translation AFTER the rotation done by the VertexShader
+            //viewTransform(); //Note : doing the translation AFTER the rotation done by the VertexShader
 
             render(); //Using shader overload
             Display.update();
@@ -71,6 +75,8 @@ public class CubeShaders
 		rotation = (int)Time.uniformRotation();
 		colorRed = UserInputs.incrementWithArrowKeys(colorRed, 5f);
 		colorRed = Math.abs(colorRed) % 255;
+		System.out.println("rotation = "+ rotation);
+		System.out.println("colorRed = " +colorRed);
 	}
 
 	private void updateShaders(){
@@ -89,9 +95,7 @@ public class CubeShaders
 	}
 	
 	private void setObjectPosition(){
-		FloatBuffer posMat = Buffers.IdentityMatrix();
-		Buffers.setPos(posMat, 100, 100, -100);
-		GL20.glUniformMatrix4(positionAddress, false, posMat);
+		GL20.glUniform3f(positionAddress, 100f,100f,-100f);
 	}
 
 	private void loadIBOs(){
@@ -105,6 +109,13 @@ public class CubeShaders
 		rotationAddress = GL20.glGetUniformLocation(shader[2], "rotation"); 
 		colorRedAddress = GL20.glGetUniformLocation(shader[2], "colorRed");
 		positionAddress = GL20.glGetUniformLocation(shader[2],  "pos");
+		
+		if (rotationAddress == 0 || colorRedAddress == 0 || positionAddress ==0){
+			System.err.println("Could not get Uniform locations");
+			System.err.println("rotationAddress : " +rotationAddress);
+			System.err.println("colorRedAddress : " +colorRedAddress);
+			System.err.println("positionAddress : " +positionAddress);
+		}
 	}
 
 	private void setView(){    
