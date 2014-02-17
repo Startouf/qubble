@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLContext;
 
 import static routines.VBO.*;
@@ -156,7 +157,7 @@ public class IBO
 	}
 
 	/**
-	 * Cube IBO drawn with the textures of a FBO
+	 * Cube IBO drawn with a FBO as texture
 	 * @param x
 	 * @param y
 	 * @param z
@@ -179,7 +180,7 @@ public class IBO
 	 * Draw an IBO given its vertex ID, index ID and number of vertices
 	 * @param IDs = int[] {vertex_VBO_id, index_VBO_id, number of vertices}
 	 */
-	public static void drawIBOTriangles3f(int[] vboIDs){
+	public static void drawTriangles3f(int[] vboIDs){
 
 		if (vboIDs == null){
 			System.out.println("NULL IBO ID");
@@ -194,13 +195,24 @@ public class IBO
 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
 	}
+	/**
+	 * Shader overload
+	 * Use the shader program, draw the triangle, and release the shader
+	 * @param vboIDs = int[] {vertex_VBO_id, index_VBO_id, number of vertices}
+	 * @param shader the compiled shader program
+	 */
+	public static void drawTriangles3f(int[] vboIDs, int shader) {
+		GL20.glUseProgram(shader);
+		drawTriangles3f(vboIDs);
+		GL20.glUseProgram(0);
+	}
 
 	/**
 	 * Colors and Normals Overload (Not interleaved)
 	 * @param vboIDs = {{vtx_IboIDs}, {color_VBOID}, {normals_VBO}}
 	 * Send null if you do not want to specify either color or normals or both
 	 */
-	public static void drawIBOTriangles3f(int[][] vboIDs){
+	public static void drawTriangles3f(int[][] vboIDs){
 
 		if (vboIDs == null || vboIDs[0] == null){
 			System.out.println("NULL IBO ID");
@@ -232,4 +244,6 @@ public class IBO
 			glDisableClientState(GL_NORMAL_ARRAY);
 		}
 	}
+
+	
 }

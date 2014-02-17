@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -91,6 +92,7 @@ public class Shaders
 
 	/**
 	 * Load and compile a shader from a file (with a fileReader, not an inputStream !)
+	 * Prints error related to Shader Compiling
 	 * @param filename
 	 * @param type
 	 * @return
@@ -117,13 +119,20 @@ public class Shaders
 		GL20.glCompileShader(shaderID);
 
 		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Could not compile shader.");
+			System.err.println("Could not compile shader " + filename);
+			System.err.println( getLogInfo(shaderID));
 			System.exit(-1);
 		}
 
 		return shaderID;
 	}
 
+	/**
+	 * Destroy a Shader. WARNING : pID first !!
+	 * @param pID
+	 * @param vsID
+	 * @param fsID
+	 */
 	public static void destroyShader(int pID, int vsID, int fsID){
 		GL20.glUseProgram(0);
 		GL20.glDetachShader(pID, vsID);
@@ -134,4 +143,7 @@ public class Shaders
 		GL20.glDeleteProgram(pID);
 	}
 
+	private static String getLogInfo(int obj) {
+        return GL20.glGetShaderInfoLog(obj, GL20.glGetShaderi(obj, GL20.GL_SHADER_SOURCE_LENGTH));
+    }
 }

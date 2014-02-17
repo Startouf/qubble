@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static routines.IBO.drawIBOTriangles3f;
 import static routines.Init.HEIGHT;
 import static routines.Init.WIDTH;
 import static routines.Init.initDisplay;

@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 
+import routines.IBO;
 import routines.Shaders;
 import routines.Time;
 import routines.UserInputs;
@@ -33,15 +34,15 @@ public class CubeShaders
 	private int[] shader;
 	private static String SHADER_PATH = "data/opengl/shaders/";
 	private int rotation =0;
-	private int colorRed =0;
+	private float colorRed =0;
 	private int colorRedAddress, rotationAddress;
 	
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
-		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
-		//TODO : enable Vertex Shaders (glEnable)
+		//Note : either use shader here OR just before rendering (if different shaders are used, better doing that during render() )
+		//In this class, it would be better to use the shader here
         loadShaders();
         loadIBOs();
         
@@ -51,10 +52,10 @@ public class CubeShaders
         	setView();
         	
         	updateVariables(); //Increment Red component of colors with arrow keys
-            updateShaders();
+            updateShaders(); //Send this info to the shader uniform variables
             viewTransform(); //Note : doing the translation AFTER the rotation done by the VertexShader
 
-            render();
+            render(); //Using shader overload
             Display.update();
             Display.sync(60);
         }
@@ -65,27 +66,27 @@ public class CubeShaders
 	
 	private void updateVariables(){
 		rotation = (int)Time.uniformRotation();
-		UserInputs.incrementWithArrowKeys(colorRed, 5);
-		colorRed %= 255;
+		colorRed = UserInputs.incrementWithArrowKeys(colorRed, 5f);
+		colorRed = Math.abs(colorRed) % 255;
 	}
 
 	private void updateShaders(){
+		//NOTE : This is a bad code : the GPU recalculates the modelview matrix for every vertex !
+		//(Only done for the exercise, please do not copy paste)
 		GL20.glUniform1i(rotationAddress, rotation); 
-		GL20.glUniform1i(colorRedAddress, colorRed);
+		GL20.glUniform1i(colorRedAddress, (int)colorRed);
 	}
 	
 	private void viewTransform(){
 		glTranslatef(+coords.getX()+100, +coords.getY()+130, -200);
-		glRotated(Time.uniformRotation(), 0.0, 1.0, 0.0);
-		glTranslatef(-100, -100, +100);
 	}
 	
 	private void render(){    
-        drawIBOTriangles3f(CubeIboIDs);
+        IBO.drawTriangles3f(CubeIboIDs, shader[2]);
 	}
 
 	private void loadIBOs(){
-		CubeIboIDs = loadCubeTriangles3f(0, 0, 0, 200);
+		CubeIboIDs = loadCubeTriangles3f(-100, -100, -100, 200);
 	}
 
 	private void loadShaders(){

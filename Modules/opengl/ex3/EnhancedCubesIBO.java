@@ -67,13 +67,13 @@ public class EnhancedCubesIBO
 		glPushMatrix();
 		putObjectAt(new float[] {coords.getX(), coords.getY(), z}, 
 				Time.uniformRotation(), new float[] {side/2, side/2, -side/2});
-		drawIBOTriangles3f(coloredCubeIboIDs);
+		drawTriangles3f(coloredCubeIboIDs);
 		glPopMatrix();
 		
 		glPushMatrix();
 		putObjectAt(new float[] {2*coords.getX(), 2*coords.getY(), 2*z}, 
 				Time.uniformRotation(), new float[] {side/2, side/2, -side/2});
-		drawIBOTriangles3f(lightedCubeIboIDs);
+		drawTriangles3f(lightedCubeIboIDs);
 		glPopMatrix();
 	}
 

@@ -73,7 +73,7 @@ public class MovingLight
 	
 	private void renderCubes(){
 		for (int i=0; i<qubjects.length; i++){
-			IBO.drawIBOTriangles3f(qubjects[i]);
+			IBO.drawTriangles3f(qubjects[i]);
 		}
 	}
 	

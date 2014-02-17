@@ -58,7 +58,7 @@ public class CubeIBO
 	}
 	
 	private void render(){    
-        drawIBOTriangles3f(CubeIboIDs);
+        drawTriangles3f(CubeIboIDs);
 	}
 
 	private void initGL(){    
