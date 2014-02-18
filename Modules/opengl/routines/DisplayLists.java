@@ -5,22 +5,27 @@ import static routines.Buffers.*;
 
 public class DisplayLists
 {
-	static int theTorus = createVBOID();
+	/*****************************
+	 * LOAD DISPLAY LISTS
+	 *****************************/
 	
-	public static void loadTorusDisplayList(){
-	   theTorus = glGenLists (1);
+	/**
+	 * Loads a torus 
+	 */
+	public static int loadTorusDisplayList(){
+	   int theTorus = glGenLists (1);
 	   glNewList(theTorus, GL_COMPILE);
 	   torus(8, 25);
 	   glEndList();
-
-	   glShadeModel(GL_FLAT);
-	   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	   return theTorus;
 	}
 
+	/**
+	 * Draw a list
+	 * @param list
+	 */
 	public static void displayList(int list)
 	{
-	   glClear(GL_COLOR_BUFFER_BIT);
-	   glColor3f (1.0f, 1.0f, 1.0f);
 	   glCallList(list);
 	   glFlush();
 	}

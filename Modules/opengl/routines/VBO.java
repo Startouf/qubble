@@ -17,6 +17,15 @@ import static routines.someMath.*;
 
 public final class VBO
 {
+	/*****************************************
+	 * VBO TOOLS
+	 ************************************/
+	
+	/**
+	 * 
+	 * @param values
+	 * @return
+	 */
 	//Uses GL_STATIC_DRAW
 	public static int load_float_vbo(float [] values)
 	{
@@ -37,8 +46,18 @@ public final class VBO
 	public static int getVBO_ID(float[] values){
 		return (load_float_vbo(values));
 	}
+	
+	/*****************************************
+	 * LOAD VBO
+	 *****************************************/
 
-	//drawArray Overload (not IBO)
+	/**
+	 * drawArray Overload (not IBO)
+	 * @param w width
+	 * @param h height
+	 * @param d side
+	 * @param vertex_vbo_id
+	 */
 	public static void loadTriangleVBO(float w, float h, float d, Integer vertex_vbo_id) {
 		//si nous avons déja crée le VBO, inutile de recommencer ...
 		if (vertex_vbo_id != 0) return;
@@ -85,9 +104,11 @@ public final class VBO
 		return vbo_id;
 	}
 
-	//advanced overload : vertices, color and normal interleaved
-
-	//Non-indexed overload, only vertices
+	/**
+	 * Color overload : vertices, color 
+	 * @param vertex_vbo_id
+	 * @param color_vbo_id
+	 */
 	public static void drawCubeVBOTriangles(int vertex_vbo_id, int color_vbo_id){
 		if (vertex_vbo_id==0) return;
 		glEnableClientState(GL_VERTEX_ARRAY);

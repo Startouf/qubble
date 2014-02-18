@@ -25,6 +25,10 @@ import static routines.Init.*;
 /**
  * @author Cyril
  * Ex 3.3 et 3.4 : Cube with shaders
+ * 
+ * Note : the poor rendering of the back face (the side is drawn very badly)
+ * MIGHT be explained here http://www.opengl.org/archives/resources/faq/technical/depthbuffer.htm 
+ * (See 12.070)
  *
  */
 public class CubeShaders

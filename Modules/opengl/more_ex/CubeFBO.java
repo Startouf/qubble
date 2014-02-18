@@ -1,33 +1,22 @@
 package more_ex;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static routines.Init.HEIGHT;
 import static routines.Init.WIDTH;
 import static routines.Init.initDisplay;
 import static routines.Init.initLighting;
-import static routines.Transformations.putObjectAt;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
 
 import routines.FBO;
+import routines.Fonts;
 import routines.IBO;
-import routines.Textures;
-import routines.Time;
+import routines.Squares;
 
 /**
  * 
@@ -42,21 +31,20 @@ import routines.Time;
  */
 public class CubeFBO
 {
-	private Point coords = new Point(200,200);
-	private float z = -100;
+	private int FBO_WIDTH = 600, FBO_HEIGHT = 600;
 	private int side = 200;
-	private int[][] texturedCubeIboIDs = null;
-	private final String Texture_path = "/data/opengl/testFBO.jpg";
-	private Texture texture;
-	private int FBO_ID;
+	private int[] FBO_IDs;
+	private int[][] cubeIBO;
+	private UnicodeFont TNR; 
 	
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
         initLighting();
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        loadFonts();
         loadIBOs();
-        FBO_ID = FBO.makeFBO(side,side);
+        FBO_IDs = FBO.makeFBO(FBO_WIDTH,FBO_HEIGHT);
         
         while(!Display.isCloseRequested()){   
             renderFBO();					//Includes ViewPort for FBO and glClear
@@ -75,11 +63,30 @@ public class CubeFBO
     }
 	
 	private void renderFBO(){
-		//TODO
+		FBO.bindFBO(FBO_IDs[0], FBO_WIDTH, FBO_HEIGHT);
+		IBO.drawTriangles3f(cubeIBO);
+		FBO.unbindFBO();
 	}
 	
 	private void render(){   
-		//TODO
+		glPushMatrix();
+		GL11.glTranslatef(400f,400f,0f);
+		IBO.drawTriangles3f(cubeIBO);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glShadeModel(GL11.GL_SMOOTH); 
+		Color.white.bind();
+		TNR.drawString(350f, 350f, "The cube loaded in the FBO", Color.yellow);
+		glPopMatrix();
+		
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL11.GL_TEXTURE_2D, FBO_IDs[1]);
+		Squares.square3DWithTexture(new float[]{0f, 0f, 0f},
+									new float[]{200f, 0f, 0f},
+									new float[]{200f, 200f, 0f},
+									new float[]{0f, 200f, 0f});														
+
+		glDisable(GL_TEXTURE_2D);
+		glFlush ();
 	}
 	
 	private void viewTransform(){
@@ -87,7 +94,15 @@ public class CubeFBO
 	}
 	
 	private void loadIBOs(){
-		texturedCubeIboIDs = IBO.loadFBOCubeQuads3f(0, 0, 0, side, FBO_ID);
+		cubeIBO = IBO.loadColoredCubeTriangles3f(0f, 0f, 0f, (float)side, 
+				new float[][]{	{0f,1f,1f},	{1f,1f,0f},
+								{0f,1f,1f},	{1f,1f,0f},
+								{0f,1f,1f},	{1f,1f,0f}
+		});
+	}
+	
+	private void loadFonts(){
+		TNR = Fonts.TimesNewRoman();
 	}
 
 	private void initGL(){    
