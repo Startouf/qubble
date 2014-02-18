@@ -35,7 +35,7 @@ public class CubeShaders
 	private int[] CubeIboIDs = null;
 	private int[] shader;
 	private static String SHADER_PATH = "data/opengl/shaders/";
-	private int rotation =0;
+	private float rotation =0;
 	private float colorRed =0;
 	private int colorRedAddress, rotationAddress, positionAddress;
 	
@@ -50,9 +50,7 @@ public class CubeShaders
 		//In this class, it would be better to use the shader here
         loadShaders();
         loadIBOs();
-        
-        setObjectPosition();
-        
+
         while(!Display.isCloseRequested()){   
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
@@ -60,7 +58,7 @@ public class CubeShaders
         	
         	updateVariables(); //Increment Red component of colors with arrow keys
             updateShaders(); //Send this info to the shader uniform variables
-            //viewTransform(); //Note : doing the translation AFTER the rotation done by the VertexShader
+            viewTransform(); //Note : doing the translation AFTER the rotation done by the VertexShader
 
             render(); //Using shader overload
             Display.update();
@@ -72,9 +70,9 @@ public class CubeShaders
     }
 	
 	private void updateVariables(){
-		rotation = (int)Time.uniformRotation();
-		colorRed = UserInputs.incrementWithArrowKeys(colorRed, 5f);
-		colorRed = Math.abs(colorRed) % 255;
+		rotation = (float)Time.uniformRotation();
+		colorRed = UserInputs.incrementWithArrowKeys(colorRed, 0.05f);
+		colorRed = Math.abs(colorRed) % 1f;
 		System.out.println("rotation = "+ rotation);
 		System.out.println("colorRed = " +colorRed);
 	}
@@ -82,8 +80,12 @@ public class CubeShaders
 	private void updateShaders(){
 		//NOTE : This is a bad code : the GPU recalculates the modelview matrix for every vertex !
 		//(Only done for the exercise, please do not copy paste)
-		GL20.glUniform1i(rotationAddress, rotation); 
-		GL20.glUniform1i(colorRedAddress, (int)colorRed);
+		
+		//Note 2 : will only affect the ACTIVE shader ! 
+		GL20.glUseProgram(shader[2]);
+		GL20.glUniform1f(rotationAddress, rotation); 
+		GL20.glUniform1f(colorRedAddress, colorRed);
+		GL20.glUseProgram(0);
 	}
 	
 	private void viewTransform(){
@@ -93,13 +95,9 @@ public class CubeShaders
 	private void render(){    
         IBO.drawTriangles3f(CubeIboIDs, shader[2]);
 	}
-	
-	private void setObjectPosition(){
-		GL20.glUniform3f(positionAddress, 100f,100f,-100f);
-	}
 
 	private void loadIBOs(){
-		CubeIboIDs = loadCubeTriangles3f(-100, -100, -100, 200);
+		CubeIboIDs = IBO.loadCubeTriangles3f(-100, -100, -100, 200);
 	}
 
 	private void loadShaders(){
