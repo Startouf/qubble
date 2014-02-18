@@ -33,10 +33,12 @@ public class WaveForm extends JFrame implements Observer {
 	
 	private PlayButton play;
 	private SynthButton synthButton;
+	private DelayButton delayButton;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ChartPanel chartPanel;
 	private JPanel windowPanel;
+	
 	
 	private QuitMenuItem quitMenuItem;
 	private SelectMenuItem selectMenuItem;
@@ -60,6 +62,7 @@ public class WaveForm extends JFrame implements Observer {
 		play = new PlayButton(this);
 		recordButton = new RecordButton(this);
 		synthButton = new SynthButton(this);
+		delayButton = new DelayButton(this);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -75,6 +78,7 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.add(play);
 		windowPanel.add(recordButton);
 		windowPanel.add(synthButton);
+		windowPanel.add(delayButton);
 		
 		setContentPane(windowPanel);
 		
@@ -90,7 +94,7 @@ public class WaveForm extends JFrame implements Observer {
 		if (file != null) {
 			try {
 				ArrayList<Integer> samples = Player.getSamples(file);
-				System.out.println(samples.size());
+				//ArrayList<Integer> samples = Player.getSpectrum(Player.getSamples(file));
 
 				for (int i = 0; i < samples.size(); i++) {
 					serie.add((float) i, (float) samples.get(i));
@@ -120,7 +124,15 @@ public class WaveForm extends JFrame implements Observer {
 	}
 
 	public void play() {
-		Player.play(file);
+		//Player.play(file);
+		Player.playStream(file);
+		/*
+		try {
+			Synthesizer.print(Player.getSpectrum(Player.getSamples(file)));
+		} catch (Exception e) {
+			System.out.println("Dans play : " + e.getMessage());
+		}
+		*/
 	}
 	
 	public void startRecording(File file) {
@@ -129,21 +141,7 @@ public class WaveForm extends JFrame implements Observer {
 		
 		stopper = new audioThread(recorder);
 		stopper.start();
-		/*
-		stopper = new Thread(new Runnable() {// Creer un nouveau thread
-					// qui attend RecordTime
-					// avant de s'arreter
-					public void run() {
-						
-						recorder.start();
-						//recorder.finish();
-
-					}
-
-				});
-		stopper.start();
-		*/
-		//recorder.start();
+		
 	}
 	
 	public void stopRecording() {
@@ -153,8 +151,40 @@ public class WaveForm extends JFrame implements Observer {
 	}
 	
 	public void synthesize(File file) {
-		synth = new Synthesizer(Synthesizer.sine, 220, 2500, 44000);
+		synth = new Synthesizer(Synthesizer.sine, 330, 2500, 44000);
 		synth.writeFile(file, 3);
 		update(null, file);
+	}
+	
+	public void applyDelay(int rate, int decay, int feedback, int dry, int wet) {
+		try {
+			int[] newSamples = Effect.delay(Player.getSamples(file), rate, decay, feedback, dry, wet);
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44000);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+			update(null, file);
+		}
+		catch (Exception e) {
+			System.out.println("applyDelay : " + e.getMessage());
+		}
+	}
+	
+	public void applyDisto(float drive, int clip) {
+		try {
+			int[] newSamples = Effect.disto(Player.getSamples(file), drive, clip);
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44000);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+			update(null, file);
+		}
+		catch (Exception e) {
+			System.out.println("applyDelay : " + e.getMessage());
+		}
 	}
 }
