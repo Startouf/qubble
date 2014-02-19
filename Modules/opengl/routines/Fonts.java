@@ -73,7 +73,12 @@ public class Fonts {
 	 */
 	public static void render(UnicodeFont font, float x, float y, String text, Color color) {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
 		font.drawString(x, y, text, color);
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}   

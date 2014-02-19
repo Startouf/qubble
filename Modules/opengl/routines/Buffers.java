@@ -43,6 +43,16 @@ public final class Buffers
 		buffer.flip();
 		return buffer;
 	}
+
+	/**
+	 * Update a Buffer WITHOUT CHANGING ITS LENGTH
+	 * @param FB
+	 */
+	public static void update(FloatBuffer FB, float[] values){
+		FB.rewind();
+		FB.put(values);
+		FB.flip();
+	}
 	
 	public static int createARBVBOID() {
 		//ARB VBO_ID and checking if it's possible

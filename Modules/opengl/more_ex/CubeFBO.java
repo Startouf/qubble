@@ -6,6 +6,9 @@ import static routines.Init.WIDTH;
 import static routines.Init.initDisplay;
 import static routines.Init.initLighting;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -13,20 +16,25 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 
+import routines.Buffers;
 import routines.FBO;
 import routines.Fonts;
 import routines.IBO;
 import routines.Squares;
+import routines.VBO;
 
 /**
  * 
  * @author Cyril
  * Exercice perso
- * Purpose : render some cubes (With whatever way : VBO, IBO, shader...)
- * ... and then make a FBO from those
+ * Purpose : render some cubes within an FBO 
+ * ... and then make a texture from it
  * 
- * Then, it's possible to alter this FBO (stretch, compress...)
+ * Then, use this texture to draw a quad. It is possible to modify the vertices of this quad to tweak the image
  * (For example with the arrow keys)
+ * Used for image registration (recalage d'images)
+ * 
+ * Aim in this class : stretch with numpad keys
  *
  */
 public class CubeFBO
@@ -35,23 +43,29 @@ public class CubeFBO
 	private int side = 200;
 	private int[] FBO_IDs;
 	private int[][] cubeIBO;
-	private UnicodeFont TNR; 
+	private int[] stretchableSquareIBO;
+	private TrueTypeFont TNR; 
+	private float pos = 100f;
+	private float[] vertices;
+	private FloatBuffer FB;
+	private boolean modified = false;
 	
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
-        initLighting();
-        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         loadFonts();
         loadIBOs();
         FBO_IDs = FBO.makeFBO(FBO_WIDTH,FBO_HEIGHT);
+        initView();
         
         while(!Display.isCloseRequested()){   
             renderFBO();					//Includes ViewPort for FBO and glClear
             
             glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-        	initGL();
+        	stretchWithNumPad();
+        	updateVBO();
+        	
             viewTransform();
             render();
             
@@ -67,26 +81,70 @@ public class CubeFBO
 		IBO.drawTriangles3f(cubeIBO);
 		FBO.unbindFBO();
 	}
-	
+
 	private void render(){   
+		//Rendering a textured square with the FBO
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL11.GL_TEXTURE_2D, FBO_IDs[1]);
+		IBO.drawTexturedTriangles3f(stretchableSquareIBO, 0); //TODO : add texCoords in the IBO.stretchableSquare 	 (the 0 will make it crash  most likely)											
+		glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+
+		//Normal render without FBO :
 		glPushMatrix();
 		GL11.glTranslatef(400f,400f,0f);
 		IBO.drawTriangles3f(cubeIBO);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_SMOOTH); 
-		Color.white.bind();
-		TNR.drawString(350f, 350f, "The cube loaded in the FBO", Color.yellow);
+		Fonts.render(TNR, 350f, 150f, "The cube loaded in the FBO", Color.white);
 		glPopMatrix();
-		
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL11.GL_TEXTURE_2D, FBO_IDs[1]);
-		Squares.square3DWithTexture(new float[]{0f, 0f, 0f},
-									new float[]{200f, 0f, 0f},
-									new float[]{200f, 200f, 0f},
-									new float[]{0f, 200f, 0f});														
 
-		glDisable(GL_TEXTURE_2D);
-		glFlush ();
+	}
+	
+	private void updateVBO(){
+		if (modified){
+			VBO.bufferData(stretchableSquareIBO[0], vertices);
+			modified = false;
+		}
+	}
+	
+	private void stretchWithNumPad(){
+		while(Keyboard.next()){ //Will generate only one line per event
+			if (Keyboard.getEventKeyState()){ //Key pressed
+				modified = true;
+				switch(Keyboard.getEventKey()){
+				case Keyboard.KEY_NUMPAD1: //move bottom-left edge (0) to bottom-left
+					vertices[0] -= 25f;
+					vertices[1] -= 25f;
+					break;
+				case Keyboard.KEY_NUMPAD2: //move bottom edge (1) to bottom
+					vertices[3*1+1] -= 25f;
+					break;
+				case Keyboard.KEY_NUMPAD3: //move bottom-right edge (2) to bottom-right
+					vertices[3*2] += 25f;
+					vertices[3*2+1] -= 25f;
+					break;
+				case Keyboard.KEY_NUMPAD4: //move left edge (3) to left
+					vertices[3*3] -= 25f;
+					break;
+				// Center vertex doesn't move !
+				case Keyboard.KEY_NUMPAD6: //move right edge (5) to right
+					vertices[3*5] += 25f;
+					break;
+				case Keyboard.KEY_NUMPAD7: //move top-left edge (6) to top-left
+					vertices[3*6] -= 25f;
+					vertices[3*6+1] += 25f;
+					break;
+				case Keyboard.KEY_NUMPAD8: //move top edge (7) to top
+					vertices[3*7+1] += 25f;
+					break;
+				case Keyboard.KEY_NUMPAD9: //move top-right edge (8) to top-right
+					vertices[3*8] += 25f;
+					vertices[3*8+1] += 25f;
+					break;
+				}
+			}
+		}
 	}
 	
 	private void viewTransform(){
@@ -95,17 +153,25 @@ public class CubeFBO
 	
 	private void loadIBOs(){
 		cubeIBO = IBO.loadColoredCubeTriangles3f(0f, 0f, 0f, (float)side, 
-				new float[][]{	{0f,1f,1f},	{1f,1f,0f},
+				new float[][]{	{1f,0.25f,1f},	{1f,1f,0f},
 								{0f,1f,1f},	{1f,1f,0f},
 								{0f,1f,1f},	{1f,1f,0f}
 		});
+		
+		//Original stretchable cube vertices positions
+		float x=0f, y=0f, z=0f, s=200f;
+		stretchableSquareIBO = IBO.loadStretchableSquareIBO2f(x, y, z, s);
+		vertices = new float[] {x,y,z,	x+s/2,y,z,	x+s,y,z,	
+				x,y+s/2,z,	x+s/2,y+s/2,z,	x+s,y+s/2,z,
+				x,y+s,z,	x+s/2,y+s,z,	x+s,y+s,z};
+		FB = Buffers.makeFloatBuffer(vertices);
 	}
 	
 	private void loadFonts(){
-		TNR = Fonts.TimesNewRomanUnicode();
+		TNR = Fonts.TimesNewsRomanTTF();
 	}
 
-	private void initGL(){    
+	private void initView(){    
 		glViewport(0, 0, WIDTH, HEIGHT);
 		glMatrixMode(GL11.GL_PROJECTION);
 		glLoadIdentity();

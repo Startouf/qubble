@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GLContext;
 
 import static routines.Buffers.*;
@@ -22,12 +23,13 @@ public final class VBO
 	 ************************************/
 	
 	/**
-	 * 
+	 * Create a FloatBuffer from values and buffer the data to a VBO on the GPU
+	 * Uses Static Draw parameter --> Not changed, used a lot
 	 * @param values
 	 * @return
 	 */
 	//Uses GL_STATIC_DRAW
-	public static int load_float_vbo(float [] values)
+	public static int loadStaticDrawVBO(float [] values)
 	{
 		//chargeons les données dans un FloatBuffer
 		FloatBuffer verticesBuffer = FB(values);
@@ -41,10 +43,37 @@ public final class VBO
 
 		return vbo_id;
 	}
+	
+	/**
+	 * Create a FloatBuffer from values and buffer the data to a VBO on the GPU
+	 * Uses Dynamic Draw parameter --> Changed often, used a lot
+	 * @param values
+	 * @return
+	 */
+	public static int loadDynamicDrawVBO(float [] values)
+	{
+		//chargeons les données dans un FloatBuffer
+		FloatBuffer verticesBuffer = FB(values);
+
+		//creons un VBO dans la mémoire du GPU (pas encore de données associées))
+		int vbo_id = createVBOID();
+
+		//et copions les données dans la mémoire du GPU en spécifiant l'utilisation
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+		glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_DYNAMIC_DRAW);
+
+		return vbo_id;
+	}
 
 	//Shortcut
 	public static int getVBO_ID(float[] values){
-		return (load_float_vbo(values));
+		return (loadStaticDrawVBO(values));
+	}
+
+	public static void bufferData(int vboID, float[] values){
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		Buffers.FB(values);
+		
 	}
 	
 	/*****************************************
@@ -69,7 +98,7 @@ public final class VBO
 				w, h, d,
 				w, -h, d,
 		};
-		vertex_vbo_id = load_float_vbo(vertices);
+		vertex_vbo_id = loadStaticDrawVBO(vertices);
 	}
 
 
@@ -93,7 +122,7 @@ public final class VBO
 		 *   | _________|/
 		 * 			6^	
 		 */
-		int vbo_id = load_float_vbo(new float[]{
+		int vbo_id = loadStaticDrawVBO(new float[]{
 				x,y,z,	x+s,y,z, 	x,y+s,z,	x,y+s,z,	x+s,y,z,	x+s,y+s,z,
 				x+s,y,z,	x+s,y,z-s,	x+s,y+s,z,		x+s,y+s,z,	x+s,y,z-s,	x+s,y+s,z-s,
 				x+s,y,z-s,	x,y,z-s,	x,y+s,z-s,	x,y+s,z-s,	x+s,y+s,z-s,	x+s,y,z-s,

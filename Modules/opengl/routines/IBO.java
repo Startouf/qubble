@@ -37,7 +37,7 @@ public class IBO
 			System.out.println("NULL IBO ID");
 		}
 
-		return new int[] {load_float_vbo(vertices), load_index_vbo(indices), indices.length};
+		return new int[] {loadStaticDrawVBO(vertices), load_index_vbo(indices), indices.length};
 	}
 	
 	/***********************************
@@ -156,18 +156,31 @@ public class IBO
 			new int[] {getVBO_ID(colorsCoords)}, new int[] {getVBO_ID(normalsCoords)}};
 	}
 
+
 	/**
-	 * Cube IBO drawn with a FBO as texture
+	 * Made to be used with a FBO rendered to texture.
+	 * Composed of 4 triangles 
+	 * 		8 
+	 * 7 _______9
+	 *	|  /|\  |
+	 * 	| / | \ |
+	 * 4|/_5|__\|6
+	 * 	|\  |  /|
+	 * 	| \ | / |
+	 * 1|__\|/__|3
+	 * 		2
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @param s
-	 * @param IBO_ID
 	 * @return
 	 */
-	public static int[][] loadFBOCubeQuads3f(float x, float y, float z, float s, int FBO_ID){
-		//TODO
-		return null;
+	public static int[] loadStretchableSquareIBO2f(float x, float y, float z, float s){
+		float[] vertices = {x,y,z,	x+s/2,y,z,	x+s,y,z,	
+				x,y+s/2,z,	x+s/2,y+s/2,z,	x+s,y+s/2,z,
+				x,y+s,z,	x+s/2,y+s,z,	x+s,y+s,z};
+		int[] indices = {1,2,4,	2,5,4,	2,6,5,	2,3,6,	4,8,7,	4,5,8,	5,6,8,	6,9,8};
+		return getIBO_IDs(vertices, indices);
 	}
 	
 	
@@ -181,7 +194,6 @@ public class IBO
 	 * @param IDs = int[] {vertex_VBO_id, index_VBO_id, number of vertices}
 	 */
 	public static void drawTriangles3f(int[] vboIDs){
-
 		if (vboIDs == null){
 			System.out.println("NULL IBO ID");
 			return;
@@ -195,6 +207,8 @@ public class IBO
 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
 	}
+	
+
 	/**
 	 * Shader overload
 	 * Use the shader program, draw the triangle, and release the shader
@@ -245,5 +259,16 @@ public class IBO
 		}
 	}
 
-	
+	public static void drawTexturedTriangles3f(int[] iboIDs, int textureVBO){
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, textureVBO);
+		GL11.glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, iboIDs[0]);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboIDs[1]);
+		glDrawElements(GL_TRIANGLES, iboIDs[2], GL_UNSIGNED_INT, 0);
+	}
 }

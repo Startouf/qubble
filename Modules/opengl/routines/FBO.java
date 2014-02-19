@@ -22,21 +22,12 @@ public class FBO {
 	 * @return {a validated FBO_ID, texture_ID} 
 	 */
 	public static int[] makeFBO(int width, int height){
-		return makeFBO(makeTextureForFBO(width, height));
-	}
-	
-	/**
-	 * texture ID overload. 
-	 * Make a FBO and attach a texture, and performs completeness check
-	 * The FBO is not binded at the end
-	 * Has a Color Buffer and a Depth Buffer
-	 * @param texture_ID
-	 * @return {a validated FBO_ID, texture_ID}
-	 */
-	public static int[] makeFBO(int texture_ID){
 		int FBO_ID = makeFBOBuffer();
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO_ID);
+		int texture_ID = makeTextureForFBO(width, height);
 		attachTexture(texture_ID, FBO_ID);
 		checkFBO(FBO_ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		return new int[]{FBO_ID, texture_ID};
 	}
 
@@ -45,22 +36,20 @@ public class FBO {
 	}
 	
 	public static int makeTextureForFBO(int width, int height){
-		int colorTextureID = GL11.glGenTextures();
+		int textureID = GL11.glGenTextures();
 		int depthRenderBufferID = GL30.glGenRenderbuffers();
 		
 		//Color Buffer
-		glBindTexture(GL_TEXTURE_2D, colorTextureID);									// Bind the colorbuffer texture
+		glBindTexture(GL_TEXTURE_2D, textureID);									// Bind the colorbuffer texture
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);				// make it linear filterd
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0,GL_RGBA, GL_INT, (java.nio.ByteBuffer) null);	// Create the texture data
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER,GL30.GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, colorTextureID, 0);
+		glFramebufferTexture2D(GL30.GL_FRAMEBUFFER,GL30.GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, textureID, 0);// bind it to the FBO
 
 		// initialize depth renderbuffer
 		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferID);				// bind the depth renderbuffer
 		glRenderbufferStorage(GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);	// get the data space for it
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER, depthRenderBufferID); // bind it to the renderbuffer
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
-		return colorTextureID;
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER, depthRenderBufferID); // bind it to the FBO
+		return textureID;
 	}
 	
 	public static void attachTexture(int textureID, int FBO_ID){
