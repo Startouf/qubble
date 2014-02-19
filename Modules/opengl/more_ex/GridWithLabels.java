@@ -1,35 +1,38 @@
 package more_ex;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnableClientState;
+import static org.lwjgl.opengl.GL11.*;
+import static routines.Init.HEIGHT;
+import static routines.Init.WIDTH;
 import static routines.Init.initDisplay;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import routines.DisplayLists;
 import routines.Fonts;
+import routines.Grids;
 import routines.Init;
+import routines.Squares;
 
 public class GridWithLabels {
 
-	private UnicodeFont TNW;
+	private UnicodeFont TNR;
+	private int gridDL;
 	
 	private void start(){
         initDisplay();
-        glEnable(GL_CULL_FACE);
         loadFonts();
-                
+        loadDisplayLists();
+    	initView();
+        
         while(!Display.isCloseRequested()){   
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-        	initGL();
   
             render();
             Display.update();
@@ -40,15 +43,27 @@ public class GridWithLabels {
     }
 	
 	private void render(){
-		Fonts.render(TNW, 50, 50, "testing Fonts", Color.white);
+		glColor3f(1f,1f,1f);
+		DisplayLists.renderList(gridDL);
+		Squares.squareFromFan(100f, 100f, 100f);
+		Fonts.render(TNR, 50, 50, "testing Fonts", Color.white);
+	}
+	
+	private void loadDisplayLists(){
+//		gridDL = DisplayLists.loadGrid(
+//				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f});
+		//The Labeled grid gets away ???
+		gridDL = DisplayLists.loadLabeledGrid(
+				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f}, 	//Position of the grid and spacing
+				new int[]{2,2,2}, new float[]{1f,1f,1f}, new String[]{"Time", "Effect"}, TNR);			//Labels : spacing between labels, multiplier for labels, axisName, font
 	}
 	
 	private void loadFonts(){
-		TNW = Fonts.TimesNewRoman();
+		TNR = Fonts.TimesNewRoman();
 	}
 	
-	private void initGL(){
-		Init.initOrthoView(new double[]{0, 800, 0, 600, 10,-500});
+	private void initView(){
+		Init.initOrthoView(new double[]{0, 800, 600, 0, 10,-500});
 	}
 	
 	public static void main(String[] args){
