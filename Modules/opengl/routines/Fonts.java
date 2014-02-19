@@ -16,11 +16,16 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Fonts {
 	
+	public static void loadFontEssentials(){
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
 	/**
-	 * Times New Roman (from JAVA awt) with antialisaing, colored white
-	 * @return TureTypeFont (slick)
+	 * Unicode Times New Roman (from JAVA awt) with antialisaing, colored white
+	 * @return Unicode (slick)
 	 */
-	public static UnicodeFont TimesNewRoman(){
+	public static UnicodeFont TimesNewRomanUnicode(){
 		loadFontEssentials();
 		UnicodeFont font = new UnicodeFont(new Font("Times New Roman", Font.BOLD, 24));
 		font.getEffects().add(new ColorEffect(java.awt.Color.white));
@@ -31,6 +36,15 @@ public class Fonts {
 	       // Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
 	    }
 	    return font;
+	}
+
+	/**
+	 * TrueTypeFont Times New Roman with antialisaing
+	 * @return TrueTypeFont TNR(slick)
+	 */
+	public static TrueTypeFont TimesNewsRomanTTF(){
+		loadFontEssentials();
+		return(new TrueTypeFont(new Font("Times New Roman", Font.BOLD, 24), true));
 	}
 
 	public static TrueTypeFont customFont(String path) {
@@ -79,8 +93,34 @@ public class Fonts {
 		font.drawString(x, y, text, color);
 	}
 	
-	public static void loadFontEssentials(){
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	/**
+	 * Render a TrueTypeFont
+	 * @param font
+	 * @param x
+	 * @param y
+	 * @param text
+	 * @param color
+	 */
+	public static void render(TrueTypeFont font, float x, float y, String text, Color color) {
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		font.drawString(x, y, text, color);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	}   
+	/**
+	 * Optimized for multiple consecutive font rendering
+	 * (Avoid Enabling/Disabling GL_Attributes)
+	 * Encapsulate all renderMultiple by glDisable-> Enable GL_DEPTH_TEST, Enable->Disable GL_TEXTURE_2D
+	 * At the end, glDisable(GL_TEXTURE_2D)
+	 * @param font
+	 * @param x
+	 * @param y
+	 * @param text
+	 * @param color
+	 */
+	public static void renderMultiple(TrueTypeFont font, float x, float y, String text, Color color){
+		font.drawString(x, y, text, color);
 	}
+
 }

@@ -3,7 +3,7 @@ package routines;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.Buffers.*;
 
-import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.TrueTypeFont;
 
 public class DisplayLists
 {
@@ -58,10 +58,10 @@ public class DisplayLists
 	 * @param axisName : a name for the axis {x, y, z}
 	 * @param font : a loaded Unicode font 
 	 */
-	public static int loadLabeledGrid(float[] area, float[] spacing, int[] labelSpacing, float[] labelMultiplier, String[] axisName, UnicodeFont font ){
+	public static int loadLabeledGrid(float[] area, float[] spacing, int[] labelSpacing, float[] labelMultiplier, String[] axisName, TrueTypeFont font ){
 		int gridList = glGenLists(1);
 		glNewList(gridList, GL_COMPILE);
-		Grids.drawGrid3fWithLabels(area, spacing, labelSpacing, labelMultiplier, axisName, font);
+		Grids.drawGrid2fWithLabels(area, spacing, labelSpacing, labelMultiplier, axisName, font);
 		glEndList();
 		return gridList;
 	}

@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 
 import routines.DisplayLists;
@@ -22,6 +23,7 @@ import routines.Squares;
 public class GridWithLabels {
 
 	private UnicodeFont TNR;
+	private TrueTypeFont TTF_TNR;
 	private int gridDL;
 	
 	private void start(){
@@ -45,8 +47,7 @@ public class GridWithLabels {
 	private void render(){
 		glColor3f(1f,1f,1f);
 		DisplayLists.renderList(gridDL);
-		Squares.squareFromFan(100f, 100f, 100f);
-		Fonts.render(TNR, 50, 50, "testing Fonts", Color.white);
+		Squares.squareFromFan(95f, 95f, 30f);
 	}
 	
 	private void loadDisplayLists(){
@@ -55,11 +56,13 @@ public class GridWithLabels {
 		//The Labeled grid gets away ???
 		gridDL = DisplayLists.loadLabeledGrid(
 				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f}, 	//Position of the grid and spacing
-				new int[]{2,2,2}, new float[]{1f,1f,1f}, new String[]{"Time", "Effect"}, TNR);			//Labels : spacing between labels, multiplier for labels, axisName, font
+				new int[]{2,2,2}, new float[]{1f,1f,1f}, new String[]{"Time", "Effect"}, TTF_TNR);			//Labels : spacing between labels, multiplier for labels, axisName, font
+		
 	}
 	
 	private void loadFonts(){
-		TNR = Fonts.TimesNewRoman();
+		TNR = Fonts.TimesNewRomanUnicode();
+		TTF_TNR = Fonts.TimesNewsRomanTTF();
 	}
 	
 	private void initView(){

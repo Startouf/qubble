@@ -102,7 +102,7 @@ public class CubeFBO
 	}
 	
 	private void loadFonts(){
-		TNR = Fonts.TimesNewRoman();
+		TNR = Fonts.TimesNewRomanUnicode();
 	}
 
 	private void initGL(){    
