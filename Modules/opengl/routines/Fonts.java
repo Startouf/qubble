@@ -1,7 +1,6 @@
 package routines;
 
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Font;
 import java.io.InputStream;
@@ -19,23 +18,6 @@ public class Fonts {
 	public static void loadFontEssentials(){
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	}
-	
-	/**
-	 * Unicode Times New Roman (from JAVA awt) with antialisaing, colored white
-	 * @return Unicode (slick)
-	 */
-	public static UnicodeFont TimesNewRomanUnicode(){
-		loadFontEssentials();
-		UnicodeFont font = new UnicodeFont(new Font("Times New Roman", Font.BOLD, 24));
-		font.getEffects().add(new ColorEffect(java.awt.Color.white));
-	    font.addAsciiGlyphs();
-	    try {
-	        font.loadGlyphs();
-	    } catch (SlickException ex) {
-	       // Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	    return font;
 	}
 
 	/**
@@ -63,60 +45,46 @@ public class Fonts {
 		return null;
 	}
 
-	/**
-	 * NOTE : you can directly print front using yourFront.drawString() !
-	 * BUT : can only draw if CULL_FACE DISABLED
-	 * @param font
-	 * @param x
-	 * @param y
-	 * @param color
-	 */
-	public static void render(UnicodeFont font, float x, float y, String text, Color color) {
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
-		font.drawString(x, y, text, color);
-		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-	}   
-
-	/**
-	 * Optimized for multiple consecutive font rendering
-	 * (Avoid Enabling/Disabling GL_Attributes)
-	 * Encapsulate all renderMultiple by glDisable-> Enable GL_DEPTH_TEST
-	 * At the end, glDisable(GL_TEXTURE_2D)
-	 * @param font
-	 * @param x
-	 * @param y
-	 * @param text
-	 * @param color
-	 */
-	public static void renderMultiple(UnicodeFont font, float x, float y, String text, Color color){
-		font.drawString(x, y, text, color);
-	}
-	
-	/**
-	 * Render a TrueTypeFont
-	 * @param font
-	 * @param x
-	 * @param y
-	 * @param text
-	 * @param color
-	 */
 	public static void render(TrueTypeFont font, float x, float y, String text, Color color) {
+		//TODO : Use glPushAttrib instead
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL_CULL_FACE);
 		font.drawString(x, y, text, color);
+		GL11.glEnable(GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	}
+	/**
+	 * Render a TrueTypeFont UpsideDown (swaps the view to Ortho (ymin =600, ymax = 0)
+	 * @param font
+	 * @param x
+	 * @param y
+	 * @param text
+	 * @param color
+	 */
+	public static void renderUpsideDown(TrueTypeFont font, float x, float y, String text, Color color) {
+		//TODO : Use glPushAttrib instead
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL_CULL_FACE);
+		
+		glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, 800, 600, 00, 300, -600);
+		font.drawString(x, y, text, color);
+		GL11.glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		
+		GL11.glEnable(GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}   
 	/**
 	 * Optimized for multiple consecutive font rendering
 	 * (Avoid Enabling/Disabling GL_Attributes)
-	 * Encapsulate all renderMultiple by glDisable-> Enable GL_DEPTH_TEST, Enable->Disable GL_TEXTURE_2D
+	 * Encapsulate all renderMultiple by glDisable-> Enable (GL_DEPTH_TEST|GL_CULLING), Enable->Disable GL_TEXTURE_2D
 	 * At the end, glDisable(GL_TEXTURE_2D)
 	 * @param font
 	 * @param x

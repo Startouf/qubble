@@ -73,6 +73,9 @@ public class CubeFBO
             viewTransform();
             render();
             
+            initViewFonts();
+            renderInfo();
+            
             Display.update();
             Display.sync(60);
         }
@@ -97,17 +100,18 @@ public class CubeFBO
 		IBO.drawTexturedTriangles3f(stretchableSquareIBO[0], stretchableSquareIBO[1][0], FBO_IDs[1]);	
 		glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		
-		glDisable(GL_TEXTURE_2D);
-
 		//Normal render without FBO :
 		glPushMatrix();
 		GL11.glTranslatef(400f,400f,0f);
 		IBO.drawTriangles3f(cubeIBO);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		//Font not rendering ?
-		Fonts.render(TNR, 350f, 150f, "The cube loaded in the FBO", Color.white);
-		glPopMatrix();
-
+	}
+	
+	private void renderInfo(){
+		loadFonts();
+		Fonts.render(TNR, 50, 350, "Quad drawn with Texture from FBO", Color.white);
+		Fonts.render(TNR, 400, 450, "Stretch with numpad 1-9", Color.white);
+		Fonts.render(TNR, 200, 20, "Original cube drawn in FBO and rendered to texture", Color.white);
 	}
 	
 	private void updateVBO(){
@@ -177,6 +181,15 @@ public class CubeFBO
 	
 	private void loadFonts(){
 		TNR = Fonts.TimesNewsRomanTTF();
+	}
+	
+	private void initViewFonts(){    
+		glViewport(0, 0, WIDTH, HEIGHT);
+		glMatrixMode(GL11.GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, 800, 600, 0, 300, -600);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 
 	private void initViewFBO(){    

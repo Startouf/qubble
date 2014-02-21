@@ -22,7 +22,6 @@ import routines.Squares;
 
 public class GridWithLabels {
 
-	private UnicodeFont TNR;
 	private TrueTypeFont TTF_TNR;
 	private int gridDL;
 	
@@ -51,17 +50,12 @@ public class GridWithLabels {
 	}
 	
 	private void loadDisplayLists(){
-//		gridDL = DisplayLists.loadGrid(
-//				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f});
-		//The Labeled grid gets away ???
 		gridDL = DisplayLists.loadLabeledGrid(
 				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f}, 	//Position of the grid and spacing
 				new int[]{2,2,2}, new float[]{1f,1f,1f}, new String[]{"Time", "Effect"}, TTF_TNR);			//Labels : spacing between labels, multiplier for labels, axisName, font
-		
 	}
 	
 	private void loadFonts(){
-		TNR = Fonts.TimesNewRomanUnicode();
 		TTF_TNR = Fonts.TimesNewsRomanTTF();
 	}
 	

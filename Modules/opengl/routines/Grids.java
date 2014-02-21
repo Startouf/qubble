@@ -107,7 +107,7 @@ public final class Grids
 	 */
 	public static void drawGrid2fWithLabels(float[] area, float[] cellSpacing, int[] labelSpacing, float[] labelMultiplier, String[] axisName, TrueTypeFont font){
 		drawGrid3f(area, cellSpacing);
-
+		//TODO : replace by glPush Attrib /glPop
 		GL11.glDisable(GL_DEPTH_TEST);
 		GL11.glEnable(GL_TEXTURE_2D);
 		renderTickLabels2f(area, cellSpacing, labelSpacing, labelMultiplier, axisName, font);
