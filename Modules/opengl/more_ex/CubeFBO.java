@@ -39,7 +39,7 @@ import routines.VBO;
  */
 public class CubeFBO
 {
-	private int FBO_WIDTH = 250, FBO_HEIGHT = 250;
+	private int FBO_WIDTH = 350, FBO_HEIGHT = 350;
 	private int side = 200;
 	private int[] FBO_IDs;
 	private int[][] cubeIBO;
@@ -61,7 +61,7 @@ public class CubeFBO
         	initViewFBO();
             glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-        	
+        	viewTransform();
         	renderFBO();					//FBO ViewInit done inside renderFBO
             
             initView();
@@ -82,7 +82,10 @@ public class CubeFBO
 	
 	private void renderFBO(){
 		FBO.bindFBO(FBO_IDs[0]);
+		glPushMatrix();
+		GL11.glTranslatef(100f,100f,0f);
 		IBO.drawTriangles3f(cubeIBO);
+		glPopMatrix();
 		FBO.unbindFBO();
 	}
 
@@ -101,7 +104,7 @@ public class CubeFBO
 		GL11.glTranslatef(400f,400f,0f);
 		IBO.drawTriangles3f(cubeIBO);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
+		//Font not rendering ?
 		Fonts.render(TNR, 350f, 150f, "The cube loaded in the FBO", Color.white);
 		glPopMatrix();
 
