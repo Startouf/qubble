@@ -91,7 +91,7 @@ public final class someMath
 	 * Inverse of getVertexFromCoords3f
 	 * @param vertexCoords 
 	 * @param vertex
-	 * @param position Starts from 0 ! (the ith vector)
+	 * @param position Position of the ith VECTOR (the *3 is handled) Starts from 0 ! 
 	 */
 	public static void mapVectorToCoords3f(float[] vertex, float[] vertexCoords, int position){
 		for(int i =0; i<3;i++){

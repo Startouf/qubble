@@ -39,28 +39,32 @@ import routines.VBO;
  */
 public class CubeFBO
 {
-	private int FBO_WIDTH = 600, FBO_HEIGHT = 600;
+	private int FBO_WIDTH = 250, FBO_HEIGHT = 250;
 	private int side = 200;
 	private int[] FBO_IDs;
 	private int[][] cubeIBO;
-	private int[] stretchableSquareIBO;
+	private int[][] stretchableSquareIBO;
 	private TrueTypeFont TNR; 
 	private float pos = 100f;
 	private float[] vertices;
-	private FloatBuffer FB;
 	private boolean modified = false;
 	
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
+        GL11.glShadeModel(GL11.GL_SMOOTH); 
         loadFonts();
         loadIBOs();
         FBO_IDs = FBO.makeFBO(FBO_WIDTH,FBO_HEIGHT);
-        initView();
         
         while(!Display.isCloseRequested()){   
-            renderFBO();					//Includes ViewPort for FBO and glClear
+        	initViewFBO();
+            glClear(GL_COLOR_BUFFER_BIT | 
+					GL_DEPTH_BUFFER_BIT);
+        	
+        	renderFBO();					//FBO ViewInit done inside renderFBO
             
+            initView();
             glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
         	stretchWithNumPad();
@@ -77,17 +81,19 @@ public class CubeFBO
     }
 	
 	private void renderFBO(){
-		FBO.bindFBO(FBO_IDs[0], FBO_WIDTH, FBO_HEIGHT);
+		FBO.bindFBO(FBO_IDs[0]);
 		IBO.drawTriangles3f(cubeIBO);
 		FBO.unbindFBO();
 	}
 
 	private void render(){   
 		//Rendering a textured square with the FBO
+		glColor3f(1f,1f,1f);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL11.GL_TEXTURE_2D, FBO_IDs[1]);
-		IBO.drawTexturedTriangles3f(stretchableSquareIBO, 0); //TODO : add texCoords in the IBO.stretchableSquare 	 (the 0 will make it crash  most likely)											
+		//Squares.squareFromFan(100f, 100f, 200);	
+		IBO.drawTexturedTriangles3f(stretchableSquareIBO[0], stretchableSquareIBO[1][0], FBO_IDs[1]);	
 		glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
 		glDisable(GL_TEXTURE_2D);
 
 		//Normal render without FBO :
@@ -95,7 +101,7 @@ public class CubeFBO
 		GL11.glTranslatef(400f,400f,0f);
 		IBO.drawTriangles3f(cubeIBO);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_SMOOTH); 
+		
 		Fonts.render(TNR, 350f, 150f, "The cube loaded in the FBO", Color.white);
 		glPopMatrix();
 
@@ -103,7 +109,7 @@ public class CubeFBO
 	
 	private void updateVBO(){
 		if (modified){
-			VBO.bufferData(stretchableSquareIBO[0], vertices);
+			VBO.overwrite(stretchableSquareIBO[0][0], vertices);
 			modified = false;
 		}
 	}
@@ -118,7 +124,7 @@ public class CubeFBO
 					vertices[1] -= 25f;
 					break;
 				case Keyboard.KEY_NUMPAD2: //move bottom edge (1) to bottom
-					vertices[3*1+1] -= 25f;
+					vertices[(3*1)+1] -= 25f;
 					break;
 				case Keyboard.KEY_NUMPAD3: //move bottom-right edge (2) to bottom-right
 					vertices[3*2] += 25f;
@@ -154,21 +160,29 @@ public class CubeFBO
 	private void loadIBOs(){
 		cubeIBO = IBO.loadColoredCubeTriangles3f(0f, 0f, 0f, (float)side, 
 				new float[][]{	{1f,0.25f,1f},	{1f,1f,0f},
-								{0f,1f,1f},	{1f,1f,0f},
-								{0f,1f,1f},	{1f,1f,0f}
+								{0f,1f,1f},	{1f,0f,1f},
+								{0f,0.5f,1f},	{1f,1f,0.5f}
 		});
 		
 		//Original stretchable cube vertices positions
-		float x=0f, y=0f, z=0f, s=200f;
+		float x=150f, y=150f, z=25f, s=200f;
 		stretchableSquareIBO = IBO.loadStretchableSquareIBO2f(x, y, z, s);
 		vertices = new float[] {x,y,z,	x+s/2,y,z,	x+s,y,z,	
 				x,y+s/2,z,	x+s/2,y+s/2,z,	x+s,y+s/2,z,
 				x,y+s,z,	x+s/2,y+s,z,	x+s,y+s,z};
-		FB = Buffers.makeFloatBuffer(vertices);
 	}
 	
 	private void loadFonts(){
 		TNR = Fonts.TimesNewsRomanTTF();
+	}
+
+	private void initViewFBO(){    
+		glViewport(0, 0, FBO_WIDTH, FBO_HEIGHT);
+		glMatrixMode(GL11.GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, FBO_WIDTH, 0, FBO_HEIGHT, 300, -600);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 
 	private void initView(){    

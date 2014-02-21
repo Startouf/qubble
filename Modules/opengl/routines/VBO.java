@@ -70,12 +70,25 @@ public final class VBO
 		return (loadStaticDrawVBO(values));
 	}
 
-	public static void bufferData(int vboID, float[] values){
+	/**
+	 * float[] overload
+	 * @param vboID
+	 * @param values
+	 */
+	public static void overwrite(int vboID, float[] values){
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		Buffers.FB(values);
-		
+		FloatBuffer FB = Buffers.FB(values);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
 	}
-	
+
+	/**
+	 * FloatBuffer overload
+	 * @param vboID
+	 * @param FB
+	 */
+	public static void overwrite(int vboID, FloatBuffer FB){
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
+	}
 	/*****************************************
 	 * LOAD VBO
 	 *****************************************/

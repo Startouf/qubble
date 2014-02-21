@@ -49,6 +49,8 @@ public class FBO {
 		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferID);				// bind the depth renderbuffer
 		glRenderbufferStorage(GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);	// get the data space for it
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER, depthRenderBufferID); // bind it to the FBO
+		
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		return textureID;
 	}
 	
@@ -89,23 +91,14 @@ public class FBO {
 		}
 	}
 	/**
-	 * Bind a FBO with a viewPort of the size of the texture
-	 * (0,0, textureWidth, textureHeight)
-	 * Clears color and depth buffer
-	 * Then load Identity Matrix
+	 * Bind a FBO
 	 */
-	public static void bindFBO(int FBO_ID, int textureWidth, int textureHeight){
+	public static void bindFBO(int FBO_ID){
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer( GL_FRAMEBUFFER, FBO_ID );
-		GL11.glPushAttrib(GL11.GL_VIEWPORT_BIT);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glViewport( 0, 0, textureWidth, textureHeight );
-		GL11.glLoadIdentity();
-		
+		glBindFramebuffer( GL_FRAMEBUFFER, FBO_ID );	
 	}
 	
 	public static void unbindFBO(){
 		glBindFramebuffer( GL_FRAMEBUFFER, 0);
-		GL11.glPopAttrib();
 	}
 }

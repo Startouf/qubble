@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import more_ex.CubeFBO;
+import more_ex.GridWithLabels;
 import ex1.*;
 import ex2.*;
 import ex3.*;
@@ -20,6 +22,8 @@ import ex3.*;
  */
 public class BrowseExercices
 {
+	private static int ROWS =4, COLUMN = 5;
+	
 	private static JButton ex11;
 	private static JButton ex12;
 	private static JButton ex14;
@@ -34,6 +38,9 @@ public class BrowseExercices
 	private static JButton ex31bis;
 	private static JButton ex32;
 	private static JButton ex33;
+	
+	private static JButton experso1;
+	private static JButton experso2;
 	
 	public static void main(String[] args){
 		
@@ -118,7 +125,7 @@ public class BrowseExercices
 				CubeIBO.main(null);
 			}
 		}));
-		ex31bis.setText("Ex 3.1 Cube en IBO");
+		ex31bis.setText("Ex 3.1bis Cube en IBO");
 		
 		ex32 = (new JButton(new AbstractAction(){
 			@Override
@@ -136,7 +143,23 @@ public class BrowseExercices
 		}));
 		ex33.setText("Ex 3.3 Cubes en IBO avec Shaders");
 		
-	panel.setLayout(new GridLayout(3,4));	
+		experso1 = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CubeFBO.main(null);
+			}
+		}));
+		experso1.setText("Ex perso : Utilisation d'un FBO");
+		
+		experso2 = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GridWithLabels.main(null);
+			}
+		}));
+		experso2.setText("Ex perso : affichage d'une grille avec labels");
+		
+	panel.setLayout(new GridLayout(ROWS,COLUMN));	
 	panel.add(ex11);
 	panel.add(ex12);
 	panel.add(ex14);
@@ -149,6 +172,8 @@ public class BrowseExercices
 	panel.add(ex31bis);
 	panel.add(ex32);
 	panel.add(ex33);
+	panel.add(experso1);
+	panel.add(experso2);
 	
 	frame.setContentPane(panel);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
