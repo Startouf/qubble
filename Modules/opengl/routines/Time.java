@@ -4,7 +4,7 @@ import org.lwjgl.Sys;
 
 /**
  * @author Cyril
- * Some functions that generate useful time-variates variables
+ * Some functions that generate useful time-varied variables
  *
  */
 public final class Time

@@ -7,12 +7,6 @@ import qubject.AnimationInterface;
 public interface ImageInterface
 {
 	/**
-	 * Where to render the cursor.
-	 * Not yet sure that the give param will be time or directly the width
-	 * @param time
-	 */
-	public void renderCursorAt(float time);
-	/**
 	 * Toggle on/off the grid
 	 * @param spacing
 	 */
@@ -35,4 +29,6 @@ public interface ImageInterface
 	 * @param anim
 	 */
 	public void triggerOtherEffect(AnimationInterface anim);
+	
+	public void playPause();
 }

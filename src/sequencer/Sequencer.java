@@ -26,15 +26,18 @@ public class Sequencer
 {
 	//TODO : store these variables somewhere else
 	private final int NUM_THREADS = 1;
+	
+
 	private final ScheduledExecutorService fScheduler;
 	/**
 	 * period in seconds
 	 */
-	private double period;
+	private float period;
 	/**
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
 	private float currentTime =0;
+	private boolean play;
 	private final Qubble qubble;
 	/**
 	 * List of scheduled tasks
@@ -42,7 +45,6 @@ public class Sequencer
 	 * (and eventually multiply if they need more tasks)
 	 */
 	private final ArrayList<ScheduledFuture<?>> scheduledQubjects;
-			
 	
 	/**
 	 * 
@@ -54,10 +56,6 @@ public class Sequencer
 		this.period = tempo;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
 		scheduledQubjects = new ArrayList<ScheduledFuture<?>>(qubble.getAllQubjects().size());
-		recalculate();
-		
-		//TODO : loop that waits for changes to be detected
-		//Something like try/catch on wait() with InterruptedException
 	}
 
 	/**
@@ -102,7 +100,14 @@ public class Sequencer
 	 * Find a way to Pause all tasks ?
 	 */
 	public void playPause(){
-		//TODO
+		if (play = false){ //Lance la lecture
+			this.recalculate();
+			play = true;
+		}
+		else{
+			destroyScheduledActions();
+			play = false;
+		}
 	}
 
 	/**
@@ -110,7 +115,7 @@ public class Sequencer
 	 * (otherwise, would recalculate 2 times the schedule)
 	 * @param period
 	 */
-	public void setPeriod(double period) {
+	public void setPeriod(float period) {
 		this.period = period;
 		recalculate();
 	}

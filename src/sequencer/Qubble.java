@@ -2,6 +2,7 @@ package sequencer;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.lwjgl.Sys;
@@ -22,7 +23,7 @@ public class Qubble implements QubbleInterface {
 	private final ArrayList<Qubject> configuredQubjects;
 	private final ArrayList<Qubject> qubjectsOnTable;
 	/**
-	 * Current time in float
+	 * Current time in float (0<= currentTime < period);
 	 */
 	private float currentTime;
 	/**
@@ -46,9 +47,17 @@ public class Qubble implements QubbleInterface {
 	 * TODO : check that indeed LinkedList > ArrayList (but anyway we're only talking about only a few refs per List, so any should be fine) 
 	 */
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
+	private Iterator iter;
 	//Not clear whether thos two should be final
-	private static final int TABLE_LENGTH = 800;
-	private static final int TABLE_HEIGHT = 800;
+	public static final int TABLE_LENGTH = 1000;
+	public static final int TABLE_HEIGHT = 800;
+	public static final int TABLE_OFFSET_X = 50; 
+	public final static int TABLE_OFFSET_Y=50;
+
+	/**
+	 * Qubject size in millimeters
+	 */
+	public static final int QUBJECT_SIZE = 50;
 
 	/**
 	 * New project overload
@@ -64,6 +73,8 @@ public class Qubble implements QubbleInterface {
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		initialiseSampleControllers();
 		sequencer = new Sequencer(this, period);
+		
+		//TODO : launch threads 
 	}
 
 	/**
@@ -89,6 +100,8 @@ public class Qubble implements QubbleInterface {
 		for (Qubject qubject : configuredQubjects){
 			sampleControllers.put(qubject, new LinkedList<SampleControllerInterface>());
 		}
+		//Iterateur sur les sampleControllers
+		iter = sampleControllers.entrySet().iterator();
 	}
 
 	@Override
@@ -127,7 +140,10 @@ public class Qubble implements QubbleInterface {
 	public long computeQubjectStartingTime(Qubject qubject){
 		//TODO : Quantify !
 		//don't forget to divide double by double and not int !
-		return (long) (qubject.getCoords().getX()/((double)TABLE_LENGTH)*period-currentTime);
+		double absoluteStartingTime = 
+				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
+				/((double)TABLE_LENGTH)		*period;
+		return (long) (absoluteStartingTime-currentTime);
 	}
 	
 	/**
@@ -137,9 +153,9 @@ public class Qubble implements QubbleInterface {
 	 * @return the Y-position of the Qubject in percent 
 	 */
 	public float getYAsPercentage(Qubject qubject){
-		//TODO : add offsets (the Qubject is located by its center, not by its bottom/top edge)
-		//TODO : Quantify ?
-		return (float)((double)qubject.getCoords().getY())/TABLE_HEIGHT;
+		return ((float)qubject.getCoords().getY()-(float)TABLE_OFFSET_Y)
+				/(float)TABLE_HEIGHT
+						;
 	}
 
 	/**
@@ -150,7 +166,6 @@ public class Qubble implements QubbleInterface {
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), getYAsPercentage(qubject));
 		sampleControllers.get(qubject).add(qubjectSoundController);
-		
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
 	
@@ -177,5 +192,11 @@ public class Qubble implements QubbleInterface {
 	public void playPause(){
 		//TODO
 		sequencer.playPause();
+		projection.playPause();
+		while(iter.hasNext()){
+			for(SampleControllerInterface sc :sampleControllers.get(iter.next())){
+				player.playPause(sc);
+			}
+		}
 	}
 }

@@ -28,7 +28,6 @@ public class CubeIBO
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
-		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
         
         loadIBOs();
@@ -55,11 +54,11 @@ public class CubeIBO
 	}
 	
 	private void loadIBOs(){
-		CubeIboIDs = loadCubeIBOTriangles3f(0, 0, 0, 200);
+		CubeIboIDs = loadCubeTriangles3f(0, 0, 0, 200);
 	}
 	
 	private void render(){    
-        drawIBOTriangles3f(CubeIboIDs);
+        drawTriangles3f(CubeIboIDs);
 	}
 
 	private void initGL(){    

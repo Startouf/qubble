@@ -1,53 +1,32 @@
-package routines;
+package opengl;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import java.awt.Font;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
-public final class Grids
+import routines.Fonts;
+import routines.Grids;
+
+public class BaseRoutines
 {
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
-	
-	public static void drawInfifiteAxis(float offset){ //Not working ATM
-		//x
-		glBegin(GL_LINES);
-		glVertex3f(Float.MIN_VALUE, offset, offset);
-		glVertex3f(Float.MAX_VALUE, offset, offset);
-		glEnd();
-		//y
-		glBegin(GL_LINE_STRIP);
-		glVertex3f(offset,Float.MIN_VALUE,offset);
-		glVertex3f(offset,Float.MAX_VALUE,offset);
-		glEnd();
-		//z
-		glBegin(GL_LINES);
-		glVertex3f(offset,offset,Float.MIN_VALUE);
-		glVertex3f(offset,offset,Float.MAX_VALUE);
-		glEnd();
-	}
-	
-	public static void drawFiniteAxis(float length, float offset){ //Not Working ATM
-		glColor3f(1f,1f,1f);
-		//x
-		glBegin(GL_LINES);
-		glVertex3f(offset, offset, offset);
-		glVertex3f(length, offset, offset);
-		glEnd();
-		
-		glBegin(GL_LINES);
-		glVertex3f(offset,offset,offset);
-		glVertex3f(offset,length,offset);
-		glEnd();
-		
-		glBegin(GL_LINES);
-		glVertex3f(offset,offset,offset);
-		glVertex3f(offset,offset,length);
-		glEnd();
-	}
-	
 	/**
 	 * Draws a grid in the given space. The grid might be smaller floor(imax*spacing)
 	 * @param area the cube in which to draw the grid 
@@ -201,5 +180,51 @@ public final class Grids
 		
 		glVertex3f(area[0]-arrowWidth, area[3]+ arrowLenght/2, area[4]);
 		glVertex3f(area[0], area[3] + arrowLenght, area[4]);
+	}
+	
+	/**
+	 * Loads a DisplayList that draws a grid in the given space with labels for axis
+	 * @param area the cube in which to draw the grid 
+	 * {xmin, xmax, ymin ymax, zmin, zmax} min < max otherwise nothing
+	 * @param spacing {x_spacing, y_spacing, z_spacing}
+	 * setting a spacing to 0 cancels grid in this dimension but rest works
+	 * @param labelSpacing show label every [int] tick. Set 0 to never show labels {x,y,z}
+	 * @param labelMultiplier multiply every label (pixel) by (shows an int) {x,y,z}
+	 * @param axisName : a name for the axis {x, y, z}
+	 * @param font : a loaded Unicode font 
+	 */
+	public static int loadLabeledGrid(float[] area, float[] spacing, int[] labelSpacing, float[] labelMultiplier, String[] axisName, TrueTypeFont font ){
+		int gridList = glGenLists(1);
+		glNewList(gridList, GL_COMPILE);
+		Grids.drawGrid2fWithLabels(area, spacing, labelSpacing, labelMultiplier, axisName, font);
+		glEndList();
+		return gridList;
+	}
+	
+	public static void renderList(int list)
+	{
+	   glCallList(list);
+	   glFlush(); // ?
+	}
+	
+	public static TrueTypeFont TimesNewsRomanTTF(){
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);;
+		return(new TrueTypeFont(new Font("Times New Roman", Font.BOLD, 24), true));
+	}
+	
+	public static void render(TrueTypeFont font, float x, float y, String text, Color color) {
+		//TODO : Use glPushAttrib instead
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL_CULL_FACE);
+		font.drawString(x, y, text, color);
+		GL11.glEnable(GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	}
+	
+	public static void renderCursor(float x, int[] IBOids, int shaderID){
+		
 	}
 }

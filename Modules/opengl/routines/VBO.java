@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GLContext;
 
 import static routines.Buffers.*;
@@ -17,8 +18,18 @@ import static routines.someMath.*;
 
 public final class VBO
 {
+	/*****************************************
+	 * VBO TOOLS
+	 ************************************/
+	
+	/**
+	 * Create a FloatBuffer from values and buffer the data to a VBO on the GPU
+	 * Uses Static Draw parameter --> Not changed, used a lot
+	 * @param values
+	 * @return
+	 */
 	//Uses GL_STATIC_DRAW
-	public static int load_float_vbo(float [] values)
+	public static int loadStaticDrawVBO(float [] values)
 	{
 		//chargeons les données dans un FloatBuffer
 		FloatBuffer verticesBuffer = FB(values);
@@ -32,13 +43,63 @@ public final class VBO
 
 		return vbo_id;
 	}
+	
+	/**
+	 * Create a FloatBuffer from values and buffer the data to a VBO on the GPU
+	 * Uses Dynamic Draw parameter --> Changed often, used a lot
+	 * @param values
+	 * @return
+	 */
+	public static int loadDynamicDrawVBO(float [] values)
+	{
+		//chargeons les données dans un FloatBuffer
+		FloatBuffer verticesBuffer = FB(values);
+
+		//creons un VBO dans la mémoire du GPU (pas encore de données associées))
+		int vbo_id = createVBOID();
+
+		//et copions les données dans la mémoire du GPU en spécifiant l'utilisation
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+		glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_DYNAMIC_DRAW);
+
+		return vbo_id;
+	}
 
 	//Shortcut
 	public static int getVBO_ID(float[] values){
-		return (load_float_vbo(values));
+		return (loadStaticDrawVBO(values));
 	}
 
-	//drawArray Overload (not IBO)
+	/**
+	 * float[] overload
+	 * @param vboID
+	 * @param values
+	 */
+	public static void overwrite(int vboID, float[] values){
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		FloatBuffer FB = Buffers.FB(values);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
+	}
+
+	/**
+	 * FloatBuffer overload
+	 * @param vboID
+	 * @param FB
+	 */
+	public static void overwrite(int vboID, FloatBuffer FB){
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
+	}
+	/*****************************************
+	 * LOAD VBO
+	 *****************************************/
+
+	/**
+	 * drawArray Overload (not IBO)
+	 * @param w width
+	 * @param h height
+	 * @param d side
+	 * @param vertex_vbo_id
+	 */
 	public static void loadTriangleVBO(float w, float h, float d, Integer vertex_vbo_id) {
 		//si nous avons déja crée le VBO, inutile de recommencer ...
 		if (vertex_vbo_id != 0) return;
@@ -50,7 +111,7 @@ public final class VBO
 				w, h, d,
 				w, -h, d,
 		};
-		vertex_vbo_id = load_float_vbo(vertices);
+		vertex_vbo_id = loadStaticDrawVBO(vertices);
 	}
 
 
@@ -74,7 +135,7 @@ public final class VBO
 		 *   | _________|/
 		 * 			6^	
 		 */
-		int vbo_id = load_float_vbo(new float[]{
+		int vbo_id = loadStaticDrawVBO(new float[]{
 				x,y,z,	x+s,y,z, 	x,y+s,z,	x,y+s,z,	x+s,y,z,	x+s,y+s,z,
 				x+s,y,z,	x+s,y,z-s,	x+s,y+s,z,		x+s,y+s,z,	x+s,y,z-s,	x+s,y+s,z-s,
 				x+s,y,z-s,	x,y,z-s,	x,y+s,z-s,	x,y+s,z-s,	x+s,y+s,z-s,	x+s,y,z-s,
@@ -85,9 +146,11 @@ public final class VBO
 		return vbo_id;
 	}
 
-	//advanced overload : vertices, color and normal interleaved
-
-	//Non-indexed overload, only vertices
+	/**
+	 * Color overload : vertices, color 
+	 * @param vertex_vbo_id
+	 * @param color_vbo_id
+	 */
 	public static void drawCubeVBOTriangles(int vertex_vbo_id, int color_vbo_id){
 		if (vertex_vbo_id==0) return;
 		glEnableClientState(GL_VERTEX_ARRAY);

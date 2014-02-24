@@ -17,4 +17,10 @@ public class Player implements SoundInterface {
 
 	}
 
+	@Override
+	public void playPause(SampleControllerInterface sc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

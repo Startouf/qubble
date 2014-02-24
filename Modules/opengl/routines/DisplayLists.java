@@ -3,29 +3,78 @@ package routines;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.Buffers.*;
 
+import org.newdawn.slick.TrueTypeFont;
+
 public class DisplayLists
 {
-	static int theTorus = createVBOID();
+	/**
+	 * Draw a list
+	 * @param list
+	 */
+	public static void renderList(int list)
+	{
+	   glCallList(list);
+	   glFlush(); // ?
+	}
 	
-	public static void loadTorusDisplayList(){
-	   theTorus = glGenLists (1);
+	/*****************************
+	 * LOAD DISPLAY LISTS
+	 *****************************/
+	
+	/**
+	 * Loads a torus 
+	 */
+	public static int loadTorusDisplayList(){
+	   int theTorus = glGenLists (1);
 	   glNewList(theTorus, GL_COMPILE);
 	   torus(8, 25);
 	   glEndList();
-
-	   glShadeModel(GL_FLAT);
-	   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	   return theTorus;
 	}
-
-	public static void displayList(int list)
-	{
-	   glClear(GL_COLOR_BUFFER_BIT);
-	   glColor3f (1.0f, 1.0f, 1.0f);
-	   glCallList(list);
-	   glFlush();
+	/**
+	 * A Display List that draws a grid in the given space
+	 * @param area the cube in which to draw the grid 
+	 * {xmin, xmax, ymin ymax, zmin, zmax} min < max otherwise nothing
+	 * @param spacing {x_spacing, y_spacing, z_spacing}
+	 * setting a spacing to 0 cancels grid in this dimension but rest works
+	 * @return DisplayList ID
+	 */
+	public static int loadGrid(float[] area, float[] spacing){
+		int gridList = glGenLists(1);
+		glNewList(gridList, GL_COMPILE);
+		Grids.drawGrid3f(area, spacing);
+		glEndList();
+		return gridList;
 	}
 	
-	/* Draw a torus */
+	/**
+	 * Loads a DisplayList that draws a grid in the given space with labels for axis
+	 * @param area the cube in which to draw the grid 
+	 * {xmin, xmax, ymin ymax, zmin, zmax} min < max otherwise nothing
+	 * @param spacing {x_spacing, y_spacing, z_spacing}
+	 * setting a spacing to 0 cancels grid in this dimension but rest works
+	 * @param labelSpacing show label every [int] tick. Set 0 to never show labels {x,y,z}
+	 * @param labelMultiplier multiply every label (pixel) by (shows an int) {x,y,z}
+	 * @param axisName : a name for the axis {x, y, z}
+	 * @param font : a loaded Unicode font 
+	 */
+	public static int loadLabeledGrid(float[] area, float[] spacing, int[] labelSpacing, float[] labelMultiplier, String[] axisName, TrueTypeFont font ){
+		int gridList = glGenLists(1);
+		glNewList(gridList, GL_COMPILE);
+		Grids.drawGrid2fWithLabels(area, spacing, labelSpacing, labelMultiplier, axisName, font);
+		glEndList();
+		return gridList;
+	}
+
+	/*****************************
+	 * SOME ROUTINES
+	 *****************************/
+	
+	/**
+	 * Draw a Torus
+	 * @param numc
+	 * @param numt
+	 */
 	static void torus(int numc, int numt)
 	{
 	   int i, j, k;

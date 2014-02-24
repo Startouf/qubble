@@ -17,11 +17,11 @@ public class UserInputs
 		while(Keyboard.next()){ //Will generate only one line per event
 			if (Keyboard.getEventKeyState()){ //Key pressed
 				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT){
-					System.out.println("Right pressed");
+					System.out.println("Right pressed : var is now" + var);
 					var += delta;
 				}
 				else if (Keyboard.getEventKey() == Keyboard.KEY_LEFT){
-					System.out.println("LEFT pressed");
+					System.out.println("LEFT pressed : var is now " + var);
 					var -= delta;
 				}
 			}

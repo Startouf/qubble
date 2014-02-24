@@ -28,7 +28,6 @@ public class CubeVBO
 	private void start(){
         initDisplay();
         glEnable(GL_CULL_FACE);
-		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
         
         loadVBOs();

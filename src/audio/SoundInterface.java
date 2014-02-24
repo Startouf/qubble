@@ -19,4 +19,10 @@ public interface SoundInterface
 	 * @param amount the percentage (which corresponds to the y-position on the Qubble) 
 	 */
 	public void tweakSample(SampleControllerInterface ref, SoundEffect effect, float amount);
+
+	/**
+	 * Pause the currently playing sample
+	 * @param sc
+	 */
+	public void playPause(SampleControllerInterface sc);
 }

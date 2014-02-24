@@ -168,6 +168,10 @@ public final class Squares
 		square3DWithTexture(v[1], v[5], v[6], v[2], getNormal(v[1], v[6], v[2]));
 	}
 	
+	public static void square3DWithTexture(float[] v1, float[]v2, float[] v3, float[] v4){
+		square3DWithTexture(v1,v2,v3,v4,getNormal(v1, v2, v4));
+	}
+	
 	public static void square3DWithTexture(float[] v1, float[]v2, float[] v3, float[] v4, float[] n){
 		glBegin(GL_QUADS);
 		glNormal3f(n[0], n[1], n[2]);

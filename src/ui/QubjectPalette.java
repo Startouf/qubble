@@ -67,15 +67,12 @@ public class QubjectPalette extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Change the active qubject
+	 * Highlights the Qubjetc qubject (but does not validate !)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == ReferenceButton.class){
 			ReferenceButton Rbutton = (ReferenceButton) e.getSource();
-			//Note should also check if the referencedButton indeed contains a MediaInterface reference
-			//but this should be the case
-			//(the reference button may contain a reference to something else than a qubject)
 			this.selectedQubject = (MediaInterface) Rbutton.getReference();
 		}
 	}

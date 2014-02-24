@@ -44,6 +44,7 @@ public final class Init
 	/**
 	 * Initialise an othronormal projection on the full screen
 	 * Base clipping planes defined by static [x|y|z][min|max]
+	 * Z vector coming out of the screen
 	 */
 	public static void initOrthoView(){  
 		glViewport(0, 0, WIDTH, HEIGHT);
@@ -56,6 +57,7 @@ public final class Init
 	
 	/**
 	 * Configurable overload
+	 * Z vector coming out of the screen
 	 * @param edges = {xmin, xmax, ymin, ymax, zmin, zmax}
 	 */
 	public static void initOrthoView(double [] edges){  
