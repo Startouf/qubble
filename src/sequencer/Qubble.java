@@ -28,12 +28,14 @@ public class Qubble implements QubbleInterface {
 	private float currentTime;
 	/**
 	 * Starting time (SYSTEM TIME IN TICKS!)
+	 * (Might be updated with play/Pause)
 	 */
 	private long startTime = Sys.getTime();
 	/**
-	 * Period in float
+	 * Period in float in seconds
 	 */
-	private float period = 60;
+	private float period = 30; 
+	public static final float TEST_PERIOD = 30;
 	private final SoundInterface player;
 	private final ImageInterface projection;
 	private final Sequencer sequencer;
@@ -49,10 +51,16 @@ public class Qubble implements QubbleInterface {
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
 	private Iterator iter;
 	//Not clear whether thos two should be final
-	public static final int TABLE_LENGTH = 1000;
-	public static final int TABLE_HEIGHT = 800;
+	public static final int TABLE_LENGTH = 1200;
+	public static final int TABLE_HEIGHT = 600;
 	public static final int TABLE_OFFSET_X = 50; 
-	public final static int TABLE_OFFSET_Y=50;
+	public static final int TABLE_OFFSET_Y=50;
+	public static final float GRID_COLUMNS_PER_SEC = 1;
+	public static final float GRID_ROWS_PER_SEC = 1;
+	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD/GRID_COLUMNS_PER_SEC;
+	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
+	
+	public static final float CURSOR_WIDTH =10f;
 
 	/**
 	 * Qubject size in millimeters
@@ -190,7 +198,6 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	public void playPause(){
-		//TODO
 		sequencer.playPause();
 		projection.playPause();
 		while(iter.hasNext()){

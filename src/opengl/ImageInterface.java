@@ -10,7 +10,7 @@ public interface ImageInterface
 	 * Toggle on/off the grid
 	 * @param spacing
 	 */
-	public void ShowGrid(float spacing);
+	public void ShowGrid();
 	/**
 	 * Render the shadow/contour of a qubject
 	 * @param qubject
@@ -29,6 +29,9 @@ public interface ImageInterface
 	 * @param anim
 	 */
 	public void triggerOtherEffect(AnimationInterface anim);
-	
+
+	/**
+	 * This is going to be a tough one to implement
+	 */
 	public void playPause();
 }

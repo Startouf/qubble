@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static routines.Init.HEIGHT;
 import static routines.Init.WIDTH;
 import static routines.Init.initDisplay;
+import opengl.VBORoutines;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -19,22 +20,29 @@ import routines.Fonts;
 import routines.Grids;
 import routines.Init;
 import routines.Squares;
+import routines.Time;
+import routines.VBO;
+import sequencer.Qubble;
 
 public class GridWithLabels {
 
 	private TrueTypeFont TTF_TNR;
 	private int gridDL;
+	private int cursorPosVBO, cursorColorVBO;
+	private float [] cursorVertices;
+	public static float cursorWidth = 10f;
 	
 	private void start(){
         initDisplay();
         loadFonts();
         loadDisplayLists();
+        loadVBOs();
     	initView();
         
         while(!Display.isCloseRequested()){   
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-  
+        	updateVBOs();
             render();
             Display.update();
             Display.sync(60);
@@ -44,14 +52,35 @@ public class GridWithLabels {
     }
 	
 	private void render(){
-		glColor3f(1f,1f,1f);
 		DisplayLists.renderList(gridDL);
 		Squares.squareFromFan(95f, 95f, 30f);
+		VBO.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
+	}
+	
+	private void updateVBOs(){
+		float newPos = Time.uniformModulusTranslation(
+				Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH, 1f/60f);
+		cursorVertices[0] = newPos;
+		cursorVertices[3] = newPos+cursorWidth;
+		cursorVertices[6] = newPos+cursorWidth;
+		cursorVertices[9] = newPos;
+		VBO.overwrite(cursorPosVBO, cursorVertices);
+	}
+	
+	private void loadVBOs(){
+		cursorVertices = new float[]{
+				Qubble.TABLE_OFFSET_X - cursorWidth/2, Qubble.TABLE_OFFSET_Y, 0,
+				Qubble.TABLE_OFFSET_X + cursorWidth/2, Qubble.TABLE_OFFSET_Y, 0,
+				Qubble.TABLE_OFFSET_X + cursorWidth/2, Qubble.TABLE_HEIGHT, 0,
+				Qubble.TABLE_OFFSET_X - cursorWidth/2, Qubble.TABLE_HEIGHT, 0};
+		cursorPosVBO = VBORoutines.loadDynamicDrawVBO(cursorVertices);
+		cursorColorVBO = VBORoutines.loadStaticDrawVBO(new float[]{
+				1f,1f,0f,	1f,0f,0f,	1f,1f,0f,	1f,0f,0f});
 	}
 	
 	private void loadDisplayLists(){
 		gridDL = DisplayLists.loadLabeledGrid(
-				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{40f,40f,0f}, 	//Position of the grid and spacing
+				new float[]{50f, 700f, 50f, 500f, 0f,-1f}, new float[]{60f,60f,0f}, 	//Position of the grid and spacing
 				new int[]{2,2,2}, new float[]{1f,1f,1f}, new String[]{"Time", "Effect"}, TTF_TNR);			//Labels : spacing between labels, multiplier for labels, axisName, font
 	}
 	

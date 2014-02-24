@@ -22,6 +22,9 @@ import org.newdawn.slick.TrueTypeFont;
 
 import routines.Fonts;
 import routines.Grids;
+import routines.Time;
+import routines.VBO;
+import sequencer.Qubble;
 
 public class BaseRoutines
 {
@@ -224,7 +227,14 @@ public class BaseRoutines
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-	public static void renderCursor(float x, int[] IBOids, int shaderID){
-		
+	public static void updateCursor(float[] cursorVertices, int cursorPosVBO){
+		float newPos = Time.uniformModulusTranslation(
+				//TODO : test period
+				Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 1f/Qubble.TEST_PERIOD);
+		cursorVertices[0] = newPos;
+		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
+		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
+		cursorVertices[9] = newPos;
+		VBO.overwrite(cursorPosVBO, cursorVertices);
 	}
 }

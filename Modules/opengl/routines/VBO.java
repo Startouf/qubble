@@ -169,6 +169,30 @@ public final class VBO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	/**
+	 * Color overload : vertices, color 
+	 * @param vertex_vbo_id
+	 * @param color_vbo_id
+	 */
+	public static void drawQuadsVBO(int vboID, int colorID, int vertices){
+		if (vboID==0) return;
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, vboID);
+		glVertexPointer(3, GL_FLOAT, 0, 0); //3D
+
+		if (colorID != 0) {
+			glEnableClientState(GL11.GL_COLOR_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, colorID);
+			glColorPointer(3, GL11.GL_FLOAT, 0, 0);
+		}
+
+		glDrawArrays(GL11.GL_QUADS, 0, vertices); //count = number of vertices ! (not triangles!)
+		glDisableClientState(GL11.GL_VERTEX_ARRAY);
+		if (colorID != 0) 
+			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	
 	//Interleave triangle vertices, color and normal
 	// 3 vertices => 9 floats
 	//Should be in someMath ?

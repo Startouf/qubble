@@ -17,7 +17,7 @@ public class InitRoutines
 		glViewport(0, 0, width, height);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, width, height, 0, 300, 0); //Extrapolation 3D
+		glOrtho(0, width, height, 0, 300, -1); //Extrapolation 3D
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}

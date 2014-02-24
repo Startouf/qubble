@@ -25,6 +25,8 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private Animation whenPutOnTable;
 	private Animation animationwhenPlayed;
 	
+	public static final float SIZE = 300f;
+	
 	public Qubject(String name, int bitIdentifier){
 		this.name = name;
 		this.bitIdentifier = bitIdentifier;
