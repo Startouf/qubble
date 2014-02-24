@@ -34,24 +34,38 @@ public class Player {
 	}
 	
 	public static void playStream(File file) {
+		
+		int[] buffer = null;
+		ArrayList<Integer> res = null;
 		try {
-			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
-			DataLine.Info info = new DataLine.Info(SourceDataLine.class, sound.getFormat());
-			SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+			WavFile wfile;
 			
-			line.open(sound.getFormat(), 2048);
-			
-			line.start();
-			byte[] data = new byte[2048];
-			int cnt;
-			for (int j = 0; j < 50 ; j++) {
-				cnt = sound.read(data, 0, 2048);
-				
-				line.write(data, 0, 2048);
-			}
-			
+			wfile = WavFile.openWavFile(file);
+			res = getSamples(wfile);
+			wfile.close();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("Dans PlayStream : " + e.getMessage());
+		}
+		
+		StreamPlayer player = new StreamPlayer();
+		player.start();
+		
+		player.addSamples(res);
+		player.addSamples(res);
+		for (int i = 0; i < 100 ; i++) {
+			player.writeNext();
+		}
+		
+	}
+
+	public static void playStream(ArrayList<Integer> samples) {
+		StreamPlayer player = new StreamPlayer();
+		player.start();
+		
+		player.addSamples(samples);
+		player.addSamples(samples);
+		for (int i = 0; i < 100 ; i++) {
+			player.writeNext();
 		}
 	}
 	public static void play(String fileName) {
