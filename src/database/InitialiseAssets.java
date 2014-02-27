@@ -37,7 +37,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SampleInterface> loadSamples(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/sample/");
+		File[] files = InitialiseTools.getFiles("data/samples/");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -58,7 +58,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SoundEffectInterface> loadSoundEffects(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/sound_effect/");
+		File[] files = InitialiseTools.getFiles("data/sound_effects/");
 		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -79,7 +79,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/animation/");
+		File[] files = InitialiseTools.getFiles("data/animations/");
 		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();

@@ -1,7 +1,7 @@
 package audio;
 
 import qubject.SampleInterface;
-import qubject.SoundEffect;
+import qubject.SoundEffectInterface;
 
 public class Player implements SoundInterface {
 
@@ -12,7 +12,7 @@ public class Player implements SoundInterface {
 	}
 
 	@Override
-	public void tweakSample(SampleControllerInterface ref, SoundEffect effect, float amount) {
+	public void tweakSample(SampleControllerInterface ref, SoundEffectInterface effect, float amount) {
 		// TODO Auto-generated method stub
 
 	}

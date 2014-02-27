@@ -17,21 +17,21 @@ public interface MediaInterface
 	 * @param sample
 	 */
 	public void setSampleWhenPlayed(SampleInterface sample);
-	public Sample getSampleWhenPlayed();
+	public SampleInterface getSampleWhenPlayed();
 	
 	/**
 	 * Sound effect applied when translating along the Y-axis
 	 * @param soundEffect
 	 */
 	public void setYAxisEffect(SoundEffectInterface soundEffect);
-	public SoundEffect getYAxisEffect();
+	public SoundEffectInterface getYAxisEffect();
 
 	/**
 	 * Animation played when cursor reaches it
 	 * @param animation
 	 */
 	public void setAnimationWhenPlayed(AnimationInterface animation);
-	public Animation getAnimationWhenPlayed();
+	public AnimationInterface getAnimationWhenPlayed();
 	
 	/*
 	 * Prototype final

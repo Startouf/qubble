@@ -23,9 +23,12 @@ public interface AnimationControllerInterface
 	 * Should the time passed since last update be sent via parameter ?
 	 * PRO : easier to handle Play/Pause
 	 * CON : ... ?
-	 * Time in float-milliseconds :
+	 * WARNING : DO NOT FORGET TO FREE GPU MEMORY !!!!!
+	 * @param dt Time in float-milliseconds 
+	 * @return true if the animation is not over, false if this controller can be deleted safely. 
+	 * WARNING : DO NOT FORGET TO FREE GPU MEMORY !!!!!
 	 */
-	public void updateAnimation(float dt);
+	public boolean updateAnimation(float dt);
 
 	/**
 	 * If the qubject is moved during the animation, move the animation ?

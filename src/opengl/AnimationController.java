@@ -18,7 +18,7 @@ public abstract class AnimationController implements AnimationControllerInterfac
 	public abstract void renderAnimation();
 
 	@Override
-	public abstract void updateAnimation(float dt);
+	public abstract boolean updateAnimation(float dt);
 
 	@Override
 	public void setAnimationOrigin(Point pos) {

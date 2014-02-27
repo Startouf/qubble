@@ -3,7 +3,6 @@ package opengl;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.util.ArrayList;
 
 import more_ex.GridWithLabels;
@@ -11,6 +10,7 @@ import more_ex.GridWithLabels;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 
 import qubject.AnimationInterface;
@@ -36,7 +36,7 @@ public class ProjectorOutput implements ImageInterface, Runnable {
 	
 	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
 
-	private void start(int width, int height){
+	public void start(int width, int height){
         InitRoutines.initDisplay(width, height);
         loadFonts();
         loadDisplayLists();
@@ -74,11 +74,11 @@ public class ProjectorOutput implements ImageInterface, Runnable {
 	}
 
 	public Dimension getTile(Point pos){
-		return new Dimension((int)((pos.x-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
-				(int)((pos.y-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
+				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
 	@Override
-	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
+	public void triggerEffect(java.awt.Point qubjectCoords, AnimationInterface anim) {
 		//load entities for the object
 		
 		//add the object to the render list

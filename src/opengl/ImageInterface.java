@@ -1,6 +1,7 @@
 package opengl;
 
-import java.awt.Point;
+
+import org.lwjgl.util.Point;
 
 import qubject.AnimationInterface;
 
@@ -16,13 +17,14 @@ public interface ImageInterface
 	 * @param qubject
 	 */
 	public void triggerQubject(Point qubject);
+	
 	/**
 	 * Trigger a QubjectEffect
 	 * @param Point the coords of the qubject which must be rendered
 	 * TODO : add shape/rotation information 
 	 * @param anim the animation to be played
 	 */
-	public void triggerEffect(Point qubjectCoords, AnimationInterface anim);
+	public void triggerEffect(java.awt.Point coords, AnimationInterface animationWhenPlayed);
 
 	/**
 	 * We might want to add Qubject-independant Animations later
@@ -34,4 +36,5 @@ public interface ImageInterface
 	 * This is going to be a tough one to implement
 	 */
 	public void playPause();
+	
 }

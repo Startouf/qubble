@@ -19,11 +19,11 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private boolean isHere = false;
 	private Point coords = null;
 	
-	private Sample sampleWhenPlayed;
-	private SoundEffect yAxisModifier;
-	private SoundEffect rotationModifier;
-	private Animation whenPutOnTable;
-	private Animation animationwhenPlayed;
+	private SampleInterface sampleWhenPlayed;
+	private SoundEffectInterface yAxisModifier;
+	private SoundEffectInterface rotationModifier;
+	private AnimationInterface whenPutOnTable;
+	private AnimationInterface animationwhenPlayed;
 	
 	public static final float SIZE = 300f;
 	
@@ -56,7 +56,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public Sample getSampleWhenPlayed() {
+	public SampleInterface getSampleWhenPlayed() {
 		return this.sampleWhenPlayed;
 	}
 
@@ -66,17 +66,17 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public SoundEffect getYAxisEffect() {
+	public SoundEffectInterface getYAxisEffect() {
 		return this.yAxisModifier;
 	}
 
 	@Override
 	public void setAnimationWhenPlayed(AnimationInterface animation) {
-		this.animationwhenPlayed = (Animation) animation;
+		this.animationwhenPlayed = animation;
 	}
 
 	@Override
-	public Animation getAnimationWhenPlayed() {
+	public AnimationInterface getAnimationWhenPlayed() {
 		return animationwhenPlayed;
 	}
 
