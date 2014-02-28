@@ -46,7 +46,8 @@ public class Qubble implements QubbleInterface {
 	 * When a soundEffect is applied on a Qubject, LinkedLists allow for a quick access to every sampleReference  
 	 * ...and a quick access when deleting (ie: a Sample just finished playing)
 	 * Useful information: follow this link http://stackoverflow.com/questions/322715/when-to-use-linkedlist-over-arraylist
-	 * TODO : check that indeed LinkedList > ArrayList (but anyway we're only talking about only a few refs per List, so any should be fine) 
+	 * TODO : check that indeed LinkedList > ArrayList (but anyway we're only talking about only a few refs per List, so any should be fine)
+	 * TODO : check if we need to use a concurrent version (CoucurrentHashMap, ConcurrentLinkedQueue...) 
 	 */
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
 	private Iterator iter;

@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import java.awt.Font;
 
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -30,6 +31,13 @@ public class BaseRoutines
 {
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
+	
+	/*
+	 * ################
+	 * ## DRAW GRID
+	 * #################
+	 */
+	
 	/**
 	 * Draws a grid in the given space. The grid might be smaller floor(imax*spacing)
 	 * @param area the cube in which to draw the grid 
@@ -210,6 +218,53 @@ public class BaseRoutines
 	   glFlush(); // ?
 	}
 	
+	/*
+	 * ################
+	 * ## CURSOR 
+	 * #################
+	 */
+	
+
+	public static void updateCursor(float[] cursorVertices, int cursorPosVBO){
+		float newPos = Time.uniformModulusTranslation(
+				//TODO : test period
+				Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 1f/Qubble.TEST_PERIOD);
+		cursorVertices[0] = newPos;
+		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
+		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
+		cursorVertices[9] = newPos;
+		VBO.overwrite(cursorPosVBO, cursorVertices);
+	}
+	
+	/*
+	 * ################
+	 * ## Time TOOLS
+	 * #################
+	 */
+	
+	/**
+	 * Time in milliseconds
+	 * @return time in milliseconds
+	 */
+	public static float getTimeMS(){
+		return (float) (Sys.getTime()*1000/Sys.getTimerResolution());
+	}
+
+	/**
+	 * Time between last given frame and current frame
+	 * @param lastFrameTime
+	 * @return delta in milliseconds
+	 */
+	public static float getDt(float lastFrameTimeMS){
+		return getTimeMS() - lastFrameTimeMS;
+	}
+	
+	/*
+	 * ################
+	 * ## OTHER TOOLS
+	 * #################
+	 */
+	
 	public static TrueTypeFont TimesNewsRomanTTF(){
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);;
@@ -225,16 +280,5 @@ public class BaseRoutines
 		GL11.glEnable(GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-	}
-	
-	public static void updateCursor(float[] cursorVertices, int cursorPosVBO){
-		float newPos = Time.uniformModulusTranslation(
-				//TODO : test period
-				Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 1f/Qubble.TEST_PERIOD);
-		cursorVertices[0] = newPos;
-		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
-		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
-		cursorVertices[9] = newPos;
-		VBO.overwrite(cursorPosVBO, cursorVertices);
 	}
 }

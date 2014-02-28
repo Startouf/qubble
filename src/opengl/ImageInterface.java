@@ -35,6 +35,6 @@ public interface ImageInterface
 	/**
 	 * This is going to be a tough one to implement
 	 */
-	public void playPause();
+	public void playPause(Thread t);
 	
 }

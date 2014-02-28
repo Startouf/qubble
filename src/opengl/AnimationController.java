@@ -4,7 +4,13 @@ import org.lwjgl.util.Point;
 
 public abstract class AnimationController implements AnimationControllerInterface
 {
+	/**
+	 * Lwjgl point
+	 */
 	protected Point sourcePos;
+	/**
+	 * Time since start in milliseconds float
+	 */
 	protected float timeSinceStart;
 	
 	public AnimationController(Point source){
@@ -24,5 +30,7 @@ public abstract class AnimationController implements AnimationControllerInterfac
 	public void setAnimationOrigin(Point pos) {
 		this.sourcePos = pos;
 	}
-
+	
+	@Override
+	public abstract void destroy();
 }
