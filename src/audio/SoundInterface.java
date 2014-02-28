@@ -25,4 +25,16 @@ public interface SoundInterface
 	 * @param sc
 	 */
 	public void playPause(SampleControllerInterface sc);
+
+	/**
+	 * SampleControllerInterface sc
+	 * @param sc
+	 */
+	public void destroySound(SampleControllerInterface sc);
+
+	/**
+	 * Quand le projet est fermé, il faut terminer le thread et tout détruire
+	 * (la destruction se fait par le Garbage Collector, en gros il faut juste terminer les threads)
+	 */
+	public void destroy();
 }

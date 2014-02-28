@@ -1,5 +1,9 @@
 package sequencer;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,6 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import org.lwjgl.opengl.Display;
 
 import qubject.Qubject;
 
@@ -22,7 +28,7 @@ import qubject.Qubject;
  * Seems like using ScheduledExecutor Service is the most recent way to handle tasks
  *
  */
-public class Sequencer
+public class Sequencer implements Runnable
 {
 	//TODO : store these variables somewhere else
 	private final int NUM_THREADS = 1;
@@ -38,6 +44,7 @@ public class Sequencer
 	 */
 	private float currentTime =0;
 	private boolean play;
+	private boolean isCloseRequested = false;
 	private final Qubble qubble;
 	/**
 	 * List of scheduled tasks
@@ -56,6 +63,14 @@ public class Sequencer
 		this.period = tempo;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
 		scheduledQubjects = new ArrayList<ScheduledFuture<?>>(qubble.getAllQubjects().size());
+	}
+	
+	@Override
+	public void run() {
+		
+		while(!isCloseRequested){
+			
+		}
 	}
 
 	/**
@@ -95,6 +110,7 @@ public class Sequencer
 	}
 	
 	/**
+	 * Method called by the sequencerThread
 	 * TODO :
 	 * Stop all tasks and restart them or...
 	 * Find a way to Pause all tasks ?
@@ -108,6 +124,14 @@ public class Sequencer
 			destroyScheduledActions();
 			play = false;
 		}
+	}
+
+	/**
+	 * Method called by the Qubble/GUI Thread
+	 * @param sequencerThread
+	 */
+	public void playPause(Thread sequencerThread) {
+		
 	}
 
 	/**
@@ -129,5 +153,5 @@ public class Sequencer
 		this.currentTime = currentTime;
 		recalculate();
 	}
-	
+
 }

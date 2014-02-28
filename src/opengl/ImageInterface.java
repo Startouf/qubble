@@ -5,7 +5,7 @@ import org.lwjgl.util.Point;
 
 import qubject.AnimationInterface;
 
-public interface ImageInterface
+public interface ImageInterface 
 {
 	/**
 	 * Toggle on/off the grid
@@ -36,5 +36,10 @@ public interface ImageInterface
 	 * This is going to be a tough one to implement
 	 */
 	public void playPause(Thread t);
+
+	/**
+	 * End everything. Project closed or sthing else happend.
+	 */
+	public void terminate();
 	
 }

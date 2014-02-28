@@ -60,6 +60,10 @@ public class SomeParticleEffects {
         
         Display.destroy();
     }
+	private void loadAdditionalEffects() {
+		// TODO Auto-generated method stub
+		
+	}
 	/**
 	 * TEST some animations at a given time
 	 */
@@ -69,10 +73,6 @@ public class SomeParticleEffects {
 			WaterWave ww = new WaterWave(new Point(95, 95));
 			animations.add(ww);
 		}
-	}
-	
-	private void addAnimation(){
-		
 	}
 	
 	private void render(){
@@ -121,7 +121,7 @@ public class SomeParticleEffects {
 	}
 	
 	public static void main(String[] args){
-		GridWithLabels app = new GridWithLabels();
+		SomeParticleEffects app = new SomeParticleEffects();
 		app.start();
 	}
 }

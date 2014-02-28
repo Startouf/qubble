@@ -57,6 +57,7 @@ public class ProjectorOutput implements ImageInterface, Runnable {
     	InitRoutines.initView(width, height);
     	loadVBOs();
         
+    	//TODO : add another closeRequested boolean check for external change (project closed...)
         while(!Display.isCloseRequested()){   
         	isPlaying();
         	loadNewAnims();
@@ -281,5 +282,10 @@ public class ProjectorOutput implements ImageInterface, Runnable {
 	@Override
 	public void run() {
 		start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
+	}
+
+	@Override
+	public void terminate() {
+		//TODO : ass boolean to request close
 	}
 }

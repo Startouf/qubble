@@ -17,11 +17,24 @@ import database.Data;
 import database.InitialiseProject;
 import qubject.QRInterface;
 import qubject.Qubject;
-
+/**
+ * 
+ * @author duchon
+ * Should share the thread of the GUI
+ *
+ */
 public class Qubble implements QubbleInterface {
+	
+	/*
+	 * Variables de données
+	 */
 	private final Data data;
 	private final ArrayList<Qubject> configuredQubjects;
 	private final ArrayList<Qubject> qubjectsOnTable;
+	
+	/*
+	 * Variables séquenceur/Dispatching d'évènements
+	 */
 	/**
 	 * Current time in float (0<= currentTime < period);
 	 */
@@ -38,6 +51,10 @@ public class Qubble implements QubbleInterface {
 	public static final float TEST_PERIOD = 30;
 	private final SoundInterface player;
 	private final ImageInterface projection;
+	/**
+	 * Utilise un gestionnaire d'évènements /ordonneur 
+	 * qui associera des threads à l'éxécution des tâches
+	 */
 	private final Sequencer sequencer;
 	/**
 	 * When a Qubject plays a sound, a sampleController reference must be kept to be able to tweak the sound
@@ -51,7 +68,12 @@ public class Qubble implements QubbleInterface {
 	 */
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
 	private Iterator iter;
-	//Not clear whether thos two should be final
+	
+	/*
+	 * Variables de calibration
+	 * Auront éventuellement besoin d'être rendues non static et non final, 
+	 * ... et d'être ajustées par le module caméra 
+	 */
 	public static final int TABLE_LENGTH = 1200;
 	public static final int TABLE_HEIGHT = 600;
 	public static final int TABLE_OFFSET_X = 50; 
@@ -62,11 +84,15 @@ public class Qubble implements QubbleInterface {
 	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
 	
 	public static final float CURSOR_WIDTH =10f;
-
 	/**
 	 * Qubject size in millimeters
 	 */
 	public static final int QUBJECT_SIZE = 50;
+	
+	/*
+	 * Variables de référence Thread (synchronisation)
+	 */
+	Thread sequencerThread, playerThread, projectionThread;
 
 	/**
 	 * New project overload
@@ -84,6 +110,9 @@ public class Qubble implements QubbleInterface {
 		sequencer = new Sequencer(this, period);
 		
 		//TODO : launch threads 
+		projectionThread = new Thread((Runnable) projection);
+		sequencerThread = new Thread((Runnable) sequencer);
+		playerThread = new Thread((Runnable) player);
 	}
 
 	/**
@@ -169,6 +198,8 @@ public class Qubble implements QubbleInterface {
 
 	/**
 	 * Plays the Qubject sample and trigger its animation
+	 * TODO : synchronise (when the player tells us a Sound is over, may data race with sequencer)
+	 * (and if multiple threads are used by the sequencer, might data race simply put.)
 	 */
 	@Override
 	public void playQubject(Qubject qubject) {
@@ -177,9 +208,14 @@ public class Qubble implements QubbleInterface {
 		sampleControllers.get(qubject).add(qubjectSoundController);
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
-	
+
+	/**
+	 * TODO : synchronise ?  might have to make a custom lock to make sure nobody does something crazy 
+	 */
 	public void closeProject(){
+		player.destroy();
 		sequencer.terminate();
+		projection.terminate();
 	}
 
 	public float getPeriod() {
@@ -199,12 +235,17 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	public void playPause(){
-		sequencer.playPause();
-		projection.playPause();
+		sequencer.playPause(sequencerThread);
+		projection.playPause(projectionThread);
 		while(iter.hasNext()){
 			for(SampleControllerInterface sc :sampleControllers.get(iter.next())){
 				player.playPause(sc);
 			}
 		}
+	}
+
+	@Override
+	public void soundHasFinishedPlaying(SampleControllerInterface sc) {
+		
 	}
 }

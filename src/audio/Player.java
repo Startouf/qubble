@@ -23,4 +23,16 @@ public class Player implements SoundInterface {
 		
 	}
 
+	@Override
+	public void destroySound(SampleControllerInterface sc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
