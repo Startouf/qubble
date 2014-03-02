@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="Modules/image"/>
+	<classpathentry kind="src" path="data/animations/controllers"/>
+	<classpathentry kind="src" path="Modules/audio1"/>
+	<classpathentry kind="src" path="Modules/opengl"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry exported="true" kind="lib" path="lib/lwjgl/jar/lwjgl_util.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lwjgl/jar/lwjgl.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://lwjgl.org/javadoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PACT/lib/lwjgl/native/all"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/lwjgl/jar/slick.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart/jcommon-1.0.21.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/apache commons/commons-io-2.4/commons-io-2.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
