@@ -20,7 +20,7 @@ import routines.Time;
 import routines.VBO;
 import sequencer.Qubble;
 
-public class ProjectorOutput implements ImageInterface, Runnable {
+public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	private int gridDL;
 	private TrueTypeFont fontTNR;

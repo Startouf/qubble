@@ -1,7 +1,7 @@
 package image_default;
 
 import java.io.File;
-import GUI.Window;
+import image_GUI.Window;
 
 
 public class main {

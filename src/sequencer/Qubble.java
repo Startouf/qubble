@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.Sys;
 
-import opengl.ImageInterface;
+import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.Player;
 import audio.SampleController;
@@ -50,7 +50,7 @@ public class Qubble implements QubbleInterface {
 	private float period = 30; 
 	public static final float TEST_PERIOD = 30;
 	private final SoundInterface player;
-	private final ImageInterface projection;
+	private final OutputImageInterface projection;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonneur 
 	 * qui associera des threads à l'éxécution des tâches

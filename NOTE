@@ -2,18 +2,25 @@
 
 ##1 Remarques générales
 ##1.1 Charset
-##1.2 Modules : configurer les sous-dossier de /Modules en src folder
+##1.2 .classpath
+##1.3 Modules : configurer les sous-dossier de /Modules en src folder
 
 ##2 Librairies
 ##2.1 lwjgl (OpenGL librairy)
+##2.2 JFreeChart
+##2.3 apache commons
 
 
 ##1 Remarques générales
 
-##1.2 	Les fichiers utilisent le charset UFT-8
+##1.1 	Les fichiers utilisent le charset UFT-8
 	Sous Eclipse Window > Preferences > General > Workspace > UTF - 8
 	
-##1.2	Organisation des modules : créez une branche sur Git, puis créez un dossier [votre module] dans /Modules/	
+##1.2 fichier .classpath
+	J'ai décidé de commit le fichier .classpath. 
+	Il s'agit en effet d'une recommandation d'eclipse, et cela ne devrait a priori pas poser de problème.
+	
+##1.3	Organisation des modules : créez une branche sur Git, puis créez un dossier [votre module] dans /Modules/	
 ====>Les sous-dossier de Modules ainsi crées doivent être configurés comme des dossiers source :
 		clic-droit sur PACT > properties > Java build Path > Add folder > tick sur votre sous-dossier de /Modules/
 

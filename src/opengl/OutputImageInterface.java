@@ -5,7 +5,7 @@ import org.lwjgl.util.Point;
 
 import qubject.AnimationInterface;
 
-public interface ImageInterface 
+public interface OutputImageInterface 
 {
 	/**
 	 * Toggle on/off the grid
