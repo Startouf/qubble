@@ -27,19 +27,13 @@ public interface QubbleInterface {
 	 * @return list of Qubjects on the table that should be processed by the sequencer
 	 */
 	public ArrayList<Qubject> getQubjectsOnTable();
-	
-	/**
-	 * Add detected Qubject to activeQubjectList
-	 * @param qubject The detected qubject 
-	 */
-	public void newQubjectOnTable(QRInterface qubject);
 
 	/**
-	 * Remove given Qubject to active QubjectList
-	 * The method checks if the Qubject is on the list
-	 * @param qubject Absent qubject
+	 * Dit a Qubble si un objet a été placé ou retiré
+	 * @param bitIdentifier l'ID 13 bit de l'objet
+	 * @param isOnTable true si ajouté sur la table, false si disparu/enlevé
 	 */
-	public void qubjectRemovedFromTable(QRInterface qubject);
+	public void setQubjectOnTable(int bitIdentifier, boolean isOnTable);
 	
 	/**
 	 * Trigger all the effects of a given Qubject when it is activated by the cursor
