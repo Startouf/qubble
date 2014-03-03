@@ -43,7 +43,7 @@ public class Sequencer implements Runnable
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
 	private float currentTime =0;
-	private boolean play;
+	private boolean play = true;;
 	private boolean isCloseRequested = false;
 	private final Qubble qubble;
 	/**
