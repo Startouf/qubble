@@ -52,16 +52,23 @@ public class Effect {
 	
 	public static int[] disto(ArrayList<Integer> samples, float drive, int clip) {
 		int[] res = new int[samples.size()];
+		int coef = (int)(drive/10);
+		float cut = clip/coef;
+		//System.out.println("cut : " + cut);
 		for (int i = 0; i < samples.size() ; i++) {
-			int coef = (int)(drive/10);
-			if (coef * samples.get(i) < clip && coef * samples.get(i) > -clip) {
-				res[i] = coef * samples.get(i);
+			int x = samples.get(i) % (int)(2*cut);
+			//System.out.println("x : " + x);
+			if (x < cut && x > -cut) {
+				//res.add(coef * samples.get(i));
+				res[i] = (coef * x);
 			}
-			else if (coef * samples.get(i) > clip) {
-				res[i] = 2*clip - coef*samples.get(i);
+			else if (x >= cut) {
+				res[i] = 2*clip - coef*x;
+				//res.add(clip);
 			}
 			else {
-				res[i] = -2*clip - coef*samples.get(i);
+				res [i] = -2*clip - coef*x;
+				//res.add(-clip);
 			}
 		}
 		return res;
@@ -70,7 +77,7 @@ public class Effect {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		int coef = (int)(drive/10);
 		float cut = clip/coef;
-		System.out.println("cut : " + cut);
+		//System.out.println("cut : " + cut);
 		for (int i = 0; i < samples.size() ; i++) {
 			int x = samples.get(i) % (int)(2*cut);
 			//System.out.println("x : " + x);

@@ -16,6 +16,8 @@ import org.apache.commons.math3.analysis.function.Sqrt;
 
 public class Player {
 	
+	private static StreamPlayer player = null;
+	
 	public static void play(File file) {
 		try {
 			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
@@ -33,7 +35,7 @@ public class Player {
 		}
 	}
 	
-	public static void playStream(File file) {
+	public static void playStream(File file, SliderDrive slider) {
 		
 		int[] buffer = null;
 		ArrayList<Integer> res = null;
@@ -47,27 +49,24 @@ public class Player {
 			System.out.println("Dans PlayStream : " + e.getMessage());
 		}
 		
-		StreamPlayer player = new StreamPlayer();
+		player = new StreamPlayer(slider);
 		player.start();
 		
 		player.addSamples(res);
-		player.addSamples(res);
-		for (int i = 0; i < 100 ; i++) {
-			player.writeNext();
-		}
 		
 	}
 
-	public static void playStream(ArrayList<Integer> samples) {
-		StreamPlayer player = new StreamPlayer();
+	public static void playStream(ArrayList<Integer> samples, SliderDrive slider) {
+		player = new StreamPlayer(slider);
 		player.start();
 		
 		player.addSamples(samples);
-		player.addSamples(samples);
-		for (int i = 0; i < 100 ; i++) {
-			player.writeNext();
-		}
 	}
+	
+	public static void pause() {
+		player.pause();
+	}
+	
 	public static void play(String fileName) {
 		play(new File(fileName));
 	}

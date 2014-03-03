@@ -33,6 +33,7 @@ public class WaveForm extends JFrame implements Observer {
 	private audioThread stopper;
 	
 	private PlayButton play;
+	private PauseButton pause;
 	private SynthButton synthButton;
 	private DelayButton delayButton;
 	private JMenuBar menuBar;
@@ -46,6 +47,9 @@ public class WaveForm extends JFrame implements Observer {
 	private SaveMenuItem saveMenuItem;
 	private RecordButton recordButton;
 	//private JFileChooser chooser;
+	
+	private SliderDrive sliderDrive;
+	//private SliderClip sliderClip;
 	
 	public WaveForm(String title) {
 		super(title);
@@ -65,9 +69,13 @@ public class WaveForm extends JFrame implements Observer {
 		setJMenuBar(menuBar);
 		
 		play = new PlayButton(this);
+		pause = new PauseButton(this);
 		recordButton = new RecordButton(this);
 		synthButton = new SynthButton(this);
 		delayButton = new DelayButton(this);
+		
+		sliderDrive = new SliderDrive(this);
+		//sliderClip = new JSlider(100, 32768, 32768);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -81,9 +89,14 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.setLayout(new BoxLayout(windowPanel, BoxLayout.PAGE_AXIS));
 		windowPanel.add(chartPanel);
 		windowPanel.add(play);
+		windowPanel.add(pause);
 		windowPanel.add(recordButton);
 		windowPanel.add(synthButton);
 		windowPanel.add(delayButton);
+		
+		windowPanel.add(sliderDrive);
+		//windowPanel.add(sliderClip);
+		
 		
 		setContentPane(windowPanel);
 		
@@ -144,7 +157,7 @@ public class WaveForm extends JFrame implements Observer {
 	public void play() {
 		//Player.play(file);
 		//Player.playStream(file);
-		Player.playStream(samplesTab);
+		Player.playStream(samplesTab, sliderDrive);
 		/*
 		try {
 			Synthesizer.print(Player.getSpectrum(Player.getSamples(file)));
@@ -230,4 +243,9 @@ public class WaveForm extends JFrame implements Observer {
 		samplesTab = Effect.distoArray(samplesTab, drive, clip);
 		update(null, null);
 	}
+	
+	public void pause() {
+		Player.pause();
+	}
+	
 }
