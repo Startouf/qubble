@@ -94,7 +94,7 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Variables de référence Thread (synchronisation)
 	 */
-	Thread sequencerThread, playerThread, projectionThread;
+	private final Thread sequencerThread, playerThread, projectionThread;
 
 	/**
 	 * New project overload
@@ -135,6 +135,14 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		initialiseSampleControllers();
+		
+		//TODO : launch threads 
+		projectionThread = new Thread((Runnable) projection);
+		sequencerThread = new Thread((Runnable) sequencer);
+		playerThread = new Thread((Runnable) player);
+		projectionThread.start();
+		playerThread.start();
+		sequencerThread.start();
 	}
 	/**
 	 * Put every Qubject in the Hashtable, and initialise LinkedLists of their sampleControllers

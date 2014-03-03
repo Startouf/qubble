@@ -10,7 +10,7 @@ public final class Grids
 {
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
-	
+
 	public static void drawInfifiteAxis(float offset){ //Not working ATM
 		//x
 		glBegin(GL_LINES);
