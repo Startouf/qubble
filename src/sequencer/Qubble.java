@@ -56,7 +56,9 @@ public class Qubble implements QubbleInterface {
 	 * qui associera des threads à l'éxécution des tâches
 	 */
 	private final Sequencer sequencer;
+	
 	/**
+	 * NOTE : Utile car on avait dit qu'un qubjet pouvait jouer un son quand placé, etc...
 	 * When a Qubject plays a sound, a sampleController reference must be kept to be able to tweak the sound
 	 * For now, use a Hashtable with a LinkedList (which assumes that cubes may play long-enough sound that they "interlace") 
 	 * ...so an unknown number of sampleControllers refs can be kept.
@@ -113,6 +115,9 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection);
 		sequencerThread = new Thread((Runnable) sequencer);
 		playerThread = new Thread((Runnable) player);
+		projectionThread.start();
+		playerThread.start();
+		sequencerThread.start();
 	}
 
 	/**
@@ -151,24 +156,6 @@ public class Qubble implements QubbleInterface {
 	public ArrayList<Qubject> getQubjectsOnTable() {
 		return qubjectsOnTable;
 	}
-
-	/**
-	 * This implementation checks if the qubject is already on the list
-	 */
-	@Override
-	public void newQubjectOnTable(QRInterface qubject) {
-		//NOTE : if the program works well, this test shouldn't be needed
-		if (!qubjectsOnTable.contains((Qubject) qubject)){
-			qubjectsOnTable.add((Qubject)qubject);
-		}
-	}
-
-	@Override
-	public void qubjectRemovedFromTable(QRInterface qubject) {
-		if (qubjectsOnTable.contains((Qubject) qubject)){
-			qubjectsOnTable.remove((Qubject)qubject);
-		}
-	}
 	
 	/**
 	 * NOTE : requires TABLE_LENGTH and current time
@@ -192,8 +179,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	public float getYAsPercentage(Qubject qubject){
 		return ((float)qubject.getCoords().getY()-(float)TABLE_OFFSET_Y)
-				/(float)TABLE_HEIGHT
-						;
+				/(float)TABLE_HEIGHT;
 	}
 
 	/**
@@ -227,13 +213,14 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	/**
-	 * Time in milliseconds
+	 * Absolute System Time in milliseconds
 	 * @return time in milliseconds
 	 */
-	public static long getTime(){
+	public static float getTime(){
 		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
-	
+
+	@Override
 	public void playPause(){
 		sequencer.playPause(sequencerThread);
 		projection.playPause(projectionThread);
@@ -246,6 +233,38 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public void soundHasFinishedPlaying(SampleControllerInterface sc) {
-		
+		for(LinkedList<SampleControllerInterface> list : sampleControllers.values()){
+			for (SampleControllerInterface controller : list){
+				if (sc == controller){
+					list.remove(sc);
+					return;
+				}
+			}
+		}
+		System.err.print("Trying to remove an unexisting SoudController");
+	}
+
+	@Override
+	public void setQubjectOnTable(int bitIdentifier, boolean isOnTable) {
+		for (Qubject qubject : configuredQubjects){
+			if (qubject.getBitIdentifier() == bitIdentifier){
+				if (isOnTable == true){
+					qubjectsOnTable.add(qubject);
+				}
+				else{
+					qubjectsOnTable.remove(qubject);
+				}
+				//Has been found, so we can end the loop
+				return;
+			}
+		}
+		//If the qubject was not found
+		System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+	}
+
+	@Override
+	public void close() {
+		sequencer.terminate();
+		sequencerThread.interrupt();
 	}
 }

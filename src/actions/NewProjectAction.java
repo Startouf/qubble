@@ -20,7 +20,7 @@ public class NewProjectAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
-		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble(app.getGlobalController().getData())));
+		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble(app.getGlobalController().getData())));		
 	}
 
 }

@@ -11,10 +11,6 @@ public class QubjectTask implements Runnable
 	private final Qubject qubject;
 	private final QubbleInterface qubble;
 
-	private static void log(String aMsg){
-		System.out.println(aMsg);
-	}
-
 	public QubjectTask(QubbleInterface qubble, Qubject qubject){
 		this.qubject=qubject;
 		this.qubble = qubble;

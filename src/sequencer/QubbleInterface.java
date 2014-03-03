@@ -47,4 +47,14 @@ public interface QubbleInterface {
 	 * @param sc le controlleur du son joué en question
 	 */
 	public void soundHasFinishedPlaying(SampleControllerInterface sc);
+
+	/**
+	 * Play/Pause. Default = play
+	 */
+	public void playPause();
+
+	/**
+	 * When a project is closed, ask to terminate the Qubble and it's child threads
+	 */
+	public void close();
 }
