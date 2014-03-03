@@ -29,11 +29,17 @@ public interface QubbleInterface {
 	public ArrayList<Qubject> getQubjectsOnTable();
 
 	/**
-	 * Dit a Qubble si un objet a été placé ou retiré
-	 * @param bitIdentifier l'ID 13 bit de l'objet
-	 * @param isOnTable true si ajouté sur la table, false si disparu/enlevé
+	 * When a new Qubject is detected on the table
+	 * @param bitIdentifier its ID
+	 * @param position its position
 	 */
-	public void setQubjectOnTable(int bitIdentifier, boolean isOnTable);
+	public void setQubjectOnTable(int bitIdentifier, imageTransform.Point position);
+
+	/**
+	 * When a Qubject is no longer on the table
+	 * @param bitIdentifier its ID
+	 */
+	public void QubjectGone(int bitIdentifier);
 	
 	/**
 	 * Trigger all the effects of a given Qubject when it is activated by the cursor
@@ -47,4 +53,14 @@ public interface QubbleInterface {
 	 * @param sc le controlleur du son joué en question
 	 */
 	public void soundHasFinishedPlaying(SampleControllerInterface sc);
+
+	/**
+	 * Play/Pause. Default = play
+	 */
+	public void playPause();
+
+	/**
+	 * When a project is closed, ask to terminate the Qubble and it's child threads
+	 */
+	public void close();
 }

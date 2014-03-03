@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
+import java.awt.Dimension;
 import java.awt.Font;
 
 import org.lwjgl.Sys;
@@ -280,5 +281,12 @@ public class BaseRoutines
 		GL11.glEnable(GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	}
+
+	public static void HighlightTile(Dimension dim) {
+		//TODO : Something else
+		GL11.glTranslatef((float)dim.width, (float)dim.height, 0f);
+		
+		
 	}
 }

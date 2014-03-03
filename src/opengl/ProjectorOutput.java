@@ -90,7 +90,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		}
 	}
 
-	public Dimension getTile(Point pos){
+	public Dimension getTile(org.lwjgl.util.Point pos){
 		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
 				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
@@ -168,7 +168,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 		//Highlight tiles where qubjects are present
 		for (Dimension dim : occupiedTiles){
-			//TODO Highlight the occupiedTile with a nice Shader :)
+			BaseRoutines.HighlightTile(dim);
 		}
 		
 		//Render animations

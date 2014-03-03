@@ -3,7 +3,7 @@ package audio;
 import qubject.SampleInterface;
 import qubject.SoundEffectInterface;
 
-public class Player implements SoundInterface {
+public class Player implements SoundInterface, Runnable {
 
 	@Override
 	public SampleControllerInterface playSample(SampleInterface sample) {
@@ -31,6 +31,12 @@ public class Player implements SoundInterface {
 
 	@Override
 	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		
 	}

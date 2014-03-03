@@ -101,7 +101,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<Qubject> loadQubjects(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/qubject/");
+		File[] files = InitialiseTools.getFiles("data/qubjects/");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();

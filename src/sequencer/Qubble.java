@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 import org.lwjgl.Sys;
 
+import camera.CameraInterface;
+import camera.FakeCamera;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.Player;
@@ -51,12 +53,15 @@ public class Qubble implements QubbleInterface {
 	public static final float TEST_PERIOD = 30;
 	private final SoundInterface player;
 	private final OutputImageInterface projection;
+	private final CameraInterface camera;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonneur 
 	 * qui associera des threads à l'éxécution des tâches
 	 */
 	private final Sequencer sequencer;
+	
 	/**
+	 * NOTE : Utile car on avait dit qu'un qubjet pouvait jouer un son quand placé, etc...
 	 * When a Qubject plays a sound, a sampleController reference must be kept to be able to tweak the sound
 	 * For now, use a Hashtable with a LinkedList (which assumes that cubes may play long-enough sound that they "interlace") 
 	 * ...so an unknown number of sampleControllers refs can be kept.
@@ -92,7 +97,7 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Variables de référence Thread (synchronisation)
 	 */
-	Thread sequencerThread, playerThread, projectionThread;
+	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
 
 	/**
 	 * New project overload
@@ -103,6 +108,7 @@ public class Qubble implements QubbleInterface {
 		this.data = data;
 		player = new Player();
 		projection = new ProjectorOutput();
+		camera = new FakeCamera(this);
 		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
@@ -110,9 +116,14 @@ public class Qubble implements QubbleInterface {
 		sequencer = new Sequencer(this, period);
 		
 		//TODO : launch threads 
+		cameraThread = new Thread((Runnable) camera);
 		projectionThread = new Thread((Runnable) projection);
 		sequencerThread = new Thread((Runnable) sequencer);
 		playerThread = new Thread((Runnable) player);
+		projectionThread.start();
+		playerThread.start();
+		sequencerThread.start();
+		cameraThread.start();
 	}
 
 	/**
@@ -125,11 +136,22 @@ public class Qubble implements QubbleInterface {
 		this.data = data;
 		player = new Player();
 		sequencer = new Sequencer(this, period);
+		camera = new FakeCamera(this);
 		projection = new ProjectorOutput();
 		configuredQubjects = InitialiseProject.loadQubjectsFromProject(path);
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		initialiseSampleControllers();
+		
+		//TODO : launch threads 
+		cameraThread = new Thread((Runnable) camera);
+		projectionThread = new Thread((Runnable) projection);
+		sequencerThread = new Thread((Runnable) sequencer);
+		playerThread = new Thread((Runnable) player);
+		projectionThread.start();
+		playerThread.start();
+		sequencerThread.start();
+		cameraThread.start();
 	}
 	/**
 	 * Put every Qubject in the Hashtable, and initialise LinkedLists of their sampleControllers
@@ -150,24 +172,6 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public ArrayList<Qubject> getQubjectsOnTable() {
 		return qubjectsOnTable;
-	}
-
-	/**
-	 * This implementation checks if the qubject is already on the list
-	 */
-	@Override
-	public void newQubjectOnTable(QRInterface qubject) {
-		//NOTE : if the program works well, this test shouldn't be needed
-		if (!qubjectsOnTable.contains((Qubject) qubject)){
-			qubjectsOnTable.add((Qubject)qubject);
-		}
-	}
-
-	@Override
-	public void qubjectRemovedFromTable(QRInterface qubject) {
-		if (qubjectsOnTable.contains((Qubject) qubject)){
-			qubjectsOnTable.remove((Qubject)qubject);
-		}
 	}
 	
 	/**
@@ -192,8 +196,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	public float getYAsPercentage(Qubject qubject){
 		return ((float)qubject.getCoords().getY()-(float)TABLE_OFFSET_Y)
-				/(float)TABLE_HEIGHT
-						;
+				/(float)TABLE_HEIGHT;
 	}
 
 	/**
@@ -227,13 +230,14 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	/**
-	 * Time in milliseconds
+	 * Absolute System Time in milliseconds
 	 * @return time in milliseconds
 	 */
-	public static long getTime(){
+	public static float getTime(){
 		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
-	
+
+	@Override
 	public void playPause(){
 		sequencer.playPause(sequencerThread);
 		projection.playPause(projectionThread);
@@ -246,6 +250,54 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public void soundHasFinishedPlaying(SampleControllerInterface sc) {
-		
+		for(LinkedList<SampleControllerInterface> list : sampleControllers.values()){
+			for (SampleControllerInterface controller : list){
+				if (sc == controller){
+					list.remove(sc);
+					return;
+				}
+			}
+		}
+		System.err.print("Trying to remove an unexisting SoudController");
+	}
+
+	@Override
+	public void setQubjectOnTable(int bitIdentifier, imageTransform.Point pos) {
+		for (Qubject qubject : configuredQubjects){
+			if (qubject.getBitIdentifier() == bitIdentifier){
+				//Si on en a trouvé un, on demande le verrou pour ajouter un objet
+				synchronized(qubjectsOnTable){
+					qubjectsOnTable.add(qubject);
+					//Tell the sequencer somehting must be done
+					sequencerThread.interrupt();
+				//Has been found, so we can end the loop
+				return;
+				}
+			}
+		}
+		//If the qubject was not found
+		System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+	}
+
+	@Override
+	public void close() {
+		sequencer.terminate();
+		sequencerThread.interrupt();
+	}
+
+	@Override
+	public void QubjectGone(int bitIdentifier) {
+		for (Qubject qubject : qubjectsOnTable){
+			if (qubject.getBitIdentifier() == bitIdentifier){
+				//Si on l'a trouvé on demande le verrou pour l'écriture
+				synchronized (qubjectsOnTable){
+					qubjectsOnTable.remove(qubject);
+				//Has been found, so we can end the loop
+				return;
+				}
+			}
+		}
+		//If the qubject was not found
+		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
 	}
 }

@@ -12,11 +12,12 @@ public interface OutputImageInterface
 	 * @param spacing
 	 */
 	public void ShowGrid();
+
 	/**
 	 * Render the shadow/contour of a qubject
 	 * @param qubject
 	 */
-	public void triggerQubject(Point qubject);
+	public void triggerQubject(org.lwjgl.util.Point qubject);
 	
 	/**
 	 * Trigger a QubjectEffect

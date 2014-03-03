@@ -37,4 +37,16 @@ public class ProjectController implements ProjectControllerInterface
 	public QubbleInterface getQubble() {
 		return qubble;
 	}
+
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
 }

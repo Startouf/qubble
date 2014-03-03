@@ -10,5 +10,10 @@ public interface ProjectControllerInterface {
 	public ArrayList<Qubject> getQubjects();
 	
 	public String getProjectName();
+	
 	public void setProjectName(String name);
+	
+	public void save();
+	
+	public void close();
 }

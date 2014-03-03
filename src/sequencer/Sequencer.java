@@ -43,7 +43,7 @@ public class Sequencer implements Runnable
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
 	private float currentTime =0;
-	private boolean play;
+	private boolean play = true;;
 	private boolean isCloseRequested = false;
 	private final Qubble qubble;
 	/**
@@ -66,11 +66,20 @@ public class Sequencer implements Runnable
 	}
 	
 	@Override
-	public void run() {
+	public synchronized void run() {
+		recalculate();
 		
 		while(!isCloseRequested){
-			
+			//attentes d'ordres
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				//Qubble a envoyé une information de changement d'état
+			}
+			recalculate();
 		}
+		
+		destroyScheduledActions();
 	}
 
 	/**
@@ -102,11 +111,13 @@ public class Sequencer implements Runnable
 
 	}
 	/**
-	 * Should be called before closing a project
+	 * Should be called before closing a project : 
+	 * asks to get of the infinite loop
 	 * TODO: Does the garbage collector handle this task well ?
 	 */
 	public void terminate(){
 		fScheduler.shutdownNow();
+		isCloseRequested = true;
 	}
 	
 	/**
@@ -117,7 +128,6 @@ public class Sequencer implements Runnable
 	 */
 	public void playPause(){
 		if (play = false){ //Lance la lecture
-			this.recalculate();
 			play = true;
 		}
 		else{
