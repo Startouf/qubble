@@ -213,6 +213,7 @@ public class App extends JFrame
 
 	public void setProjectOpened(boolean projectOpened) {
 		this.projectOpened = projectOpened;
+		this.menu.showProjectSettings(projectOpened);
 	}
 
 	public ArrayList<Qubject> getQubjects() {

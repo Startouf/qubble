@@ -10,8 +10,14 @@ public class SettingsMenu extends JMenu {
 		super("Settings");
 		this.app = app;
 		this.setMnemonic(vkS);
-		
-		add(vimi = new ViewIndividualMenuItem(app));
+		vimi = new ViewIndividualMenuItem(app);
+		//Wait for a project being loaded before showing this button
+		vimi.setVisible(false);
+		add(vimi);
+	}
+
+	public void ShowProjectSettings(boolean projectOpened) {
+		vimi.setVisible(projectOpened);
 	}
 
 }
