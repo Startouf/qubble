@@ -15,6 +15,7 @@ public class main {
 		Window wind = new Window();
 		wind.readImage(new File("Modules/image/database/test/qr_bis.jpg"));
 		//wind.readImage(new File("Modules/image/database/test/qr.png"));
+		//wind.readImage(new File("Modules/image/database/test/QR_Reel_1.png"));
 	}
 
 }

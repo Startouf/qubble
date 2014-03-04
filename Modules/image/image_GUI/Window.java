@@ -2,6 +2,7 @@ package image_GUI;
 
 import imageTransform.Component;
 import imageTransform.MyImage;
+import imageTransform.QRCodeView;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
@@ -66,7 +67,7 @@ public class Window extends JFrame implements ActionListener{
 	 */
 	public void readImage(File fichier){
 		try {
-			imageView.setImage(new MyImage(ImageIO.read(fichier)));
+			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
 			affiche();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -86,10 +87,12 @@ public class Window extends JFrame implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == action){
-			imageView.setGreyImage(imageView.getImage().getGreyMyImage());
-			imageView.setBinaryImage(imageView.getGreyImage().getBinaryMyImage());
-			Component test = new Component(imageView.getBinaryImage());
-			imageView.setConnexeImage(test.getCCMyImage());
+			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
+			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
+			Component test = new Component(imageView.getImage(imageView.BINARY));
+			imageView.setImage(test.getCCMyImage(), imageView.CONNEXE);
+			QRCodeView qrImage = new QRCodeView(test);
+			imageView.setImage(qrImage.getImage(), imageView.QR_CODE);
 		}
 		if(e.getSource() == suivant){
 			imageView.next();

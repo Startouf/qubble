@@ -33,7 +33,7 @@ public interface QubbleInterface {
 	 * @param bitIdentifier its ID
 	 * @param position its position
 	 */
-	public void setQubjectOnTable(int bitIdentifier, imageTransform.Point position);
+	public void setQubjectOnTable(int bitIdentifier, imageObject.Point position);
 
 	/**
 	 * When a Qubject is no longer on the table

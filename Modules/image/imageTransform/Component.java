@@ -1,5 +1,8 @@
 package imageTransform;
 
+import imageObject.ConnexeComponent;
+import imageObject.Point;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,8 +22,7 @@ import java.util.Set;
 public class Component {
 	
 	private int imageHeight, imageWidth;
-	private ArrayList<ArrayList<Point>> listComponents;
-	private ArrayList<Point> listPoints;
+	private ArrayList<ConnexeComponent> listCC;
 	private MyImage image;
 	
 	/**
@@ -29,11 +31,11 @@ public class Component {
 	 */
 	public Component(MyImage binaryImage){
 		
+		imageHeight = 200;//binaryImage.getHeight();
+		imageWidth = 200; //binaryImage.getWidth();
 		
-		imageHeight = binaryImage.getHeight();
-		imageWidth = binaryImage.getWidth();
 		// Tableau de référence
-		int[][] labels = new int[binaryImage.getHeight()][binaryImage.getWidth()];
+		int[][] labels = new int[imageHeight][imageWidth];
 		
 		int nbLabels = 1;
 		
@@ -44,7 +46,7 @@ public class Component {
 		}
 		
 		//premiere colonne i=0
-		for (int j=1 ; j < binaryImage.getHeight() ; j++) {
+		for (int j=1 ; j < imageHeight ; j++) {
 			if (binaryImage.getRGB(0, j) == new Color(0,0,0).getRGB()){
 				if(labels[0][j-1] == 0) {
 					labels[0][j] = 0;
@@ -56,7 +58,7 @@ public class Component {
 		}
 		
 		//premiere ligne j=0
-		for (int i=1 ; i < binaryImage.getWidth() ; i++) {
+		for (int i=1 ; i < imageWidth ; i++) {
 			if (binaryImage.getRGB(i, 0) == new Color(0,0,0).getRGB()){
 				if(labels[i-1][0] == 0) {
 					labels[i][0] = nbLabels;
@@ -66,15 +68,10 @@ public class Component {
 				}
 			}
 		}
-		/*
-		ArrayList<Point> list1 = new ArrayList<Point>();
-		ArrayList<Point> list2 = new ArrayList<Point>();
-		ArrayList<Point> list3 = new ArrayList<Point>();
-		ArrayList<Point> list4 = new ArrayList<Point>();
-		*/
+
 		//Reste du tableau
-		for (int j=1 ; j<binaryImage.getHeight() ; j++){
-			for (int i=1; i<binaryImage.getWidth() ; i++) {
+		for (int j=1 ; j<imageHeight ; j++){
+			for (int i=1; i<imageWidth ; i++) {
 				if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
 					if(labels[i][j-1] == 0 && labels[i-1][j] == 0) {
 						labels[i][j] = nbLabels;
@@ -93,13 +90,14 @@ public class Component {
 			}
 		}
 		
+		// Calcul 
 		// Je néglige les bords de l'image et la valeur est temporaire
 		boolean modif = true;
 		int x = 0;
 		while(x<5){
 			x++;
-			for (int j=binaryImage.getHeight()-2 ; j >= 0 ; j--){
-				for (int i=binaryImage.getWidth()-2; i >= 0 ; i--) {
+			for (int j=imageHeight-2 ; j >= 0 ; j--){
+				for (int i=imageWidth-2; i >= 0 ; i--) {
 					if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
 						if (labels[i][j+1] != 0 && labels[i+1][j] == 0){
 							labels[i][j] = Math.min(labels[i][j+1], labels[i][j]);
@@ -115,8 +113,8 @@ public class Component {
 		}
 	}
 	
-		for (int j= 1 ; j < binaryImage.getHeight() ; j++){
-			for (int i= 1; i < binaryImage.getWidth() ; i++) {
+		for (int j= 1 ; j < imageHeight ; j++){
+			for (int i= 1; i < imageWidth ; i++) {
 				if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
 					if (labels[i][j-1] != 0 && labels[i-1][j] == 0){
 						labels[i][j] = Math.min(labels[i][j-1], labels[i][j]);
@@ -136,28 +134,24 @@ public class Component {
 		}
 			
 		
-		HashMap<Integer, ArrayList<Point>> component = new HashMap<Integer, ArrayList<Point>>();
-		
-		for (int i=0; i<binaryImage.getWidth() ; i++) {
-			for (int j=0 ; j<binaryImage.getHeight() ; j++){
+		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
+		/**
+		 * Création des différents ensembles connexes grâce à l'indice
+		 */
+		for (int i=0; i<imageWidth ; i++) {
+			for (int j=0 ; j<imageHeight ; j++){
 				if(labels[i][j] != 0){
 					if(!component.containsKey(labels[i][j])){
-						component.put(labels[i][j], new ArrayList<Point>());
+						component.put(labels[i][j], new ConnexeComponent());
 					}
-					component.get(labels[i][j]).add(new Point(i, j));
+					component.get(labels[i][j]).addPoint(new Point(i, j));
 				}
 				
 			}
 		}
 		
-		listComponents = new ArrayList<ArrayList<Point>>();
-		listComponents.addAll(component.values());
-		/*
-		listComponents.add(list1);
-		listComponents.add(list2);
-		listComponents.add(list3);
-		listComponents.add(list4);
-		*/
+		listCC = new ArrayList<ConnexeComponent>();
+		listCC.addAll(component.values());
 	
 	}	
 
@@ -174,9 +168,9 @@ public class Component {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, imageWidth, imageHeight);
 				
-		for (ArrayList<Point> listPoint : listComponents) {
+		for (ConnexeComponent listPoint : listCC) {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
-			for (Point pixel : listPoint) {
+			for (Point pixel : listPoint.getConnexePoints()) {
 					if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
 						CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
 			}
@@ -184,15 +178,6 @@ public class Component {
 		
 		return CCMyImage;
 	} 
-	
-	
-	public void addPoint (Point p) {
-		listPoints.add(p);
-	}
-	
-	public boolean containsPoint (Point p) {
-		return listPoints.contains(p);
-	}
 	
 	public ArrayList<Point> getContour() {
 		ArrayList<Point> contour = new ArrayList<Point>();
@@ -204,7 +189,7 @@ public class Component {
 				Point voisin_haut = new Point (i,j-1);
 				Point voisin_droite = new Point (i+1,j);
 				Point voisin_gauche = new Point (i-1,j);
-				
+				/*
 				if (this.containsPoint(p)) {
 					if ((this.containsPoint(voisin_haut) && this.containsPoint(voisin_bas)==false)
 						|| (this.containsPoint(voisin_haut)==false) && this.containsPoint(voisin_bas)
@@ -214,8 +199,14 @@ public class Component {
 							contour.add(p);
 					}				
 				}
+				*/
 			}
 		}
 		return contour;
+	}
+	
+	public ArrayList<ConnexeComponent> getCClist(){
+		return listCC;
+		
 	}
 }

@@ -262,7 +262,7 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public void setQubjectOnTable(int bitIdentifier, imageTransform.Point pos) {
+	public void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on en a trouvé un, on demande le verrou pour ajouter un objet
