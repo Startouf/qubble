@@ -31,7 +31,7 @@ public class MainAudio {
 		}
 		player.playSample(sample);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 		} catch(Exception e) {
 		}
 		//System.out.println();
