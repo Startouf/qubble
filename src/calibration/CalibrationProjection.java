@@ -20,7 +20,7 @@ public class CalibrationProjection implements Runnable{
 		glEnable(GL_CULL_FACE);
 
 		while (!Display.isCloseRequested()){
-			glClearColor(1f,1f,1f,1f);
+			glClearColor(0f,0f,0f,1f);
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
 			initGL();
@@ -51,7 +51,7 @@ public class CalibrationProjection implements Runnable{
 	}
 	
 	private void renderGL(){
-		glColor3f(0f,0f,0f);
+		glColor3f(1f,1f,1f);
 		
 		Squares.rectangleHorizontal2f(0f, (float)WIDTH, 0f, thickness);
 		Squares.rectangleHorizontal2f(0f, (float)WIDTH, (float)HEIGHT-thickness, (float)HEIGHT);
