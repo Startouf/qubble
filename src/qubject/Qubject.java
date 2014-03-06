@@ -17,7 +17,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private final String name;
 	private final int bitIdentifier;
 	private boolean isHere = false;
-	private Point coords = null;
+	private Point coords = new Point(0,0);
 	
 	private SampleInterface sampleWhenPlayed;
 	private SoundEffectInterface yAxisModifier;
