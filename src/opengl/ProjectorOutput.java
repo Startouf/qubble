@@ -99,25 +99,25 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
 		AnimationControllerInterface controller;
-		try {
-			controller = AnimationClassLoader.compileAndLoadAnimation(anim.getFile());
-			//load entities for the object
-			needsToBeLoaded.add(controller);
-			
-			//add the object to the render list
-			activeAnimations.add(controller);
-			
-		} catch (CannotCompileAnimationException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			controller = AnimationClassLoader.compileAndLoadAnimation(anim.getFile());
+//			//load entities for the object
+//			needsToBeLoaded.add(controller);
+//			
+//			//add the object to the render list
+//			activeAnimations.add(controller);
+//			
+//		} catch (CannotCompileAnimationException e) {
+//			e.printStackTrace();
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

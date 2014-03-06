@@ -208,7 +208,8 @@ public class Qubble implements QubbleInterface {
 	public void playQubject(Qubject qubject) {
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), getYAsPercentage(qubject));
-		System.out.println("Play !!");
+		System.out.println("Play !!" + qubject.getSampleWhenPlayed().getFile().getAbsolutePath());
+		
 		sampleControllers.get(qubject).add(qubjectSoundController);
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}

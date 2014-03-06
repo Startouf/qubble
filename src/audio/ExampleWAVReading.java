@@ -29,4 +29,8 @@ public class ExampleWAVReading
 	        exc.printStackTrace(System.out);
 	    }
 	}
+	
+	public static void main(String[] args){
+		ReadWav(new File("data/samples/bruits.wav"));
+	}
 }

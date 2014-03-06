@@ -22,7 +22,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private boolean isHere = false;
 	private Point coords = new Point(0,0);
 	
-	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/hit-01.wav"));
+	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/bruits.wav"));
 	private SoundEffectInterface yAxisModifier;
 	private SoundEffectInterface rotationModifier;
 	private AnimationInterface whenPutOnTable;

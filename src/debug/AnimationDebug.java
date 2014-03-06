@@ -91,13 +91,6 @@ public class AnimationDebug implements OutputImageInterface, Runnable {
 		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
 				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
-	@Override
-	public void triggerEffect(java.awt.Point qubjectCoords, AnimationInterface anim) {
-		//load entities for the object
-		
-		//add the object to the render list
-		
-	}
 
 	@Override
 	public void triggerOtherEffect(AnimationInterface anim) {
@@ -175,6 +168,13 @@ public class AnimationDebug implements OutputImageInterface, Runnable {
 
 	@Override
 	public void terminate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void triggerEffect(Point coords,
+			AnimationInterface animationWhenPlayed) {
 		// TODO Auto-generated method stub
 		
 	}
