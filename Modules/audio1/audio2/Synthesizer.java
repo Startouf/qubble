@@ -92,26 +92,14 @@ public class Synthesizer {
 		//WavFile wavFile = null;
 		try {
 			WavFile wavFile = WavFile.newWavFile(file, 1, samples.size(), 16, bitrate);
-			//int buffer[][] = new int[2][10000];
+			
 			int buffer[] = new int[samples.size()];
 			
 			for (int i = 0; i < samples.size() ; i++) {
 				buffer[i] = samples.get(i);
 			}
-			/*
-			int frameCounter = 0;
-			
-			while (frameCounter < samples.size()) {
-				long remaining = wavFile.getFramesRemaining();
-				int toWrite = (remaining > 10000) ? 10000 : (int) remaining;
-				
-				for (int i = 0 ; i < toWrite ; i++, frameCounter++) {
-					buffer[0][i] = samples.get(frameCounter);
-					buffer[1][i] = samples.get(frameCounter);
-				}
-				*/
 				wavFile.writeFrames(buffer, samples.size());
-			//}
+			
 			
 			wavFile.close();
  		}
@@ -123,7 +111,7 @@ public class Synthesizer {
 		}
 	}
 	
-	public void print(ArrayList<Integer> al) {
+	public static void print(ArrayList<Integer> al) {
 		for (int i = 0; i < al.size(); i++) {
 			System.out.print(al.get(i) + ", ");
 		}

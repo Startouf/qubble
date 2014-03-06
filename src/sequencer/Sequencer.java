@@ -91,6 +91,7 @@ public class Sequencer implements Runnable
 		this.scheduledQubjects.clear();
 		for (Qubject qubject : this.qubble.getQubjectsOnTable()){
 			//Schedule when the Qubject should be played
+			System.out.println("Tache ajoutée !");
 			Runnable qubjectTask = new QubjectTask(qubble, qubject);
 		    ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
 		      qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)period*1000, TimeUnit.MILLISECONDS

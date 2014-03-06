@@ -21,23 +21,45 @@ public class SynthButton extends JButton implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		JTextField formText = new JTextField("", 10);
+		JTextField freqText = new JTextField("", 5);
+		JTextField ampText = new JTextField("", 5);
+		JTextField lengthText = new JTextField("", 5);
 		
-		final JFileChooser fc = new JFileChooser();
-
-		int returnVal = fc.showSaveDialog(this);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
+		JPanel myPanel = new JPanel();
+		myPanel.add(new JLabel("Forme :"));
+		myPanel.add(formText);
+		myPanel.add(new JLabel("frequency :"));
+		myPanel.add(freqText);
+		myPanel.add(new JLabel("amp :"));
+		myPanel.add(ampText);
+		myPanel.add(new JLabel("length :"));
+		myPanel.add(lengthText);
+		
+		int result = JOptionPane.showConfirmDialog(null,  myPanel, "Delay", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (result == JOptionPane.OK_OPTION) {
+			int form = Synthesizer.sine;
+			switch(formText.getText()) {
+			case "saw":
+				form = Synthesizer.saw;
+				break;
+			case "triangle":
+				form = Synthesizer.triangle;
+				break;
+			case "square":
+				form = Synthesizer.square;
+				break;
+			default:
+				break;
+			}
 			
-			window.update(null, file);
-			System.out.println("Opening: " + file.getName() + ".");
-			
-			window.synthesize(file);
-			
-		} else {
-			System.out.println("Open command cancelled by user.");
+			window.synthesize(form,
+			Integer.parseInt(freqText.getText()),
+			Integer.parseInt(ampText.getText()),
+			Integer.parseInt(lengthText.getText())
+			);
 		}
-
 	}
 
 }

@@ -13,9 +13,9 @@ import camera.FakeCamera;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.Player;
+import audio.PlayerInterface;
 import audio.SampleController;
 import audio.SampleControllerInterface;
-import audio.SoundInterface;
 import database.Data;
 import database.InitialiseProject;
 import qubject.QRInterface;
@@ -52,7 +52,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	private float period = 30; 
 	public static final float TEST_PERIOD = 30;
-	private final SoundInterface player;
+	private final PlayerInterface player;
 	private final OutputImageInterface projection;
 	private final CameraInterface camera;
 	/**
@@ -106,7 +106,7 @@ public class Qubble implements QubbleInterface {
 	public Qubble(Data data){
 		super();
 		this.data = data;
-		player = new Player();
+		player = new Player(this);
 		projection = new ProjectorOutput();
 		camera = new FakeCamera(this);
 		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
@@ -134,7 +134,7 @@ public class Qubble implements QubbleInterface {
 	public Qubble(Data data, String path){
 		super();
 		this.data = data;
-		player = new Player();
+		player = new Player(this);
 		sequencer = new Sequencer(this, period);
 		camera = new FakeCamera(this);
 		projection = new ProjectorOutput();
@@ -208,6 +208,7 @@ public class Qubble implements QubbleInterface {
 	public void playQubject(Qubject qubject) {
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), getYAsPercentage(qubject));
+		System.out.println("Play !!");
 		sampleControllers.get(qubject).add(qubjectSoundController);
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
@@ -241,11 +242,7 @@ public class Qubble implements QubbleInterface {
 	public void playPause(){
 		sequencer.playPause(sequencerThread);
 		projection.playPause(projectionThread);
-		while(iter.hasNext()){
-			for(SampleControllerInterface sc :sampleControllers.get(iter.next())){
-				player.playPause(sc);
-			}
-		}
+		player.playPause();
 	}
 
 	@Override
@@ -268,10 +265,12 @@ public class Qubble implements QubbleInterface {
 				//Si on en a trouvé un, on demande le verrou pour ajouter un objet
 				qubject.setCoords(Calibrate.mapToOpenGL(pos));
 				synchronized(qubjectsOnTable){
-					
+					System.out.println("Qubject détecté et ajouté!");
 					qubjectsOnTable.add(qubject);
 					//Tell the sequencer somehting must be done
 					sequencerThread.interrupt();
+					playQubject(qubject);
+					
 				//Has been found, so we can end the loop
 				return;
 				}

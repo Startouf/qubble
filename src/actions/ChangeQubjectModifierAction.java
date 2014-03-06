@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.MediaInterface;
 import qubject.SampleInterface;
-import qubject.SoundEffectInterface;
 import ui.App;
 import ui.ReferenceButton;
 

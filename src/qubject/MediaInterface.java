@@ -1,5 +1,7 @@
 package qubject;
 
+import audio.SoundEffectInterface;
+
 
 /**
  * @author duchon

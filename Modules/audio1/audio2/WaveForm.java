@@ -26,40 +26,56 @@ public class WaveForm extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	
 	private File file;
+	private ArrayList<Integer> samplesTab;
 	private Recorder recorder;
 	private Synthesizer synth;
 	
 	private audioThread stopper;
 	
 	private PlayButton play;
+	private PauseButton pause;
 	private SynthButton synthButton;
+	private DelayButton delayButton;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ChartPanel chartPanel;
 	private JPanel windowPanel;
 	
+	
 	private QuitMenuItem quitMenuItem;
 	private SelectMenuItem selectMenuItem;
+	private SaveMenuItem saveMenuItem;
 	private RecordButton recordButton;
 	//private JFileChooser chooser;
+	
+	private SliderDrive sliderDrive;
+	//private SliderClip sliderClip;
 	
 	public WaveForm(String title) {
 		super(title);
 		
 		this.file = null;
+		samplesTab = new ArrayList<Integer>();
 		
 		menu = new JMenu("File");
 		quitMenuItem = new QuitMenuItem(this);
 		selectMenuItem = new SelectMenuItem(this);
+		saveMenuItem = new SaveMenuItem(this);
 		menu.add(quitMenuItem);
 		menu.add(selectMenuItem);
+		menu.add(saveMenuItem);
 		menuBar = new JMenuBar();
 		menuBar.add(menu);
 		setJMenuBar(menuBar);
 		
 		play = new PlayButton(this);
+		pause = new PauseButton(this);
 		recordButton = new RecordButton(this);
 		synthButton = new SynthButton(this);
+		delayButton = new DelayButton(this);
+		
+		sliderDrive = new SliderDrive(this);
+		//sliderClip = new JSlider(100, 32768, 32768);
 		
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
@@ -73,8 +89,14 @@ public class WaveForm extends JFrame implements Observer {
 		windowPanel.setLayout(new BoxLayout(windowPanel, BoxLayout.PAGE_AXIS));
 		windowPanel.add(chartPanel);
 		windowPanel.add(play);
+		windowPanel.add(pause);
 		windowPanel.add(recordButton);
 		windowPanel.add(synthButton);
+		windowPanel.add(delayButton);
+		
+		windowPanel.add(sliderDrive);
+		//windowPanel.add(sliderClip);
+		
 		
 		setContentPane(windowPanel);
 		
@@ -87,17 +109,22 @@ public class WaveForm extends JFrame implements Observer {
 		XYSeriesCollection collection = new XYSeriesCollection();
 		
 		XYSeries serie = new XYSeries("samples");
+		/*
 		if (file != null) {
 			try {
 				ArrayList<Integer> samples = Player.getSamples(file);
-				System.out.println(samples.size());
-
+				//ArrayList<Integer> samples = Player.getSpectrum(Player.getSamples(file));
+				samplesTab = samples;
 				for (int i = 0; i < samples.size(); i++) {
 					serie.add((float) i, (float) samples.get(i));
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
+		}
+		*/
+		for (int i = 0; i < samplesTab.size(); i++) {
+			serie.add((float) i, (float) samplesTab.get(i));
 		}
 		collection.addSeries(serie);
 		
@@ -112,15 +139,51 @@ public class WaveForm extends JFrame implements Observer {
 
 	public void update(Observable observable, Object parameter) {
 		XYSeriesCollection collection = new XYSeriesCollection();
-		file = (File) parameter;
+		//file = (File) parameter;
 		collection = createDataset();
 		JFreeChart chart = createChart("Forme d'onde", collection);
 		chartPanel.setChart(chart);
 		chartPanel.repaint();
 	}
 
+	public void openFile(File file) {
+		try {
+			samplesTab = Player.getSamples(file);
+			update(null, null);
+		} catch (Exception e) {
+			System.out.println("Error opening a file : " + e.getMessage());
+		}
+	}
 	public void play() {
-		Player.play(file);
+		//Player.play(file);
+		//Player.playStream(file);
+		Player.playStream(samplesTab, sliderDrive);
+		/*
+		try {
+			Synthesizer.print(Player.getSpectrum(Player.getSamples(file)));
+		} catch (Exception e) {
+			System.out.println("Dans play : " + e.getMessage());
+		}
+		*/
+	}
+	
+	public void writeFile(File file) {
+		try {
+			int[] newSamples = new int[samplesTab.size()];
+			for (int i = 0 ; i < newSamples.length ; i++) {
+				newSamples[i] = samplesTab.get(i);
+			}
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44100);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+			update(null, file);
+		}
+		catch (Exception e) {
+			System.out.println("applyDelay : " + e.getMessage());
+		}
 	}
 	
 	public void startRecording(File file) {
@@ -129,21 +192,7 @@ public class WaveForm extends JFrame implements Observer {
 		
 		stopper = new audioThread(recorder);
 		stopper.start();
-		/*
-		stopper = new Thread(new Runnable() {// Creer un nouveau thread
-					// qui attend RecordTime
-					// avant de s'arreter
-					public void run() {
-						
-						recorder.start();
-						//recorder.finish();
-
-					}
-
-				});
-		stopper.start();
-		*/
-		//recorder.start();
+		
 	}
 	
 	public void stopRecording() {
@@ -152,9 +201,51 @@ public class WaveForm extends JFrame implements Observer {
 		update(null, file);
 	}
 	
-	public void synthesize(File file) {
-		synth = new Synthesizer(Synthesizer.sine, 220, 2500, 44000);
-		synth.writeFile(file, 3);
-		update(null, file);
+	public void synthesize(int form, int freq, int amp, double length) {
+		synth = new Synthesizer(form, freq, amp, 44100);
+		//synth.writeFile(file, 3);
+		samplesTab = synth.generate(length);
+		update(null, null);
 	}
+	
+	public void applyDelay(int rate, int decay, int feedback, int dry, int wet) {
+		try {
+			int[] newSamples = Effect.delay(Player.getSamples(file), rate, decay, feedback, dry, wet);
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44000);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+			update(null, file);
+		}
+		catch (Exception e) {
+			System.out.println("applyDelay : " + e.getMessage());
+		}
+	}
+	
+	public void applyDisto(float drive, int clip) {
+		/*
+		try {
+			int[] newSamples = Effect.disto(Player.getSamples(file), drive, clip);
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44000);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+			update(null, file);
+		}
+		catch (Exception e) {
+			System.out.println("applyDelay : " + e.getMessage());
+		}
+		*/
+		samplesTab = Effect.distoArray(samplesTab, drive, clip);
+		update(null, null);
+	}
+	
+	public void pause() {
+		Player.pause();
+	}
+	
 }

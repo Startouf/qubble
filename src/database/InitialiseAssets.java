@@ -4,13 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import audio.SoundEffect;
+import audio.SoundEffectInterface;
 import qubject.Animation;
 import qubject.AnimationInterface;
 import qubject.Qubject;
 import qubject.Sample;
 import qubject.SampleInterface;
-import qubject.SoundEffect;
-import qubject.SoundEffectInterface;
 
 /**
  * @author Cyril

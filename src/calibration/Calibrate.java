@@ -23,15 +23,15 @@ public class Calibrate{
 	/*
 	 * Les points doivent être donnés par le module image
 	 */
-	static public Point CAMERA_PIXEL_LOWER_LEFT;
-	static public Point CAMERA_PIXEL_LOWER_RIGHT;
-	static public Point CAMERA_PIXEL_UPPER_RIGHT;
-	static public Point CAMERA_PIXEL_UPPER_LEFT;
+	static public Point CAMERA_PIXEL_LOWER_LEFT = new Point(0,0);
+	static public Point CAMERA_PIXEL_LOWER_RIGHT = new Point(OpenGL_WIDTH,0);
+	static public Point CAMERA_PIXEL_UPPER_RIGHT = new Point(OpenGL_WIDTH,OpenGL_HEIGHT);
+	static public Point CAMERA_PIXEL_UPPER_LEFT = new Point(0,OpenGL_HEIGHT);
 	
 	static public int Camera_WIDTH_Px = 1024; //??
 	static public int Camera_Height_Px = 600;
 	
-	static public float ratioX, ratioY;
+	static public float ratioX =1, ratioY =1;
 	
 	/*
 	 * Current computation assumes both the camera and openGL output are Horizontal Rectangles

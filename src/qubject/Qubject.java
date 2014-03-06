@@ -5,6 +5,9 @@ import java.util.Properties;
 
 import org.lwjgl.util.Point;
 
+import audio.SoundEffect;
+import audio.SoundEffectInterface;
+
 
 
 /**
@@ -19,7 +22,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private boolean isHere = false;
 	private Point coords = new Point(0,0);
 	
-	private SampleInterface sampleWhenPlayed;
+	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/hit-01.wav"));
 	private SoundEffectInterface yAxisModifier;
 	private SoundEffectInterface rotationModifier;
 	private AnimationInterface whenPutOnTable;
