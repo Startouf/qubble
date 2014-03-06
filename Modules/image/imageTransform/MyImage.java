@@ -18,6 +18,8 @@ import java.util.Hashtable;
  */
 public class MyImage extends BufferedImage{
 	
+	// Niveau de sensibilité pour l'image binaire
+	public static int GREY_LEVEL = 160; 
 
 	public MyImage(int width, int height, int imageType) {
 		super(width, height, imageType);
@@ -74,7 +76,7 @@ public class MyImage extends BufferedImage{
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
-				if((this.getRGB(i, j) & 0x000000ff) > 220)
+				if((this.getRGB(i, j) & 0x000000ff) > GREY_LEVEL)
 					binaryImage.setRGB(i, j, (new Color(255, 255, 255).getRGB()));
 				else
 					binaryImage.setRGB(i, j, (new Color(0, 0, 0).getRGB()));

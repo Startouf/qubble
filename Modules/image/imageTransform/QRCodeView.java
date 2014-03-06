@@ -22,21 +22,45 @@ public class QRCodeView {
 	public ArrayList<ConnexeComponent> Square = new ArrayList<ConnexeComponent>();
 	
 	public QRCodeView(Component comp){
-		
-		// Grder les compo carré de grande taille // Petite taille + Créer Qr Code
-		for(ConnexeComponent cc : comp.getCClist()){
-			if(cc.isSquare())
-				Square.add(cc);
-		}
-		
-		// Assembler les QrCode
-		
-		// Chercher la valeur
-		
 		image = new MyImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 		
 		Graphics g = image.getGraphics();
 		g.fillRect(0, 0, 200, 200);
+		int i = 0;
+		// Grder les compo carré de grande taille // Petite taille + Créer Qr Code
+		for(ConnexeComponent cc : comp.getCClist()){
+			/*
+			if(i == 0){
+				g.setColor(Color.blue);
+			}
+			if(i == 1){
+				g.setColor(Color.green);
+			}
+			if(i == 2){
+				g.setColor(Color.red);
+			}
+			if(i == 3){
+				g.setColor(Color.black);
+			}
+			if(i == 4){
+				g.setColor(Color.orange);
+			}
+			i++;
+			*/
+			if(cc.isSquare(g))
+				Square.add(cc);
+		}
+		/*
+		g.setColor(Color.cyan);
+		for(int j = 0; j<90; j++){
+			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j]*100), j, (int)(ConnexeComponent.perfectSquare[j]*100));
+		}
+		*/
+		// Assembler les QrCode
+		
+		// Chercher la valeur
+		
+		
 		
 		for(ConnexeComponent cc : Square){
 			
@@ -44,6 +68,7 @@ public class QRCodeView {
 				image.setRGB(pt.getX(), pt.getY(), Color.BLUE.getRGB());
 			}
 		}
+		
 		
 	}
 	
