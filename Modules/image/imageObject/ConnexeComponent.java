@@ -46,15 +46,16 @@ public class ConnexeComponent {
 	public boolean isSquare(){
 		this.getCenter();
 		
-		int[] mySquare = new int[361];
-		int angle = 0, distance = 0;
+		float[] mySquare = new float[361];
+		int angle = 0; 
+		float distance = 0;
 		
 		// Calculer la distance
 		for(Point pt : list){
-			distance = (int)Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
+			distance = (float) Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
 			// Calcul de l'angle : produit sca / diviser par les distances ==> transformer le cosinus
 			// le deuxième vecteur est (1, 0)
-			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*360/Math.PI);
+			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*360/(float)Math.PI);
 			//System.out.println(angle);
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
@@ -64,7 +65,7 @@ public class ConnexeComponent {
 		}
 		
 		
-		if(this.calculError(mySquare, (int)((Math.abs(xMax-xMin) + Math.abs(yMax-yMin))/(float)2)) < 20){
+		if(this.calculError(mySquare, (int)((Math.abs(xMax-xMin) + Math.abs(yMax-yMin))/(float)2)) < 50){
 			return true;
 		}
 		else
@@ -77,7 +78,7 @@ public class ConnexeComponent {
 	 * @param length
 	 * @return
 	 */
-	public float calculError(int[] real, int length){
+	public float calculError(float[] real, int length){
 		
 		float error = 0;
 		float current = 0;
@@ -87,10 +88,12 @@ public class ConnexeComponent {
 			if(real[i] == 0){
 				error +=5;
 			}else{
-				best = (float) (Math.sqrt(2) - Math.sin((i%89/(float)360)*2*Math.PI)*(Math.sqrt(2)-(1/2)));
-				current = (Math.abs((real[i]/(float)length) - best) / best) * 100;
+				// Forme pour un carré parfait
+				best = (float) (0.5 + Math.sin((i%89/(float)360)*2*Math.PI)*(Math.sqrt(2)-(0.5)));
+				// Erreur relative
+				current = (Math.abs((real[i]/(float)length) - best) / (float)best) * 100;
 				error += current;
-				System.out.println(current);
+				//System.out.println(Math.abs((real[i]/(float)length)) + "||" + best);
 			}
 		}
 		System.out.println(error/360);

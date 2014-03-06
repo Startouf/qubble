@@ -158,7 +158,10 @@ public class Component {
 		
 	
 	
-	// Créer une image avec chaque composante connexe d'une autre couleur
+	/**
+	 *  Créer une image avec chaque composante connexe d'une autre couleur
+	 * @return
+	 */
 	public MyImage getCCMyImage() {
 		MyImage CCMyImage = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
 		Color compoColor = null;
@@ -179,6 +182,10 @@ public class Component {
 		return CCMyImage;
 	} 
 	
+	/**
+	 * Retourne la liste des points qui font le contour de la composante
+	 * @return
+	 */
 	public ArrayList<Point> getContour() {
 		ArrayList<Point> contour = new ArrayList<Point>();
 

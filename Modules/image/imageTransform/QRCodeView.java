@@ -5,6 +5,7 @@ import imageObject.Point;
 import imageObject.QRCode;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -34,7 +35,11 @@ public class QRCodeView {
 		
 		image = new MyImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 		
+		Graphics g = image.getGraphics();
+		g.fillRect(0, 0, 200, 200);
+		
 		for(ConnexeComponent cc : Square){
+			
 			for(Point pt : cc.getConnexePoints()){
 				image.setRGB(pt.getX(), pt.getY(), Color.BLUE.getRGB());
 			}
