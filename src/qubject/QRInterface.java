@@ -1,6 +1,6 @@
 package qubject;
 
-import java.awt.Point;
+import org.lwjgl.util.Point;
 import java.io.File;
 
 
@@ -12,12 +12,6 @@ import java.io.File;
  *
  */
 public interface QRInterface {
-
-	/**
-	 * Allows to quickly make a list of Patterns on table
-	 * @return
-	 */
-	public boolean isHere();
 	
 	/**
 	 * QR-code 16 bit identifier
@@ -38,4 +32,10 @@ public interface QRInterface {
 	 * @return Pixel coordinates of the point on the table
 	 */
 	public Point getCoords();
+
+	/**
+	 * Set the position of the QUbject on the table
+	 * @param pos currently a Java.awt.Point
+	 */
+	public void setCoords(Point pos);
 }

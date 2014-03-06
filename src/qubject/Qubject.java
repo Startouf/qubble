@@ -3,7 +3,7 @@ package qubject;
 import java.io.File;
 import java.util.Properties;
 
-import java.awt.Point;
+import org.lwjgl.util.Point;
 
 
 
@@ -46,11 +46,6 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public boolean isHere() {
-		return isHere;
-	}
-
-	@Override
 	public void setSampleWhenPlayed(SampleInterface sample) {
 		this.sampleWhenPlayed = (Sample) sample;
 	}
@@ -81,7 +76,12 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public java.awt.Point getCoords() {
+	public Point getCoords() {
 		return coords;
+	}
+
+	@Override
+	public void setCoords(Point pos) {
+		this.coords = pos;
 	}
 }

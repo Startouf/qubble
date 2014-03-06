@@ -16,13 +16,14 @@ import javax.swing.JPanel;
 public class ImageView extends JPanel{
 	
 	private MyImage[] image;
-	private final int COLOR = 0, GREY = 1, BINARY = 2, CONNEXE = 3; // Choisi l'image affichée
+	public final int COLOR = 0, GREY = 1, BINARY = 2, CONNEXE = 3, QR_CODE = 4; // Choisi l'image affichée
+	private final int nbrImage = 5;
 	private int view;
 	
 	public ImageView(){
 		super();
 		this.setSize(new Dimension(800, 600));
-		image = new MyImage[4];
+		image = new MyImage[nbrImage];
 		view = 0;
 	}
 	
@@ -33,54 +34,39 @@ public class ImageView extends JPanel{
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 	
-	public void setImage(MyImage image){
-		this.image[COLOR] = image;
+	public void setImage(MyImage image, int type){
+		if(nbrImage > type && type >= 0)
+			this.image[type] = image;
 	}
 	
-	public void setGreyImage(MyImage image){
-		this.image[GREY] = image;
+	public MyImage getImage(int type){
+		// Vérifier l'index tu tableau
+		if(nbrImage > type && type >= 0)
+			return image[type];
+		else
+			return null;
 	}
 	
-	public void setBinaryImage(MyImage image){
-		this.image[BINARY] = image;
-	}
 	
-	public void setConnexeImage(MyImage image){
-		this.image[CONNEXE] = image;
-	}
-	
-	public MyImage getImage(){
-		return image[COLOR];
-	}
-	
-	public MyImage getGreyImage(){
-		return image[GREY];
-	}
-	
-	public MyImage getBinaryImage(){
-		return image[BINARY];
-	}
-	
-	public MyImage getConnexeImage(){
-		return image[CONNEXE];
+	public void previous(){
+		if(view > 0){
+			view--;
+		}else
+			System.out.println("Pas d'image précédente.");
 	}
 	
 	public void next(){
-		view = (view+1)%4;
-		// Parcourir les images suivantes
-		while(image[view] == null && hasImage()){
-			view = (view+1)%4;
-		}
-	}
-	
-	public void previous(){
-		
+		if(view < (nbrImage-1) && image[view+1] != null){
+			view++;
+		}else
+			System.out.println("Pas d'image suivante.");
 	}
 	
 	private boolean hasImage(){
-		if(image[COLOR] != null || image[GREY] != null || image[BINARY] != null || image[CONNEXE] != null )
-			return true;
-		else
-			return false;
+		for(int i = 0 ; i < nbrImage ; i++){
+			if(image[i] == null)
+				return false;
+		}
+		return true;
 	}
 }

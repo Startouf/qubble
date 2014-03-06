@@ -1,4 +1,4 @@
-package imageTransform;
+package imageObject;
 
 public class Point {
 	private int x;

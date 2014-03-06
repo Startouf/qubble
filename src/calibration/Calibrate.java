@@ -1,6 +1,6 @@
 package calibration;
 
-import imageTransform.Point;
+import imageObject.Point;
 
 public class Calibrate{
 

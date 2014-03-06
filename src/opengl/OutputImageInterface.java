@@ -17,7 +17,7 @@ public interface OutputImageInterface
 	 * Render the shadow/contour of a qubject
 	 * @param qubject
 	 */
-	public void triggerQubject(org.lwjgl.util.Point qubject);
+	public void triggerQubject(Point qubject);
 	
 	/**
 	 * Trigger a QubjectEffect
@@ -25,7 +25,7 @@ public interface OutputImageInterface
 	 * TODO : add shape/rotation information 
 	 * @param anim the animation to be played
 	 */
-	public void triggerEffect(java.awt.Point coords, AnimationInterface animationWhenPlayed);
+	public void triggerEffect(Point coords, AnimationInterface animationWhenPlayed);
 
 	/**
 	 * We might want to add Qubject-independant Animations later

@@ -96,7 +96,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	}
 	
 	@Override
-	public void triggerEffect(java.awt.Point qubjectCoords, AnimationInterface anim) {
+	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
 		AnimationControllerInterface controller;
 		try {

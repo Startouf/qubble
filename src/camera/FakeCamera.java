@@ -1,6 +1,6 @@
 package camera;
 
-import imageTransform.Point;
+import imageObject.Point;
 import sequencer.QubbleInterface;
 
 public class FakeCamera implements CameraInterface, Runnable

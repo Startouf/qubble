@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.Sys;
 
+import calibration.Calibrate;
 import camera.CameraInterface;
 import camera.FakeCamera;
 import opengl.OutputImageInterface;
@@ -75,9 +76,8 @@ public class Qubble implements QubbleInterface {
 	private Iterator iter;
 	
 	/*
-	 * Variables de calibration
-	 * Auront éventuellement besoin d'être rendues non static et non final, 
-	 * ... et d'être ajustées par le module caméra 
+	 * Variables liés à la taille de la table projetée
+	 * (Pour les variables de calibration, utiliser les variables decalibration.Calibrate)
 	 */
 	public static final int TABLE_LENGTH = 1200;
 	public static final int TABLE_HEIGHT = 600;
@@ -262,11 +262,13 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public void setQubjectOnTable(int bitIdentifier, imageTransform.Point pos) {
+	public void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on en a trouvé un, on demande le verrou pour ajouter un objet
+				qubject.setCoords(Calibrate.mapToOpenGL(pos));
 				synchronized(qubjectsOnTable){
+					
 					qubjectsOnTable.add(qubject);
 					//Tell the sequencer somehting must be done
 					sequencerThread.interrupt();
