@@ -195,4 +195,21 @@ public final class Squares
 		glVertex3f(v4[0], v4[1], v4[2]);
 		glEnd();
 	}
+
+	/**
+	 * Rectangle of coords (x1,y1), (x1,y2), (x2,y2), (x2, y1)
+	 * @param x1
+	 * @param x2
+	 * @param y1
+	 * @param y2
+	 */
+	public static void rectangleHorizontal2f(float x1, float x2, float y1, float y2){
+		glBegin(GL_QUADS);
+		glNormal3f(0f,0f,1f);
+		glVertex2f(x1, y1);
+		glVertex2f(x2, y1);
+		glVertex2f(x2, y2);
+		glVertex2f(x1, y2);
+		glEnd();
+	}
 }
