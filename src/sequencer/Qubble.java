@@ -73,7 +73,6 @@ public class Qubble implements QubbleInterface {
 	 * TODO : check if we need to use a concurrent version (CoucurrentHashMap, ConcurrentLinkedQueue...) 
 	 */
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
-	private Iterator iter;
 	
 	/*
 	 * Variables liés à la taille de la table projetée
@@ -115,11 +114,10 @@ public class Qubble implements QubbleInterface {
 		initialiseSampleControllers();
 		sequencer = new Sequencer(this, period);
 		
-		//TODO : launch threads 
-		cameraThread = new Thread((Runnable) camera);
-		projectionThread = new Thread((Runnable) projection);
-		sequencerThread = new Thread((Runnable) sequencer);
-		playerThread = new Thread((Runnable) player);
+		cameraThread = new Thread((Runnable) camera, "Camera Thread");
+		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
+		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
+		playerThread = new Thread((Runnable) player, "Player Thread");
 		projectionThread.start();
 		playerThread.start();
 		sequencerThread.start();
@@ -143,11 +141,10 @@ public class Qubble implements QubbleInterface {
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		initialiseSampleControllers();
 		
-		//TODO : launch threads 
-		cameraThread = new Thread((Runnable) camera);
-		projectionThread = new Thread((Runnable) projection);
-		sequencerThread = new Thread((Runnable) sequencer);
-		playerThread = new Thread((Runnable) player);
+		cameraThread = new Thread((Runnable) camera, "Camera Thread");
+		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
+		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
+		playerThread = new Thread((Runnable) player, "Player Thread");
 		projectionThread.start();
 		playerThread.start();
 		sequencerThread.start();
@@ -160,8 +157,6 @@ public class Qubble implements QubbleInterface {
 		for (Qubject qubject : configuredQubjects){
 			sampleControllers.put(qubject, new LinkedList<SampleControllerInterface>());
 		}
-		//Iterateur sur les sampleControllers
-		iter = sampleControllers.entrySet().iterator();
 	}
 
 	@Override
@@ -206,11 +201,14 @@ public class Qubble implements QubbleInterface {
 	 */
 	@Override
 	public void playQubject(Qubject qubject) {
-		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
-		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), getYAsPercentage(qubject));
+		//play!
 		System.out.println("Play !!" + qubject.getSampleWhenPlayed().getFile().getAbsolutePath());
-		
+		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
+		//adjust effect
+		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), getYAsPercentage(qubject));
+		//add it to the list of sampleControllers
 		sampleControllers.get(qubject).add(qubjectSoundController);
+		//show its animation
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
 
@@ -263,8 +261,9 @@ public class Qubble implements QubbleInterface {
 	public void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
-				//Si on en a trouvé un, on demande le verrou pour ajouter un objet
+				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
 				qubject.setCoords(Calibrate.mapToOpenGL(pos));
+				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
 					System.out.println("Qubject détecté et ajouté!");
 					qubjectsOnTable.add(qubject);
