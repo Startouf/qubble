@@ -12,7 +12,7 @@ import sequencer.Qubble;
 
 public class Player implements PlayerInterface, Runnable {
 	
-	private ArrayList<SampleControllerInterface> sampleControllers;
+	private ArrayList<SampleController> sampleControllers;
 	
 	private Qubble qubble;
 	
@@ -25,7 +25,7 @@ public class Player implements PlayerInterface, Runnable {
 	
 	public Player(Qubble qubble) {
 		this.qubble = qubble;
-		sampleControllers = new ArrayList<SampleControllerInterface>();
+		sampleControllers = new ArrayList<SampleController>();
 		bufferSize = 2048;
 		running = false;
 		
@@ -90,8 +90,10 @@ public class Player implements PlayerInterface, Runnable {
 	
 	public int[] nextArray(int size) {
 		int[] res = new int[size];
-		for (int i = 0; i < sampleControllers.size(); i++) {
-			res[i] += sampleControllers.get(i).getNext();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < sampleControllers.size(); j++) {
+				res[i] += sampleControllers.get(j).getNext();
+			}
 		}
 		return res;
 	}
@@ -122,7 +124,9 @@ public class Player implements PlayerInterface, Runnable {
 	@Override
 	public void destroy() {
 		running = false;
-		
+		for (int i = 0; i < sampleControllers.size(); i++) {
+			System.out.println(sampleControllers.get(i).getRelativeCursor());
+		}
 	}
 
 	

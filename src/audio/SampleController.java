@@ -21,6 +21,7 @@ public class SampleController implements SampleControllerInterface {
 		volume = 100;
 		try {
 			samples = AudioUtility.getSamples(file);
+			System.out.println(samples.size());
 		} catch (Exception e) {
 			System.out.println("In SampleController Constructor : " + e.getMessage());
 		}
@@ -61,13 +62,18 @@ public class SampleController implements SampleControllerInterface {
 		if (relativeCursor < samples.size()) {
 			int res = samples.get(relativeCursor)*((int)(volume/100));
 			relativeCursor++;
+			//System.out.println(relativeCursor);
 			return res;
 		}
 		else {
-			qi.soundHasFinishedPlaying(this);
+			//qi.soundHasFinishedPlaying(this);
 			player.hasFinishedPlaying(this);
 			return 0;
 		}
+	}
+	
+	public int getRelativeCursor() {
+		return relativeCursor;
 	}
 
 }
