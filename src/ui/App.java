@@ -14,8 +14,8 @@ import qubject.MediaInterface;
 import qubject.QRInterface;
 import qubject.Qubject;
 import qubject.SampleInterface;
-import qubject.SoundEffectInterface;
 import actions.*;
+import audio.SoundEffectInterface;
 
 /**
  * @author Cyril|duchon

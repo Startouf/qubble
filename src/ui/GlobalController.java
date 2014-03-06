@@ -2,11 +2,11 @@ package ui;
 
 import java.util.ArrayList;
 
+import audio.SoundEffectInterface;
 import database.Data;
 import qubject.Animation;
 import qubject.AnimationInterface;
 import qubject.SampleInterface;
-import qubject.SoundEffectInterface;
 public class GlobalController implements GlobalControllerInterface {
 	
 	private final App app;

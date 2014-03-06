@@ -1,9 +1,8 @@
 package audio;
 
 import qubject.SampleInterface;
-import qubject.SoundEffectInterface;
 
-public interface SoundInterface
+public interface PlayerInterface
 {
 	/**
 	 * 
@@ -24,13 +23,7 @@ public interface SoundInterface
 	 * Pause the currently playing sample
 	 * @param sc
 	 */
-	public void playPause(SampleControllerInterface sc);
-
-	/**
-	 * SampleControllerInterface sc
-	 * @param sc
-	 */
-	public void destroySound(SampleControllerInterface sc);
+	public void playPause();
 
 	/**
 	 * Quand le projet est fermé, il faut terminer le thread et tout détruire
