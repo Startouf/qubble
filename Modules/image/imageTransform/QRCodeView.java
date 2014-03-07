@@ -16,21 +16,31 @@ import java.util.ArrayList;
  */
 public class QRCodeView {
 	
+	public static final int BIGSQUARESIZE = 190;
+	public static final int SMALLSQUARESIZE = 35;
+	
 	private ArrayList<QRCode> listQRcode;
 	private MyImage image;
 	
-	public ArrayList<ConnexeComponent> Square = new ArrayList<ConnexeComponent>();
+	private ArrayList<ConnexeComponent> smallSquare;
 	
-	public QRCodeView(Component comp){
-		image = new MyImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+	public QRCodeView(MyImage screen, Component comp){
 		
+		int imageHeight = screen.getHeight();
+		int imageWidth = screen.getWidth();
+		
+		image = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
 		Graphics g = image.getGraphics();
-		g.fillRect(0, 0, 200, 200);
+		g.fillRect(0, 0, imageWidth, imageHeight);
+		
+		smallSquare = new ArrayList<ConnexeComponent>();
+		listQRcode = new ArrayList<QRCode>();
+		
 		int i = 0;
-		// Grder les compo carré de grande taille // Petite taille + Créer Qr Code
+		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
 		for(ConnexeComponent cc : comp.getCClist()){
-			/*
-			if(i == 0){
+			
+			/*	if(i == 0){
 				g.setColor(Color.blue);
 			}
 			if(i == 1){
@@ -45,31 +55,48 @@ public class QRCodeView {
 			if(i == 4){
 				g.setColor(Color.orange);
 			}
-			i++;
-			*/
-			if(cc.isSquare(g))
-				Square.add(cc);
-		}
-		/*
-		g.setColor(Color.cyan);
-		for(int j = 0; j<90; j++){
-			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j]*100), j, (int)(ConnexeComponent.perfectSquare[j]*100));
-		}
-		*/
-		// Assembler les QrCode
-		
-		// Chercher la valeur
-		
-		
-		
-		for(ConnexeComponent cc : Square){
-			
-			for(Point pt : cc.getConnexePoints()){
-				image.setRGB(pt.getX(), pt.getY(), Color.BLUE.getRGB());
+			i++;*/
+			System.out.println("Longueur : " + cc.getLength());
+			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare(g)){
+				smallSquare.add(cc);
+			}else if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare(g)){
+				listQRcode.add(new QRCode(cc));
 			}
 		}
 		
+		/* Afficher la courbe d'un carré parfait
+		 * g.setColor(Color.cyan);
+		for(int j = 0; j<180; j++){
+			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j%90]*100), j, (int)(ConnexeComponent.perfectSquare[j%90]*100));
+		}*/
 		
+		// Assembler les QrCodes
+		for(ConnexeComponent cc : smallSquare){
+			for(QRCode qr : listQRcode){
+				if(cc.getxMin() > qr.getBorder().getxMin() && cc.getyMin() > qr.getBorder().getyMin() && cc.getxMax() < qr.getBorder().getxMax() && cc.getxMax() < qr.getBorder().getxMax()){
+					qr.addLandMark(cc);
+					break;
+				}
+					
+			}
+		}
+		
+		// Chercher la valeur
+		
+		Color compoColor = null;
+		// Affichage
+		for(QRCode qr : listQRcode){
+			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
+			for(Point pt : qr.getBorder().getConnexePoints()){
+				image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
+			}
+			for(ConnexeComponent landmark : qr.getLandMark()){
+				for(Point pt : landmark.getConnexePoints()){
+					image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
+				}
+			}
+			qr.getValeur();
+		}
 	}
 	
 	public MyImage getImage() {

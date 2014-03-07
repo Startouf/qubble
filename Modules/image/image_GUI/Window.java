@@ -30,6 +30,7 @@ import javax.swing.JPanel;
  */
 public class Window extends JFrame implements ActionListener{
 	
+	public static int imageWidth, imageHeight;
 	private ImageView imageView;
 	private JPanel control;
 	private JButton suivant, action, precedent;
@@ -68,6 +69,8 @@ public class Window extends JFrame implements ActionListener{
 	public void readImage(File fichier){
 		try {
 			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
+			imageWidth = imageView.getImage(imageView.COLOR).getWidth();
+			imageHeight = imageView.getImage(imageView.COLOR).getHeight();
 			affiche();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -87,12 +90,25 @@ public class Window extends JFrame implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == action){
+			long startTime = System.currentTimeMillis();
 			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
+			long greyTime = System.currentTimeMillis();
 			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
+			long binaryTime = System.currentTimeMillis();
 			Component test = new Component(imageView.getImage(imageView.BINARY));
 			imageView.setImage(test.getCCMyImage(), imageView.CONNEXE);
-			QRCodeView qrImage = new QRCodeView(test);
+			long componentTime = System.currentTimeMillis();
+			QRCodeView qrImage = new QRCodeView(imageView.getImage(imageView.GREY).getBinaryMyImage(), test);
 			imageView.setImage(qrImage.getImage(), imageView.QR_CODE);
+			long qrTime = System.currentTimeMillis();
+			
+			long endTime = System.currentTimeMillis();
+			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
+			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
+			System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
+			
 		}
 		if(e.getSource() == suivant){
 			imageView.next();

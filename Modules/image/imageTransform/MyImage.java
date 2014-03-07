@@ -19,11 +19,10 @@ import java.util.Hashtable;
 public class MyImage extends BufferedImage{
 	
 	// Niveau de sensibilité pour l'image binaire
-	public static int GREY_LEVEL = 160; 
+	public static int GREY_LEVEL = 180; 
 
 	public MyImage(int width, int height, int imageType) {
 		super(width, height, imageType);
-		
 	}
 	
 	public MyImage(ColorModel cm, WritableRaster raster,
@@ -55,6 +54,10 @@ public class MyImage extends BufferedImage{
 	       return resizedImage;
 	}
 	
+	/**
+	 * Transforme une image couleur en image niveau de gris
+	 * @return
+	 */
 	public MyImage getGreyMyImage(){
 		int greyValue = 0, red = 0, green = 0, blue = 0;
 		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
@@ -71,6 +74,10 @@ public class MyImage extends BufferedImage{
 		return greyImage;
 	}
 	
+	/**
+	 * Transforme une image en niveau de gris en une image binaire
+	 * @return
+	 */
 	public MyImage getBinaryMyImage(){
 		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_BINARY);
 		for(int i = 0 ; i < this.getWidth() ; i++){

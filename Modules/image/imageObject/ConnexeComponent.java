@@ -1,10 +1,15 @@
 package imageObject;
 
+import image_GUI.Window;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class ConnexeComponent {
+	
+	private ArrayList<Point> list;
+	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
 	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
@@ -42,15 +47,12 @@ public class ConnexeComponent {
 		return (float) Math.sqrt(variance/size);
 	}
 	
-	private ArrayList<Point> list;
-	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
-	
 	public ConnexeComponent(){
 		list = new ArrayList<Point>();
 		xMax = 0;
 		yMax = 0;
-		xMin = 200;
-		yMin = 200;
+		xMin = Window.imageWidth;
+		yMin = Window.imageHeight;
 	}
 	
 	/**
@@ -67,7 +69,7 @@ public class ConnexeComponent {
 				yMax = pt.getY();
 			if(pt.getX() < xMin)
 				xMin = pt.getX();
-			if(pt.getX() < yMin)
+			if(pt.getY() < yMin)
 				yMin = pt.getY();
 		}
 		
@@ -84,7 +86,7 @@ public class ConnexeComponent {
 	public boolean isSquare(Graphics g){
 		this.getCenter();
 		
-		float[] mySquare = new float[360];
+		float[] mySquare = new float[180];
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
@@ -94,7 +96,7 @@ public class ConnexeComponent {
 			distance = (float) Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
 			// Calcul de l'angle : produit sca / diviser par les distances ==> transformer le cosinus
 			// le deuxième vecteur est (1, 0)
-			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%360;
+			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
 			//System.out.println(angle);
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
@@ -103,25 +105,29 @@ public class ConnexeComponent {
 			}
 		}
 		
-		for(int i = 0; i<180; i += 2){
+		 //Afficher la composante connexe sous forme de courbe.
+		/*for(int i = 0; i<180; i += 2){
 			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}
+		}*/
 		
-		for(int i = 0; i<360; i++){
+		
+		for(int i = 0; i<180; i++){
 			mySquareAverage += mySquare[i];
 		}
-		mySquareAverage /= 360;
-		mySquareSD = getStandartDeviation(mySquare, 360, mySquareAverage);
+		mySquareAverage /= 180;
+		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
 			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > 0.87 )
+			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > 0.75 ){
+				System.out.println("True : " + save);
 				return true;
+			}
+				
 		}
-		System.out.println(save);
-			
+		System.out.println("False : " + save);
 		return false;
 	}
 	
@@ -156,5 +162,38 @@ public class ConnexeComponent {
 		yCenter = (int) ((float)(yCenter)/(float)list.size());
 		
 	}
+	
+	/**
+	 * Retourne la taille du coté du carré
+	 */
+	public int getLength(){
+		return 	(int) (xMax-xMin + yMax-yMin)/2;
+	}
+
+	public int getxMax() {
+		return xMax;
+	}
+
+	public int getxMin() {
+		return xMin;
+	}
+
+	public int getyMax() {
+		return yMax;
+	}
+
+	public int getyMin() {
+		return yMin;
+	}
+
+	public int getxCenter() {
+		return xCenter;
+	}
+
+	public int getyCenter() {
+		return yCenter;
+	}
+	
+	
 
 }
