@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.*;
 
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.transform.DftNormalization;
-import org.apache.commons.math3.transform.FastFourierTransformer;
-import org.apache.commons.math3.transform.TransformType;
-import org.apache.commons.math3.analysis.function.Sqrt;
+//import org.apache.commons.math3.complex.Complex;
+//import org.apache.commons.math3.transform.DftNormalization;
+//import org.apache.commons.math3.transform.FastFourierTransformer;
+//import org.apache.commons.math3.transform.TransformType;
+//import org.apache.commons.math3.analysis.function.Sqrt;
 
 public class Player {
 	
@@ -107,18 +107,18 @@ public class Player {
 		while (s < in.size()) {
 			samples[s] = 0;
 		}
-		FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
+//		FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
 		
 		
-		Complex[] spectrum = transformer.transform(samples, TransformType.FORWARD);
+//		Complex[] spectrum = transformer.transform(samples, TransformType.FORWARD);
 		ArrayList<Integer> modspec = new ArrayList<Integer>();
-		
-		for (int i = 0 ; i < spectrum.length ; i++) {
-			//Sqrt sqrt = new Sqrt();
-			double temp = (spectrum[i].getReal()*spectrum[i].getReal() + 
-					spectrum[i].getImaginary()*spectrum[i].getImaginary());
-			modspec.add((int)temp);
-		}
+//		
+//		for (int i = 0 ; i < spectrum.length ; i++) {
+//			//Sqrt sqrt = new Sqrt();
+//			double temp = (spectrum[i].getReal()*spectrum[i].getReal() + 
+//					spectrum[i].getImaginary()*spectrum[i].getImaginary());
+//			modspec.add((int)temp);
+//		}
 		return modspec;
 	}
 	

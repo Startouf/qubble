@@ -40,19 +40,19 @@ public class SynthButton extends JButton implements ActionListener {
 		
 		if (result == JOptionPane.OK_OPTION) {
 			int form = Synthesizer.sine;
-			switch(formText.getText()) {
-			case "saw":
-				form = Synthesizer.saw;
-				break;
-			case "triangle":
-				form = Synthesizer.triangle;
-				break;
-			case "square":
-				form = Synthesizer.square;
-				break;
-			default:
-				break;
-			}
+//			switch(formText.getText()) {
+//			case "saw":
+//				form = Synthesizer.saw;
+//				break;
+//			case "triangle":
+//				form = Synthesizer.triangle;
+//				break;
+//			case "square":
+//				form = Synthesizer.square;
+//				break;
+//			default:
+//				break;
+//			}
 			
 			window.synthesize(form,
 			Integer.parseInt(freqText.getText()),
