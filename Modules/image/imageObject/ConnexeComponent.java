@@ -6,7 +6,16 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+/**
+ * Représentation du composante connexe
+ * Contient les coordonnées extrénums et le pt central
+ * Permet de vérifier s'il s'agit d'un carré
+ * @author masseran
+ *
+ */
 public class ConnexeComponent {
+	
+	public static final float SQUARETRIGGER = (float) 0.65;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -106,9 +115,9 @@ public class ConnexeComponent {
 		}
 		
 		 //Afficher la composante connexe sous forme de courbe.
-		/*for(int i = 0; i<180; i += 2){
+		for(int i = 0; i<180; i += 2){
 			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}*/
+		}
 		
 		
 		for(int i = 0; i<180; i++){
@@ -121,7 +130,7 @@ public class ConnexeComponent {
 		float save = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
 			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > 0.75 ){
+			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) >SQUARETRIGGER ){
 				System.out.println("True : " + save);
 				return true;
 			}

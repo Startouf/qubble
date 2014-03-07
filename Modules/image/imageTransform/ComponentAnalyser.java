@@ -19,7 +19,7 @@ import java.util.Set;
  * @author masseran
  *
  */
-public class Component {
+public class ComponentAnalyser {
 	
 	private int imageHeight, imageWidth;
 	private ArrayList<ConnexeComponent> listCC;
@@ -29,7 +29,7 @@ public class Component {
 	 * Analyse l'image pour récupérer les composantes connexes
 	 * @param binaryImage
 	 */
-	public Component(MyImage binaryImage){
+	public ComponentAnalyser(MyImage binaryImage){
 		
 		imageHeight = binaryImage.getHeight();
 		imageWidth = binaryImage.getWidth();

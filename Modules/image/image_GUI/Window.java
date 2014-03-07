@@ -1,8 +1,8 @@
 package image_GUI;
 
-import imageTransform.Component;
+import imageTransform.ComponentAnalyser;
 import imageTransform.MyImage;
-import imageTransform.QRCodeView;
+import imageTransform.QRCodesAnalyser;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
@@ -95,10 +95,10 @@ public class Window extends JFrame implements ActionListener{
 			long greyTime = System.currentTimeMillis();
 			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
 			long binaryTime = System.currentTimeMillis();
-			Component test = new Component(imageView.getImage(imageView.BINARY));
+			ComponentAnalyser test = new ComponentAnalyser(imageView.getImage(imageView.BINARY));
 			imageView.setImage(test.getCCMyImage(), imageView.CONNEXE);
 			long componentTime = System.currentTimeMillis();
-			QRCodeView qrImage = new QRCodeView(imageView.getImage(imageView.GREY).getBinaryMyImage(), test);
+			QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(imageView.BINARY), test);
 			imageView.setImage(qrImage.getImage(), imageView.QR_CODE);
 			long qrTime = System.currentTimeMillis();
 			

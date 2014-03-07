@@ -60,7 +60,7 @@ public class MyImage extends BufferedImage{
 	 */
 	public MyImage getGreyMyImage(){
 		int greyValue = 0, red = 0, green = 0, blue = 0;
-		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
@@ -79,7 +79,7 @@ public class MyImage extends BufferedImage{
 	 * @return
 	 */
 	public MyImage getBinaryMyImage(){
-		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_BINARY);
+		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
