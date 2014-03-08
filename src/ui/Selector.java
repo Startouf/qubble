@@ -13,6 +13,7 @@ import javax.swing.border.EtchedBorder;
 
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
+import qubject.QubjectModifiers;
 
 
 /**
@@ -51,7 +52,7 @@ public class Selector extends JPanel {
 
 	}
 	
-	public Selector(App app, Qubject pattern, QubjectModifierInterface modifier){
+	public Selector(App app, QubjectModifiers modifier){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(modifier);
 		
@@ -64,7 +65,7 @@ public class Selector extends JPanel {
 		add(new JLabel(getNameFor(modifier)), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
 		//TODO : show a clickable arrow that pops-up a custom file chooser menu with BorderLayer.EAST
-		add(new SelectorButton(pattern, modifier), BorderLayout.EAST);
+		add(new SelectorButton(app, modifier), BorderLayout.EAST);
 	}
 
 	//Note : maybe a superclass of Pattern and PatternModifier should be created

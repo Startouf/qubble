@@ -233,8 +233,8 @@ public class App extends JFrame
 	}
 	
 	public ViewQubjects getActiveTab() {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO : handle different type of tab !!!
+		return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
 	}
 	
 	public ChangeQubjectAction getChangeQubjectAction() {

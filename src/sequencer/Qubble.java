@@ -145,7 +145,7 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-		projectionThread.start();
+		//projectionThread.start();
 		playerThread.start();
 		sequencerThread.start();
 		cameraThread.start();

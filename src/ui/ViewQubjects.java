@@ -19,9 +19,7 @@ public abstract class ViewQubjects extends JPanel {
 	 * The subclasses should Override this method to refresh their display
 	 * @param selectedQubject
 	 */
-	public void setActiveQubject(MediaInterface selectedQubject) {
-		this.activeQubject = selectedQubject;
-	}
+	public abstract void setActiveQubject(MediaInterface selectedQubject);
 
 	public MediaInterface getActiveQubject() {
 		//TODO get/set

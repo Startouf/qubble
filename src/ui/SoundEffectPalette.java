@@ -9,9 +9,15 @@ public class SoundEffectPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected void listModifiers() {
+	protected void editModifiers() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected void previsualisation() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

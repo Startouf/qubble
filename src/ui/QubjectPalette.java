@@ -32,33 +32,15 @@ public class QubjectPalette extends JFrame implements ActionListener
 {
 
 	private App app;
-	 
 	private final JPanel qubjectSelection = new JPanel();
 	private MediaInterface selectedQubject;
     private final ArrayList<ReferenceButton> qubjectList;
-    private JButton boutonVal = new JButton("Valider");
-    private JButton boutonAnn = new JButton("Annuler");
+    private JButton boutonVal;
+    private JButton boutonAnn;
     private JLabel label = new JLabel("Choix du Qubject");
     private JComboBox combo = new JComboBox();
 
 	public QubjectPalette(App app) {
-//		super("Selection de Qubject");
-//		this.app=app;
-//		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-//		qubjectList = new ArrayList<ReferenceButton>();
-//		qubjectSelection.setLayout(new GridLayout());
-//        this.listQubjects();
-//        /**
-//         * Le bouton valider déclenche l'action de cette classe qui change la référence du qubject actif
-//         * TODO Le Qubject actif sera mis en surbrillance
-//         */
-//        JButton validate = new JButton("Valider");
-//        validate.setAction(this.app.getChangeQubjectAction());
-//        qubjectSelection.add(validate);
-//        setContentPane(qubjectSelection);
-//        pack();
-//        setVisible(true); 
-//        
          	
         	super("Selection de Qubject");
         	Dimension dim = new Dimension (325,80);
@@ -67,11 +49,17 @@ public class QubjectPalette extends JFrame implements ActionListener
         	this.setSize(325, 300);
         	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         	qubjectList = new ArrayList<ReferenceButton>();
-        	this.setLocationRelativeTo(app);
+        	this.setLocationRelativeTo(null);
  
         	qubjectSelection.setBackground(Color.white);
         	qubjectSelection.setLayout(new BorderLayout());
    
+        	boutonVal = new JButton("Valider");
+        	boutonVal.setAction(this.app.getChangeQubjectAction());
+        	//boutonVal.setName("Valider");
+        	boutonAnn = new JButton("Annuler");
+        	boutonAnn.addActionListener(this);
+        	
   // bouton.addActionListener(new BoutonListener());     
    //bouton2.addActionListener(new Bouton2Listener());
     //bouton2.setEnabled(false);    
@@ -109,7 +97,13 @@ public class QubjectPalette extends JFrame implements ActionListener
 	}
 
 	public MediaInterface getSelectedQubject() {
-		return selectedQubject;
+		String str = (String) combo.getSelectedItem();
+		for (MediaInterface qubject : this.app.getQubjects()){
+			if(qubject.getName().equals(str)){
+				return qubject;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -117,9 +111,7 @@ public class QubjectPalette extends JFrame implements ActionListener
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == ReferenceButton.class){
-			ReferenceButton Rbutton = (ReferenceButton) e.getSource();
-			this.selectedQubject = (MediaInterface) Rbutton.getReference();
-		}
+	
+			this.setVisible(false);
 	}
 }

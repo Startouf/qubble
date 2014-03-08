@@ -11,5 +11,5 @@ public interface QubjectModifierInterface {
 	
 	public File getFile();
 	public String getName();
-
+	
 }

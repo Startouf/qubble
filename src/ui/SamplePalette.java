@@ -11,7 +11,12 @@ public class SamplePalette extends QubjectModifierPalette
 	}
 
 	@Override
-	protected void listModifiers() {
+	protected void editModifiers() {
+		
+	}
+
+	@Override
+	protected void previsualisation() {
 		// TODO Auto-generated method stub
 		
 	}
