@@ -16,6 +16,7 @@ private final App app;
 	
 	public ChangeQubjectModifierAction(App app){
 		this.app = app;
+		putValue(NAME, "Valider");
 	}
 
 	@Override

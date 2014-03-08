@@ -56,13 +56,12 @@ public class QubjectPalette extends JFrame implements ActionListener
    
         	boutonVal = new JButton("Valider");
         	boutonVal.setAction(this.app.getChangeQubjectAction());
-        	//boutonVal.setName("Valider");
+        	boutonVal.setHideActionText(false);
+       
         	boutonAnn = new JButton("Annuler");
         	boutonAnn.addActionListener(this);
         	
-  // bouton.addActionListener(new BoutonListener());     
-   //bouton2.addActionListener(new Bouton2Listener());
-    //bouton2.setEnabled(false);    
+ 
         	JPanel south = new JPanel();
         	south.add(boutonVal);
         	south.add(boutonAnn);
@@ -73,7 +72,7 @@ public class QubjectPalette extends JFrame implements ActionListener
         		combo.addItem(qubject.getName());
         	}
        
-    //combo.addActionListener(new FormeListener());
+    
     
         	JPanel top = new JPanel();
         	top.add(label);

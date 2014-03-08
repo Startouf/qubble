@@ -12,6 +12,7 @@ public class ChangeQubjectAction extends AbstractAction{
 	
 	public ChangeQubjectAction(App app){
 		this.app = app;
+		putValue(NAME, "Valider");
 	}
 
 	@Override

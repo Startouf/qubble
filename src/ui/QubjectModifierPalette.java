@@ -25,8 +25,8 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     private JButton boutonVal;
     private JButton boutonAnn;
 	protected QubjectModifierInterface selectedModifier;    
-	private JComboBox combo = new JComboBox();
-	private JLabel label = new JLabel("Choix du Qubject");
+	protected final JComboBox combo = new JComboBox();
+
 	
 	public QubjectModifierPalette(App app) {
 		
@@ -43,6 +43,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 
     	boutonVal = new JButton("Valider");
     	boutonVal.setAction(this.app.getChangeQubjectModifierAction());
+    	boutonVal.setHideActionText(false);
     	//boutonVal.setName("Valider");
     	boutonAnn = new JButton("Annuler");
     	boutonAnn.addActionListener(this);
@@ -52,28 +53,26 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     	south.add(boutonAnn);
     	itemSelectionPanel.add(south, BorderLayout.SOUTH);
 
-    	//editModifiers();
-    	//previsualisation();
-    	
-    	for (MediaInterface qubject : this.app.getQubjects())
-    	{
-    		combo.addItem(qubject.getName());
-    	}
- 
+    	previsualisation();
+    	fillCombo();
     	JPanel top = new JPanel();
-    	top.add(label);
+    	top.add(label());
     	top.add(combo);    
     	itemSelectionPanel.add(top, BorderLayout.NORTH);
     	this.setContentPane(itemSelectionPanel);
     	pack();
     	this.setVisible(true);
 	}
-    
 	/**
-	 * Edition du modifier choisi pour le Qubject actif
+	 * fill the combo 
 	 */
-	protected abstract void editModifiers();
-
+	protected abstract JComboBox fillCombo();
+	
+	/**
+	 * Return le label de la palette
+	 * @return
+	 */
+	protected abstract JLabel label();
 	/**
 	 * Ajout d'un espace de prévisualisation
 	 */
