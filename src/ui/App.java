@@ -48,7 +48,7 @@ public class App extends JFrame
 	 * Références vers les projets chargés (liste des Qubject configurés)
 	 */
 	private final ArrayList<ProjectController> projects = new ArrayList<ProjectController>();
-	private ProjectController activeProject = null;
+	private ProjectController activeProject;
 	
 	
 	/*
@@ -63,7 +63,7 @@ public class App extends JFrame
 	private final ChangeQubjectModifierAction changeQubjectModifierAction 
 		= new ChangeQubjectModifierAction(this);
 	
-	private boolean projectOpened = false;
+	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
 	private QubjectPalette qubjectPalette = null;
 	private SamplePalette samplePalette = null;
@@ -78,6 +78,8 @@ public class App extends JFrame
 	public App()
 	{
 		super("Qubble");
+		activeProject  = null;
+		projectOpened  = false;
 		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
@@ -94,9 +96,11 @@ public class App extends JFrame
 	public App(ProjectController project)
 	{
 		super("Qubble");
-		this.activeProject = project;
-		this.projects.add(project);
-		setJMenuBar(menu = new MenuBar(this));
+		projects.add(project);
+		activeProject = project;
+		projectOpened  = false;
+		
+		setJMenuBar(menu = new MenuBar(this, true));
 		setContentPane(mainPanel = new MainPanel(this));
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -218,14 +222,6 @@ public class App extends JFrame
 
 	public ArrayList<Qubject> getQubjects() {
 		return activeProject.getQubjects();
-	}
-
-	public ArrayList<SoundEffectInterface> getSoundEffects() {
-		return globalController.getSoundEffects();
-	}
-
-	public ArrayList<AnimationInterface> getAnimations() {
-		return globalController.getAnimations();
 	}
 
 	public void setQubjectPalette(QubjectPalette patternSelectionFrame) {

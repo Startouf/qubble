@@ -8,11 +8,23 @@ public class SettingsMenu extends JMenu {
 
 	public SettingsMenu(App app, String string, String string2, int vkS) {
 		super("Settings");
+		//TODO : string & string2 .?????
 		this.app = app;
 		this.setMnemonic(vkS);
 		vimi = new ViewIndividualMenuItem(app);
 		//Wait for a project being loaded before showing this button
 		vimi.setVisible(false);
+		add(vimi);
+	}
+
+	public SettingsMenu(App app, String string, String string2, int vkS,
+			boolean showAll) {
+		super("Settings");
+		this.app = app;
+		this.setMnemonic(vkS);
+		vimi = new ViewIndividualMenuItem(app);
+		//Wait for a project being loaded before showing this button
+		vimi.setVisible(showAll);
 		add(vimi);
 	}
 

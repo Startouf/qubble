@@ -145,11 +145,41 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-		//projectionThread.start();
+		projectionThread.start();
 		playerThread.start();
 		sequencerThread.start();
 		cameraThread.start();
 	}
+
+	/**
+	 * Debug Overload : don't start threads !
+	 * @param data
+	 */
+	public Qubble(Data data, boolean runThreads){
+		super();
+		this.data = data;
+		player = new Player(this);
+		projection = new ProjectorOutput();
+		camera = new FakeCamera(this);
+		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
+		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
+		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+		initialiseSampleControllers();
+		sequencer = new Sequencer(this, period);
+		
+		cameraThread = new Thread((Runnable) camera, "Camera Thread");
+		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
+		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
+		playerThread = new Thread((Runnable) player, "Player Thread");
+		
+		if (runThreads){
+			projectionThread.start();
+			playerThread.start();
+			sequencerThread.start();
+			cameraThread.start();
+		}
+	}
+	
 	/**
 	 * Put every Qubject in the Hashtable, and initialise LinkedLists of their sampleControllers
 	 */

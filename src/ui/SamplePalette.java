@@ -4,6 +4,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import qubject.MediaInterface;
+import qubject.SampleInterface;
+
 public class SamplePalette extends QubjectModifierPalette
 {
 
@@ -13,8 +16,18 @@ public class SamplePalette extends QubjectModifierPalette
 	}
 
 	@Override
-	protected void editModifiers() {
-		
+	protected JComboBox<String> fillCombo() {
+		JComboBox<String> combo = new JComboBox<String>();
+	  	for (SampleInterface sound : this.app.getGlobalController().getSamples())
+    	{
+    		combo.addItem(sound.getName());
+    	}
+	  	return combo;
+	}
+
+	@Override
+	protected JLabel label() {
+		return new JLabel("Choix du sample joué");
 	}
 
 	@Override
@@ -22,17 +35,4 @@ public class SamplePalette extends QubjectModifierPalette
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	protected JComboBox getCombo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected JLabel label() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

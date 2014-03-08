@@ -1,5 +1,11 @@
 package ui;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+
+import qubject.AnimationInterface;
+import audio.SoundEffectInterface;
+
 public class AnimationPalette extends QubjectModifierPalette {
 
 	public AnimationPalette(App app) {
@@ -14,9 +20,18 @@ public class AnimationPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected void editModifiers() {
-		// TODO Auto-generated method stub
-		
+	protected JComboBox<String> fillCombo() {
+		JComboBox<String> combo = new JComboBox<String>();
+	  	for (AnimationInterface anim : this.app.getGlobalController().getAnimations())
+    	{
+    		combo.addItem(anim.getName());
+    	}
+	  	return combo;
+	}
+
+	@Override
+	protected JLabel label() {
+		return new JLabel("Choisissez une animation");
 	}
 
 }

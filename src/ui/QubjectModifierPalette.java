@@ -41,10 +41,10 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     	itemSelectionPanel.setBackground(Color.white);
     	itemSelectionPanel.setLayout(new BorderLayout());
 
-    	boutonVal = new JButton("Valider");
+    	boutonVal = new JButton();
     	boutonVal.setAction(this.app.getChangeQubjectModifierAction());
     	boutonVal.setHideActionText(false);
-    	//boutonVal.setName("Valider");
+    	
     	boutonAnn = new JButton("Annuler");
     	boutonAnn.addActionListener(this);
  
@@ -66,7 +66,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	/**
 	 * fill the combo 
 	 */
-	protected abstract JComboBox fillCombo();
+	protected abstract JComboBox<?> fillCombo();
 	
 	/**
 	 * Return le label de la palette

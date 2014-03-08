@@ -3,6 +3,7 @@ package ui;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import audio.SoundEffectInterface;
 import qubject.MediaInterface;
 
 
@@ -21,19 +22,18 @@ public class SoundEffectPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected JComboBox getCombo() {
-		JComboBox combo = new JComboBox();
-	  	for (MediaInterface qubject : this.app.getQubjects())
+	protected JComboBox<String> fillCombo() {
+		JComboBox<String> combo = new JComboBox<String>();
+	  	for (SoundEffectInterface effect : this.app.getGlobalController().getSoundEffects())
     	{
-    		combo.addItem(qubject.getName());
+    		combo.addItem(effect.getName());
     	}
 	  	return combo;
 	}
 
 	@Override
 	protected JLabel label() {
-		JLabel label = new JLabel("Choix de l'effet sonore");
-		return label;
+		return (new JLabel("Choix de l'effet sonore"));
 	}
 
 }

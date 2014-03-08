@@ -9,9 +9,20 @@ public class MenuBar extends JMenuBar
     private SettingsMenu settingsMenu;
 
     public MenuBar(App app){
-	this.app = app;
-	add(fileMenu = new FileMenu(app, "File", "File Menu", java.awt.event.KeyEvent.VK_F));
-	add(settingsMenu = new SettingsMenu(app, "Settings", "Set settings for patterns", java.awt.event.KeyEvent.VK_S));
+    	this.app = app;
+    	add(fileMenu = new FileMenu(app, "File", "File Menu", java.awt.event.KeyEvent.VK_F));
+    	add(settingsMenu = new SettingsMenu(app, "Settings", "Set settings for patterns", java.awt.event.KeyEvent.VK_S));
+    }
+   
+    /**
+     * Debug Overload
+     * @param app
+     * @param showAll menu items
+     */
+    public MenuBar(App ap, boolean showAll){
+    	this.app = app;
+    	//add(fileMenu = new FileMenu(app, "File", "File Menu", java.awt.event.KeyEvent.VK_F));
+    	add(settingsMenu = new SettingsMenu(app, "Settings", "Set settings for patterns", java.awt.event.KeyEvent.VK_S, showAll));
     }
 
 	public void showProjectSettings(boolean projectOpened) {
