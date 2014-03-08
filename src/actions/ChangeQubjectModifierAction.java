@@ -3,6 +3,7 @@ package actions;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
@@ -21,7 +22,7 @@ private final App app;
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		switch (this.app.getActiveTab().getActiveQubjectModifier()){
+		switch (this.app.getActiveTab().getActiveProperty()){
 		//Proto final
 //		case rotationModifier:
 //			this.app.getActiveTab().getActiveQubject().setRotationEffect(

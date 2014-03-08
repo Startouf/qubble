@@ -3,6 +3,7 @@ package ui;
 import javax.swing.JPanel;
 
 import qubject.MediaInterface;
+import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
 /**
  * @author duchon
@@ -11,27 +12,23 @@ import qubject.QubjectModifiers;
  *
  */
 public abstract class ViewQubjects extends JPanel {
-	private MediaInterface activeQubject;
-	private QubjectModifiers activeModifier;
-	
+	protected MediaInterface activeQubject;
+	protected QubjectModifiers activeProperty;
+
 	/**
 	 * Change the active Qubject that will be modified by the Palettes
 	 * The subclasses should Override this method to refresh their display
 	 * @param selectedQubject
 	 */
 	public abstract void setActiveQubject(MediaInterface selectedQubject);
+	
+	public abstract void setActiveModifier(QubjectModifierInterface modifier);
 
-	public MediaInterface getActiveQubject() {
-		//TODO get/set
+	public MediaInterface getActiveQubject(){
 		return activeQubject;
 	}
 	
-	public void setActiveQubject(QubjectModifiers modifier) {
-		this.activeModifier= modifier;
-	}
-	
-	public QubjectModifiers getActiveQubjectModifier(){
-		//TODO get/set
-		return activeModifier;
+	public QubjectModifiers getActiveProperty(){
+		return activeProperty;
 	}
 }

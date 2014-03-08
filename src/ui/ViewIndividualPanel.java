@@ -27,7 +27,6 @@ public class ViewIndividualPanel extends ViewQubjects {
 
 	private final App app;
 	private final ProjectController project;
-	private Qubject currentQubject;
 	private int qubjectModifiers = 0;
 	private final GridBagConstraints c = new GridBagConstraints();
 	private final Selector qubjectSelector; 
@@ -35,7 +34,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	public ViewIndividualPanel(App app) {
 		this.app = app;
 		this.project = app.getActiveProject();
-		this.currentQubject = (Qubject) project.getQubjects().get(0);
+		this.activeQubject = (Qubject) project.getQubjects().get(0);
 		
 		this.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);
@@ -47,7 +46,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridx = 0;
 		add(new JLabel("Options pour :"), c);
 		c.gridx = 1;
-		add(qubjectSelector = new Selector(app, "Qubject: "+currentQubject.getName(), currentQubject), c);
+		add(qubjectSelector = new Selector(app, "Qubject: "+ activeQubject.getName(), activeQubject), c);
 		
 		//TODO : Replace nulls by default choices (this.app.getXXX.get(0) for example)
 		addOption("Sample Associé", QubjectModifiers.sampleWhenPlayed);
@@ -67,6 +66,13 @@ public class ViewIndividualPanel extends ViewQubjects {
 
 	@Override
 	public void setActiveQubject(MediaInterface selectedQubject) {
-		currentQubject=(Qubject) selectedQubject;
+		activeQubject= selectedQubject;
+		//TODO :
+	}
+
+	@Override
+	public void setActiveModifier(QubjectModifierInterface modifier) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import qubject.MediaInterface;
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
@@ -35,7 +36,7 @@ public class Selector extends JPanel {
 	//change the specific object (pattern or patternmodifier)
 	private Object selectedObject;
 	
-	public Selector(App app, String title, Qubject pattern){
+	public Selector(App app, String title, MediaInterface pattern){
 		this.app = app;
 		this.selectedObject = getDefaultChoice(pattern);
 		
