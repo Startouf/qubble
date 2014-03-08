@@ -25,7 +25,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     private JButton boutonVal;
     private JButton boutonAnn;
 	protected QubjectModifierInterface selectedModifier;    
-	protected final JComboBox combo = new JComboBox();
+	protected final JComboBox combo;
 
 	
 	public QubjectModifierPalette(App app) {
@@ -54,7 +54,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     	itemSelectionPanel.add(south, BorderLayout.SOUTH);
 
     	previsualisation();
-    	fillCombo();
+    	combo = fillCombo();
     	JPanel top = new JPanel();
     	top.add(label());
     	top.add(combo);    
