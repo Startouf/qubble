@@ -44,7 +44,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridx = 0;
 		add(new JLabel("Options pour :"), c);
 		c.gridx = 1;
-		add(new Selector(app, "Pattern", currentQubject), c);
+		add(new Selector(app, "Pattern: "+currentQubject.getName(), currentQubject), c);
 		
 		//TODO : Replace nulls by default choices (this.app.getXXX.get(0) for example)
 		addOption("Sample Associé", currentQubject, null);

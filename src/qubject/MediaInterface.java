@@ -15,6 +15,13 @@ public interface MediaInterface
 	 */
 	
 	/**
+	 * The name corresponds to a human-distinction sign 
+	 * (for example a (Qubject) Cube with stars drawn on it would be called "Star")
+	 * @return
+	 */
+	public String getName();
+	
+	/**
 	 * Sample played when cursor reaches it
 	 * @param sample
 	 */

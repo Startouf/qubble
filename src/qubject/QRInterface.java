@@ -18,13 +18,6 @@ public interface QRInterface {
 	 * @return
 	 */
 	public int getBitIdentifier();
-	
-	/**
-	 * The name corresponds to a human-distinction sign 
-	 * (for example a (Qubject) Cube with stars drawn on it would be called "Star")
-	 * @return
-	 */
-	public String getName();
 
 	/**
 	 * Notclear whether this value is a pixel (int) value, a float
