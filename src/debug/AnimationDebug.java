@@ -16,6 +16,7 @@ import opengl.OutputImageInterface;
 import opengl.VBORoutines;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL15;
@@ -56,9 +57,10 @@ public class AnimationDebug implements OutputImageInterface {
 	
 	//Other
 	public boolean playPause = true;
-	private float lastFrameTimeMS;
+	private long lastFrameTime = Sys.getTime();
 
 	private void debug(){
+		triggerQubject(new Point(150,350));
 		activeAnimations.add(new WaterWave(new Point (400,400)));
 	}
 	
@@ -95,11 +97,10 @@ public class AnimationDebug implements OutputImageInterface {
 		for (Dimension dim : occupiedTiles){
 			if (dim.width == tile.width && dim.height == tile.height){
 				occupiedTiles.remove(dim);
-			}
-			else{
-				occupiedTiles.add(tile);
+				return;
 			}
 		}
+		occupiedTiles.add(tile);
 	}
 
 	public Dimension getTile(org.lwjgl.util.Point pos){
@@ -171,14 +172,17 @@ public class AnimationDebug implements OutputImageInterface {
 	 */
 	private void render(){
 		//Grid
-		if (showGrid)
+		if (showGrid){
+			glColor3f(1f,1f,1f);
 			BaseRoutines.renderList(gridDL);
-		
+		}
+
 		//Cursor 
 		//TODO : Curseur stylé avec shader
 		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
 		
 		//Highlight tiles where qubjects are present
+		glColor3f(0.5f,0.5f,0f);
 		for (Dimension dim : occupiedTiles){
 			BaseRoutines.HighlightTile(dim);
 		}
@@ -199,8 +203,8 @@ public class AnimationDebug implements OutputImageInterface {
 		
 		//Update animations
 		//TODO Check if only one dt computation is enough for all the animations !!
-		updateAnimations(BaseRoutines.getDt(lastFrameTimeMS));
-		lastFrameTimeMS = BaseRoutines.getTimeMS();
+		updateAnimations(BaseRoutines.getDt(lastFrameTime));
+		lastFrameTime = Sys.getTime();
 	}
 
 	/**

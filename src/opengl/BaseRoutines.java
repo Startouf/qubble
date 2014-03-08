@@ -1,18 +1,6 @@
 package opengl;
 
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glCallList;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glFlush;
-import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glNewList;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -250,14 +238,18 @@ public class BaseRoutines
 	public static float getTimeMS(){
 		return (float) (Sys.getTime()*1000/Sys.getTimerResolution());
 	}
+	
+	public static float convertSysTimeToMS(long sysTime){
+		return (float) (sysTime*1000/Sys.getTimerResolution());
+	}
 
 	/**
 	 * Time between last given frame and current frame
 	 * @param lastFrameTime
 	 * @return delta in milliseconds
 	 */
-	public static float getDt(float lastFrameTimeMS){
-		return getTimeMS() - lastFrameTimeMS;
+	public static float getDt(long lastFrameTime){
+		return convertSysTimeToMS(Sys.getTime()-lastFrameTime);
 	}
 	
 	/*
@@ -285,8 +277,16 @@ public class BaseRoutines
 
 	public static void HighlightTile(Dimension dim) {
 		//TODO : Something else
-		GL11.glTranslatef((float)dim.width, (float)dim.height, 0f);
-		
-		
+		glPushMatrix();
+		GL11.glTranslatef(((float)dim.width)*Qubble.SPACING_X+Qubble.TABLE_OFFSET_X, 
+				+((float)dim.height)*Qubble.SPACING_Y+Qubble.TABLE_OFFSET_Y, 0f);
+		glBegin(GL_QUADS);
+		glNormal3f(0f,0f,1f);
+		glVertex2f(0f,0f);
+		glVertex2f(Qubble.SPACING_X,0f);
+		glVertex2f(Qubble.SPACING_X,Qubble.SPACING_Y);
+		glVertex2f(0f,Qubble.SPACING_Y);
+		glEnd();
+		glPopMatrix();
 	}
 }
