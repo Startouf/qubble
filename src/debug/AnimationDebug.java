@@ -23,6 +23,8 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 
+import explosion.PixelExplosion;
+
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
@@ -61,7 +63,7 @@ public class AnimationDebug implements OutputImageInterface {
 
 	private void debug(){
 		triggerQubject(new Point(150,350));
-		activeAnimations.add(new WaterWave(new Point (400,400)));
+		activeAnimations.add(new PixelExplosion(new Point (400,400)));
 	}
 	
 	public void start(int width, int height){
