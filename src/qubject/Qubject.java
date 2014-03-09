@@ -88,4 +88,24 @@ public final class Qubject implements QRInterface, MediaInterface {
 	public void setCoords(Point pos) {
 		this.coords = pos;
 	}
+
+	@Override
+	public QubjectModifierInterface getModifierForProperty(QubjectModifiers property) {
+		switch(property){
+		case animationWhenPlayed:
+			return(this.animationwhenPlayed);
+		case rotationModifier:
+			//TODO
+			return(null);
+		case sampleWhenPlayed:
+			return(this.sampleWhenPlayed);
+		case whenPutOnTable:
+			return this.whenPutOnTable;
+		case yAxisModifier:
+			return this.getYAxisEffect();
+		default:
+			//TODO : throw exception
+			return null;
+		}
+	}
 }

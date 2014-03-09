@@ -74,11 +74,14 @@ public class ViewIndividualPanel extends ViewQubjects {
 	public void setActiveQubject(MediaInterface selectedQubject) {
 		activeQubject= selectedQubject;
 		qubjectSelector.setQubject(selectedQubject);
+		for (QubjectModifiers property : QubjectModifiers.values()){
+			this.selectors.get(property).setModifier(selectedQubject.getModifierForProperty(property));
+		}
 	}
 
 	@Override
-	public void setActiveProperty(QubjectModifiers modifier) {
-		this.activeProperty = modifier;
+	public void setActiveProperty(QubjectModifiers property) {
+		this.activeProperty = property;
 	}
 
 	@Override

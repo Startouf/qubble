@@ -86,12 +86,15 @@ public class Sequencer implements Runnable
 		destroyScheduledActions();
 		//remove the nulls from the list
 		this.scheduledQubjects.clear();
-		for (Qubject qubject : this.qubble.getQubjectsOnTable()){
-			//Schedule when the Qubject should be played
-			Runnable qubjectTask = new QubjectTask(qubble, qubject);
-		    ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
-		      qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)qubble.getPeriod(), TimeUnit.MILLISECONDS
-		    );
+		ArrayList<Qubject> qubjects = this.qubble.getQubjectsOnTable();
+		synchronized(qubjects){
+			for (Qubject qubject : qubjects){
+				//Schedule when the Qubject should be played
+				Runnable qubjectTask = new QubjectTask(qubble, qubject);
+				ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
+						qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)qubble.getPeriod(), TimeUnit.MILLISECONDS
+						);
+			}
 		}
 	}
 

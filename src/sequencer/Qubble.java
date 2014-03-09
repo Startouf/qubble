@@ -195,7 +195,7 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public synchronized ArrayList<Qubject> getQubjectsOnTable() {
+	public ArrayList<Qubject> getQubjectsOnTable() {
 		return qubjectsOnTable;
 	}
 	

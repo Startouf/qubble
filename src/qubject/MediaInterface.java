@@ -51,4 +51,10 @@ public interface MediaInterface
 //	
 //	public void setAnimationWhenDetected(Animation animation);
 //	public Animation getAnimationWhenDetected();
+
+	/**
+	 * 
+	 * @param property (SampleWhenPlayed, etc...)
+	 */
+	public QubjectModifierInterface getModifierForProperty(QubjectModifiers property);
 }
