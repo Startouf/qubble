@@ -19,7 +19,7 @@ public class ChangeQubjectAction extends AbstractAction{
 	public void actionPerformed(ActionEvent arg0) {
 		//set the active qubject 
 		this.app.getActiveTab().setActiveQubject(
-				this.app.getQubjectSelectionFrame().getSelectedQubject());
+		this.app.getQubjectSelectionFrame().getSelectedQubject());
 		
 		//Hide the QUbject Palette
 		this.app.getQubjectPalette().setVisible(false);

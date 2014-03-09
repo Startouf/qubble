@@ -63,7 +63,7 @@ public class GlobalSettingsPanel extends JPanel
 		timeBar.setStringPainted(true);
 		
 		//Play/Pause Button
-		playPause = new JButton("Play/Pause");
+		playPause = new JButton(new ImageIcon("data/ui/PauseButton.png"));
 		//TODO : play/Pause action !!!!!
 		playPause.setAction(this.app.getPlayPauseAction());
 		//TODO : Size not adjustable with current layout ??
