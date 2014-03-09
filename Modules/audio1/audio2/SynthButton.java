@@ -38,28 +38,28 @@ public class SynthButton extends JButton implements ActionListener {
 		
 		int result = JOptionPane.showConfirmDialog(null,  myPanel, "Delay", JOptionPane.OK_CANCEL_OPTION);
 		
-		if (result == JOptionPane.OK_OPTION) {
-			int form = Synthesizer.sine;
-			switch(formText.getText()) {
-			case "saw":
-				form = Synthesizer.saw;
-				break;
-			case "triangle":
-				form = Synthesizer.triangle;
-				break;
-			case "square":
-				form = Synthesizer.square;
-				break;
-			default:
-				break;
-			}
+//		if (result == JOptionPane.OK_OPTION) {
+//			int form = Synthesizer.sine;
+//			switch(formText.getText()) {
+//			case "saw":
+//				form = Synthesizer.saw;
+//				break;
+//			case "triangle":
+//				form = Synthesizer.triangle;
+//				break;
+//			case "square":
+//				form = Synthesizer.square;
+//				break;
+//			default:
+//				break;
+//			}
 			
-			window.synthesize(form,
-			Integer.parseInt(freqText.getText()),
-			Integer.parseInt(ampText.getText()),
-			Integer.parseInt(lengthText.getText())
-			);
-		}
+//			window.synthesize(form,
+//			Integer.parseInt(freqText.getText()),
+//			Integer.parseInt(ampText.getText()),
+//			Integer.parseInt(lengthText.getText())
+//			);
+//		}
 	}
 
 }

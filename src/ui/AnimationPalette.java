@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import qubject.AnimationInterface;
+import qubject.QubjectModifierInterface;
+import qubject.SampleInterface;
 import audio.SoundEffectInterface;
 
 public class AnimationPalette extends QubjectModifierPalette {
@@ -20,8 +22,8 @@ public class AnimationPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected JComboBox<String> fillCombo() {
-		JComboBox<String> combo = new JComboBox<String>();
+	protected JComboBox fillCombo() {
+		JComboBox combo = new JComboBox();
 	  	for (AnimationInterface anim : this.app.getGlobalController().getAnimations())
     	{
     		combo.addItem(anim.getName());
@@ -32,6 +34,16 @@ public class AnimationPalette extends QubjectModifierPalette {
 	@Override
 	protected JLabel label() {
 		return new JLabel("Choisissez une animation");
+	}
+
+	public QubjectModifierInterface getSelectedModifier() {
+		String str = (String) combo.getSelectedItem();
+		for (AnimationInterface anim : this.app.getGlobalController().getAnimations()){
+			if(anim.getName().equals(str)){
+				return anim;
+			}
+		}
+		return null;
 	}
 
 }

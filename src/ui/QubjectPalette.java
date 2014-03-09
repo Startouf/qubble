@@ -40,7 +40,7 @@ public class QubjectPalette extends JFrame implements ActionListener
     private JButton boutonVal;
     private JButton boutonAnn;
     private JLabel label = new JLabel("Choix du Qubject");
-    private JComboBox<String> combo = new JComboBox<String>();
+    private JComboBox combo = new JComboBox();
 
 	public QubjectPalette(App app) 
 	{

@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import qubject.MediaInterface;
+import qubject.QubjectModifierInterface;
 import qubject.SampleInterface;
 
 public class SamplePalette extends QubjectModifierPalette
@@ -17,8 +18,8 @@ public class SamplePalette extends QubjectModifierPalette
 	}
 
 	@Override
-	protected JComboBox<String> fillCombo() {
-		JComboBox<String> combo = new JComboBox<String>();
+	protected JComboBox fillCombo() {
+		JComboBox combo = new JComboBox();
 	  	for (SampleInterface sound : this.app.getGlobalController().getSamples())
     	{
     		combo.addItem(sound.getName());
@@ -36,9 +37,20 @@ public class SamplePalette extends QubjectModifierPalette
 		JPanel panel = new JPanel();
 		JButton play = new JButton("Play");
 		//TODO : use this
-		//play.setAction(this.app.getPlaySoundAction());
+		play.setAction(this.app.getPlaySampleAction());
 		//....Or override the ActionPerformed(...) of the palette
 		panel.add(play);
 		return panel;
+	}
+
+	@Override
+	public QubjectModifierInterface getSelectedModifier() {
+		String str = (String) combo.getSelectedItem();
+		for (SampleInterface sample : this.app.getGlobalController().getSamples()){
+			if(sample.getName().equals(str)){
+				return sample;
+			}
+		}
+		return null;
 	}
 }
