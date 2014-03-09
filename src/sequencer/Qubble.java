@@ -48,9 +48,9 @@ public class Qubble implements QubbleInterface {
 	 */
 	private long startTime = Sys.getTime();
 	/**
-	 * Period in float in seconds
+	 * Period in float milliseconds
 	 */
-	private float period = 30; 
+	private float period = 30000f; 
 	public static final float TEST_PERIOD = 30;
 	private final PlayerInterface player;
 	private final OutputImageInterface projection;
@@ -210,6 +210,7 @@ public class Qubble implements QubbleInterface {
 		double absoluteStartingTime = 
 				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
 				/((double)TABLE_LENGTH)		*period;
+		System.out.println("Demarrage absolu : " + absoluteStartingTime);
 		return (long) (absoluteStartingTime-currentTime);
 	}
 	
@@ -241,6 +242,7 @@ public class Qubble implements QubbleInterface {
 		//show its animation
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
+	
 
 	/**
 	 * TODO : synchronise ?  might have to make a custom lock to make sure nobody does something crazy 
@@ -292,15 +294,16 @@ public class Qubble implements QubbleInterface {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
-				qubject.setCoords(Calibrate.mapToOpenGL(pos));
+				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(pos);
+				qubject.setCoords(glCoords);
 				//...et on demande le verrou pour ajouter à la liste des objets sur la table
+				System.out.println("Highlight tile");
+				projection.triggerQubject(qubject.getCoords());
 				synchronized(qubjectsOnTable){
 					System.out.println("Qubject détecté et ajouté!");
 					qubjectsOnTable.add(qubject);
 					//Tell the sequencer somehting must be done
-					sequencerThread.interrupt();
-					playQubject(qubject);
-					
+					sequencerThread.interrupt();					
 				//Has been found, so we can end the loop
 				return;
 				}

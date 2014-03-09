@@ -32,11 +32,7 @@ public class Player implements PlayerInterface, Runnable {
 		running = false;
 		paused = false;
 		cursor = 0;
-		
-		
-		
 		try {
-			
 			format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 1, 2, 44100, false);
 			System.out.println(format.toString());
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
@@ -59,7 +55,6 @@ public class Player implements PlayerInterface, Runnable {
 				writeNext();
 			}
 		}
-		
 	}
 
 	public void write(short[] dataInt) {
@@ -114,10 +109,28 @@ public class Player implements PlayerInterface, Runnable {
 	}
 
 	@Override
-	public void tweakSample(SampleControllerInterface ref, EffectType effect, float amount) {
-		ref.addEffect(effect);
-		//if effect est deja dedans, on modifie l'amount
-		
+	public void tweakSample(SampleControllerInterface ref, EffectType effect, int amount) {
+		SampleController r = (SampleController) ref;
+		if (r.effectAlreadyIn(effect) == null) {
+			SoundEffect e;
+			switch (effect) {
+			case Delay:
+				e = new Delay(amount);
+				break;
+			case Distortion:
+				e = new Distortion(amount);
+				break;
+			case Flanger:
+				e = new Flanger(amount);
+				break;
+			default:
+				e = new Volume(amount);
+			}
+			ref.addEffect(e);
+		}
+		else {
+			r.effectAlreadyIn(effect).setAmount(amount);
+		}
 	}
 	
 	@Override
@@ -127,6 +140,7 @@ public class Player implements PlayerInterface, Runnable {
 		
 	}
 
+	
 	@Override
 	public void destroy() {
 		running = false;

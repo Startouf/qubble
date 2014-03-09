@@ -133,5 +133,14 @@ public class SampleController implements SampleControllerInterface {
 	public Sample getSample() {
 		return sample;
 	}
+	
+	public SoundEffect effectAlreadyIn(EffectType et) {
+		for (int i = 0; i < soundEffects.size(); i++) {
+			if (soundEffects.get(i).getType() == et) {
+				return soundEffects.get(i);
+			}
+		}
+		return null;
+	}
 
 }

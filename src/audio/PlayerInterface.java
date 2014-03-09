@@ -17,7 +17,7 @@ public interface PlayerInterface
 	 * @param effect the effect that should be applied to the sample
 	 * @param amount the percentage (which corresponds to the y-position on the Qubble) 
 	 */
-	public void tweakSample(SampleControllerInterface ref, EffectType effect, float amount);
+	public void tweakSample(SampleControllerInterface ref, EffectType effect, int amount);
 
 	/**
 	 * Pause the currently playing sample

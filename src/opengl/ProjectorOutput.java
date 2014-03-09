@@ -12,14 +12,18 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
+
+import explosion.PixelExplosion;
 
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
 import sequencer.Qubble;
+import wave.WaterWave;
 
 public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
@@ -49,8 +53,16 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	//Other
 	public boolean playPause = true;
-	private long lastFrameTime;
+	private long lastFrameTime = Sys.getTime();
 
+	private void debug(){
+		triggerQubject(new Point(400,400));
+		needsToBeLoaded.add(new PixelExplosion(new Point (400,400)));
+		
+		triggerQubject(new Point(600, 300));
+		activeAnimations.add(new WaterWave(new Point(595,325)));
+	}
+	
 	public void start(int width, int height){
         InitRoutines.initDisplay(width, height);
         loadFonts();
@@ -84,11 +96,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		for (Dimension dim : occupiedTiles){
 			if (dim.width == tile.width && dim.height == tile.height){
 				occupiedTiles.remove(dim);
-			}
-			else{
-				occupiedTiles.add(tile);
+				return;
 			}
 		}
+		occupiedTiles.add(tile);
 	}
 
 	public Dimension getTile(org.lwjgl.util.Point pos){
@@ -99,26 +110,15 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
+		//TODO
 		AnimationControllerInterface controller;
-//		try {
-//			controller = AnimationClassLoader.compileAndLoadAnimation(anim.getFile());
-//			//load entities for the object
-//			needsToBeLoaded.add(controller);
-//			
-//			//add the object to the render list
-//			activeAnimations.add(controller);
-//			
-//		} catch (CannotCompileAnimationException e) {
-//			e.printStackTrace();
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		}
+
+		controller = new WaterWave(qubjectCoords);
+		//load entities for the object
+		needsToBeLoaded.add(controller);
+
+		//add the object to the render list
+		activeAnimations.add(controller);
 	}
 
 	@Override
@@ -160,6 +160,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void render(){
 		//Grid
+		GL11.glColor3f(1f, 1f, 1f);
 		if (showGrid)
 			BaseRoutines.renderList(gridDL);
 		
@@ -204,7 +205,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		for (AnimationControllerInterface anim : activeAnimations){
 			if (anim.updateAnimation(dt) == false)
 				anim.destroy();
-				activeAnimations.remove(anim);
+			//TODO
+				//activeAnimations.remove(anim);
 		}
 	}
 

@@ -23,7 +23,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private boolean isHere = false;
 	private Point coords = new Point(0,0);
 	
-	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/bruits.wav"));
+	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 	private EffectType yAxisModifier = EffectType.Volume;
 	private EffectType rotationModifier = EffectType.Distortion;
 	private AnimationInterface whenPutOnTable;
@@ -35,7 +35,6 @@ public final class Qubject implements QRInterface, MediaInterface {
 	public Qubject(String name, int bitIdentifier){
 		this.name = name;
 		this.bitIdentifier = bitIdentifier;
-		
 		//TODO : assign default sample/effect/animation effects 
 		//(done here or somewhere else ?)
 	}
