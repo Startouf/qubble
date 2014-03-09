@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import qubject.AnimationInterface;
 import audio.SoundEffectInterface;
@@ -13,9 +14,9 @@ public class AnimationPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected void previsualisation() {
-		// TODO Auto-generated method stub
-		
+	protected JPanel addPrevisualisation() {
+		//TODO
+		return(new JPanel());
 	}
 
 	@Override

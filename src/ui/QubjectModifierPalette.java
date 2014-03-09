@@ -24,7 +24,8 @@ import actions.ChangeQubjectModifierAction;
  * Abstract class for all QubjectModifiers Palettes. (factorisation of validate/cancel button)
  * @author Cyril
  * @author bertolli
- * TODO : use something else than a JFrame. IT'S VERY BAD.
+ * TODO : use something else than a JFrame. IT'S VERY BAD 
+ * (some guy from StackOverflow says...he had good arguments though) .
  */
 public abstract class QubjectModifierPalette extends JFrame implements ActionListener{
 	
@@ -32,6 +33,9 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	protected final JPanel itemSelectionPanel = new JPanel();
     private JButton boutonVal;
     private JButton boutonAnn;
+    /**
+     * This selectedModifier is grabbed by the AbstractAction ChangeQubjectModifierAction
+     */
 	protected QubjectModifierInterface selectedModifier;    
 	protected final JComboBox combo;
 
@@ -57,28 +61,36 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
             }
         });
 
-    	boutonVal = new JButton();
-    	boutonVal.setAction(this.app.getChangeQubjectModifierAction());
-    	boutonVal.setHideActionText(false);
+    	addBasicButtons();
+    	itemSelectionPanel.add(addPrevisualisation(), BorderLayout.CENTER);
     	
-    	boutonAnn = new JButton("Annuler");
-    	boutonAnn.addActionListener(this);
- 
-    	JPanel south = new JPanel();
-    	south.add(boutonVal);
-    	south.add(boutonAnn);
-    	itemSelectionPanel.add(south, BorderLayout.SOUTH);
-
-    	previsualisation();
+    	//The useful stuff :
     	combo = fillCombo();
     	JPanel top = new JPanel();
     	top.add(label());
     	top.add(combo);    
     	itemSelectionPanel.add(top, BorderLayout.NORTH);
+    	
     	this.setContentPane(itemSelectionPanel);
     	pack();
     	this.setVisible(true);
 	}
+
+	/**
+	 * Add Validate and cancel buttons
+	 */
+	private void addBasicButtons(){
+		boutonVal = new JButton();
+    	boutonVal.setAction(this.app.getChangeQubjectModifierAction());
+    	boutonVal.setHideActionText(false);
+    	boutonAnn = new JButton("Annuler");
+    	boutonAnn.addActionListener(this);
+    	JPanel south = new JPanel();
+    	south.add(boutonVal);
+    	south.add(boutonAnn);
+    	itemSelectionPanel.add(south, BorderLayout.SOUTH);
+	}
+	
 	/**
 	 * fill the combo 
 	 */
@@ -89,10 +101,12 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	 * @return
 	 */
 	protected abstract JLabel label();
+	
 	/**
 	 * Ajout d'un espace de prévisualisation
+	 * @return Le panel qui sera ajouté au milieu de la palette
 	 */
-	protected abstract void previsualisation();
+	protected abstract JPanel addPrevisualisation();
 
 	public QubjectModifierInterface getSelectedModifier() {
 		return selectedModifier;

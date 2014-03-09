@@ -1,8 +1,10 @@
 package ui;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import qubject.MediaInterface;
 import qubject.SampleInterface;
@@ -30,8 +32,13 @@ public class SamplePalette extends QubjectModifierPalette
 	}
 
 	@Override
-	protected void previsualisation() {
-		
-		
+	protected JPanel addPrevisualisation() {
+		JPanel panel = new JPanel();
+		JButton play = new JButton("Play");
+		//TODO : use this
+		//play.setAction(this.app.getPlaySoundAction());
+		//....Or override the ActionPerformed(...) of the palette
+		panel.add(play);
+		return panel;
 	}
 }

@@ -13,22 +13,26 @@ public class GlobalSettingsPanel extends JPanel
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
+	private final JButton playPause;
 	private JLabel activeProject;
 
 	public GlobalSettingsPanel(App app)
 	{
 		super();
 		this.app = app;
+		GridLayout layout = new GridLayout(2,4);
+		layout.setHgap(25);
+		setLayout(layout);
 
-		setLayout(new GridLayout(2,4));
-
-		//Headings
+		//Labels
 		JLabel project = new JLabel("Active project:");
 		project.setHorizontalAlignment(JLabel.CENTER);
 		JLabel volume = new JLabel("Volume");
 		volume.setHorizontalAlignment(JLabel.CENTER);
-		JLabel time = new JLabel("Time");
-		time.setHorizontalAlignment(JLabel.CENTER);
+//		JLabel time = new JLabel("Time");
+//		time.setHorizontalAlignment(JLabel.CENTER);
+		JLabel playPauseLabel = new JLabel("Play/Pause");
+		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
 		
 		//Project Name
 		activeProject = new JLabel();
@@ -50,21 +54,31 @@ public class GlobalSettingsPanel extends JPanel
 		volumeSlider.setLabelTable(volumeLabels);
 		volumeSlider.setPaintLabels(true);
 		//TODO : chaîne réactive quand le volume est changé
+		//(AbstractAction would be best : able to sync it from external modif (OS modification ?))
 
-		//Time Slider :
+		//Time Slider : Removed because time synchronization is harddddd
 		//TODO : afficher le temps actuel/temps total
 		//With fixed values
 		timeBar = new JProgressBar(0,240);
 		timeBar.setStringPainted(true);
+		
+		//Play/Pause Button
+		playPause = new JButton("Play/Pause");
+		//TODO : play/Pause action !!!!!
+		//playPause.setAction(null);
+		//TODO : Size not adjustable with current layout ??
+		playPause.setSize(new Dimension(300,50));
 
 		//add in order (left to right)
 		add(project);
 		add(volume);
-		add(time);
+		add(playPauseLabel);
+//		add(time);
 
 		add(activeProject);
 		add(volumeSlider);
-		add(timeBar);
+		add(playPause);
+//		add(timeBar);
 
 		setBackground(Color.WHITE);
 	}

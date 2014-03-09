@@ -39,12 +39,14 @@ public class Selector extends JPanel {
 
 	/**
 	 * Selector for a Qubject
+	 * TODO Make it somewhat larger than the Modifiers ?
+	 * (Or more distinctive)
 	 * @param app
 	 * @param qubject
 	 */
 	public Selector(App app, MediaInterface qubject){
 		this.app = app;		
-		setPreferredSize(new Dimension(250,35));
+		setPreferredSize(new Dimension(300,40));
 		setBorder(BorderFactory.createCompoundBorder(
 				new EtchedBorder(), 
 				new EmptyBorder(10, 20, 10, 20)));
@@ -68,16 +70,10 @@ public class Selector extends JPanel {
 				new EmptyBorder(5, 10, 5, 10)));
 		setLayout(new BorderLayout());
 		
+		//TODO : name
 		add(label = new JLabel(getNameFor(modifier)), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
-		//TODO : show a clickable arrow that pops-up a custom file chooser menu with BorderLayer.EAST
 		add(new SelectorButton(app, modifier), BorderLayout.EAST);
-	}
-
-	//Note : maybe a superclass of Pattern and PatternModifier should be created
-	private Object getDefaultChoice(Object object){
-		//TODO 
-		return null;
 	}
 	
 	private String getNameFor(Object selectedObjec){
