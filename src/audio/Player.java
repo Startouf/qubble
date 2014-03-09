@@ -7,7 +7,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-import qubject.SampleInterface;
+import qubject.*;
 import sequencer.Qubble;
 
 public class Player implements PlayerInterface, Runnable {
@@ -16,22 +16,25 @@ public class Player implements PlayerInterface, Runnable {
 	
 	private Qubble qubble;
 	
+	
 	private SourceDataLine line;
 	private AudioFormat format;
 	private final int bufferSize; //taille en octet du buffer. Contient donc 2*moins d'échantillons
 	//private ArrayList<Integer> samples;
 	private int cursor;
 	boolean running;
+	boolean paused;
 	
 	public Player(Qubble qubble) {
 		this.qubble = qubble;
 		sampleControllers = new ArrayList<SampleController>();
 		bufferSize = 2048;
 		running = false;
-		
+		paused = false;
 		cursor = 0;
 		
-		//samples = new ArrayList<Integer>();
+		
+		
 		try {
 			
 			format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 1, 2, 44100, false);
@@ -51,15 +54,10 @@ public class Player implements PlayerInterface, Runnable {
 		line.start();
 		//System.out.println("cursor : " + cursor + ", bufferSize : " + bufferSize + ", samples.size() : " + samples.size());
 		while(running) {
-			/*
-			if (cursor + bufferSize/2 < samples.size()) {
-				//effectNextChunk();
+			if (!paused) {
+				effectNextChunk();
 				writeNext();
-			} else {
-				cursor = 0;
 			}
-			*/
-			writeNext();
 		}
 		
 	}
@@ -88,6 +86,12 @@ public class Player implements PlayerInterface, Runnable {
 		cursor += bufferSize/2;
 	}
 	
+	public void effectNextChunk() {
+		for (int i = 0; i < sampleControllers.size(); i++) {
+			sampleControllers.get(i).effectNextChunk(bufferSize/2);
+		}
+	}
+	
 	public int[] nextArray(int size) {
 		int[] res = new int[size];
 		for (int i = 0; i < size; i++) {
@@ -104,20 +108,22 @@ public class Player implements PlayerInterface, Runnable {
 	
 	@Override
 	public SampleControllerInterface playSample(SampleInterface sample) {
-		SampleController res = new SampleController(cursor, sample.getFile(), qubble, this);
+		SampleController res = new SampleController(cursor, sample.getFile(), qubble, this, (Sample) sample);
 		sampleControllers.add(res);
 		return res;
 	}
 
 	@Override
 	public void tweakSample(SampleControllerInterface ref, SoundEffectInterface effect, float amount) {
-		ref.changeVolume(amount);
-		//pour l'instant tweakSample ne permet que de modifier le volume.
+		ref.addEffect(effect);
+		//if effect est deja dedans, on modifie l'amount
+		
 	}
-
+	
 	@Override
 	public void playPause() {
-		running = false;
+		if (paused) paused = false;
+		else paused = true;
 		
 	}
 
