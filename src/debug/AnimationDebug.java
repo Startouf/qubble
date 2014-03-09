@@ -92,7 +92,7 @@ public class AnimationDebug implements OutputImageInterface {
     }
 
 	@Override
-	public void ShowGrid() {
+	public void toggleGrid() {
 		showGrid = !showGrid;
 	}
 

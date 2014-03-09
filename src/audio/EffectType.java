@@ -12,7 +12,7 @@ public enum EffectType implements QubjectModifierInterface {
 
 	@Override
 	public File getFile() {
-		// TODO Auto-generated method stub
+		// TODO QubjectModifierInterface shouldn't ask for a file!!!!!
 		return null;
 	}
 

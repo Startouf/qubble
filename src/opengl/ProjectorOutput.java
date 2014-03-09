@@ -94,7 +94,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     }
 
 	@Override
-	public void ShowGrid() {
+	public void toggleGrid() {
 		showGrid = !showGrid;
 	}
 
@@ -114,7 +114,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
 				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
-	
+
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
@@ -122,8 +122,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		AnimationControllerInterface controller;
 
 		controller = new WaterWave(qubjectCoords);
-		//load entities for the object
-		needsToBeLoaded.add(controller);
+		//load entities for the object (sync with openGL thread)
+		synchronized(needsToBeLoaded){
+			needsToBeLoaded.add(controller);
+		}
 		//Will be moved to activeAnimations during the load() method
 	}
 

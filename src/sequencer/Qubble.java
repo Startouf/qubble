@@ -97,6 +97,7 @@ public class Qubble implements QubbleInterface {
 	 * Variables de référence Thread (synchronisation)
 	 */
 	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
+	private boolean hasStarted = false;
 
 	/**
 	 * New project overload
@@ -118,10 +119,6 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-		projectionThread.start();
-		playerThread.start();
-		sequencerThread.start();
-		cameraThread.start();
 	}
 
 	/**
@@ -145,10 +142,6 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-		projectionThread.start();
-		playerThread.start();
-		sequencerThread.start();
-		cameraThread.start();
 	}
 
 	/**
@@ -173,10 +166,7 @@ public class Qubble implements QubbleInterface {
 		playerThread = new Thread((Runnable) player, "Player Thread");
 		
 		if (runThreads){
-			projectionThread.start();
-			playerThread.start();
-			sequencerThread.start();
-			cameraThread.start();
+			start();
 		}
 	}
 	
@@ -210,7 +200,8 @@ public class Qubble implements QubbleInterface {
 		double absoluteStartingTime = 
 				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
 				/((double)TABLE_LENGTH)		*period;
-		System.out.println("Demarrage absolu : " + absoluteStartingTime);
+		System.out.println("Demarrage absolu Qubject " + qubject.getName() 
+				+ " At absolute time : "+ absoluteStartingTime/1000f + " seconds");
 		return (long) (absoluteStartingTime-currentTime);
 	}
 	
@@ -270,9 +261,11 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public void playPause(){
-		sequencer.playPause(sequencerThread);
-		projection.playPause(projectionThread);
-		player.playPause();
+		if (hasStarted){
+			sequencer.playPause(sequencerThread);
+			projection.playPause(projectionThread);
+			player.playPause();
+		}
 	}
 
 	@Override
@@ -333,5 +326,21 @@ public class Qubble implements QubbleInterface {
 		}
 		//If the qubject was not found
 		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
+	}
+
+	@Override
+	public void start() {
+		if(!hasStarted){
+			projectionThread.start();
+			playerThread.start();
+			sequencerThread.start();
+			cameraThread.start();
+			hasStarted = true;
+		}
+	}
+
+	@Override
+	public void toggleGrid() {
+		this.projection.toggleGrid();
 	}
 }

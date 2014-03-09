@@ -63,4 +63,14 @@ public interface QubbleInterface {
 	 * When a project is closed, ask to terminate the Qubble and it's child threads
 	 */
 	public void close();
+
+	/**
+	 * Start the qubble (first click on play)
+	 */
+	public void start();
+
+	/**
+	 * Toggle the grid
+	 */
+	public void toggleGrid();
 }

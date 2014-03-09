@@ -13,7 +13,7 @@ public class GlobalSettingsPanel extends JPanel
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
-	private final JButton playPause;
+	private final JButton toggleGrid, playPause;
 	private JLabel activeProject;
 
 	public GlobalSettingsPanel(App app)
@@ -55,6 +55,9 @@ public class GlobalSettingsPanel extends JPanel
 		volumeSlider.setPaintLabels(true);
 		//TODO : chaîne réactive quand le volume est changé
 		//(AbstractAction would be best : able to sync it from external modif (OS modification ?))
+		
+		//Grid Toggle
+		toggleGrid = new JButton(this.app.getToggleGridAction());
 
 		//Time Slider : Removed because time synchronization is harddddd
 		//TODO : afficher le temps actuel/temps total
@@ -76,7 +79,8 @@ public class GlobalSettingsPanel extends JPanel
 //		add(time);
 
 		add(activeProject);
-		add(volumeSlider);
+		add(toggleGrid);
+//		add(volumeSlider);
 		add(playPause);
 //		add(timeBar);
 

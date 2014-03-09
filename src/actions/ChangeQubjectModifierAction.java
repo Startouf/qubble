@@ -31,10 +31,10 @@ private final App app;
 	public void actionPerformed(ActionEvent e) {
 		switch (this.app.getActiveTab().getActiveProperty()){
 		//Proto final
-//		case rotationModifier:
-//			this.app.getActiveTab().getActiveQubject().setRotationEffect(
-//					(SoundEffectInterface) this.app.getSoundEffectPalette().getSelectedModifier());
-//			break;
+		case rotationModifier:
+			this.app.getActiveTab().getActiveQubject().setRotationEffect(
+					(EffectType) this.app.getSoundEffectPalette().getSelectedModifier());
+			break;
 		case sampleWhenPlayed:
 			SampleInterface sample = (SampleInterface) this.app.getSamplePalette().getSelectedModifier();
 			this.app.getActiveTab().getActiveQubject().setSampleWhenPlayed(sample);
@@ -46,10 +46,10 @@ private final App app;
 			this.app.getActiveTab().setModifierOfActiveProperty(anim);
 			break;
 			//Proto final
-//		case whenPutOnTable:
-//			this.app.getActiveTab().getActiveQubject().setAnimationWhenDetected(
-//					(AnimationInterface) this.app.getAnimationPalette().getSelectedModifier());
-//			break;
+		case whenPutOnTable:
+			this.app.getActiveTab().getActiveQubject().setAnimationWhenDetected(
+					(AnimationInterface) this.app.getAnimationPalette().getSelectedModifier());
+			break;
 		case yAxisModifier:
 			EffectType effect = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
 			this.app.getActiveTab().getActiveQubject().setYAxisEffect(effect);

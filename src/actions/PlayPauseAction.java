@@ -10,16 +10,17 @@ import ui.ViewIndividualPanel;
 public class PlayPauseAction extends AbstractAction {
 
 private final App app;
-private boolean play = true;
+private boolean play = false;
 	
 	public PlayPauseAction(App app) {
 		this.app = app;
-		putValue(NAME, "Pause");
+		putValue(NAME, "Play");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.getActiveProject().getQubble().playPause();
+		this.app.getActiveProject().getQubble().start();
 		// If was playing, pause, and show Play button
 		if (play){ 
 			putValue(NAME, "Play");

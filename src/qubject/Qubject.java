@@ -95,8 +95,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 		case animationWhenPlayed:
 			return(this.animationwhenPlayed);
 		case rotationModifier:
-			//TODO
-			return(null);
+			return(this.rotationModifier);
 		case sampleWhenPlayed:
 			return(this.sampleWhenPlayed);
 		case whenPutOnTable:
@@ -107,5 +106,25 @@ public final class Qubject implements QRInterface, MediaInterface {
 			//TODO : throw exception
 			return null;
 		}
+	}
+
+	@Override
+	public void setRotationEffect(EffectType soundEffect) {
+		this.rotationModifier = soundEffect;
+	}
+
+	@Override
+	public EffectType getSoundEffect() {
+		return this.rotationModifier;
+	}
+
+	@Override
+	public void setAnimationWhenDetected(AnimationInterface animation) {
+		this.whenPutOnTable = animation;
+	}
+
+	@Override
+	public AnimationInterface getAnimationWhenDetected() {
+		return this.whenPutOnTable;
 	}
 }

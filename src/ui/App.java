@@ -64,6 +64,7 @@ public class App extends JFrame
 		= new ChangeQubjectModifierAction(this);
 	private final PlaySampleAction playSampleAction = new PlaySampleAction(this);
 	private final PlayPauseAction playPauseAction = new PlayPauseAction(this);
+	private final ToggleGridAction toggleGridAction = new ToggleGridAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -249,6 +250,10 @@ public class App extends JFrame
 
 	public PlayPauseAction getPlayPauseAction() {
 		return playPauseAction;
+	}
+
+	public ToggleGridAction getToggleGridAction() {
+		return toggleGridAction;
 	}
 
 	/**

@@ -46,14 +46,14 @@ public interface MediaInterface
 	 * Prototype final
 	 */
 	
-//	public void setRotationEffect(SoundEffect soundEffect);
-//	public SoundEffect getSoundEffect();
-//	
-//	public void setAnimationWhenDetected(Animation animation);
-//	public Animation getAnimationWhenDetected();
+	public void setRotationEffect(EffectType soundEffect);
+	public EffectType getSoundEffect();
+	
+	public void setAnimationWhenDetected(AnimationInterface animation);
+	public AnimationInterface getAnimationWhenDetected();
 
 	/**
-	 * 
+	 * Useful to iterate over all of them
 	 * @param property (SampleWhenPlayed, etc...)
 	 */
 	public QubjectModifierInterface getModifierForProperty(QubjectModifiers property);
