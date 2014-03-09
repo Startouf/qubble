@@ -3,7 +3,7 @@ package audio;
 public class Flanger extends SoundEffect {
 
 	public Flanger(int amount) {
-		super(SoundEffect.flanger, amount);
+		super(EffectType.flanger, amount);
 	}
 
 	@Override

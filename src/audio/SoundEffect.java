@@ -5,15 +5,10 @@ import java.io.File;
 
 public abstract class SoundEffect implements SoundEffectInterface{
 	
-	public static final int volume = 1;
-	public static final int distortion = 2;
-	public static final int delay = 3;
-	public static final int flanger = 4;
-	
-	private int type;
+	private EffectType type;
 	protected int amount;
 	
-	public SoundEffect(int type, int amount) {
+	public SoundEffect(EffectType type, int amount) {
 		this.type = type;
 		this.amount = amount;
 	}
@@ -36,7 +31,7 @@ public abstract class SoundEffect implements SoundEffectInterface{
 		}
 	}
 	@Override
-	public int getType() {
+	public EffectType getType() {
 		return type;
 	}
 	@Override

@@ -3,7 +3,7 @@ package audio;
 public class Volume extends SoundEffect {
 
 	public Volume(int amount) {
-		super(SoundEffect.volume, amount);
+		super(EffectType.volume, amount);
 	}
 
 	@Override

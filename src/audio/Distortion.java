@@ -5,7 +5,7 @@ public class Distortion extends SoundEffect {
 	private int clip;
 	
 	public Distortion(int amount) {
-		super(SoundEffect.distortion, amount);
+		super(EffectType.distortion, amount);
 		clip = 10000;
 	}
 
