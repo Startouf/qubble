@@ -65,7 +65,7 @@ public class GlobalSettingsPanel extends JPanel
 		//Play/Pause Button
 		playPause = new JButton("Play/Pause");
 		//TODO : play/Pause action !!!!!
-		//playPause.setAction(null);
+		playPause.setAction(this.app.getPlayPauseAction());
 		//TODO : Size not adjustable with current layout ??
 		playPause.setSize(new Dimension(300,50));
 

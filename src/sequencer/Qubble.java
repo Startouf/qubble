@@ -236,7 +236,8 @@ public class Qubble implements QubbleInterface {
 		System.out.println("Play !!" + qubject.getSampleWhenPlayed().getFile().getAbsolutePath());
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		//adjust effect
-		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)getYAsPercentage(qubject));
+		System.out.println((int)getYAsPercentage(qubject));
+		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
 		//add it to the list of sampleControllers
 		sampleControllers.get(qubject).add(qubjectSoundController);
 		//show its animation
@@ -296,9 +297,12 @@ public class Qubble implements QubbleInterface {
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
 				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(pos);
 				qubject.setCoords(glCoords);
-				//...et on demande le verrou pour ajouter à la liste des objets sur la table
+				
+				//On indique a openGL qu'on a un Qubject 
 				System.out.println("Highlight tile");
 				projection.triggerQubject(qubject.getCoords());
+				
+				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
 					System.out.println("Qubject détecté et ajouté!");
 					qubjectsOnTable.add(qubject);

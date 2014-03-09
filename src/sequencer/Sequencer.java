@@ -33,7 +33,6 @@ public class Sequencer implements Runnable
 	//TODO : store these variables somewhere else
 	private final int NUM_THREADS = 1;
 	
-
 	private final ScheduledExecutorService fScheduler;
 	/**
 	 * period in seconds
@@ -42,7 +41,6 @@ public class Sequencer implements Runnable
 	/**
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
-	private float currentTime =0;
 	private boolean play = true;;
 	private boolean isCloseRequested = false;
 	private final Qubble qubble;
@@ -68,7 +66,7 @@ public class Sequencer implements Runnable
 	@Override
 	public synchronized void run() {
 		recalculate();
-		
+
 		while(!isCloseRequested){
 			//attentes d'ordres
 			try {
@@ -78,7 +76,6 @@ public class Sequencer implements Runnable
 			}
 			recalculate();
 		}
-		
 		destroyScheduledActions();
 	}
 
@@ -94,7 +91,7 @@ public class Sequencer implements Runnable
 			System.out.println("Tache ajoutée !");
 			Runnable qubjectTask = new QubjectTask(qubble, qubject);
 		    ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
-		      qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)period*1000, TimeUnit.MILLISECONDS
+		      qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)qubble.getPeriod(), TimeUnit.MILLISECONDS
 		    );
 		}
 	}
@@ -154,15 +151,4 @@ public class Sequencer implements Runnable
 		this.period = period;
 		recalculate();
 	}
-
-	/**
-	 * If both period and current time are changed, please use another method
-	 * (otherwise, would recalculate 2 times the schedule)
-	 * @param currentTime
-	 */
-	public void setCurrentTime(float currentTime) {
-		this.currentTime = currentTime;
-		recalculate();
-	}
-
 }

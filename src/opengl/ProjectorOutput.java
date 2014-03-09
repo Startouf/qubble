@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Dimension;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import more_ex.GridWithLabels;
 
@@ -52,7 +53,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
 	
 	//Other
-	public boolean playPause = true;
+	public volatile boolean playPause = true;
+	/**
+	 * Time spent during playPause
+	 * (must be substracted to DT before updating animations
+	 * 
+	 */
+	private float DTPause = 0f;
 	private long lastFrameTime = Sys.getTime();
 
 	private void debug(){
@@ -72,10 +79,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
         
     	//TODO : add another closeRequested boolean check for external change (project closed...)
         while(!Display.isCloseRequested()){   
-        	isPlaying();
         	loadNewAnims();
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
+        	isPlaying();
         	updateVBOs();
             render();
             Display.update();
@@ -131,11 +138,14 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	public void isPlaying(){
 		if (playPause = false){
+			//Save the DT that should've been used
+			long stop = Sys.getTime(); 
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			DTPause = (float)((Sys.getTime()-stop)*1000/Sys.getTimerResolution());
 		}
 	}
 
@@ -150,7 +160,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			t.interrupt();
 		}
 		else{
-			playPause = false;
+			//Synchronisation done with volatile keyword
+			playPause = !playPause;
 		}
 	}
 
@@ -169,6 +180,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
 		
 		//Highlight tiles where qubjects are present
+		GL11.glColor3f(0.8f, 0f, 0f);
 		for (Dimension dim : occupiedTiles){
 			BaseRoutines.HighlightTile(dim);
 		}
@@ -189,7 +201,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 		//Update animations
 		//TODO Check if only one dt computation is enough for all the animations !!
-		updateAnimations(BaseRoutines.getDt(lastFrameTime));
+		updateAnimations(BaseRoutines.getDt(lastFrameTime)-DTPause);
+		DTPause = 0f;
 		lastFrameTime = Sys.getTime();
 	}
 
@@ -202,11 +215,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void updateAnimations(float dt){
 		//Update Animations (Check whether they are running or not)
-		for (AnimationControllerInterface anim : activeAnimations){
+		Iterator<AnimationControllerInterface> iter = activeAnimations.iterator();
+		while(iter.hasNext()){
+			AnimationControllerInterface anim = iter.next();
 			if (anim.updateAnimation(dt) == false)
-				anim.destroy();
-			//TODO
-				//activeAnimations.remove(anim);
+				iter.remove();
 		}
 	}
 

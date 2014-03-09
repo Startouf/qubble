@@ -63,6 +63,7 @@ public class App extends JFrame
 	private final ChangeQubjectModifierAction changeQubjectModifierAction 
 		= new ChangeQubjectModifierAction(this);
 	private final PlaySampleAction playSampleAction = new PlaySampleAction(this);
+	private final PlayPauseAction playPauseAction = new PlayPauseAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -242,10 +243,12 @@ public class App extends JFrame
 		return changeQubjectModifierAction;
 	}
 	
-	
-
 	public PlaySampleAction getPlaySampleAction() {
 		return playSampleAction;
+	}
+
+	public PlayPauseAction getPlayPauseAction() {
+		return playPauseAction;
 	}
 
 	/**
