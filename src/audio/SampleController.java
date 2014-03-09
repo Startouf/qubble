@@ -118,7 +118,10 @@ public class SampleController implements SampleControllerInterface {
 	}
 	
 	public void addTo(int index, int value) {
-		set(index, samples.get(index) + value);
+		if (index < size()) {
+			set(index, samples.get(index) + value);
+		}
+		else set(index, value);
 	}
 	
 	public void multiply(int index, int factor) {
