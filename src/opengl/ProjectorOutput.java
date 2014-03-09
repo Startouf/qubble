@@ -3,6 +3,8 @@ package opengl;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,7 +21,6 @@ import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 
 import explosion.PixelExplosion;
-
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
@@ -123,9 +124,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		controller = new WaterWave(qubjectCoords);
 		//load entities for the object
 		needsToBeLoaded.add(controller);
-
-		//add the object to the render list
-		activeAnimations.add(controller);
+		//Will be moved to activeAnimations during the load() method
 	}
 
 	@Override
@@ -228,10 +227,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * ...Puis cette liste est vidée
 	 */
 	private void loadNewAnims(){
-		for (AnimationControllerInterface anim : needsToBeLoaded){
-			anim.load();
+		synchronized(needsToBeLoaded){
+			for (AnimationControllerInterface anim : needsToBeLoaded){
+				anim.load();
+				activeAnimations.add(anim);
+			}
+			needsToBeLoaded.clear();
 		}
-		needsToBeLoaded.clear();
 	}
 
 	/**

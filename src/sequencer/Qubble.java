@@ -195,7 +195,7 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public ArrayList<Qubject> getQubjectsOnTable() {
+	public synchronized ArrayList<Qubject> getQubjectsOnTable() {
 		return qubjectsOnTable;
 	}
 	
@@ -233,10 +233,8 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void playQubject(Qubject qubject) {
 		//play!
-		System.out.println("Play !!" + qubject.getSampleWhenPlayed().getFile().getAbsolutePath());
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		//adjust effect
-		System.out.println((int)getYAsPercentage(qubject));
 		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
 		//add it to the list of sampleControllers
 		sampleControllers.get(qubject).add(qubjectSoundController);
@@ -287,11 +285,11 @@ public class Qubble implements QubbleInterface {
 				}
 			}
 		}
-		System.err.print("Trying to remove an unexisting SoudController");
+		System.err.print("Trying to remove an unexisting SoundController");
 	}
 
 	@Override
-	public void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
+	public synchronized void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
@@ -299,12 +297,10 @@ public class Qubble implements QubbleInterface {
 				qubject.setCoords(glCoords);
 				
 				//On indique a openGL qu'on a un Qubject 
-				System.out.println("Highlight tile");
 				projection.triggerQubject(qubject.getCoords());
 				
 				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
-					System.out.println("Qubject détecté et ajouté!");
 					qubjectsOnTable.add(qubject);
 					//Tell the sequencer somehting must be done
 					sequencerThread.interrupt();					
