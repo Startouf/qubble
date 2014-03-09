@@ -3,23 +3,46 @@ package audio;
 import java.io.File;
 
 
-public class SoundEffect implements SoundEffectInterface{
+public abstract class SoundEffect implements SoundEffectInterface{
 	
-	private final String name;
-	private final File file;
+	private EffectType type;
+	protected int amount;
 	
-	public SoundEffect(String name, String file){
-		this.name = name;
-		this.file = new File("/data/sound effect/" + file);
+	public SoundEffect(EffectType type, int amount) {
+		this.type = type;
+		this.amount = amount;
 	}
-
+	
+	@Override
+	public int getAmount() {
+		return amount;
+	}
+	@Override
+	public void setAmount(int amount) {
+		if (0 < amount) {
+			if (amount < 100) {
+				this.amount = amount;
+			} else {
+				this.amount = 100;
+			}
+		}
+		else {
+			this.amount = 0;
+		}
+	}
+	@Override
+	public EffectType getType() {
+		return type;
+	}
 	@Override
 	public File getFile() {
-		return this.file;
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	@Override
 	public String getName() {
-		return this.name;
+		// TODO Auto-generated method stub
+		return "suce ma bite";
 	}
+	
 }
