@@ -11,8 +11,7 @@ public class SamplePalette extends QubjectModifierPalette
 {
 
 	public SamplePalette(App app) {
-		super(app);
-		// TODO Auto-generated constructor stub
+		super(app, "Palette de choix de Sample");
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class SamplePalette extends QubjectModifierPalette
 
 	@Override
 	protected void previsualisation() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }

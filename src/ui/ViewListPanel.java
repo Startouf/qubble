@@ -3,7 +3,6 @@ package ui;
 import javax.swing.JPanel;
 
 import qubject.MediaInterface;
-import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
 
 public class ViewListPanel extends ViewQubjects {
@@ -15,7 +14,7 @@ public class ViewListPanel extends ViewQubjects {
 	}
 
 	@Override
-	public void setActiveModifier(QubjectModifierInterface modifier) {
+	public void setActiveProperty(QubjectModifiers modifier) {
 		// TODO Auto-generated method stub
 		
 	}

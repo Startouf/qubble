@@ -3,13 +3,13 @@ package ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Hashtable;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import qubject.MediaInterface;
 import qubject.Qubject;
-import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
 
 
@@ -30,6 +30,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private int qubjectModifiers = 0;
 	private final GridBagConstraints c = new GridBagConstraints();
 	private final Selector qubjectSelector; 
+	private final Hashtable<QubjectModifiers, Selector> selectors 
+		= new Hashtable<QubjectModifiers, Selector>();
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
@@ -41,14 +43,15 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 20;
 
-		//Display selected pattern (with test Square)
+		//Display selected Qubject
 		c.gridy = 0;
 		c.gridx = 0;
 		add(new JLabel("Options pour :"), c);
 		c.gridx = 1;
-		add(qubjectSelector = new Selector(app, "Qubject: "+ activeQubject.getName(), activeQubject), c);
+		add(qubjectSelector = new Selector(app, activeQubject), c);
 		
-		//TODO : Replace nulls by default choices (this.app.getXXX.get(0) for example)
+		//TODO : modify the enum to also associate a User-friendly Jlabel with each QubjectModifier !
+		//(then it's possible to do a for loop here on QubjectModifiers.values())
 		addOption("Sample Associé", QubjectModifiers.sampleWhenPlayed);
 		addOption("Effet Axe Y", QubjectModifiers.yAxisModifier);
 		addOption("Rotation", QubjectModifiers.rotationModifier);
@@ -60,19 +63,21 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridx = 0;
 		add(new JLabel(title), c);
 		c.gridx = 1;
-		add(new Selector(app, modifier), c);
+		Selector selector = new Selector(app, modifier);
+		add(selector, c);
 		qubjectModifiers++;
+		selectors.put(modifier, selector);
 	}
 
 	@Override
 	public void setActiveQubject(MediaInterface selectedQubject) {
 		activeQubject= selectedQubject;
-		//TODO :
+		qubjectSelector.setQubject(selectedQubject);
+		
 	}
 
 	@Override
-	public void setActiveModifier(QubjectModifierInterface modifier) {
-		// TODO Auto-generated method stub
-		
+	public void setActiveProperty(QubjectModifiers modifier) {
+		this.activeProperty = modifier;
 	}
 }

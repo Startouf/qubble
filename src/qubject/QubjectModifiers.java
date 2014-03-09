@@ -1,7 +1,7 @@
 package qubject;
 
 /**
- * We might not need this enum
+ * Should be renamed (name conflicts with QubjectModifier(Interface). Idea : QubjectProperty, QubjectModifierType
  * @author Cyril
  *
  */

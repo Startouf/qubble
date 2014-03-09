@@ -10,7 +10,7 @@ import qubject.MediaInterface;
 public class SoundEffectPalette extends QubjectModifierPalette {
 
 	public SoundEffectPalette(App app) {
-		super(app);
+		super(app, "Palette de choix d'effet sonore");
 		// TODO Auto-generated constructor stub
 	}
 

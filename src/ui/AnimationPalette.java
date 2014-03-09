@@ -9,8 +9,7 @@ import audio.SoundEffectInterface;
 public class AnimationPalette extends QubjectModifierPalette {
 
 	public AnimationPalette(App app) {
-		super(app);
-		// TODO Auto-generated constructor stub
+		super(app, "Palette de choix d'animation");
 	}
 
 	@Override

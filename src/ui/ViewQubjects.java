@@ -3,7 +3,6 @@ package ui;
 import javax.swing.JPanel;
 
 import qubject.MediaInterface;
-import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
 /**
  * @author duchon
@@ -22,7 +21,7 @@ public abstract class ViewQubjects extends JPanel {
 	 */
 	public abstract void setActiveQubject(MediaInterface selectedQubject);
 	
-	public abstract void setActiveModifier(QubjectModifierInterface modifier);
+	public abstract void setActiveProperty(QubjectModifiers modifier);
 
 	public MediaInterface getActiveQubject(){
 		return activeQubject;

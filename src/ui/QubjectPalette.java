@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -17,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import actions.ChangeQubjectAction;
-
 import qubject.MediaInterface;
 import qubject.QRInterface;
 
@@ -27,6 +28,8 @@ import qubject.QRInterface;
  * @author duchon
  * Not really sure this palette should extend a generic Palette class, 
  * (The QubjectModifierPalette abstract class is more designed for QubjectModifiers). 
+ * 
+ * TODO : use something else than a JFrame. IT'S VERY BAD.
  */
 public class QubjectPalette extends JFrame implements ActionListener
 {
@@ -47,9 +50,17 @@ public class QubjectPalette extends JFrame implements ActionListener
         	this.app=app;
         	this.setMinimumSize(dim);
         	this.setSize(325, 300);
-        	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        	this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         	qubjectList = new ArrayList<ReferenceButton>();
         	this.setLocationRelativeTo(null);
+        	
+        	//Hide on close with a window listener
+        	this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    e.getWindow().setVisible(false);
+                }
+            });
  
         	qubjectSelection.setBackground(Color.white);
         	qubjectSelection.setLayout(new BorderLayout());
