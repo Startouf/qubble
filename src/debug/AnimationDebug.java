@@ -62,11 +62,11 @@ public class AnimationDebug implements OutputImageInterface {
 	private long lastFrameTime = Sys.getTime();
 
 	private void debug(){
-		triggerQubject(new Point(150,350));
-		activeAnimations.add(new PixelExplosion(new Point (400,400)));
+		triggerQubject(new Point(400,400));
+		needsToBeLoaded.add(new PixelExplosion(new Point (400,400)));
 		
-		triggerQubject(new Point(530, 350));
-		activeAnimations.add(new WaterWave(new Point(600,300)));
+		triggerQubject(new Point(600, 300));
+		activeAnimations.add(new WaterWave(new Point(595,325)));
 	}
 	
 	public void start(int width, int height){
@@ -236,6 +236,7 @@ public class AnimationDebug implements OutputImageInterface {
 	private void loadNewAnims(){
 		for (AnimationControllerInterface anim : needsToBeLoaded){
 			anim.load();
+			activeAnimations.add(anim);
 		}
 		needsToBeLoaded.clear();
 	}
