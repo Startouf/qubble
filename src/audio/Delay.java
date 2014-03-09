@@ -9,7 +9,7 @@ public class Delay extends SoundEffect {
 	
 	public Delay(int amount) {
 		
-		super(EffectType.delay, amount);
+		super(EffectType.Delay, amount);
 		rate = 15000;
 		decay = 4;
 		feedback = 2;

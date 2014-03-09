@@ -5,7 +5,7 @@ public class Distortion extends SoundEffect {
 	private int clip;
 	
 	public Distortion(int amount) {
-		super(EffectType.distortion, amount);
+		super(EffectType.Distortion, amount);
 		clip = 10000;
 	}
 
