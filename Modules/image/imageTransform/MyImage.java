@@ -10,6 +10,7 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 /**
  * Gère les images
  * Permet de créer une image en niveau de gris ou une image binaire

@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class QRCodesAnalyser {
 	
-	public static final int BIGSQUARESIZE = 200;
-	public static final int SMALLSQUARESIZE = 35;
+	public static int BIGSQUARESIZE = 200;
+	public static int SMALLSQUARESIZE = 35;
 	
 	private ArrayList<QRCode> listQRcode;
 	private MyImage image;
@@ -82,7 +82,7 @@ public class QRCodesAnalyser {
 			}
 		}
 		for(QRCode qr : listQRcode){
-			System.out.println(qr.getValeur());;
+			System.out.println("Valeur du QR Code : " + qr.getValeur());;
 		}
 		// Chercher la valeur
 		

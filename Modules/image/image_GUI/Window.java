@@ -7,6 +7,7 @@ import imageTransform.QRCodesAnalyser;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
@@ -22,18 +23,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * Affiche une fenetre
  * @author masseran
  *
  */
-public class Window extends JFrame implements ActionListener{
+public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	public static int imageWidth, imageHeight;
 	private ImageView imageView;
 	private JPanel control;
 	private JButton suivant, action, precedent;
+	private JTextField greyLevel, bigSquareSize, smallSquareSize;
 	
 	public Window(){
 		this.setSize(800, 600);
@@ -43,7 +48,8 @@ public class Window extends JFrame implements ActionListener{
 		this.setTitle("Reconnaissance de QR Code");
 		
 		control = new JPanel();
-		control.setLayout(new GridLayout(1, 3));
+		control.setLayout(new GridLayout(3, 3));
+		
 		
 		precedent = new JButton("Précédent");
 		action = new JButton("Transformer !");
@@ -51,10 +57,26 @@ public class Window extends JFrame implements ActionListener{
 		precedent.addActionListener(this);
 		action.addActionListener(this);
 		suivant.addActionListener(this);
+	
 		
 		control.add(precedent);
 		control.add(action);
 		control.add(suivant);
+		control.add(new JLabel("Niveau de gris (0-255)"));
+		control.add(new JLabel("Taille petit carré"));
+		control.add(new JLabel("Taille grand carré"));
+		greyLevel = new JTextField();
+		bigSquareSize = new JTextField();
+		smallSquareSize = new JTextField();
+		
+		greyLevel.getDocument().addDocumentListener(this);
+		bigSquareSize.getDocument().addDocumentListener(this);
+		smallSquareSize.getDocument().addDocumentListener(this);
+		
+		control.add(greyLevel);
+		control.add(smallSquareSize);
+		control.add(bigSquareSize);
+		
 		imageView = new ImageView();
 		this.setLayout(new BorderLayout());
 		this.getContentPane().add(imageView, BorderLayout.CENTER);
@@ -117,6 +139,68 @@ public class Window extends JFrame implements ActionListener{
 			imageView.previous();
 		}
 		affiche();
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("changed");
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("insert");
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("remove");
+	}
+	
+	
+	/**
+	 * Modifie le seuil pour la transformation en image binaire
+	 * @param value
+	 * @return true si 0 <= value <= 255 sinon false
+	 */
+	private boolean changeGreyLevel(int value){
+		if(value < 0 || value > 255){
+			return false;
+		}else{
+			MyImage.GREY_LEVEL = value;
+			return true;
+		}
+	}
+	
+	/**
+	 * Modifie le seuil pour la transformation en image binaire
+	 * @param value
+	 * @return true si 0 <= value <= 255 sinon false
+	 */
+	private boolean changeBigSquareSize(int value){
+		if(value < 0){
+			return false;
+		}else{
+			QRCodesAnalyser.BIGSQUARESIZE = value;
+			return true;
+		}
+	}
+	
+	/**
+	 * Modifie le seuil pour la transformation en image binaire
+	 * @param value
+	 * @return true si 0 <= value <= 255 sinon false
+	 */
+	private boolean changeSmallSquareSize(int value){
+		if(value < 0){
+			return false;
+		}else{
+			QRCodesAnalyser.SMALLSQUARESIZE = value;
+			return true;
+		}
 	}
 	
 
