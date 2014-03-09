@@ -26,7 +26,7 @@ public class PlaySampleAction extends AbstractAction
 	
 	public PlaySampleAction(App app){
 		this.app = app;
-		
+		putValue(NAME, "Essayer le son");
 	}
 
 

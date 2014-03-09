@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import more_ex.GridWithLabels;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL15;
@@ -48,7 +49,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	//Other
 	public boolean playPause = true;
-	private float lastFrameTimeMS;
+	private long lastFrameTime;
 
 	public void start(int width, int height){
         InitRoutines.initDisplay(width, height);
@@ -187,8 +188,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 		//Update animations
 		//TODO Check if only one dt computation is enough for all the animations !!
-		updateAnimations(BaseRoutines.getDt(lastFrameTimeMS));
-		lastFrameTimeMS = BaseRoutines.getTimeMS();
+		updateAnimations(BaseRoutines.getDt(lastFrameTime));
+		lastFrameTime = Sys.getTime();
 	}
 
 	/**

@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import debug.AnimationDebug;
 import more_ex.CubeFBO;
 import more_ex.GridWithLabels;
 import ex1.*;
@@ -41,6 +42,8 @@ public class BrowseExercices
 	
 	private static JButton experso1;
 	private static JButton experso2;
+	
+	private static JButton animDebug;
 	
 	public static void main(String[] args){
 		
@@ -159,6 +162,14 @@ public class BrowseExercices
 		}));
 		experso2.setText("Ex perso : affichage d'une grille avec labels");
 		
+		animDebug = (new JButton(new AbstractAction(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				AnimationDebug.main(null);
+			}
+		}));
+		animDebug.setText("Debugger d'animations pour le projet");
+		
 	panel.setLayout(new GridLayout(ROWS,COLUMN));	
 	panel.add(ex11);
 	panel.add(ex12);
@@ -174,6 +185,7 @@ public class BrowseExercices
 	panel.add(ex33);
 	panel.add(experso1);
 	panel.add(experso2);
+	panel.add(animDebug);
 	
 	frame.setContentPane(panel);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -193,6 +193,26 @@ public final class VBO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
+	public static void drawQuadStrips2fVBO(int vboID, int colorID, int vertices) {
+		if (vboID==0) return;
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, vboID);
+		glVertexPointer(2, GL_FLOAT, 0, 0); //2D
+
+		if (colorID != 0) {
+			glEnableClientState(GL11.GL_COLOR_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, colorID);
+			glColorPointer(3, GL11.GL_FLOAT, 0, 0);
+		}
+
+		glDrawArrays(GL11.GL_QUAD_STRIP, 0, vertices); 
+		glDisableClientState(GL11.GL_VERTEX_ARRAY);
+		if (colorID != 0) 
+			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+	}
+	
 	//Interleave triangle vertices, color and normal
 	// 3 vertices => 9 floats
 	//Should be in someMath ?

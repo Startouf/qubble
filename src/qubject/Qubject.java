@@ -26,9 +26,10 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private SoundEffectInterface yAxisModifier;
 	private SoundEffectInterface rotationModifier;
 	private AnimationInterface whenPutOnTable;
-	private AnimationInterface animationwhenPlayed;
+	private AnimationInterface animationwhenPlayed = 
+			new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"));
 	
-	public static final float SIZE = 300f;
+	public static final float SIZE = 30f;
 	
 	public Qubject(String name, int bitIdentifier){
 		this.name = name;

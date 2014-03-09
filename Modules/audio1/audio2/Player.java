@@ -112,7 +112,7 @@ public class Player {
 		
 //		Complex[] spectrum = transformer.transform(samples, TransformType.FORWARD);
 		ArrayList<Integer> modspec = new ArrayList<Integer>();
-		
+//		
 //		for (int i = 0 ; i < spectrum.length ; i++) {
 //			//Sqrt sqrt = new Sqrt();
 //			double temp = (spectrum[i].getReal()*spectrum[i].getReal() + 

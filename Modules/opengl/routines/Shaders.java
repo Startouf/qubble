@@ -126,6 +126,14 @@ public class Shaders
 
 		return shaderID;
 	}
+	
+	public static void attachShader(int programID){
+		GL20.glUseProgram(programID);
+	}
+	
+	public static void detachShader(){
+		GL20.glUseProgram(0);
+	}
 
 	/**
 	 * Destroy a Shader. WARNING : pID first !!

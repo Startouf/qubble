@@ -17,7 +17,14 @@ import routines.Time;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.VBO.*;
 import static routines.Init.*;
-
+/**
+ * Ex 3.1 GLBaseModule : en utilisant un VBO
+ * En utilisant un VBO non indexé, il faut préciser à chaque tous les sommets pour tous les triangles
+ * (Donc un sommet est dupliqué 6 fois (2 fois par face)
+ * la suite de l'exercice est dans la classe CubeIBO
+ * @author Cyril
+ *
+ */
 public class CubeVBO
 {
 	private Point coords = new Point(300,300);

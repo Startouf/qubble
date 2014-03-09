@@ -19,7 +19,12 @@ import static org.lwjgl.opengl.GL11.*;
 import static routines.IBO.*;
 import static routines.Init.*;
 import static routines.Transformations.*;
-
+/**
+ * Ex 3.2 : Cube en IBO avec couleurs et normales
+ * (Note : il manque le cube avec textures, bon...)
+ * @author Cyril
+ *
+ */
 public class EnhancedCubesIBO
 {
 	private Point coords = new Point(200,200);
