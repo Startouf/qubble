@@ -1,11 +1,13 @@
 package sequencer;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.lwjgl.Sys;
+import org.lwjgl.util.Point;
 
 import calibration.Calibrate;
 import camera.CameraInterface;
@@ -18,6 +20,7 @@ import audio.SampleController;
 import audio.SampleControllerInterface;
 import database.Data;
 import database.InitialiseProject;
+import qubject.MediaInterface;
 import qubject.QRInterface;
 import qubject.Qubject;
 /**
@@ -342,5 +345,13 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void toggleGrid() {
 		this.projection.toggleGrid();
+	}
+
+	@Override
+	public String whereIsIt(MediaInterface qubject) {
+		QRInterface qr = (QRInterface) qubject;
+		Point pos = qr.getCoords();
+		return new String("X : " + (int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X) + 
+				" Y : " + (int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
 }

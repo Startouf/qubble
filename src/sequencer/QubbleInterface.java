@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import audio.SampleControllerInterface;
-
+import qubject.MediaInterface;
 import qubject.QRInterface;
 import qubject.Qubject;
 
@@ -73,4 +73,11 @@ public interface QubbleInterface {
 	 * Toggle the grid
 	 */
 	public void toggleGrid();
+	
+	/**
+	 * 
+	 * @param qubject
+	 * @return A user friendly String 
+	 */
+	public String whereIsIt(MediaInterface qubject);
 }

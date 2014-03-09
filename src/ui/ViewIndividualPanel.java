@@ -33,6 +33,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private final Selector qubjectSelector; 
 	private final Hashtable<QubjectModifiers, Selector> selectors 
 		= new Hashtable<QubjectModifiers, Selector>();
+	private final JLabel qubjectPosition;
 	
 	public ViewIndividualPanel(App app) {
 		this.app = app;
@@ -51,6 +52,14 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridx = 1;
 		add(qubjectSelector = new Selector(app, activeQubject), c);
 		
+		//Display Current position : NOT POSSIBLE WITH MEDIAINTERFACE !!!
+		c.gridy=1;
+		c.gridx=0;
+		add(new JLabel("Position : "));
+		qubjectPosition = new JLabel(this.app.getActiveProject().getQubble().whereIsIt(activeQubject));
+		c.gridx = 1;
+		add(qubjectPosition);
+		
 		//TODO : modify the enum to also associate a User-friendly Jlabel with each QubjectModifier !
 		//(then it's possible to do a for loop here on QubjectModifiers.values())
 		addOption("Sample Associé", QubjectModifiers.sampleWhenPlayed);
@@ -60,7 +69,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	}
 	
 	private void addOption(String title, QubjectModifiers modifier){
-		c.gridy = qubjectModifiers+2;
+		c.gridy = qubjectModifiers+3;
 		c.gridx = 0;
 		add(new JLabel(title), c);
 		c.gridx = 1;
@@ -74,6 +83,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	public void setActiveQubject(MediaInterface selectedQubject) {
 		activeQubject= selectedQubject;
 		qubjectSelector.setQubject(selectedQubject);
+		qubjectPosition.setText(this.app.getActiveProject().getQubble().whereIsIt(activeQubject));
 		for (QubjectModifiers property : QubjectModifiers.values()){
 			this.selectors.get(property).setModifier(selectedQubject.getModifierForProperty(property));
 		}
