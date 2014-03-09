@@ -17,7 +17,14 @@ import routines.Time;
 import static org.lwjgl.opengl.GL11.*;
 import static routines.IBO.*;
 import static routines.Init.*;
-
+/**
+ * Suite de l'exercice 3.1 : Cube indexé (IBO)
+ * L'avantage est qu'il suffit de donner une seule fois les vertex 
+ * pour l'ensemble des triangles qui les utilisent
+ * (Economie mémoire)
+ * @author Cyril
+ *
+ */
 public class CubeIBO
 {
 	private Point coords = new Point(200,200);

@@ -64,6 +64,9 @@ public class AnimationDebug implements OutputImageInterface {
 	private void debug(){
 		triggerQubject(new Point(150,350));
 		activeAnimations.add(new PixelExplosion(new Point (400,400)));
+		
+		triggerQubject(new Point(530, 350));
+		activeAnimations.add(new WaterWave(new Point(600,300)));
 	}
 	
 	public void start(int width, int height){
