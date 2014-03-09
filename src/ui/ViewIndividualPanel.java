@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import qubject.MediaInterface;
 import qubject.Qubject;
+import qubject.QubjectModifierInterface;
 import qubject.QubjectModifiers;
 
 
@@ -73,11 +74,15 @@ public class ViewIndividualPanel extends ViewQubjects {
 	public void setActiveQubject(MediaInterface selectedQubject) {
 		activeQubject= selectedQubject;
 		qubjectSelector.setQubject(selectedQubject);
-		
 	}
 
 	@Override
 	public void setActiveProperty(QubjectModifiers modifier) {
 		this.activeProperty = modifier;
+	}
+
+	@Override
+	public void setModifierOfActiveProperty(QubjectModifierInterface modifier) {
+		this.selectors.get(activeProperty).setModifier(modifier);		
 	}
 }

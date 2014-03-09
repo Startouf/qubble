@@ -58,12 +58,13 @@ public class InitialiseAssets
 	 * @return
 	 */
 	public static ArrayList<EffectType> loadSoundEffects(){
-		
+		//Using hardcoded SoundEffects
 		ArrayList<EffectType> list = new ArrayList<EffectType>();
 		for (EffectType effect : EffectType.values()){
 			list.add(effect);
 		}
 		
+		//OLD :
 //		Properties prop;
 //		File[] files = InitialiseTools.getFiles("data/sound_effects/");
 //		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
