@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 /**
  * Affiche une fenetre
@@ -65,9 +66,14 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(new JLabel("Niveau de gris (0-255)"));
 		control.add(new JLabel("Taille petit carré"));
 		control.add(new JLabel("Taille grand carré"));
-		greyLevel = new JTextField();
-		bigSquareSize = new JTextField();
-		smallSquareSize = new JTextField();
+		greyLevel = new JTextField(String.valueOf(MyImage.GREY_LEVEL));
+		bigSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
+		smallSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
+		
+		// Ajouter la relation entre le document et le jtextfield
+		greyLevel.getDocument().putProperty("parent", greyLevel);
+		bigSquareSize.getDocument().putProperty("parent", bigSquareSize);
+		smallSquareSize.getDocument().putProperty("parent", smallSquareSize);
 		
 		greyLevel.getDocument().addDocumentListener(this);
 		bigSquareSize.getDocument().addDocumentListener(this);
@@ -144,21 +150,46 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("changed");
+		//System.out.println("changed");
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("insert");
-		
+		//System.out.println("insert");
+		changingValue(arg0);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("remove");
+		//System.out.println("remove");
+		changingValue(arg0);
 	}
+	
+	/**
+	 * Fonction qui gère la modification d'un paramètre après le déclenchement d'une modification d'un JTextfield
+	 * @param e
+	 */
+	private void changingValue(DocumentEvent e){
+		int value = 0;
+		
+		try{
+			value = Integer.parseInt(((JTextField)(e.getDocument().getProperty("parent"))).getText());
+		}catch(NumberFormatException error){
+			
+		}
+		//System.out.println(value);
+		if(e.getDocument().equals(greyLevel.getDocument())){
+			changeGreyLevel(value);			
+		}else if(e.getDocument().equals(bigSquareSize.getDocument())){
+			changeBigSquareSize(value);	
+		}else if(e.getDocument().equals(smallSquareSize.getDocument())){
+			changeSmallSquareSize(value);	
+		}
+	}
+	
+	
 	
 	
 	/**
@@ -176,9 +207,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	}
 	
 	/**
-	 * Modifie le seuil pour la transformation en image binaire
+	 * Modifie le seuil de détection des grands carrés qui font le contour des QR codes
 	 * @param value
-	 * @return true si 0 <= value <= 255 sinon false
+	 * @return true si 0 <= value sinon false
 	 */
 	private boolean changeBigSquareSize(int value){
 		if(value < 0){
@@ -190,9 +221,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	}
 	
 	/**
-	 * Modifie le seuil pour la transformation en image binaire
+	 * Modifie le seuil de détection des petits carrés pour le repère des QR codes
 	 * @param value
-	 * @return true si 0 <= value <= 255 sinon false
+	 * @return true si 0 <= value sinon false
 	 */
 	private boolean changeSmallSquareSize(int value){
 		if(value < 0){

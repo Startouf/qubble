@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ConnexeComponent {
 	
-	public static final float SQUARETRIGGER = (float) 0.65;
+	public static final float SQUARETRIGGER = (float) 0.5;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -110,14 +110,13 @@ public class ConnexeComponent {
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
 				mySquare[angle] = distance;
-				
 			}
 		}
 		
 		 //Afficher la composante connexe sous forme de courbe.
-		for(int i = 0; i<180; i += 2){
-			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}
+//		for(int i = 0; i<180; i += 2){
+//			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
+//		}
 		
 		
 		for(int i = 0; i<180; i++){
