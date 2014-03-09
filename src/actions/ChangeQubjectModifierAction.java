@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import audio.EffectType;
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.MediaInterface;
@@ -43,7 +44,7 @@ private final App app;
 //			break;
 		case yAxisModifier:
 			this.app.getActiveTab().getActiveQubject().setYAxisEffect(
-					(SoundEffectInterface) this.app.getSoundEffectPalette().getSelectedModifier());
+					(EffectType) this.app.getSoundEffectPalette().getSelectedModifier());
 			break;
 		default:
 			//Should never happen !!!

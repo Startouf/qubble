@@ -62,7 +62,7 @@ public class Selector extends JPanel {
 	 * @param app
 	 * @param modifier
 	 */
-	public Selector(App app, QubjectModifiers modifier){
+	public Selector(App app, MediaInterface qubject, QubjectModifiers modifier){
 		this.app = app;		
 		setPreferredSize(new Dimension(250,35));
 		setBorder(BorderFactory.createCompoundBorder(
@@ -71,14 +71,27 @@ public class Selector extends JPanel {
 		setLayout(new BorderLayout());
 		
 		//TODO : name
-		add(label = new JLabel(getNameFor(modifier)), BorderLayout.WEST);
+		add(label = new JLabel(getNameFor(qubject, modifier)), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
 		add(new SelectorButton(app, modifier), BorderLayout.EAST);
 	}
+
 	
-	private String getNameFor(Object selectedObjec){
-		//TODO
-		return "[Default choice]";
+	private String getNameFor(MediaInterface q, QubjectModifiers selectedParam){
+		switch(selectedParam){
+		case animationWhenPlayed:
+			q.getAnimationWhenPlayed().getName();
+		case rotationModifier:
+			return ("TODO");
+		case sampleWhenPlayed:
+			return q.getSampleWhenPlayed().getName();
+		case whenPutOnTable:
+			return ("TODO");
+		case yAxisModifier:
+			return q.getYAxisEffect().getName();
+		default:
+			return ("Should Not exist");
+		}
 	}
 	
 	public void setQubject(MediaInterface qubject){

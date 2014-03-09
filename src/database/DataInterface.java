@@ -2,6 +2,7 @@ package database;
 
 import java.util.ArrayList;
 
+import audio.EffectType;
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.Qubject;
@@ -38,7 +39,7 @@ public interface DataInterface {
 	 * Load all the effects that have been defined in .properties in data/sound_effects/
 	 * @return list of sound effects
 	 */
-	public ArrayList<SoundEffectInterface> getSoundEffects();
+	public ArrayList<EffectType> getSoundEffects();
 	
 	/**
 	 * Load all the animations that have been defined in .properties in data/animations/

@@ -63,7 +63,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridx = 0;
 		add(new JLabel(title), c);
 		c.gridx = 1;
-		Selector selector = new Selector(app, modifier);
+		Selector selector = new Selector(app, activeQubject, modifier);
 		add(selector, c);
 		qubjectModifiers++;
 		selectors.put(modifier, selector);

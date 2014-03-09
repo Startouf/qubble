@@ -5,8 +5,9 @@ import java.util.Properties;
 
 import org.lwjgl.util.Point;
 
+import audio.EffectType;
 import audio.SoundEffect;
-import audio.SoundEffectInterface;
+import audio.EffectType;
 
 
 
@@ -23,8 +24,8 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private Point coords = new Point(0,0);
 	
 	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/bruits.wav"));
-	private SoundEffectInterface yAxisModifier;
-	private SoundEffectInterface rotationModifier;
+	private EffectType yAxisModifier = EffectType.Volume;
+	private EffectType rotationModifier = EffectType.Distortion;
 	private AnimationInterface whenPutOnTable;
 	private AnimationInterface animationwhenPlayed = 
 			new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"));
@@ -60,12 +61,12 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public void setYAxisEffect(SoundEffectInterface soundEffect) {
-		this.yAxisModifier = (SoundEffect) soundEffect;
+	public void setYAxisEffect(EffectType soundEffect) {
+		this.yAxisModifier =  soundEffect;
 	}
 
 	@Override
-	public SoundEffectInterface getYAxisEffect() {
+	public EffectType getYAxisEffect() {
 		return this.yAxisModifier;
 	}
 

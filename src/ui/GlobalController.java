@@ -2,6 +2,7 @@ package ui;
 
 import java.util.ArrayList;
 
+import audio.EffectType;
 import audio.SoundEffectInterface;
 import database.Data;
 import qubject.Animation;
@@ -25,7 +26,7 @@ public class GlobalController implements GlobalControllerInterface {
 		return data.getSamples();
 	}
 
-	public ArrayList<SoundEffectInterface> getSoundEffects() {
+	public ArrayList<EffectType> getSoundEffects() {
 		return data.getSoundEffects();
 	}
 

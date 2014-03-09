@@ -12,7 +12,7 @@ import qubject.QubjectModifiers;
  */
 public abstract class ViewQubjects extends JPanel {
 	protected MediaInterface activeQubject;
-	protected QubjectModifiers activeProperty;
+	protected QubjectModifiers activeProperty = QubjectModifiers.sampleWhenPlayed;
 
 	/**
 	 * Change the active Qubject that will be modified by the Palettes

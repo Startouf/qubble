@@ -1,6 +1,6 @@
 package qubject;
 
-import audio.SoundEffectInterface;
+import audio.EffectType;
 
 
 /**
@@ -32,8 +32,8 @@ public interface MediaInterface
 	 * Sound effect applied when translating along the Y-axis
 	 * @param soundEffect
 	 */
-	public void setYAxisEffect(SoundEffectInterface soundEffect);
-	public SoundEffectInterface getYAxisEffect();
+	public void setYAxisEffect(EffectType soundEffect);
+	public EffectType getYAxisEffect();
 
 	/**
 	 * Animation played when cursor reaches it

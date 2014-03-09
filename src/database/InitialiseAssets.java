@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import audio.EffectType;
 import audio.SoundEffect;
 import audio.SoundEffectInterface;
 import qubject.Animation;
@@ -56,20 +57,26 @@ public class InitialiseAssets
 	 * Currently loaded props : name and file
 	 * @return
 	 */
-	public static ArrayList<SoundEffectInterface> loadSoundEffects(){
-		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/sound_effects/");
-		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
-		for (File entry : files){ //TODO : use fileInputStream
-			prop = new Properties();
-			try {
-				prop.load(new FileInputStream(entry));	
-				//TODO load other params
-				list.add(new SoundEffect(prop.getProperty("name"), prop.getProperty("file")));
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+	public static ArrayList<EffectType> loadSoundEffects(){
+		
+		ArrayList<EffectType> list = new ArrayList<EffectType>();
+		for (EffectType effect : EffectType.values()){
+			list.add(effect);
 		}
+		
+//		Properties prop;
+//		File[] files = InitialiseTools.getFiles("data/sound_effects/");
+//		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
+//		for (File entry : files){ //TODO : use fileInputStream
+//			prop = new Properties();
+//			try {
+//				prop.load(new FileInputStream(entry));	
+//				//TODO load other params
+//				list.add(new SoundEffect(prop.getProperty("name"), prop.getProperty("file")));
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 		return list;
 	}
 

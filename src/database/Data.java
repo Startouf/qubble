@@ -3,6 +3,7 @@ package database;
 import java.io.File;
 import java.util.ArrayList;
 
+import audio.EffectType;
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.Qubject;
@@ -20,7 +21,7 @@ public final class Data implements DataInterface
 	//NOTE : there should be a difference Between the qubjects of this list and the qubjects of a saved project
 	private final ArrayList<Qubject> qubjects;
 	private final ArrayList<SampleInterface> samples;
-	private final ArrayList<SoundEffectInterface> soundEffects;
+	private final ArrayList<EffectType> soundEffects;
 	private final ArrayList<AnimationInterface> animations;
 
 	public Data(){
@@ -42,7 +43,7 @@ public final class Data implements DataInterface
 	}
 
 	@Override
-	public ArrayList<SoundEffectInterface> getSoundEffects() {
+	public ArrayList<EffectType> getSoundEffects() {
 		return soundEffects;
 	}
 
