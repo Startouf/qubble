@@ -81,7 +81,9 @@ public class SampleController implements SampleControllerInterface {
 			return res;
 		}
 		else {
-			//qi.soundHasFinishedPlaying(this);
+			if (qi != null) {
+				qi.soundHasFinishedPlaying(this);
+			}
 			player.hasFinishedPlaying(this);
 			return 0;
 		}
