@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import qubject.MediaInterface;
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
-import qubject.QubjectModifiers;
+import qubject.QubjectProperty;
 
 
 /**
@@ -31,8 +31,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private int qubjectModifiers = 0;
 	private final GridBagConstraints c = new GridBagConstraints();
 	private final Selector qubjectSelector; 
-	private final Hashtable<QubjectModifiers, Selector> selectors 
-		= new Hashtable<QubjectModifiers, Selector>();
+	private final Hashtable<QubjectProperty, Selector> selectors 
+		= new Hashtable<QubjectProperty, Selector>();
 	private final JLabel qubjectPosition;
 	
 	public ViewIndividualPanel(App app) {
@@ -62,13 +62,13 @@ public class ViewIndividualPanel extends ViewQubjects {
 		
 		//TODO : modify the enum to also associate a User-friendly Jlabel with each QubjectModifier !
 		//(then it's possible to do a for loop here on QubjectModifiers.values())
-		addOption("Sample Associé", QubjectModifiers.sampleWhenPlayed);
-		addOption("Effet Axe Y", QubjectModifiers.yAxisModifier);
-		addOption("Rotation", QubjectModifiers.rotationModifier);
-		addOption("Animation", QubjectModifiers.animationWhenPlayed);
+		addOption("Sample Associé", QubjectProperty.SAMPLE_WHEN_PLAYED);
+		addOption("Effet Axe Y", QubjectProperty.Y_AXIS);
+		addOption("Rotation", QubjectProperty.ROTATION);
+		addOption("Animation", QubjectProperty.ANIM_WHEN_PLAYED);
 	}
 	
-	private void addOption(String title, QubjectModifiers modifier){
+	private void addOption(String title, QubjectProperty modifier){
 		c.gridy = qubjectModifiers+3;
 		c.gridx = 0;
 		add(new JLabel(title), c);
@@ -84,13 +84,13 @@ public class ViewIndividualPanel extends ViewQubjects {
 		activeQubject= selectedQubject;
 		qubjectSelector.setQubject(selectedQubject);
 		qubjectPosition.setText(this.app.getActiveProject().getQubble().whereIsIt(activeQubject));
-		for (QubjectModifiers property : QubjectModifiers.values()){
+		for (QubjectProperty property : QubjectProperty.values()){
 			this.selectors.get(property).setModifier(selectedQubject.getModifierForProperty(property));
 		}
 	}
 
 	@Override
-	public void setActiveProperty(QubjectModifiers property) {
+	public void setActiveProperty(QubjectProperty property) {
 		this.activeProperty = property;
 	}
 

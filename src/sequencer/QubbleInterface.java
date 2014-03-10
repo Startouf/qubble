@@ -36,6 +36,13 @@ public interface QubbleInterface {
 	public void setQubjectOnTable(int bitIdentifier, imageObject.Point position);
 
 	/**
+	 * When a Qubject is moved on the table
+	 * @param bitIdentifier
+	 * @param position
+	 */
+	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position);
+
+	/**
 	 * When a Qubject is no longer on the table
 	 * @param bitIdentifier its ID
 	 */

@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -110,6 +112,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		occupiedTiles.add(tile);
 	}
 
+	//TODO : move to Qubble
 	public Dimension getTile(org.lwjgl.util.Point pos){
 		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
 				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
@@ -118,11 +121,22 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
-		//TODO
+		//TODO : Reflection to load the class from .class file
 		AnimationControllerInterface controller;
-
-		controller = new WaterWave(qubjectCoords);
-		//load entities for the object (sync with openGL thread)
+//		controller = new WaterWave(qubjectCoords);
+//		URLClassLoader classLoader = URLClassLoader.newInstance(
+//				new URL[] { anim.getAnimationControllerDotClass().toURI().toURL() });
+//		Class<?> cls = Class.forName("anim..class", true, classLoader); // Should print "hello".
+//		Object instance = cls.ne // Should print "world".
+//		System.out.println(instance);
+//		//load entities for the object (sync with openGL thread)
+		
+		//TODO : temp method
+		if (anim.getName().equals("Water wave"))
+			controller = new WaterWave(qubjectCoords);
+		else
+			controller = new PixelExplosion(qubjectCoords);
+		
 		synchronized(needsToBeLoaded){
 			needsToBeLoaded.add(controller);
 		}

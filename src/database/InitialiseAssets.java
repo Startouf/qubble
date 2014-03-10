@@ -86,19 +86,21 @@ public class InitialiseAssets
 	 * @return
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
-		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/animations/");
-		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(files.length);
-		for (File entry : files){ //TODO : use fileInputStream
-			prop = new Properties();
-			try {
-				prop.load(new FileInputStream(entry));	
-				//TODO load other params
-				list.add(new Animation(prop.getProperty("name"), new File(prop.getProperty("file"))));
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
+		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(2);
+		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java")));
+		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java")));
+//		Properties prop;
+//		File[] files = InitialiseTools.getFiles("data/animations/");
+//		for (File entry : files){ //TODO : use fileInputStream
+//			prop = new Properties();
+//			try {
+//				prop.load(new FileInputStream(entry));	
+//				//TODO load other params
+//				list.add(new Animation(prop.getProperty("name"), new File(prop.getProperty("file"))));
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 		return list;
 	}
 

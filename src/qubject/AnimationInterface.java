@@ -14,8 +14,8 @@ public interface AnimationInterface extends QubjectModifierInterface {
 	public boolean mustBeCompiled();
 
 	/**
-	 * Returns an AnimationController
+	 * Returns an AnimationController file
 	 * @return
 	 */
-	public AnimationControllerInterface getAnimationController();
+	public File getAnimationControllerDotClass();
 }

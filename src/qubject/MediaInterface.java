@@ -47,7 +47,7 @@ public interface MediaInterface
 	 */
 	
 	public void setRotationEffect(EffectType soundEffect);
-	public EffectType getSoundEffect();
+	public EffectType getRotationEffect();
 	
 	public void setAnimationWhenDetected(AnimationInterface animation);
 	public AnimationInterface getAnimationWhenDetected();
@@ -56,5 +56,5 @@ public interface MediaInterface
 	 * Useful to iterate over all of them
 	 * @param property (SampleWhenPlayed, etc...)
 	 */
-	public QubjectModifierInterface getModifierForProperty(QubjectModifiers property);
+	public QubjectModifierInterface getModifierForProperty(QubjectProperty property);
 }

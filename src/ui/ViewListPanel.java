@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import qubject.MediaInterface;
 import qubject.QubjectModifierInterface;
-import qubject.QubjectModifiers;
+import qubject.QubjectProperty;
 
 public class ViewListPanel extends ViewQubjects {
 
@@ -15,7 +15,7 @@ public class ViewListPanel extends ViewQubjects {
 	}
 
 	@Override
-	public void setActiveProperty(QubjectModifiers modifier) {
+	public void setActiveProperty(QubjectProperty modifier) {
 		// TODO Auto-generated method stub
 		
 	}

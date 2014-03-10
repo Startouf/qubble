@@ -14,7 +14,7 @@ import javax.swing.border.EtchedBorder;
 import qubject.MediaInterface;
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
-import qubject.QubjectModifiers;
+import qubject.QubjectProperty;
 
 
 /**
@@ -62,7 +62,7 @@ public class Selector extends JPanel {
 	 * @param app
 	 * @param modifier
 	 */
-	public Selector(App app, MediaInterface qubject, QubjectModifiers modifier){
+	public Selector(App app, MediaInterface qubject, QubjectProperty modifier){
 		this.app = app;		
 		setPreferredSize(new Dimension(250,35));
 		setBorder(BorderFactory.createCompoundBorder(
@@ -77,17 +77,17 @@ public class Selector extends JPanel {
 	}
 
 	
-	private String getNameFor(MediaInterface q, QubjectModifiers selectedParam){
+	private String getNameFor(MediaInterface q, QubjectProperty selectedParam){
 		switch(selectedParam){
-		case animationWhenPlayed:
-			q.getAnimationWhenPlayed().getName();
-		case rotationModifier:
-			return ("TODO");
-		case sampleWhenPlayed:
+		case ANIM_WHEN_PLAYED:
+			return q.getAnimationWhenPlayed().getName();
+		case ROTATION:
+			return q.getRotationEffect().getName();
+		case SAMPLE_WHEN_PLAYED:
 			return q.getSampleWhenPlayed().getName();
-		case whenPutOnTable:
-			return ("TODO");
-		case yAxisModifier:
+		case ANIM_WHEN_PUT_ON_TABLE:
+			return q.getAnimationWhenPlayed().getName();
+		case Y_AXIS:
 			return q.getYAxisEffect().getName();
 		default:
 			return ("Should Not exist");

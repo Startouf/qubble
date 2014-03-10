@@ -231,7 +231,9 @@ public class Qubble implements QubbleInterface {
 		//adjust effect
 		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
 		//add it to the list of sampleControllers
-		sampleControllers.get(qubject).add(qubjectSoundController);
+		synchronized(sampleControllers){
+			sampleControllers.get(qubject).add(qubjectSoundController);
+		}
 		//show its animation
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
@@ -307,6 +309,27 @@ public class Qubble implements QubbleInterface {
 		}
 		//If the qubject was not found
 		System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+	}
+	
+	@Override
+	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position) {
+		for (Qubject qubject : configuredQubjects){
+			if (qubject.getBitIdentifier() == bitIdentifier){
+				//Si on l'a trouvé, on masque son ancien emplacement 
+				projection.triggerQubject(qubject.getCoords());
+				
+				//on change les coordonnées caméra -> OpenGL
+				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
+				qubject.setCoords(glCoords);
+				
+				//On indique son nouvel emplacement
+				projection.triggerQubject(qubject.getCoords());
+
+				//On dit au séquenceur de recalculer
+				sequencerThread.interrupt();					
+				return;
+				}
+			}
 	}
 
 	@Override

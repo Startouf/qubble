@@ -20,21 +20,28 @@ public class Animation implements AnimationInterface {
 	private File dotClassFile;
 	private boolean mustBeCompiled = false;
 	
-	public Animation(String name, File file){
+	public Animation(String name, File dotJavafile){
 		this.name = name;
-		this.dotJavaFile = file;
+		this.dotJavaFile = dotJavafile;
 	}
 
 	/**
 	 * Compilation Overload
 	 * @param name
-	 * @param file
+	 * @param dotJavafile
 	 * @param mustBeCompiled
 	 */
-	public Animation(String name, File file, boolean mustBeCompiled){
+	public Animation(String name, File dotJavafile, boolean mustBeCompiled){
 		this.name = name;
-		this.dotJavaFile = file;
-		this.mustBeCompiled = mustBeCompiled;
+		this.dotJavaFile = dotJavafile;
+		this.mustBeCompiled = true;
+	}
+	
+	public Animation(String name, File dotJavaFile, File dotClassFile){
+		this.name = name;
+		this.dotJavaFile = dotJavaFile;
+		this.dotClassFile = dotClassFile;
+		this.mustBeCompiled = false;
 	}
 
 	@Override
@@ -53,18 +60,9 @@ public class Animation implements AnimationInterface {
 	}
 
 	@Override
-	public AnimationControllerInterface getAnimationController() {
+	public File getAnimationControllerDotClass() {
 		if (!mustBeCompiled){
-			try {
-				return (AnimationControllerInterface) ClassLoader.getSystemClassLoader().loadClass(dotClassFile.getPath()).newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Try to ccompile the Java file !!
-
-			}
+			return dotClassFile;
 		}
 		else{
 			//TODO compile the java file

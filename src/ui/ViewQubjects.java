@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import qubject.MediaInterface;
 import qubject.QubjectModifierInterface;
-import qubject.QubjectModifiers;
+import qubject.QubjectProperty;
 /**
  * @author duchon
  * This class should be implemented by all panels that allow the user to 
@@ -13,7 +13,7 @@ import qubject.QubjectModifiers;
  */
 public abstract class ViewQubjects extends JPanel {
 	protected MediaInterface activeQubject;
-	protected QubjectModifiers activeProperty = QubjectModifiers.sampleWhenPlayed;
+	protected QubjectProperty activeProperty = QubjectProperty.SAMPLE_WHEN_PLAYED;
 
 	/**
 	 * Change the active Qubject that will be modified by the Palettes
@@ -22,7 +22,7 @@ public abstract class ViewQubjects extends JPanel {
 	 */
 	public abstract void setActiveQubject(MediaInterface selectedQubject);
 	
-	public abstract void setActiveProperty(QubjectModifiers property);
+	public abstract void setActiveProperty(QubjectProperty property);
 	
 	public abstract void setModifierOfActiveProperty(QubjectModifierInterface modifier);
 
@@ -30,7 +30,7 @@ public abstract class ViewQubjects extends JPanel {
 		return activeQubject;
 	}
 	
-	public QubjectModifiers getActiveProperty(){
+	public QubjectProperty getActiveProperty(){
 		return activeProperty;
 	}
 }

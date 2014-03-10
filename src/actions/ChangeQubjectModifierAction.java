@@ -31,29 +31,36 @@ private final App app;
 	public void actionPerformed(ActionEvent e) {
 		switch (this.app.getActiveTab().getActiveProperty()){
 		//Proto final
-		case rotationModifier:
-			this.app.getActiveTab().getActiveQubject().setRotationEffect(
-					(EffectType) this.app.getSoundEffectPalette().getSelectedModifier());
+		case ROTATION:
+			EffectType effect = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
+			this.app.getActiveTab().getActiveQubject().setRotationEffect(effect);
+			this.app.getActiveTab().setModifierOfActiveProperty(effect);
+			this.app.getSoundEffectPalette().setVisible(false);
 			break;
-		case sampleWhenPlayed:
+		case SAMPLE_WHEN_PLAYED:
 			SampleInterface sample = (SampleInterface) this.app.getSamplePalette().getSelectedModifier();
 			this.app.getActiveTab().getActiveQubject().setSampleWhenPlayed(sample);
 			this.app.getActiveTab().setModifierOfActiveProperty(sample);
+			this.app.getSamplePalette().setVisible(false);
 			break;
-		case animationWhenPlayed:
-			AnimationInterface anim = (AnimationInterface) this.app.getSoundEffectPalette().getSelectedModifier();
+		case ANIM_WHEN_PLAYED:
+			AnimationInterface anim = (AnimationInterface) this.app.getAnimationPalette().getSelectedModifier();
 			this.app.getActiveTab().getActiveQubject().setAnimationWhenPlayed(anim);
 			this.app.getActiveTab().setModifierOfActiveProperty(anim);
+			this.app.getAnimationPalette().setVisible(false);
 			break;
 			//Proto final
-		case whenPutOnTable:
-			this.app.getActiveTab().getActiveQubject().setAnimationWhenDetected(
-					(AnimationInterface) this.app.getAnimationPalette().getSelectedModifier());
+		case ANIM_WHEN_PUT_ON_TABLE:
+			AnimationInterface anim2 = (AnimationInterface) this.app.getAnimationPalette().getSelectedModifier();
+			this.app.getActiveTab().getActiveQubject().setAnimationWhenDetected(anim2);
+			this.app.getActiveTab().setModifierOfActiveProperty(anim2);
+			this.app.getAnimationPalette().setVisible(false);
 			break;
-		case yAxisModifier:
-			EffectType effect = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setYAxisEffect(effect);
-			this.app.getActiveTab().setModifierOfActiveProperty(effect);
+		case Y_AXIS:
+			EffectType effect2 = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
+			this.app.getActiveTab().getActiveQubject().setYAxisEffect(effect2);
+			this.app.getActiveTab().setModifierOfActiveProperty(effect2);
+			this.app.getSoundEffectPalette().setVisible(false);
 			break;
 		default:
 			//Should never happen !!!

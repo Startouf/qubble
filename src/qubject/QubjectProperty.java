@@ -6,10 +6,10 @@ package qubject;
  *
  */
 
-public enum QubjectModifiers {
-	sampleWhenPlayed,
-	yAxisModifier,
-	rotationModifier,
-	whenPutOnTable,
-	animationWhenPlayed;
+public enum QubjectProperty {
+	SAMPLE_WHEN_PLAYED,
+	Y_AXIS,
+	ROTATION,
+	ANIM_WHEN_PUT_ON_TABLE,
+	ANIM_WHEN_PLAYED;
 }

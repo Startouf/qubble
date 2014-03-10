@@ -90,17 +90,17 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public QubjectModifierInterface getModifierForProperty(QubjectModifiers property) {
+	public QubjectModifierInterface getModifierForProperty(QubjectProperty property) {
 		switch(property){
-		case animationWhenPlayed:
+		case ANIM_WHEN_PLAYED:
 			return(this.animationwhenPlayed);
-		case rotationModifier:
+		case ROTATION:
 			return(this.rotationModifier);
-		case sampleWhenPlayed:
+		case SAMPLE_WHEN_PLAYED:
 			return(this.sampleWhenPlayed);
-		case whenPutOnTable:
+		case ANIM_WHEN_PUT_ON_TABLE:
 			return this.whenPutOnTable;
-		case yAxisModifier:
+		case Y_AXIS:
 			return this.getYAxisEffect();
 		default:
 			//TODO : throw exception
@@ -114,7 +114,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	}
 
 	@Override
-	public EffectType getSoundEffect() {
+	public EffectType getRotationEffect() {
 		return this.rotationModifier;
 	}
 
