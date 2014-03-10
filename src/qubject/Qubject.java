@@ -26,7 +26,8 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 	private EffectType yAxisModifier = EffectType.Volume;
 	private EffectType rotationModifier = EffectType.Distortion;
-	private AnimationInterface whenPutOnTable;
+	private AnimationInterface whenPutOnTable = 
+			new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"));;
 	private AnimationInterface animationwhenPlayed = 
 			new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"));
 	

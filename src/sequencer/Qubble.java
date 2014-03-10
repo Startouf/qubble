@@ -49,7 +49,7 @@ public class Qubble implements QubbleInterface {
 	/**
 	 * Starting time (Sys time)
 	 */
-	private long startTime = Sys.getTime();
+	private long startTime;
 	/**
 	 * Sys time when click on pause
 	 */
@@ -305,6 +305,9 @@ public class Qubble implements QubbleInterface {
 				//On indique a openGL qu'on a un Qubject 
 				projection.triggerQubject(qubject.getCoords());
 				
+				//On joue l'animation posé sur la table
+				projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
+				
 				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
 					qubjectsOnTable.add(qubject);
@@ -365,6 +368,7 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void start() {
 		if(!hasStarted){
+			startTime = Sys.getTime();
 			projectionThread.start();
 			playerThread.start();
 			sequencerThread.start();
@@ -383,7 +387,17 @@ public class Qubble implements QubbleInterface {
 	public String whereIsIt(MediaInterface qubject) {
 		QRInterface qr = (QRInterface) qubject;
 		Point pos = qr.getCoords();
-		return new String("X : " + (int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X) + 
-				" Y : " + (int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+		Dimension tile = getTile(pos);
+		return new String("X : " + tile.width + " Y : " + tile.height);
+	}
+	
+	/**
+	 * 
+	 * @param pos
+	 * @return the X,Y tile where the qubject is
+	 */
+	public static Dimension getTile(org.lwjgl.util.Point pos){
+		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
+				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
 }
