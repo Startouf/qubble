@@ -65,7 +65,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 		addOption("Sample Associé", QubjectProperty.SAMPLE_WHEN_PLAYED);
 		addOption("Effet Axe Y", QubjectProperty.Y_AXIS);
 		addOption("Rotation", QubjectProperty.ROTATION);
-		addOption("Animation", QubjectProperty.ANIM_WHEN_PLAYED);
+		addOption("Animation quand joué", QubjectProperty.ANIM_WHEN_PLAYED);
+		addOption("Animation quand posé", QubjectProperty.ANIM_WHEN_PUT_ON_TABLE);
 	}
 	
 	private void addOption(String title, QubjectProperty modifier){

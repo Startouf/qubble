@@ -86,7 +86,7 @@ public class Selector extends JPanel {
 		case SAMPLE_WHEN_PLAYED:
 			return q.getSampleWhenPlayed().getName();
 		case ANIM_WHEN_PUT_ON_TABLE:
-			return q.getAnimationWhenPlayed().getName();
+			return q.getAnimationWhenDetected().getName();
 		case Y_AXIS:
 			return q.getYAxisEffect().getName();
 		default:

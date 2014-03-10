@@ -12,6 +12,7 @@ import org.lwjgl.util.Point;
 import calibration.Calibrate;
 import camera.CameraInterface;
 import camera.FakeCamera;
+import opengl.BaseRoutines;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.Player;
@@ -44,12 +45,12 @@ public class Qubble implements QubbleInterface {
 	/**
 	 * Current time in float (0<= currentTime < period);
 	 */
-	private float currentTime;
+	private float currentTime =0f;
 	/**
 	 * Starting time (SYSTEM TIME IN TICKS!)
 	 * (Might be updated with play/Pause)
 	 */
-	private long startTime = Sys.getTime();
+	private long lastFrameTime = Sys.getTime();
 	/**
 	 * Period in float milliseconds
 	 */
@@ -297,6 +298,9 @@ public class Qubble implements QubbleInterface {
 				//On indique a openGL qu'on a un Qubject 
 				projection.triggerQubject(qubject.getCoords());
 				
+				//On joue l'animation posé sur la table
+				projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
+				
 				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
 					qubjectsOnTable.add(qubject);
@@ -376,5 +380,10 @@ public class Qubble implements QubbleInterface {
 		Point pos = qr.getCoords();
 		return new String("X : " + (int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X) + 
 				" Y : " + (int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+	}
+	
+	public void updateCurrentTime(){
+		this.currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-lastFrameTime);
+		lastFrameTime = Sys.getTime();
 	}
 }
