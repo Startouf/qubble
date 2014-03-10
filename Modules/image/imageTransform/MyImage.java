@@ -10,6 +10,7 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 /**
  * Gère les images
  * Permet de créer une image en niveau de gris ou une image binaire
@@ -18,10 +19,11 @@ import java.util.Hashtable;
  */
 public class MyImage extends BufferedImage{
 	
+	// Niveau de sensibilité pour l'image binaire
+	public static int GREY_LEVEL = 180; 
 
 	public MyImage(int width, int height, int imageType) {
 		super(width, height, imageType);
-		
 	}
 	
 	public MyImage(ColorModel cm, WritableRaster raster,
@@ -53,9 +55,13 @@ public class MyImage extends BufferedImage{
 	       return resizedImage;
 	}
 	
+	/**
+	 * Transforme une image couleur en image niveau de gris
+	 * @return
+	 */
 	public MyImage getGreyMyImage(){
 		int greyValue = 0, red = 0, green = 0, blue = 0;
-		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
@@ -69,12 +75,16 @@ public class MyImage extends BufferedImage{
 		return greyImage;
 	}
 	
+	/**
+	 * Transforme une image en niveau de gris en une image binaire
+	 * @return
+	 */
 	public MyImage getBinaryMyImage(){
-		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_BYTE_BINARY);
+		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
-				if((this.getRGB(i, j) & 0x000000ff) > 220)
+				if((this.getRGB(i, j) & 0x000000ff) > GREY_LEVEL)
 					binaryImage.setRGB(i, j, (new Color(255, 255, 255).getRGB()));
 				else
 					binaryImage.setRGB(i, j, (new Color(0, 0, 0).getRGB()));

@@ -19,7 +19,7 @@ import java.util.Set;
  * @author masseran
  *
  */
-public class Component {
+public class ComponentAnalyser {
 	
 	private int imageHeight, imageWidth;
 	private ArrayList<ConnexeComponent> listCC;
@@ -29,13 +29,13 @@ public class Component {
 	 * Analyse l'image pour récupérer les composantes connexes
 	 * @param binaryImage
 	 */
-	public Component(MyImage binaryImage){
+	public ComponentAnalyser(MyImage binaryImage){
 		
-		imageHeight = 200;//binaryImage.getHeight();
-		imageWidth = 200; //binaryImage.getWidth();
+		imageHeight = binaryImage.getHeight();
+		imageWidth = binaryImage.getWidth();
 		
 		// Tableau de référence
-		int[][] labels = new int[imageHeight][imageWidth];
+		int[][] labels = new int[imageWidth][imageHeight];
 		
 		int nbLabels = 1;
 		
@@ -93,11 +93,16 @@ public class Component {
 		// Calcul 
 		// Je néglige les bords de l'image et la valeur est temporaire
 		boolean modif = true;
+		int labelSave = 0;
 		int x = 0;
-		while(x<5){
+		
+		while(modif){
+			modif = false;
 			x++;
+			System.out.println(x);
 			for (int j=imageHeight-2 ; j >= 0 ; j--){
 				for (int i=imageWidth-2; i >= 0 ; i--) {
+					labelSave = labels[i][j];
 					if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
 						if (labels[i][j+1] != 0 && labels[i+1][j] == 0){
 							labels[i][j] = Math.min(labels[i][j+1], labels[i][j]);
@@ -107,30 +112,35 @@ public class Component {
 							
 						}else if (labels[i][j+1] != 0 && labels[i+1][j] != 0){
 							labels[i][j] = Math.min(labels[i][j],Math.min(labels[i+1][j], labels[i][j+1]));
+						}
 					}
-			}	
-					
-		}
-	}
-	
-		for (int j= 1 ; j < imageHeight ; j++){
-			for (int i= 1; i < imageWidth ; i++) {
-				if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
-					if (labels[i][j-1] != 0 && labels[i-1][j] == 0){
-						labels[i][j] = Math.min(labels[i][j-1], labels[i][j]);
-						
-					}else if (labels[i][j-1] == 0 && labels[i-1][j] != 0){
-						labels[i][j] = Math.min(labels[i-1][j], labels[i][j]);
-						
-					}else if (labels[i][j-1] != 0 && labels[i-1][j] != 0){
-						labels[i][j] = Math.min(labels[i][j],Math.min(labels[i-1][j], labels[i][j-1]));
-					}
-				
-				}	
-				
+					if(labelSave != labels[i][j])
+						modif = true;					
+				}
 			}
-		}
-
+			
+			
+			if(modif){
+				for (int j= 1 ; j < imageHeight ; j++){
+					for (int i= 1; i < imageWidth ; i++) {
+						labelSave = labels[i][j];
+						if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
+							if (labels[i][j-1] != 0 && labels[i-1][j] == 0){
+								labels[i][j] = Math.min(labels[i][j-1], labels[i][j]);
+								
+							}else if (labels[i][j-1] == 0 && labels[i-1][j] != 0){
+								labels[i][j] = Math.min(labels[i-1][j], labels[i][j]);
+								
+							}else if (labels[i][j-1] != 0 && labels[i-1][j] != 0){
+								labels[i][j] = Math.min(labels[i][j],Math.min(labels[i-1][j], labels[i][j-1]));
+							}
+						}	
+						if(labelSave != labels[i][j])
+							modif = true;	
+					}
+				}
+			}
+				
 		}
 			
 		
@@ -170,13 +180,33 @@ public class Component {
 		Graphics g = CCMyImage.getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, imageWidth, imageHeight);
-				
+		
+		
 		for (ConnexeComponent listPoint : listCC) {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
+			
+			
+			/* Affichage de l'image ou on ne voit que les pt principaux (bordure  et centre)
+			 * g.setColor(compoColor);
+			listPoint.getCenter();
+			g.fillRect(listPoint.getxMin(), listPoint.getyMin(), 2, 2);
+			g.fillRect(listPoint.getxMin(), listPoint.getyMax(), 2, 2);
+			g.fillRect(listPoint.getxMax(), listPoint.getyMin(), 2, 2);
+			g.fillRect(listPoint.getxMax(), listPoint.getyMax(), 2, 2);
+			g.fillRect(listPoint.getxCenter(), listPoint.getyCenter(), 2, 2);
+			
+			System.out.println("---------");
+			System.out.println(listPoint.getxMin());
+			System.out.println(listPoint.getxMax());
+			System.out.println(listPoint.getyMin());
+			System.out.println(listPoint.getyMax());
+			System.out.println("---------");*/
+			
 			for (Point pixel : listPoint.getConnexePoints()) {
 					if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
 						CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
 			}
+			
 		}
 		
 		return CCMyImage;
@@ -184,6 +214,7 @@ public class Component {
 	
 	/**
 	 * Retourne la liste des points qui font le contour de la composante
+	 * On ne ne l'utilise plus
 	 * @return
 	 */
 	public ArrayList<Point> getContour() {

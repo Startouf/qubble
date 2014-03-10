@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 public class ImageView extends JPanel{
 	
 	private MyImage[] image;
-	public final int COLOR = 0, GREY = 1, BINARY = 2, CONNEXE = 3, QR_CODE = 4; // Choisi l'image affichée
-	private final int nbrImage = 5;
+	public final int COLOR = 0, GREY = 1, BINARY = 2, CONNEXE = 3, QR_CODE = 4, COURBE = 5; // Choisi l'image affichée
+	private final int nbrImage = 6;
 	private int view;
 	
 	public ImageView(){
