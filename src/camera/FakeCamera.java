@@ -25,6 +25,7 @@ public class FakeCamera implements CameraInterface, Runnable
 		qubble.setQubjectOnTable(100110, new Point(450, 350));
 		qubble.setQubjectOnTable(100111, new Point(760, 550));
 		qubble.setQubjectOnTable(101000, new Point(950, 150));
+		qubble.setQubjectOnTable(101001, new Point(1100, 650));
 		try {
 			wait(30000);
 		} catch (InterruptedException e) {

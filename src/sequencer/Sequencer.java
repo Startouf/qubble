@@ -75,7 +75,7 @@ public class Sequencer implements Runnable
 				//Qubble a envoyé une information de changement d'état
 			}
 			//ask Qubble to update currentTime before recalculating
-			qubble.updateCurrentTime();
+			//qubble.updateCurrentTime();
 			recalculate();
 		}
 		destroyScheduledActions();

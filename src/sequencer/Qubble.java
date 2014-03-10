@@ -45,7 +45,7 @@ public class Qubble implements QubbleInterface {
 	/**
 	 * Current time in float (0<= currentTime < period);
 	 */
-	private float currentTime =0f;
+	private float currentTime;
 	/**
 	 * Starting time (SYSTEM TIME IN TICKS!)
 	 * (Might be updated with play/Pause)
