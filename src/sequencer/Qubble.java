@@ -12,6 +12,7 @@ import org.lwjgl.util.Point;
 import calibration.Calibrate;
 import camera.CameraInterface;
 import camera.FakeCamera;
+import opengl.BaseRoutines;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.Player;
@@ -42,14 +43,17 @@ public class Qubble implements QubbleInterface {
 	 * Variables séquenceur/Dispatching d'évènements
 	 */
 	/**
-	 * Current time in float (0<= currentTime < period);
+	 * Current time in float MS(0<= currentTime < period);
 	 */
-	private float currentTime;
+	private float currentTime =0f, totalPauseTime =0f;
 	/**
-	 * Starting time (SYSTEM TIME IN TICKS!)
-	 * (Might be updated with play/Pause)
+	 * Starting time (Sys time)
 	 */
 	private long startTime = Sys.getTime();
+	/**
+	 * Sys time when click on pause
+	 */
+	private long startPauseTime;
 	/**
 	 * Period in float milliseconds
 	 */
@@ -100,7 +104,7 @@ public class Qubble implements QubbleInterface {
 	 * Variables de référence Thread (synchronisation)
 	 */
 	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
-	private boolean hasStarted = false;
+	private boolean hasStarted = false, isPlaying = false;
 
 	/**
 	 * New project overload
@@ -193,19 +197,24 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	/**
-	 * NOTE : requires TABLE_LENGTH and current time
+	 * NOTE : requires TABLE_LENGTH and current time and total pause time
+	 * Handle Play/Pause
 	 * @param qubject
 	 * @return time in MILLISECONDS
 	 */
 	public long computeQubjectStartingTime(Qubject qubject){
-		//TODO : Quantify !
 		//don't forget to divide double by double and not int !
 		double absoluteStartingTime = 
 				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
 				/((double)TABLE_LENGTH)		*period;
-		System.out.println("Demarrage absolu Qubject " + qubject.getName() 
-				+ " At absolute time : "+ absoluteStartingTime/1000f + " seconds");
-		return (long) (absoluteStartingTime-currentTime);
+		System.out.println("Demarrage relatif Qubject " + qubject.getName() 
+				+ " At absolute time : "+ (absoluteStartingTime-currentTime+totalPauseTime)/1000f + " seconds");
+		updateCurrentTime();
+		return (long) (absoluteStartingTime-currentTime+totalPauseTime);
+	}
+	
+	private void updateCurrentTime(){
+		currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-startTime)%period;
 	}
 	
 	/**
@@ -255,18 +264,17 @@ public class Qubble implements QubbleInterface {
 	public void setPeriod(float period) {
 		this.period = period;
 	}
-	
-	/**
-	 * Absolute System Time in milliseconds
-	 * @return time in milliseconds
-	 */
-	public static float getTime(){
-		return Sys.getTime()*1000/Sys.getTimerResolution();
-	}
 
 	@Override
 	public void playPause(){
 		if (hasStarted){
+			if(isPlaying){
+				this.startPauseTime = Sys.getTime();
+			}
+			else{
+				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
+			}
+			isPlaying = !isPlaying;
 			sequencer.playPause(sequencerThread);
 			projection.playPause(projectionThread);
 			player.playPause();
@@ -362,6 +370,7 @@ public class Qubble implements QubbleInterface {
 			sequencerThread.start();
 			cameraThread.start();
 			hasStarted = true;
+			isPlaying = true;
 		}
 	}
 
