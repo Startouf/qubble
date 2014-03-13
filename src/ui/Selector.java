@@ -81,13 +81,13 @@ public class Selector extends JPanel {
 		switch(selectedParam){
 		case ANIM_WHEN_PLAYED:
 			return q.getAnimationWhenPlayed().getName();
-		case ROTATION:
+		case AUDIO_EFFECT_ROTATION:
 			return q.getRotationEffect().getName();
 		case SAMPLE_WHEN_PLAYED:
 			return q.getSampleWhenPlayed().getName();
-		case ANIM_WHEN_PUT_ON_TABLE:
+		case ANIM_WHEN_DETECTED:
 			return q.getAnimationWhenDetected().getName();
-		case Y_AXIS:
+		case AUDIO_EFFECT_Y_AXIS:
 			return q.getYAxisEffect().getName();
 		default:
 			return ("Should Not exist");

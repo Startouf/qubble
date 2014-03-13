@@ -34,7 +34,7 @@ public class PlaySampleAction extends AbstractAction
 	public void actionPerformed(ActionEvent arg0){ 
 		try {
 			AudioInputStream sound = AudioSystem.getAudioInputStream
-					(this.app.getSamplePalette().getSelectedModifier().getFile());
+					(((SampleInterface)this.app.getSamplePalette().getSelectedModifier()).getFile());
 
 			// load the sound into memory (a Clip)
 			DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());

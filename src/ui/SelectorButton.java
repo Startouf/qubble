@@ -55,7 +55,7 @@ public class SelectorButton extends JButton implements ActionListener{
 			this.app.getActiveTab().setActiveProperty(modifier);
 			switch (modifier){
 			//Proto final
-			case ROTATION:
+			case AUDIO_EFFECT_ROTATION:
 				this.app.getSoundEffectPalette();
 				break;
 			case SAMPLE_WHEN_PLAYED:
@@ -65,10 +65,10 @@ public class SelectorButton extends JButton implements ActionListener{
 				this.app.getAnimationPalette();
 				break;
 				//Proto final
-			case ANIM_WHEN_PUT_ON_TABLE:
+			case ANIM_WHEN_DETECTED:
 				this.app.getAnimationPalette();
 				break;
-			case Y_AXIS:
+			case AUDIO_EFFECT_Y_AXIS:
 				this.app.getSoundEffectPalette();
 				break;
 			default:

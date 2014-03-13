@@ -7,9 +7,14 @@ import wav.WavFile;
 
 public class AudioUtility {
 	
+	/**
+	 * @param wfile
+	 * @return
+	 */
 	public static ArrayList<Integer> getSamples(WavFile wfile) {
 		ArrayList<Integer> samples = new ArrayList<Integer>();
 		int numChannels = wfile.getNumChannels();
+		
 		
 		int[] buffer = new int[100*numChannels];
 		

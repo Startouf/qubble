@@ -11,12 +11,6 @@ public enum EffectType implements QubjectModifierInterface {
 	Volume;
 
 	@Override
-	public File getFile() {
-		// TODO QubjectModifierInterface shouldn't ask for a file!!!!!
-		return null;
-	}
-
-	@Override
 	public String getName() {
 		return this.toString();
 	}

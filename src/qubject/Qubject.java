@@ -20,16 +20,13 @@ public final class Qubject implements QRInterface, MediaInterface {
 
 	private final String name;
 	private final int bitIdentifier;
-	private boolean isHere = false;
 	private Point coords = new Point(0,0);
 	
 	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 	private EffectType yAxisModifier = EffectType.Volume;
 	private EffectType rotationModifier = EffectType.Distortion;
-	private AnimationInterface whenPutOnTable = 
-			new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"));;
-	private AnimationInterface animationwhenPlayed = 
-			new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"));
+	private AnimationInterface whenPutOnTable; //TODO
+	private AnimationInterface animationwhenPlayed; //TODO : default !
 	
 	public static final float SIZE = 30f;
 	
@@ -95,16 +92,16 @@ public final class Qubject implements QRInterface, MediaInterface {
 		switch(property){
 		case ANIM_WHEN_PLAYED:
 			return(this.animationwhenPlayed);
-		case ROTATION:
+		case AUDIO_EFFECT_ROTATION:
 			return(this.rotationModifier);
 		case SAMPLE_WHEN_PLAYED:
 			return(this.sampleWhenPlayed);
-		case ANIM_WHEN_PUT_ON_TABLE:
+		case ANIM_WHEN_DETECTED:
 			return this.whenPutOnTable;
-		case Y_AXIS:
+		case AUDIO_EFFECT_Y_AXIS:
 			return this.getYAxisEffect();
 		default:
-			//TODO : throw exception
+			System.err.println("TODO : Behaviour not defined in Qubject class for " + property.toString());
 			return null;
 		}
 	}

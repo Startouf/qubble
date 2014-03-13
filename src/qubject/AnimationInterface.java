@@ -7,15 +7,16 @@ import opengl.AnimationControllerInterface;
 
 
 public interface AnimationInterface extends QubjectModifierInterface {
-	/**
-	 * Set to false if the animation must be compiled
-	 * @return
-	 */
-	public boolean mustBeCompiled();
 
 	/**
-	 * Returns an AnimationController file
+	 * Returns an AnimationController Class 
 	 * @return
 	 */
-	public File getAnimationControllerDotClass();
+	public Class getAnimationControllerClass();
+
+	/**
+	 * Might be useful to save changes (only use the name of the dotJava)
+	 * @return dotJavaFile
+	 */
+	public File getDotJavaFile();
 }

@@ -63,10 +63,10 @@ public class ViewIndividualPanel extends ViewQubjects {
 		//TODO : modify the enum to also associate a User-friendly Jlabel with each QubjectModifier !
 		//(then it's possible to do a for loop here on QubjectModifiers.values())
 		addOption("Sample Associé", QubjectProperty.SAMPLE_WHEN_PLAYED);
-		addOption("Effet Axe Y", QubjectProperty.Y_AXIS);
-		addOption("Rotation", QubjectProperty.ROTATION);
+		addOption("Effet Axe Y", QubjectProperty.AUDIO_EFFECT_Y_AXIS);
+		addOption("Rotation", QubjectProperty.AUDIO_EFFECT_ROTATION);
 		addOption("Animation quand joué", QubjectProperty.ANIM_WHEN_PLAYED);
-		addOption("Animation quand posé", QubjectProperty.ANIM_WHEN_PUT_ON_TABLE);
+		addOption("Animation quand posé", QubjectProperty.ANIM_WHEN_DETECTED);
 	}
 	
 	private void addOption(String title, QubjectProperty modifier){

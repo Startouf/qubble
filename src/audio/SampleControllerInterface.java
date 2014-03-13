@@ -1,6 +1,5 @@
 package audio;
 
-import java.io.File;
 
 /**
  * The aim of this interface is to provide a way to alter a streamed sound

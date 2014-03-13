@@ -34,15 +34,11 @@ public abstract class SoundEffect implements SoundEffectInterface{
 	public EffectType getType() {
 		return type;
 	}
-	@Override
-	public File getFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "suce ma bite";
+		return "sois poli";
 	}
 	
 }

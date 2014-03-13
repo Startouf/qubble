@@ -1,6 +1,9 @@
 package database;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -27,6 +30,8 @@ import qubject.SampleInterface;
  */
 public class InitialiseAssets
 {
+	private static final File controllersDir = new File("data/animations/controllers");
+	
 	/*
 	 * Note : cannot factorise more without using Class objects
 	 * 	The instructions inside the try/catch block should be different for every Object type
@@ -87,21 +92,48 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
 		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(2);
-		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java")));
-		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java")));
-//		Properties prop;
-//		File[] files = InitialiseTools.getFiles("data/animations/");
-//		for (File entry : files){ //TODO : use fileInputStream
-//			prop = new Properties();
-//			try {
-//				prop.load(new FileInputStream(entry));	
-//				//TODO load other params
-//				list.add(new Animation(prop.getProperty("name"), new File(prop.getProperty("file"))));
-//			} catch (IOException ex) {
-//				ex.printStackTrace();
-//			}
-//		}
+//		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java")));
+//		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java")));
+		
+		Properties prop;
+		File[] files = InitialiseTools.getFiles("data/animations/");
+		for (File entry : files){ //TODO : use fileInputStream
+			prop = new Properties();
+			try {
+				prop.load(new FileInputStream(entry));
+				File dotJavaFile = new File ("data/animations/controllers/" + prop.getProperty("dotJavaFile"));
+				if (prop.getProperty("dotClassFile") == null){
+					InitialiseTools.compileAnimation(dotJavaFile);
+					prop.setProperty("dotClassFile", InitialiseTools.getDotClassFromDotJava(prop.getProperty("dotJavaFile")));
+					prop.store(new FileOutputStream(entry), null);
+				}				
+				list.add(new Animation(prop.getProperty("name"),dotJavaFile,
+						loadAnimation(new File("data/animations/controllers/" + prop.getProperty("dotClassFile")))));
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			} catch (CannotLoadAnimationException e) {
+				System.err.println("Cannot create Class Object from animation.class !");
+				e.printStackTrace();
+			}
+		}
 		return list;
+	}
+
+	/**
+	 * @param dotClassFile the dotClassFile
+	 * @return a Class than can be instanciated as a AnimationController
+	 * @throws CannotLoadAnimationException
+	 */
+	private static Class loadAnimation(File dotClassFile) throws CannotLoadAnimationException{
+		try {
+			AnimationClassLoader cl = new AnimationClassLoader(controllersDir);
+			return cl.loadClass(controllersDir.toURI().relativize(dotClassFile.toURI()).getPath());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//If didn't work :
+		throw new CannotLoadAnimationException();
 	}
 
 	/**

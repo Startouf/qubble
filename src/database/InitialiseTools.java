@@ -2,6 +2,15 @@ package database;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+import org.apache.commons.io.FilenameUtils;
 
 public class InitialiseTools
 {
@@ -27,4 +36,20 @@ public class InitialiseTools
 		return files;
 	}
 
+	public static File compileAnimation(File dotJavaFile){
+		//Some Copy Paste. Check
+		//TODO
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		//TODO : check
+		compiler.run(null, null, null, dotJavaFile.getAbsoluteFile().toString());
+		return null;
+	}
+	
+	public static String getDotClassFromDotJava(String dotJavaFile){
+		return (FilenameUtils.removeExtension(dotJavaFile) + ".class");
+	}
+	
+	public static File getDotClassFromDotJava(File file){
+		return new File(getDotClassFromDotJava(file.getAbsolutePath()));
+	}
 }
