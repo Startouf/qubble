@@ -15,11 +15,11 @@ import java.util.Set;
 
 /**
  * Prend en entrée une image binarisée
- * Enumère les différentes composantes connexes de l'image
+ * Enumération les différentes composantes connexes de l'image
  * @author masseran
  *
  */
-public class ComponentAnalyser {
+public class ComponentsAnalyser {
 	
 	private int imageHeight, imageWidth;
 	private ArrayList<ConnexeComponent> listCC;
@@ -29,7 +29,7 @@ public class ComponentAnalyser {
 	 * Analyse l'image pour récupérer les composantes connexes
 	 * @param binaryImage
 	 */
-	public ComponentAnalyser(MyImage binaryImage){
+	public ComponentsAnalyser(MyImage binaryImage){
 		
 		imageHeight = binaryImage.getHeight();
 		imageWidth = binaryImage.getWidth();
@@ -90,8 +90,8 @@ public class ComponentAnalyser {
 			}
 		}
 		
-		// Calcul 
-		// Je néglige les bords de l'image et la valeur est temporaire
+		// Parcours de l'image de haut en bas puis de bas en haut tant qu'il y a des fusions de composantes connexes
+		// Je néglige les bords de l'image x = 0 ou y = 0
 		boolean modif = true;
 		int labelSave = 0;
 		int x = 0;
@@ -99,7 +99,6 @@ public class ComponentAnalyser {
 		while(modif){
 			modif = false;
 			x++;
-			System.out.println(x);
 			for (int j=imageHeight-2 ; j >= 0 ; j--){
 				for (int i=imageWidth-2; i >= 0 ; i--) {
 					labelSave = labels[i][j];
@@ -142,7 +141,8 @@ public class ComponentAnalyser {
 			}
 				
 		}
-			
+		// Affichage du nombre de parcours
+		System.out.println(x);
 		
 		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
 		/**
@@ -186,7 +186,7 @@ public class ComponentAnalyser {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
 			
 			
-			/* Affichage de l'image ou on ne voit que les pt principaux (bordure  et centre)
+			/* Affichage de l'image ou on ne voit que les points principaux (bordures  et centre)
 			 * g.setColor(compoColor);
 			listPoint.getCenter();
 			g.fillRect(listPoint.getxMin(), listPoint.getyMin(), 2, 2);
@@ -202,6 +202,7 @@ public class ComponentAnalyser {
 			System.out.println(listPoint.getyMax());
 			System.out.println("---------");*/
 			
+			// Affichages des composantes connexes par couleurs
 			for (Point pixel : listPoint.getConnexePoints()) {
 					if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
 						CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
@@ -217,6 +218,7 @@ public class ComponentAnalyser {
 	 * On ne ne l'utilise plus
 	 * @return
 	 */
+	@Deprecated
 	public ArrayList<Point> getContour() {
 		ArrayList<Point> contour = new ArrayList<Point>();
 

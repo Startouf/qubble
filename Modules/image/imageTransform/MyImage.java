@@ -20,8 +20,11 @@ import java.util.Hashtable;
 public class MyImage extends BufferedImage{
 	
 	// Niveau de sensibilité pour l'image binaire
-	public static int GREY_LEVEL = 180; 
+	public static int BINARY_LEVEL = 180; 
 
+	/*
+	 * Reprise des constructeurs de BufferedImage
+	 */
 	public MyImage(int width, int height, int imageType) {
 		super(width, height, imageType);
 	}
@@ -45,6 +48,7 @@ public class MyImage extends BufferedImage{
 		g.dispose();
 	}
 
+	
 	public MyImage redimensionner(BufferedImage img, int tailleX, int tailleY) {
 			MyImage resizedImage = new MyImage(tailleX,tailleY,BufferedImage.TYPE_INT_ARGB);
 	       Graphics2D g = resizedImage.createGraphics();
@@ -81,10 +85,11 @@ public class MyImage extends BufferedImage{
 	 */
 	public MyImage getBinaryMyImage(){
 		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		int binaryLevel = this.getBinaryLevel();
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
-				if((this.getRGB(i, j) & 0x000000ff) > GREY_LEVEL)
+				if((this.getRGB(i, j) & 0x000000ff) > binaryLevel)
 					binaryImage.setRGB(i, j, (new Color(255, 255, 255).getRGB()));
 				else
 					binaryImage.setRGB(i, j, (new Color(0, 0, 0).getRGB()));
@@ -92,4 +97,14 @@ public class MyImage extends BufferedImage{
 		}
 		return binaryImage;
 	}
+	
+	/** A IMPLEMENTER
+	 * Calcule le meilleur niveau de binarisation pour l'image afin d'avoir les bonnes composantes en noires
+	 * @param greyImage
+	 * @return
+	 */
+	private int getBinaryLevel(){
+		return BINARY_LEVEL;
+	}
+	
 }

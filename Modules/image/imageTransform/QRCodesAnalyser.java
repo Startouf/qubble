@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Traite les différentes composantes connexes de l'image pour en faire ressortir les QR codes et les afficher.
@@ -20,57 +21,32 @@ public class QRCodesAnalyser {
 	public static int SMALLSQUARESIZE = 35;
 	
 	private ArrayList<QRCode> listQRcode;
+	// Contient les ids des QR codes et sa position
+	private HashMap<Integer, Point> qrFound;
 	private MyImage image;
 	
-	private ArrayList<ConnexeComponent> smallSquare;
 	
-	public QRCodesAnalyser(MyImage binaryImage, ComponentAnalyser comp){
+	public QRCodesAnalyser(MyImage binaryImage, ComponentsAnalyser componentResult){
 		
 		int imageHeight = binaryImage.getHeight();
 		int imageWidth = binaryImage.getWidth();
 		
-		image = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
-		Graphics g = image.getGraphics();
-		g.fillRect(0, 0, imageWidth, imageHeight);
-		
-		smallSquare = new ArrayList<ConnexeComponent>();
+		ArrayList<ConnexeComponent> smallSquare = new ArrayList<ConnexeComponent>();
 		listQRcode = new ArrayList<QRCode>();
 		
-		int i = 0;
+		image = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
+				
 		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
-		for(ConnexeComponent cc : comp.getCClist()){
+		for(ConnexeComponent cc : componentResult.getCClist()){
+			// Affichage de la longueur des compos afin de trouver quel seuil prendre pour la détection des carrés
+			//System.out.println("Longueur : " + cc.getLength());
 			
-//				if(i == 0){
-//				g.setColor(Color.blue);
-//			}
-//			if(i == 1){
-//				g.setColor(Color.green);
-//			}
-//			if(i == 2){
-//				g.setColor(Color.red);
-//			}
-//			if(i == 3){
-//				g.setColor(Color.black);
-//			}
-//			if(i == 4){
-//				g.setColor(Color.orange);
-//			}
-//			i++;
-//			cc.isSquare(g);
-//			System.out.println("Longueur : " + cc.getLength());
-			
-			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare(g)){
+			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare()){
 				smallSquare.add(cc);
-			}else if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare(g)){
+			}else if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare()){
 				listQRcode.add(new QRCode(cc, binaryImage));
 			}
 		}
-		
-		/* Afficher la courbe d'un carré parfait */
-//		g.setColor(Color.cyan);
-//		for(int j = 0; j<180; j++){
-//			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j%90]*100), j, (int)(ConnexeComponent.perfectSquare[j%90]*100));
-//		}
 		
 		// Assembler les QrCodes
 		for(ConnexeComponent cc : smallSquare){
@@ -82,10 +58,16 @@ public class QRCodesAnalyser {
 					
 			}
 		}
-		for(QRCode qr : listQRcode){
-			System.out.println("Valeur du QR Code : " + qr.getValeur());;
-		}
-		// Chercher la valeur
+		
+	}
+	
+	/**
+	 * Retourne une image avec le contour et les 3 repères de chaque QR codes dans une couleur 
+	 * @return
+	 */
+	public MyImage getQRCodesImage() {
+		Graphics g = image.getGraphics();
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		
 		Color compoColor = null;
 		// Affichage
@@ -102,11 +84,34 @@ public class QRCodesAnalyser {
 			
 		}
 		
-	}
-	
-	public MyImage getImage() {
 		return image;
 	}
 	
+	/** A IMPLEMENTER
+	 * Retourne une image avec les courbes représentatives  pour chaque composantes connexes 
+	 * de la distance du point central à l'extrémité la plus loin en fonction de l'angle
+	 * @return
+	 */
+	public MyImage getGraphicSquareForm() {
+		Graphics g = image.getGraphics();
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		
+		/* Afficher la courbe d'un carré parfait */
+//		g.setColor(Color.cyan);
+//		for(int j = 0; j<180; j++){
+//			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j%90]*100), j, (int)(ConnexeComponent.perfectSquare[j%90]*100));
+//		}
+		
+		return image;
+	}
+	
+	/**
+	 * Affiche pour chaque qr code valide son id
+	 */
+	public void getValeur(){
+		for(QRCode qr : listQRcode){
+			System.out.println("Valeur du QR Code : " + qr.getValeur());;
+		}
+	}
 
 }

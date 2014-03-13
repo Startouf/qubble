@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  */
 public class ConnexeComponent {
-	
+	// Coefficient pour accepter qu'une composante est un carré
 	public static final float SQUARETRIGGER = (float) 0.5;
 	
 	private ArrayList<Point> list;
@@ -92,7 +92,7 @@ public class ConnexeComponent {
 	 * Returne true si la composante connexe à l'allure d'un carré
 	 * @return
 	 */
-	public boolean isSquare(Graphics g){
+	public boolean isSquare(){
 		this.getCenter();
 		
 		float[] mySquare = new float[180];
@@ -129,7 +129,7 @@ public class ConnexeComponent {
 		float save = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
 			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) >SQUARETRIGGER ){
+			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > SQUARETRIGGER ){
 				System.out.println("True : " + save);
 				return true;
 			}
