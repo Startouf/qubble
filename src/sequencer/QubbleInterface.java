@@ -30,13 +30,15 @@ public interface QubbleInterface {
 
 	/**
 	 * When a new Qubject is detected on the table
+	 * (may play detected animation/sound)
 	 * @param bitIdentifier its ID
 	 * @param position its position
 	 */
-	public void setQubjectOnTable(int bitIdentifier, imageObject.Point position);
+	public void QubjectDetected(int bitIdentifier, imageObject.Point position);
 
 	/**
 	 * When a Qubject is moved on the table
+	 * (may play a move animation/sound)
 	 * @param bitIdentifier
 	 * @param position
 	 */
@@ -44,9 +46,10 @@ public interface QubbleInterface {
 
 	/**
 	 * When a Qubject is no longer on the table
+	 * (may play a "missing" sound/animation)
 	 * @param bitIdentifier its ID
 	 */
-	public void QubjectGone(int bitIdentifier);
+	public void QubjectRemoved(int bitIdentifier);
 	
 	/**
 	 * Trigger all the effects of a given Qubject when it is activated by the cursor
