@@ -20,12 +20,12 @@ public class FakeCamera implements CameraInterface, Runnable
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		qubble.setQubjectOnTable(100100, new Point(150, 350));
-		qubble.setQubjectOnTable(100101, new Point(250, 550));
-		qubble.setQubjectOnTable(100110, new Point(450, 350));
-		qubble.setQubjectOnTable(100111, new Point(760, 550));
-		qubble.setQubjectOnTable(101000, new Point(950, 150));
-		qubble.setQubjectOnTable(101001, new Point(1100, 650));
+		qubble.QubjectDetected(100100, new Point(150, 350));
+		qubble.QubjectDetected(100101, new Point(250, 550));
+		qubble.QubjectDetected(100110, new Point(450, 350));
+		qubble.QubjectDetected(100111, new Point(760, 550));
+		qubble.QubjectDetected(101000, new Point(950, 150));
+		qubble.QubjectDetected(101001, new Point(1100, 650));
 //		try {
 //			wait(30000);
 //		} catch (InterruptedException e) {

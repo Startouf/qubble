@@ -63,7 +63,7 @@ public class Qubble implements QubbleInterface {
 	private final OutputImageInterface projection;
 	private final CameraInterface camera;
 	/**
-	 * Utilise un gestionnaire d'évènements /ordonneur 
+	 * Utilise un gestionnaire d'évènements /ordonnanceur 
 	 * qui associera des threads à l'éxécution des tâches
 	 */
 	private final Sequencer sequencer;
@@ -102,6 +102,8 @@ public class Qubble implements QubbleInterface {
 	
 	/*
 	 * Variables de référence Thread (synchronisation)
+	 * TODO : remove final to make a PANIC button that restarts the threads
+	 * (or maybe it's possible to use some trick ?)
 	 */
 	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
 	private boolean hasStarted = false, isPlaying = false;
@@ -185,16 +187,6 @@ public class Qubble implements QubbleInterface {
 			sampleControllers.put(qubject, new LinkedList<SampleControllerInterface>());
 		}
 	}
-
-	@Override
-	public ArrayList<Qubject> getAllQubjects() {
-		return configuredQubjects;
-	}
-
-	@Override
-	public ArrayList<Qubject> getQubjectsOnTable() {
-		return qubjectsOnTable;
-	}
 	
 	/**
 	 * NOTE : requires TABLE_LENGTH and current time and total pause time
@@ -247,40 +239,6 @@ public class Qubble implements QubbleInterface {
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
 	}
 	
-
-	/**
-	 * TODO : synchronise ?  might have to make a custom lock to make sure nobody does something crazy 
-	 */
-	public void closeProject(){
-		player.destroy();
-		sequencer.terminate();
-		projection.terminate();
-	}
-
-	public float getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(float period) {
-		this.period = period;
-	}
-
-	@Override
-	public void playPause(){
-		if (hasStarted){
-			if(isPlaying){
-				this.startPauseTime = Sys.getTime();
-			}
-			else{
-				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
-			}
-			isPlaying = !isPlaying;
-			sequencer.playPause(sequencerThread);
-			projection.playPause(projectionThread);
-			player.playPause();
-		}
-	}
-
 	@Override
 	public void soundHasFinishedPlaying(SampleControllerInterface sc) {
 		for(LinkedList<SampleControllerInterface> list : sampleControllers.values()){
@@ -295,7 +253,7 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public synchronized void setQubjectOnTable(int bitIdentifier, imageObject.Point pos) {
+	public synchronized void QubjectDetected(int bitIdentifier, imageObject.Point pos) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
@@ -323,6 +281,22 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	@Override
+	public void QubjectRemoved(int bitIdentifier) {
+		for (Qubject qubject : qubjectsOnTable){
+			if (qubject.getBitIdentifier() == bitIdentifier){
+				//Si on l'a trouvé on demande le verrou pour l'écriture
+				synchronized (qubjectsOnTable){
+					qubjectsOnTable.remove(qubject);
+					//Has been found, so we can end the loop
+					return;
+				}
+			}
+		}
+		//If the qubject was not found
+		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
+	}
+	
+	@Override
 	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position) {
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
@@ -344,25 +318,28 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public void close() {
-		sequencer.terminate();
-		sequencerThread.interrupt();
+	public void playPause(){
+		if (hasStarted){
+			if(isPlaying){
+				this.startPauseTime = Sys.getTime();
+			}
+			else{
+				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
+			}
+			isPlaying = !isPlaying;
+			sequencer.playPause(sequencerThread);
+			projection.playPause(projectionThread);
+			player.playPause();
+		}
 	}
 
 	@Override
-	public void QubjectGone(int bitIdentifier) {
-		for (Qubject qubject : qubjectsOnTable){
-			if (qubject.getBitIdentifier() == bitIdentifier){
-				//Si on l'a trouvé on demande le verrou pour l'écriture
-				synchronized (qubjectsOnTable){
-					qubjectsOnTable.remove(qubject);
-				//Has been found, so we can end the loop
-				return;
-				}
-			}
-		}
-		//If the qubject was not found
-		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
+	public void close() {
+		sequencer.terminate();
+		sequencerThread.interrupt();
+		player.destroy();
+		sequencer.terminate();
+		projection.terminate();
 	}
 
 	@Override
@@ -399,5 +376,25 @@ public class Qubble implements QubbleInterface {
 	public static Dimension getTile(org.lwjgl.util.Point pos){
 		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
 				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+	}
+	
+
+	@Override
+	public ArrayList<Qubject> getAllQubjects() {
+		return configuredQubjects;
+	}
+
+	@Override
+	public ArrayList<Qubject> getQubjectsOnTable() {
+		return qubjectsOnTable;
+	}
+	
+	public float getPeriod() {
+		return period;
+	}
+
+	//TODO : remove if period is fixed to 30
+	public void setPeriod(float period) {
+		this.period = period;
 	}
 }
