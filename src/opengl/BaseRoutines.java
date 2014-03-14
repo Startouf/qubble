@@ -20,6 +20,7 @@ public class BaseRoutines
 {
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
+	static float cursorPos = 0f;
 	
 	/*
 	 * ################
@@ -214,15 +215,21 @@ public class BaseRoutines
 	 */
 	
 
-	public static void updateCursor(float[] cursorVertices, int cursorPosVBO){
-		float newPos = Time.uniformModulusTranslation(
+	public static void updateCursor(Float cursorPos, float[] cursorVertices, int cursorPosVBO, float dt){
+		float newPos = uniformModulusTranslation(
 				//TODO : test period
-				Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 1f/Qubble.TEST_PERIOD);
+				cursorPos, Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 
+				1f/Qubble.TEST_PERIOD,dt);
 		cursorVertices[0] = newPos;
 		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
 		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
 		cursorVertices[9] = newPos;
 		VBO.overwrite(cursorPosVBO, cursorVertices);
+	}
+	
+	public static float uniformModulusTranslation(Float pos, float min, float max, float freq, float dt){
+		pos += freq*dt;
+		return (float) ((pos)/1000f*(max-min))%(max-min)+min;
 	}
 	
 	/*

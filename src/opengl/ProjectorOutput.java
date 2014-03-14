@@ -44,19 +44,18 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	/**
 	 * Liste des animations actives
 	 * Utilisé par : render, updateVBOs (qui vérifie aussi si l'animation s'est terminée ou pas)
-	 * TODO : synchronization read/write ?
 	 */
 	private final ArrayList<AnimationControllerInterface> activeAnimations 
 		= new ArrayList<AnimationControllerInterface>(20); //Nombre empirique
 	private final ArrayList<AnimationControllerInterface> needsToBeLoaded
 		= new ArrayList<AnimationControllerInterface>(5);  //Nombre Empirique
 	/**
-	 * TODO : partager avec Qubble/Séquenceur avec le mot clé volatile ?
+	 * TODO : move to Qubble/Séquenceur ?
 	 */
 	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
 	
 	//Other
-	public volatile boolean playPause = true;
+	public volatile boolean isPlaying = true, hasStarted = false;
 	/**
 	 * Time spent during playPause
 	 * (must be substracted to DT before updating animations
@@ -64,6 +63,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private float DTPause = 0f;
 	private long lastFrameTime = Sys.getTime();
+	private Float cursorPos;
 
 	private void debug(){
 		triggerQubject(new Point(400,400));
@@ -78,7 +78,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);
-    	loadVBOs();
+    	loadCursorVBOs();
         
     	//TODO : add another closeRequested boolean check for external change (project closed...)
         while(!Display.isCloseRequested()){   
@@ -96,13 +96,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     }
 
 	@Override
-	public void toggleGrid() {
-		showGrid = !showGrid;
-	}
-
-	@Override
 	public void triggerQubject(Point qubjectPos) {
-		Dimension tile = getTile(qubjectPos);
+		Dimension tile = Qubble.getTile(qubjectPos);
 		for (Dimension dim : occupiedTiles){
 			if (dim.width == tile.width && dim.height == tile.height){
 				occupiedTiles.remove(dim);
@@ -110,12 +105,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			}
 		}
 		occupiedTiles.add(tile);
-	}
-
-	//TODO : move to Qubble
-	public Dimension getTile(org.lwjgl.util.Point pos){
-		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
-				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
 
 	@Override
@@ -149,38 +138,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	}
 
 	/**
-	 * Vérifie si Qubble/Le séquenceur ont demandé à mettre en pause
-	 */
-	public void isPlaying(){
-		if (playPause = false){
-			//Save the DT that should've been used
-			long stop = Sys.getTime(); 
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			DTPause = (float)((Sys.getTime()-stop)*1000/Sys.getTimerResolution());
-		}
-	}
-
-	/**
-	 * Méthode appelée par Qubble/Le séquenceur pour mettre en pause
-	 * DEPUIS UN AUTRE THREAD
-	 */
-	@Override
-	public void playPause(Thread t) {
-		if (t.isInterrupted()){
-			playPause = true;
-			t.interrupt();
-		}
-		else{
-			//Synchronisation done with volatile keyword
-			playPause = !playPause;
-		}
-	}
-
-	/**
 	 * Rendu des routines de base (Curseur, grille)
 	 * Rendu des animations de activeAnimations
 	 */
@@ -211,12 +168,14 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * et mise à jour de la liste d'animations  
 	 */
 	private void updateVBOs(){
+		float dt = BaseRoutines.getDt(lastFrameTime)-DTPause;
+		
 		//Update cursor
-		BaseRoutines.updateCursor(cursorVertices, cursorPosVBO);
+		if(isPlaying)
+			BaseRoutines.updateCursor(cursorPos, cursorVertices, cursorPosVBO, dt);
 		
 		//Update animations
-		//TODO Check if only one dt computation is enough for all the animations !!
-		updateAnimations(BaseRoutines.getDt(lastFrameTime)-DTPause);
+		updateAnimations(dt);
 		DTPause = 0f;
 		lastFrameTime = Sys.getTime();
 	}
@@ -231,6 +190,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	private void updateAnimations(float dt){
 		//Update Animations (Check whether they are running or not)
 		Iterator<AnimationControllerInterface> iter = activeAnimations.iterator();
+		//No need to sync cause activeAnimations only called in openGL Thread
 		while(iter.hasNext()){
 			AnimationControllerInterface anim = iter.next();
 			if (anim.updateAnimation(dt) == false)
@@ -246,6 +206,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		synchronized(needsToBeLoaded){
 			for (AnimationControllerInterface anim : needsToBeLoaded){
 				anim.load();
+				//No need to sync cause activeAnimations only called in openGL Thread
 				activeAnimations.add(anim);
 			}
 			needsToBeLoaded.clear();
@@ -255,7 +216,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	/**
 	 * Chargement des VBO de base (curseur)
 	 */
-	private void loadVBOs(){
+	private void loadCursorVBOs(){
 		cursorVertices = new float[]{
 				//TODO : fix, and do not use static (Projector output should be instanciated with a qubble
 				Qubble.TABLE_OFFSET_X, Qubble.TABLE_OFFSET_Y, 0,
@@ -281,10 +242,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 				new int[]{2,2,2}, new float[]{1f/Qubble.TABLE_LENGTH*Qubble.TEST_PERIOD,1f/Qubble.TABLE_HEIGHT*100f,1f}, 
 				new String[]{"Time", "Effect"}, fontTNR);			 
 	}
-	
-	private void loadFonts(){
-		fontTNR = BaseRoutines.TimesNewsRomanTTF();
-	}
 
 	/**
 	 * IMPORTANT : Relâcher les ressources GPU
@@ -298,13 +255,17 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//Destroy des objets de base
 		GL15.glDeleteBuffers(cursorPosVBO);
 		GL15.glDeleteBuffers(cursorColorVBO);
-		//TODO delete la displayList
+		GL11.glDeleteLists(gridDL, 1);//TODO delete la displayList
 		
 		//Destroy des animations
 		for (AnimationControllerInterface anim : activeAnimations){
 			anim.destroy();
 			//Le garbage collector devrait se charger du reste
 		}
+	}
+	
+	private void loadFonts(){
+		fontTNR = BaseRoutines.TimesNewsRomanTTF();
 	}
 
 	//main used as a test
@@ -315,11 +276,50 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void run() {
+		isPlaying = true;
 		start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
+	}
+	
+	@Override
+	public void toggleGrid() {
+		showGrid = !showGrid;
 	}
 
 	@Override
 	public void terminate() {
-		//TODO : ass boolean to request close
+		//TODO : use boolean to request close
+	}
+	
+	/**
+	 * Vérifie si Qubble/Le séquenceur ont demandé à mettre en pause
+	 */
+	public void isPlaying(){
+		if (isPlaying = false && hasStarted){
+			//Save the DT that should've been used
+			long stop = Sys.getTime(); 
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			DTPause = (float)((Sys.getTime()-stop)*1000/Sys.getTimerResolution());
+		}
+	}
+
+	/**
+	 * Méthode appelée par Qubble/Le séquenceur pour mettre en pause
+	 * DEPUIS UN AUTRE THREAD
+	 */
+	@Override
+	public void playPause(Thread t) {
+		if(hasStarted){
+			if (t.isInterrupted()){
+				t.interrupt();
+			}
+			else{
+				//Synchronisation done with volatile keyword
+			}
+			isPlaying = !isPlaying;
+		}
 	}
 }

@@ -39,6 +39,7 @@ public class AnimationDebug implements OutputImageInterface {
 	//Grid
 	private int cursorShaderID; 
 	private int cursorPosVBO, cursorColorVBO;
+	private float cursorPos = 0f;
 	private float[] cursorVertices;
 	private boolean showGrid = true;
 	
@@ -203,12 +204,13 @@ public class AnimationDebug implements OutputImageInterface {
 	 * et mise à jour de la liste d'animations  
 	 */
 	private void updateVBOs(){
+		float dt = BaseRoutines.getDt(lastFrameTime);
+		
 		//Update cursor
-		BaseRoutines.updateCursor(cursorVertices, cursorPosVBO);
+		BaseRoutines.updateCursor(cursorPos, cursorVertices, cursorPosVBO, dt);
 		
 		//Update animations
-		//TODO Check if only one dt computation is enough for all the animations !!
-		updateAnimations(BaseRoutines.getDt(lastFrameTime));
+		updateAnimations(dt);
 		lastFrameTime = Sys.getTime();
 	}
 

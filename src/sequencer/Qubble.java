@@ -43,14 +43,17 @@ public class Qubble implements QubbleInterface {
 	 * Variables séquenceur/Dispatching d'évènements
 	 */
 	/**
-	 * Current time in float (0<= currentTime < period);
+	 * Current time in float MS(0<= currentTime < period);
 	 */
-	private float currentTime;
+	private float currentTime =0f, totalPauseTime =0f;
 	/**
-	 * Starting time (SYSTEM TIME IN TICKS!)
-	 * (Might be updated with play/Pause)
+	 * Starting time (Sys time)
 	 */
-	private long lastFrameTime = Sys.getTime();
+	private long startTime;
+	/**
+	 * Sys time when click on pause
+	 */
+	private long startPauseTime;
 	/**
 	 * Period in float milliseconds
 	 */
@@ -101,7 +104,7 @@ public class Qubble implements QubbleInterface {
 	 * Variables de référence Thread (synchronisation)
 	 */
 	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
-	private boolean hasStarted = false;
+	private boolean hasStarted = false, isPlaying = false;
 
 	/**
 	 * New project overload
@@ -194,19 +197,24 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	/**
-	 * NOTE : requires TABLE_LENGTH and current time
+	 * NOTE : requires TABLE_LENGTH and current time and total pause time
+	 * Handle Play/Pause
 	 * @param qubject
 	 * @return time in MILLISECONDS
 	 */
 	public long computeQubjectStartingTime(Qubject qubject){
-		//TODO : Quantify !
 		//don't forget to divide double by double and not int !
 		double absoluteStartingTime = 
 				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
 				/((double)TABLE_LENGTH)		*period;
-		System.out.println("Demarrage absolu Qubject " + qubject.getName() 
-				+ " At absolute time : "+ absoluteStartingTime/1000f + " seconds");
-		return (long) (absoluteStartingTime-currentTime);
+		System.out.println("Demarrage relatif Qubject " + qubject.getName() 
+				+ " At absolute time : "+ (absoluteStartingTime-currentTime+totalPauseTime)/1000f + " seconds");
+		updateCurrentTime();
+		return (long) (absoluteStartingTime-currentTime+totalPauseTime);
+	}
+	
+	private void updateCurrentTime(){
+		currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-startTime)%period;
 	}
 	
 	/**
@@ -256,18 +264,17 @@ public class Qubble implements QubbleInterface {
 	public void setPeriod(float period) {
 		this.period = period;
 	}
-	
-	/**
-	 * Absolute System Time in milliseconds
-	 * @return time in milliseconds
-	 */
-	public static float getTime(){
-		return Sys.getTime()*1000/Sys.getTimerResolution();
-	}
 
 	@Override
 	public void playPause(){
 		if (hasStarted){
+			if(isPlaying){
+				this.startPauseTime = Sys.getTime();
+			}
+			else{
+				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
+			}
+			isPlaying = !isPlaying;
 			sequencer.playPause(sequencerThread);
 			projection.playPause(projectionThread);
 			player.playPause();
@@ -361,11 +368,13 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void start() {
 		if(!hasStarted){
+			startTime = Sys.getTime();
 			projectionThread.start();
 			playerThread.start();
 			sequencerThread.start();
 			cameraThread.start();
 			hasStarted = true;
+			isPlaying = true;
 		}
 	}
 
@@ -378,12 +387,17 @@ public class Qubble implements QubbleInterface {
 	public String whereIsIt(MediaInterface qubject) {
 		QRInterface qr = (QRInterface) qubject;
 		Point pos = qr.getCoords();
-		return new String("X : " + (int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X) + 
-				" Y : " + (int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+		Dimension tile = getTile(pos);
+		return new String("X : " + tile.width + " Y : " + tile.height);
 	}
 	
-	public void updateCurrentTime(){
-		this.currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-lastFrameTime);
-		lastFrameTime = Sys.getTime();
+	/**
+	 * 
+	 * @param pos
+	 * @return the X,Y tile where the qubject is
+	 */
+	public static Dimension getTile(org.lwjgl.util.Point pos){
+		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
+				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
 	}
 }
