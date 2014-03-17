@@ -63,7 +63,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private float DTPause = 0f;
 	private long lastFrameTime = Sys.getTime();
-	private Float cursorPos;
+	private Float cursorPos = new Float(Qubble.TABLE_OFFSET_X);
 
 	private void debug(){
 		
@@ -81,8 +81,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
         	loadNewAnims();
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
-        	isPlaying();
-        	updateVBOs();
+        	update();
             render();
             Display.update();
             Display.sync(30);
@@ -132,23 +131,25 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void render(){
 		//Grid
-		GL11.glColor3f(1f, 1f, 1f);
-		if (showGrid)
-			BaseRoutines.renderList(gridDL);
-		
-		//Cursor 
-		//TODO : Curseur stylé avec shader
-		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
-		
-		//Highlight tiles where qubjects are present
-		GL11.glColor3f(0.8f, 0f, 0f);
-		for (Dimension dim : occupiedTiles){
-			BaseRoutines.HighlightTile(dim);
-		}
-		
-		//Render animations
-		for (AnimationControllerInterface anim : activeAnimations){
-			anim.renderAnimation();
+		if(isPlaying){
+			GL11.glColor3f(1f, 1f, 1f);
+			if (showGrid)
+				BaseRoutines.renderList(gridDL);
+			
+			//Cursor 
+			//TODO : Curseur stylé avec shader
+			VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
+			
+			//Highlight tiles where qubjects are present
+			GL11.glColor3f(0.8f, 0f, 0f);
+			for (Dimension dim : occupiedTiles){
+				BaseRoutines.HighlightTile(dim);
+			}
+			
+			//Render animations
+			for (AnimationControllerInterface anim : activeAnimations){
+				anim.renderAnimation();
+			}
 		}
 	}
 
@@ -156,17 +157,21 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * Mise à jour des VBO de base (curseur)
 	 * et mise à jour de la liste d'animations  
 	 */
-	private void updateVBOs(){
-		float dt = BaseRoutines.getDt(lastFrameTime)-DTPause;
+	private void update(){
+		//Idea : whether the Qubble is Paused or not : compute dt !!!
+		//(So that there is no problem of "removing  the 
 		
-		//Update cursor
+		float dt = BaseRoutines.getDt(lastFrameTime);
+		
 		if(isPlaying)
-			BaseRoutines.updateCursor(cursorPos, cursorVertices, cursorPosVBO, dt);
+		{
+			//Update cursor
+			cursorPos = BaseRoutines.updateCursor(cursorPos, cursorVertices, cursorPosVBO, dt);
 		
-		//Update animations
-		updateAnimations(dt);
-		DTPause = 0f;
-		lastFrameTime = Sys.getTime();
+			//Update animations
+			updateAnimations(dt);
+			lastFrameTime = Sys.getTime();
+		}
 	}
 
 	/**
@@ -228,7 +233,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 						Qubble.TABLE_OFFSET_Y, Qubble.TABLE_HEIGHT+Qubble.TABLE_OFFSET_Y, 0f,-1f}, 
 						new float[]{Qubble.SPACING_X,60f,0f}, 	
 						//TODO : using TEST_PERIOD here
-				new int[]{2,2,2}, new float[]{1f/Qubble.TABLE_LENGTH*Qubble.TEST_PERIOD,1f/Qubble.TABLE_HEIGHT*100f,1f}, 
+				new int[]{2,2,2}, new float[]{1f/Qubble.TABLE_LENGTH*Qubble.TEST_PERIOD_SEC,1f/Qubble.TABLE_HEIGHT*100f,1f}, 
 				new String[]{"Time", "Effect"}, fontTNR);			 
 	}
 
@@ -238,7 +243,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * (à moins de terminer la VM)
 	 */
 	private void destroy(){
-		//Si appelé par un autre thread, ne pas oublier de mettre le thread en pause !!!!!
+		//Si appelé par un autre thread, ne pas oublier d'arreter le thread OpenGL !!!!!
 		//RQ : Avec le Garbage Collector, 
 		
 		//Destroy des objets de base
@@ -276,24 +281,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void terminate() {
-		//TODO : use boolean to request close
-	}
-	
-	/**
-	 * Vérifie si Qubble/Le séquenceur ont demandé à mettre en pause
-	 * DEPUIS LE THREAD OPENGL
-	 */
-	public void isPlaying(){
-		if (isPlaying = false && hasStarted){
-			//Save the DT that should've been used
-			long stop = Sys.getTime(); 
-			try {
-				this.wait();
-			} catch (InterruptedException e) {//clear the interrupt flag
-				e.printStackTrace();
-			}
-			DTPause = (float)((Sys.getTime()-stop)*1000/Sys.getTimerResolution());
-		}
+		//TODO : use boolean to request close (2x bool :one to check user didn't click on X, on to check user didn't close project)
 	}
 
 	/**
@@ -306,8 +294,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			//Synchronisation done with volatile keyword
 			isPlaying = !isPlaying;
 			
-			//TODO : handle both play and pause with an Interruption by adding throws PlayPause exception everywhere ???
-			// http://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html
+			//TODO? : handle both play and pause with an Interruption by adding throws PlayPause exception everywhere ???
 		}
 	}
 }

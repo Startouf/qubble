@@ -215,21 +215,29 @@ public class BaseRoutines
 	 */
 	
 
-	public static void updateCursor(Float cursorPos, float[] cursorVertices, int cursorPosVBO, float dt){
+	public static float updateCursor(float cursorPos, float[] cursorVertices, int cursorPosVBO, float dt){
 		float newPos = uniformModulusTranslation(
 				//TODO : test period
 				cursorPos, Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 
-				1f/Qubble.TEST_PERIOD,dt);
+				1f/(Qubble.TEST_PERIOD_SEC*1000f),dt);
 		cursorVertices[0] = newPos;
 		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
 		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
 		cursorVertices[9] = newPos;
 		VBO.overwrite(cursorPosVBO, cursorVertices);
+		return newPos;
 	}
-	
-	public static float uniformModulusTranslation(Float pos, float min, float max, float freq, float dt){
-		pos += freq*dt;
-		return (float) ((pos)/1000f*(max-min))%(max-min)+min;
+
+	/**
+	 * 
+	 * @param pos
+	 * @param min
+	 * @param max
+	 * @param freq in millisec (how many times should it go from min to max per sec
+	 * @param dt in millisec
+	 */
+	public static float uniformModulusTranslation(float pos, float min, float max, float freq, float dt){
+		return ((pos + (freq*dt)*(max-min))%(max-min));
 	}
 	
 	/*

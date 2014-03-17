@@ -57,7 +57,7 @@ public class Qubble implements QubbleInterface {
 	 * Period in float milliseconds
 	 */
 	private float period = 30000f; 
-	public static final float TEST_PERIOD = 30;
+	public static final float TEST_PERIOD_SEC = 30f;
 	private final PlayerInterface player;
 	private final OutputImageInterface projection;
 	private final CameraInterface camera;
@@ -90,7 +90,7 @@ public class Qubble implements QubbleInterface {
 	public static final int TABLE_OFFSET_Y=50;
 	public static final float GRID_COLUMNS_PER_SEC = 1f;
 	public static final float GRID_ROWS_PER_SEC = 10f;
-	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD/GRID_COLUMNS_PER_SEC;
+	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD_SEC/GRID_COLUMNS_PER_SEC;
 	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
 	
 	public static final float CURSOR_WIDTH =10f;
