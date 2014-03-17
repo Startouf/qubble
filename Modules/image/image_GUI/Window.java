@@ -155,7 +155,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
-			System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
+			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 			
 		}
 		if(e.getSource() == suivant){

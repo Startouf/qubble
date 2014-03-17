@@ -59,6 +59,10 @@ public class QRCodesAnalyser {
 			}
 		}
 		
+		for(QRCode qr : listQRcode){
+			System.out.println("Valeur du QR code : " + qr.getValeur());
+		}
+		
 	}
 	
 	/**

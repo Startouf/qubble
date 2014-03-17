@@ -42,8 +42,8 @@ public class MyImage extends BufferedImage{
 	public MyImage(BufferedImage img){
 		super(img.getWidth(), img.getHeight(), img.getType());
 		Graphics2D g = this.createGraphics();
-		g.setComposite(AlphaComposite.Src);      
-	    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		//g.setComposite(AlphaComposite.Src);      
+	    //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 		g.dispose();
 	}
