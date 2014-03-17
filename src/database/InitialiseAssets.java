@@ -7,6 +7,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import explosion.PixelExplosion;
+
 import audio.EffectType;
 import audio.SoundEffect;
 import audio.SoundEffectInterface;
@@ -15,6 +17,7 @@ import qubject.AnimationInterface;
 import qubject.Qubject;
 import qubject.Sample;
 import qubject.SampleInterface;
+import wave.WaterWave;
 
 /**
  * @author Cyril
@@ -91,10 +94,12 @@ public class InitialiseAssets
 	 * @return
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
+		//Dummy Load
 		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(2);
-//		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java")));
-//		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java")));
+		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class));
+		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"), PixelExplosion.class));
 		
+		/*
 		Properties prop;
 		File[] files = InitialiseTools.getFiles("data/animations/");
 		for (File entry : files){ //TODO : use fileInputStream
@@ -116,6 +121,8 @@ public class InitialiseAssets
 				e.printStackTrace();
 			}
 		}
+		*/
+		
 		return list;
 	}
 
@@ -125,6 +132,7 @@ public class InitialiseAssets
 	 * @throws CannotLoadAnimationException
 	 */
 	private static Class loadAnimation(File dotClassFile) throws CannotLoadAnimationException{
+		
 		try {
 			AnimationClassLoader cl = new AnimationClassLoader(controllersDir);
 			return cl.loadClass(controllersDir.toURI().relativize(dotClassFile.toURI()).getPath());
