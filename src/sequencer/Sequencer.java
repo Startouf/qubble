@@ -31,7 +31,7 @@ import qubject.Qubject;
 public class Sequencer implements Runnable
 {
 	//TODO : store these variables somewhere else
-	private final int NUM_THREADS = 1;
+	private final int NUM_THREADS = 2;
 	
 	private final ScheduledExecutorService fScheduler;
 	/**
@@ -43,6 +43,7 @@ public class Sequencer implements Runnable
 	 */
 	private boolean play = true;;
 	private boolean isCloseRequested = false;
+	private boolean hasFinishedRecalculating = false;
 	private final Qubble qubble;
 	/**
 	 * List of scheduled tasks
@@ -52,7 +53,6 @@ public class Sequencer implements Runnable
 	private final ArrayList<ScheduledFuture<?>> scheduledQubjects;
 	
 	/**
-	 * 
 	 * @param qubble
 	 * @param tempo
 	 */
@@ -65,26 +65,30 @@ public class Sequencer implements Runnable
 	
 	@Override
 	public synchronized void run() {
-		recalculate();
-
 		while(!isCloseRequested){
-			//attentes d'ordres
+			
+			//Try recalculating assuming nothing moves on the Qubble
+//			while(hasFinishedRecalculating == false){
+				try {
+					recalculate();
+				} catch (QubbleUpdatedException e) {
+					//If big changes are detected, start recalculating from scratch
+				}
+//			}
+			
+			//If we managed to recalculate everything, wait for further orders
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
-				//Qubble a envoyé une information de changement d'état
+				//Change on Qubjects detected => let's recalculate
 			}
-			//ask Qubble to update currentTime before recalculating
-			//qubble.updateCurrentTime();
-			recalculate();
 		}
-		destroyScheduledActions();
 	}
 
 	/**
 	 * Reschedule the actions for EVERY Qubject (destroys every existing Schedule Actions)
 	 */
-	private void recalculate(){
+	private void recalculate() throws QubbleUpdatedException{
 		destroyScheduledActions();
 		//remove the nulls from the list
 		this.scheduledQubjects.clear();
@@ -151,8 +155,8 @@ public class Sequencer implements Runnable
 	 * (otherwise, would recalculate 2 times the schedule)
 	 * @param period
 	 */
-	public void setPeriod(float period) {
+	public void setPeriod(float period, Thread t) {
 		this.period = period;
-		recalculate();
+		t.interrupt();
 	}
 }

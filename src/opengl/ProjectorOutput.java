@@ -66,11 +66,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	private Float cursorPos;
 
 	private void debug(){
-		triggerQubject(new Point(400,400));
-		needsToBeLoaded.add(new PixelExplosion(new Point (400,400)));
 		
-		triggerQubject(new Point(600, 300));
-		activeAnimations.add(new WaterWave(new Point(595,325)));
 	}
 	
 	public void start(int width, int height){
@@ -89,7 +85,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
         	updateVBOs();
             render();
             Display.update();
-            Display.sync(60);
+            Display.sync(30);
         }
         destroy();
         Display.destroy();
@@ -110,17 +106,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
-		//TODO : Reflection to load the class from .class file
+		//TODO : Reflection to load the class from CLASS Object provided by the animationInterface
 		AnimationControllerInterface controller;
-//		controller = new WaterWave(qubjectCoords);
-//		URLClassLoader classLoader = URLClassLoader.newInstance(
-//				new URL[] { anim.getAnimationControllerDotClass().toURI().toURL() });
-//		Class<?> cls = Class.forName("anim..class", true, classLoader); // Should print "hello".
-//		Object instance = cls.ne // Should print "world".
-//		System.out.println(instance);
-//		//load entities for the object (sync with openGL thread)
 		
-		//TODO : temp method
+		//Dummy load
 		if (anim.getName().equals("Water wave"))
 			controller = new WaterWave(qubjectCoords);
 		else
@@ -292,6 +281,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	/**
 	 * Vérifie si Qubble/Le séquenceur ont demandé à mettre en pause
+	 * DEPUIS LE THREAD OPENGL
 	 */
 	public void isPlaying(){
 		if (isPlaying = false && hasStarted){
@@ -299,7 +289,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			long stop = Sys.getTime(); 
 			try {
 				this.wait();
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e) {//clear the interrupt flag
 				e.printStackTrace();
 			}
 			DTPause = (float)((Sys.getTime()-stop)*1000/Sys.getTimerResolution());
@@ -313,13 +303,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void playPause(Thread t) {
 		if(hasStarted){
-			if (t.isInterrupted()){
-				t.interrupt();
-			}
-			else{
-				//Synchronisation done with volatile keyword
-			}
+			//Synchronisation done with volatile keyword
 			isPlaying = !isPlaying;
+			
+			//TODO : handle both play and pause with an Interruption by adding throws PlayPause exception everywhere ???
+			// http://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html
 		}
 	}
 }
