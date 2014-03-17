@@ -164,10 +164,10 @@ public class Qubble implements QubbleInterface {
 	public long computeQubjectStartingTime(Qubject qubject){
 		//don't forget to divide double by double and not int !
 		double absoluteStartingTime = 
-				(qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
+				((double)qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
 				/((double)TABLE_LENGTH)		*period;
-		System.out.println("Demarrage relatif Qubject " + qubject.getName() 
-				+ " At absolute time : "+ (absoluteStartingTime-currentTime+totalPauseTime)/1000f + " seconds");
+//		System.out.println("Demarrage relatif Qubject " + qubject.getName() 
+//				+ " At absolute time : "+ (absoluteStartingTime-currentTime+totalPauseTime)/1000f + " seconds");
 		updateCurrentTime();
 		return (long) (absoluteStartingTime-currentTime+totalPauseTime);
 	}

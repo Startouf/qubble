@@ -61,8 +61,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * (must be substracted to DT before updating animations
 	 * 
 	 */
-	private float DTPause = 0f;
-	private long lastFrameTime = Sys.getTime();
+	private long lastFrameTime;
 	private Float cursorPos = new Float(Qubble.TABLE_OFFSET_X);
 
 	private void debug(){
@@ -70,12 +69,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	}
 	
 	public void start(int width, int height){
+		lastFrameTime = Sys.getTime();
         InitRoutines.initDisplay(width, height);
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);
     	loadCursorVBOs();
-        
+    	
     	//TODO : add another closeRequested boolean check for external change (project closed...)
         while(!Display.isCloseRequested()){   
         	loadNewAnims();
