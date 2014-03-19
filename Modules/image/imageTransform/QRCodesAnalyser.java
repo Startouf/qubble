@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class QRCodesAnalyser {
 	
-	public static int BIGSQUARESIZE = 200;
+	public static int BIGSQUARESIZE = 210;
 	public static int SMALLSQUARESIZE = 35;
 	
 	private ArrayList<QRCode> listQRcode;
@@ -31,7 +31,7 @@ public class QRCodesAnalyser {
 		int imageHeight = binaryImage.getHeight();
 		int imageWidth = binaryImage.getWidth();
 		
-		ArrayList<ConnexeComponent> smallSquare = new ArrayList<ConnexeComponent>();
+		//ArrayList<ConnexeComponent> smallSquare = new ArrayList<ConnexeComponent>();
 		listQRcode = new ArrayList<QRCode>();
 		
 		image = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
@@ -41,15 +41,15 @@ public class QRCodesAnalyser {
 			// Affichage de la longueur des compos afin de trouver quel seuil prendre pour la détection des carrés
 			//System.out.println("Longueur : " + cc.getLength());
 			
-			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare()){
+/*			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare()){
 				smallSquare.add(cc);
-			}else if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare()){
+			}else*/ if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare()){
 				listQRcode.add(new QRCode(cc, binaryImage));
 			}
 		}
 		
 		// Assembler les QrCodes
-		for(ConnexeComponent cc : smallSquare){
+/*		for(ConnexeComponent cc : smallSquare){
 			for(QRCode qr : listQRcode){
 				if(cc.getxMin() > qr.getBorder().getxMin() && cc.getyMin() > qr.getBorder().getyMin() && cc.getxMax() < qr.getBorder().getxMax() && cc.getyMax() < qr.getBorder().getyMax()){
 					qr.addLandMark(cc);
@@ -57,7 +57,7 @@ public class QRCodesAnalyser {
 				}
 					
 			}
-		}
+		}*/
 		
 		for(QRCode qr : listQRcode){
 			System.out.println("Valeur du QR code : " + qr.getValeur());
@@ -80,11 +80,11 @@ public class QRCodesAnalyser {
 			for(Point pt : qr.getBorder().getConnexePoints()){
 				image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
 			}
-			for(ConnexeComponent landmark : qr.getLandMark()){
+/*			for(ConnexeComponent landmark : qr.getLandMark()){
 				for(Point pt : landmark.getConnexePoints()){
 					image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
 				}
-			}
+			}*/
 			
 		}
 		

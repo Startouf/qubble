@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ConnexeComponent {
 	// Coefficient pour accepter qu'une composante est un carré
-	public static final float SQUARETRIGGER = (float) 0.5;
+	public static final float SQUARETRIGGER = (float) 0.60;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -113,10 +113,10 @@ public class ConnexeComponent {
 			}
 		}
 		
-		 //Afficher la composante connexe sous forme de courbe.
-//		for(int i = 0; i<180; i += 2){
-//			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-//		}
+/*		 //Afficher la composante connexe sous forme de courbe.
+		for(int i = 0; i<180; i += 2){
+			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
+		}*/
 		
 		
 		for(int i = 0; i<180; i++){
@@ -175,6 +175,8 @@ public class ConnexeComponent {
 	 * Retourne la taille du coté du carré
 	 */
 	public int getLength(){
+		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
+		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
 		return 	(int) (xMax-xMin + yMax-yMin)/2;
 	}
 

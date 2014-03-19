@@ -13,35 +13,128 @@ import java.util.ArrayList;
  *
  */
 public class QRCode {
-	// Défini le seuil de tolérance pour accepter un produit scalaire comme nul dans la création de l'axe relatif
-	public static int Trigger = 100;
 	// Taille de la fenêtre pour définir si une zone contient une composante (demi-longueur)
-	public static int sizeWindow = 4;
+	public static int sizeWindow = 1;
 	
 	private ConnexeComponent border;
-	private ArrayList<ConnexeComponent> landmark;
+	//private ArrayList<ConnexeComponent> landmark;
 	private MyImage binaryImage;
 	
 	public QRCode(ConnexeComponent border, MyImage binaryImage){
 		this.border = border;
 		this.binaryImage = binaryImage;
-		landmark = new ArrayList<ConnexeComponent>();
+		//landmark = new ArrayList<ConnexeComponent>();
 	}
 
 	public ConnexeComponent getBorder() {
 		return border;
 	}
 	
-	public void addLandMark(ConnexeComponent cc){
+	/**
+	 * Renvoie true si la zone est noir
+	 * Fais une moyenne sur une zone de 4*4 pixels
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private boolean isBlack(int x, int y){
+		Graphics g = binaryImage.getGraphics();
+		int moy = 0;
+		
+		if(sizeWindow>0){
+			for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
+				for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
+					if(x>=0 && x<binaryImage.getWidth() && y >= 0 && y<binaryImage.getHeight()){
+						if(binaryImage.getRGB(i, j) == Color.BLACK.getRGB()){
+							moy++;
+						}
+					}
+				}
+			}
+			
+			if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
+				g.setColor(Color.red);
+				g.fillRect(x-sizeWindow, y-sizeWindow, sizeWindow*2, sizeWindow*2);
+				return true;
+			}
+			else{
+				g.setColor(Color.blue);
+				g.fillRect(x-sizeWindow, y-sizeWindow, sizeWindow*2, sizeWindow*2);
+				return false;
+			}
+			// Recherche sur 1 pixel
+		}else if(sizeWindow == 0){
+					if(x>=0 && x<binaryImage.getWidth() && y >= 0 && y<binaryImage.getHeight()){
+						if(binaryImage.getRGB(x, y) == Color.BLACK.getRGB()){
+							moy++;
+						}
+					}
+			
+			if(moy > 0.5){
+				g.setColor(Color.red);
+				g.fillRect(x, y, 1, 1);
+				return true;
+			}
+			else{
+				g.setColor(Color.blue);
+				g.fillRect(x, y, 1, 1);
+				return false;
+			}
+		}else
+			return false;
+
+			
+	}
+	
+	/**
+	 * Renvoie la valeur associée au QR code
+	 * # : Bord
+	 * #######
+	 * #     #
+	 * # 012 #
+	 * # 345 #
+	 * # 678 #
+	 * #     #
+	 * #######
+	 * @return int : bit pd fort >> 876543210 << bit pd faible
+	 *
+	 * @return
+	 **/
+	public int getValeur(){
+		// Vecteur directeur [0][]: selon x // [1][]: selon y et [][0]: valeur x // [][1]: valeur y
+		int[][] vector = new int[2][2];
+		// On divise par 7 pour avoir la valeur unitaire d'une case
+		vector[0][0] = (border.getxMax()-border.getxMin())/7;
+		vector[0][1] = 0;
+		vector[1][0] = 0;
+		vector[1][1] = (border.getyMax()-border.getyMin())/7;
+		int offX = vector[0][0]/2, offY = vector[1][1]/2;		
+		int valeur = 0;
+		int masque = 1;
+		
+		for(int i = 2 ; i < 5; i++){
+			for(int j = 2 ; j < 5; j++){
+				if(isBlack(border.getxMin() + offX + i*vector[0][0], border.getyMin() +  offY + j*vector[1][1])){
+					valeur |= masque; 
+				}
+				masque = masque << 1;
+			}
+		}
+		
+		return valeur;
+	
+	}
+	
+	/*public void addLandMark(ConnexeComponent cc){
 		if(landmark.size() < 3){
 			landmark.add(cc);
 		}else
 			System.out.println("Déjà trois repères dans le qr code.");
-	}
+	}*/
 	
-	public ArrayList<ConnexeComponent> getLandMark(){
+	/*public ArrayList<ConnexeComponent> getLandMark(){
 		return landmark;
-	}
+	}*/
 	
 	/**
 	 * Renvoie la valeur associée au QR code
@@ -51,10 +144,10 @@ public class QRCode {
 	 * 3789
 	 * $abc
 	 * @return int : bit pd fort >> cba9876543210 << bit pd faible
-	 */
-	/**
+	 *//*
+	*//**
 	 * @return
-	 */
+	 *//*
 	public int getValeur(){
 		int valeur = 0;
 		if(landmark.size() == 3){
@@ -73,9 +166,9 @@ public class QRCode {
 			v[2][0] = landmark.get(2).getxCenter()-landmark.get(1).getxCenter();
 			v[2][1] = landmark.get(2).getyCenter()-landmark.get(1).getyCenter();
 			
-				/* Création de l'axe relatif :
+				 Création de l'axe relatif :
 				 * 
-				 */
+				 
 				// Recherche du repère central
 				for(int i = 0; i < 3 ; i++){
 					// Les axes sont perpendiculaires, on peut définir un repère central
@@ -182,40 +275,6 @@ public class QRCode {
 			
 		
 		return valeur;
-	}
-	
-	/**
-	 * Renvoie true si la zone est noir
-	 * Fais une moyenne sur une zone de 4*4 pixels
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	private boolean isBlack(int x, int y){
-		Graphics g = binaryImage.getGraphics();
-		int moy = 0;
-		for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
-			for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
-				if(x>=0 && x<binaryImage.getWidth() && y >= 0 && y<binaryImage.getHeight()){
-					if(binaryImage.getRGB(i, j) == Color.BLACK.getRGB()){
-						moy++;
-					}
-				}
-			}
-		}
-		
-		if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
-			g.setColor(Color.red);
-			g.fillRect(x-sizeWindow, y-sizeWindow, 8, 8);
-			return true;
-		}
-		else{
-			g.setColor(Color.blue);
-			g.fillRect(x-sizeWindow, y-sizeWindow, 8, 8);
-			return false;
-		}
-			
-	}
-	
+	}*/
 	
 }

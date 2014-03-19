@@ -40,7 +40,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private ImageView imageView;
 	private JPanel control;
 	private JButton suivant, action, precedent;
-	private JTextField greyLevel, bigSquareSize, smallSquareSize;
+	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
 	private boolean qrCodesSearch;
 	
 	public Window(){
@@ -68,22 +68,22 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(new JLabel("Niveau de gris (0-255)"));
 		control.add(new JLabel("Taille petit carré"));
 		control.add(new JLabel("Taille grand carré"));
-		greyLevel = new JTextField(String.valueOf(MyImage.BINARY_LEVEL));
-		bigSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
-		smallSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
+		binaryLevelJTF = new JTextField(String.valueOf(MyImage.BINARY_LEVEL));
+		bigSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
+		smallSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
 		
 		// Ajouter la relation entre le document et le jtextfield
-		greyLevel.getDocument().putProperty("parent", greyLevel);
-		bigSquareSize.getDocument().putProperty("parent", bigSquareSize);
-		smallSquareSize.getDocument().putProperty("parent", smallSquareSize);
+		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
+		bigSquareSizeJTF.getDocument().putProperty("parent", bigSquareSizeJTF);
+		smallSquareSizeJTF.getDocument().putProperty("parent", smallSquareSizeJTF);
 		
-		greyLevel.getDocument().addDocumentListener(this);
-		bigSquareSize.getDocument().addDocumentListener(this);
-		smallSquareSize.getDocument().addDocumentListener(this);
+		binaryLevelJTF.getDocument().addDocumentListener(this);
+		bigSquareSizeJTF.getDocument().addDocumentListener(this);
+		smallSquareSizeJTF.getDocument().addDocumentListener(this);
 		
-		control.add(greyLevel);
-		control.add(smallSquareSize);
-		control.add(bigSquareSize);
+		control.add(binaryLevelJTF);
+		control.add(smallSquareSizeJTF);
+		control.add(bigSquareSizeJTF);
 		
 		imageView = new ImageView();
 		this.setLayout(new BorderLayout());
@@ -96,7 +96,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * 
 	 * @param fichier
 	 */
-	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int smallSquare, int bigSquare){
+	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
 		try {
 			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
 			imageWidth = imageView.getImage(imageView.COLOR).getWidth();
@@ -108,8 +108,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		}
 		this.qrCodesSearch = qrCodesSearch;
 		this.changeBinaryLevel(binaryLevel);
+		this.binaryLevelJTF.setText(String.valueOf(binaryLevel));
 		this.changeBigSquareSize(bigSquare);
+		this.bigSquareSizeJTF.setText(String.valueOf(bigSquare));
 		this.changeSmallSquareSize(smallSquare);
+		this.smallSquareSizeJTF.setText(String.valueOf(smallSquare));
 	}
 	
 	private void affiche(){
@@ -200,11 +203,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			
 		}
 		//System.out.println(value);
-		if(e.getDocument().equals(greyLevel.getDocument())){
+		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
 			changeBinaryLevel(value);			
-		}else if(e.getDocument().equals(bigSquareSize.getDocument())){
+		}else if(e.getDocument().equals(bigSquareSizeJTF.getDocument())){
 			changeBigSquareSize(value);	
-		}else if(e.getDocument().equals(smallSquareSize.getDocument())){
+		}else if(e.getDocument().equals(smallSquareSizeJTF.getDocument())){
 			changeSmallSquareSize(value);	
 		}
 	}
