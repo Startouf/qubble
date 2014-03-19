@@ -19,16 +19,16 @@ public class main {
 		Window wind = new Window();
 		
 		// Image avec un qr code
-		//wind.readImage(new File("Modules/image/database/test/qr_bis.jpg"), true);
+		//wind.readImage(new File("Modules/image/database/test/qr_bis.jpg"), true, 180, 50, 200);
 		//wind.readImage(new File("Modules/image/database/test/qr_bis_rot.jpg"), true);
 		//Image de plusieurs qr codes (1 petit et 3 moyens) 
-		wind.readImage(new File("Modules/image/database/test/multi.jpg"), true, 180, 100, 18);
+		//wind.readImage(new File("Modules/image/database/test/multi.jpg"), true, 180, 100, 18);
 		//Photo d'un vrai qr code en grand
 		//wind.readImage(new File("Modules/image/database/test/qr.png"), true);
 		
 		//wind.readImage(new File("Modules/image/database/test/QR_Reel_2.png"), true);
 		//wind.readImage(new File("Modules/image/database/test/QR_photo.jpg"), true);
-		//wind.readImage(new File("Modules/image/database/test/QR_photo_720p.jpg"), true, 180, 570, 110);
+		wind.readImage(new File("Modules/image/database/test/QR_photo_720p.jpg"), true, 180, 570, 110);
 		
 		// Image avec des carrés
 		//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10

@@ -79,6 +79,7 @@ public class QRCode {
 				// Recherche du repère central
 				for(int i = 0; i < 3 ; i++){
 					// Les axes sont perpendiculaires, on peut définir un repère central
+					System.out.println(Math.abs(v[i][0]*v[i][0]+ v[(i+2)%3][1]*v[(i+2)%3][1]));
 					if(Math.abs(v[i][0]*v[i][0]+ v[(i+2)%3][1]*v[(i+2)%3][1]) < 100){
 						if(i == 0 && (i+2)%3 == 1){
 							indexCenter = 0;
@@ -165,6 +166,14 @@ public class QRCode {
 						}
 					}
 					
+					Graphics g = binaryImage.getGraphics();
+					g.setColor(Color.green);
+					g.fillRect(landmark.get(0).getxCenter(), landmark.get(0).getyCenter(), 8, 8);
+					g.setColor(Color.yellow);
+					g.fillRect(landmark.get(1).getxCenter(), landmark.get(1).getyCenter(), 8, 8);
+					g.setColor(Color.cyan);
+					g.fillRect(landmark.get(2).getxCenter(), landmark.get(2).getyCenter(), 8, 8);
+					
 					
 					
 			
@@ -184,7 +193,6 @@ public class QRCode {
 	 */
 	private boolean isBlack(int x, int y){
 		Graphics g = binaryImage.getGraphics();
-		g.setColor(Color.red);
 		int moy = 0;
 		for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
 			for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
@@ -197,11 +205,16 @@ public class QRCode {
 		}
 		
 		if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
+			g.setColor(Color.red);
 			g.fillRect(x-sizeWindow, y-sizeWindow, 8, 8);
 			return true;
 		}
-		else
+		else{
+			g.setColor(Color.blue);
+			g.fillRect(x-sizeWindow, y-sizeWindow, 8, 8);
 			return false;
+		}
+			
 	}
 	
 	
