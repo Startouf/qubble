@@ -3,6 +3,7 @@ package database;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -11,6 +12,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.apache.commons.io.FilenameUtils;
+
+import qubject.QubjectModifierInterface;
 
 public class InitialiseTools
 {

@@ -52,10 +52,4 @@ public interface DataInterface {
 	 * Load a list of saved projects: number of folders in /data/save/
 	 * @return list of saved projects
 	 */
-	public ArrayList<QubbleInterface> getPreviousSettings();
-	/**
-	 * Return a reference to the last saved project
-	 * @return last saved Project
-	 */
-	public QubbleInterface getSettings();
 }

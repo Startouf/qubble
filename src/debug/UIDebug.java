@@ -13,7 +13,7 @@ public class UIDebug
 		//Qubble qubble = new Qubble(new Data(), false);
 		App debug = new App();
 		debug.setProjectOpened(true);
-		debug.setActiveProject(new ProjectController(debug, (QubbleInterface) new Qubble(debug.getGlobalController().getData(), false)));
+		debug.setActiveProject(new ProjectController(debug, (QubbleInterface) new Qubble()));
 		debug.getMainPanel().getSettingsTabs().addTab(
 				"Config. indiv. "+debug.getActiveProject().getProjectName(), new ViewIndividualPanel(debug));
 	}

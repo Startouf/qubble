@@ -90,4 +90,9 @@ public interface QubbleInterface {
 	 * @return A user friendly String 
 	 */
 	public String whereIsIt(MediaInterface qubject);
+	
+	/**
+	 * Quick restart (keep Qubject config)
+	 */
+	public void panic();
 }

@@ -35,4 +35,9 @@ public interface ProjectControllerInterface {
 	 * Ask to save on project close ?
 	 */
 	public void close();
+	
+	/**
+	 * Resets the project (but if possible keep Qubject config)
+	 */
+	public void panic();
 }

@@ -16,51 +16,39 @@ import sequencer.QubbleInterface;
  * @author duchon
  *
  */
-public final class Data implements DataInterface
+public final class Data
 {
 	//NOTE : there should be a difference Between the qubjects of this list and the qubjects of a saved project
-	private final ArrayList<Qubject> qubjects;
-	private final ArrayList<SampleInterface> samples;
-	private final ArrayList<EffectType> soundEffects;
-	private final ArrayList<AnimationInterface> animations;
+	private static final ArrayList<Qubject> qubjects;
+	private static final ArrayList<SampleInterface> samples;
+	private static final ArrayList<EffectType> soundEffects;
+	private static final ArrayList<AnimationInterface> animations;
 
-	public Data(){
-		super();
+	static{
 		qubjects = InitialiseAssets.loadQubjects();
 		samples = InitialiseAssets.loadSamples();
 		soundEffects = InitialiseAssets.loadSoundEffects();
 		animations = InitialiseAssets.loadAnimations();
 	}
 	
-	@Override
-	public ArrayList<Qubject> getQubjects() {
+	public static ArrayList<Qubject> getQubjects() {
 		return qubjects;
 	}
 
-	@Override
-	public ArrayList<SampleInterface> getSamples() {
+	public static ArrayList<SampleInterface> getSamples() {
 		return samples;
 	}
 
-	@Override
-	public ArrayList<EffectType> getSoundEffects() {
+	public static ArrayList<EffectType> getSoundEffects() {
 		return soundEffects;
 	}
 
-	@Override
-	public ArrayList<AnimationInterface> getAnimations() {
+	public static ArrayList<AnimationInterface> getAnimations() {
 		return animations;
 	}
 
-	@Override
-	public ArrayList<QubbleInterface> getPreviousSettings() {
+	public static ArrayList<QubbleInterface> getPreviousSettings() {
 		//TODO
-		return null;
-	}
-
-	@Override
-	public QubbleInterface getSettings() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

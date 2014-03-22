@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import qubject.Qubject;
+import qubject.QubjectProperty;
 import sequencer.Qubble;
 import sequencer.QubbleInterface;
 
@@ -20,7 +21,7 @@ public class SaveProject
 	}
 	
 	private static void saveQubjects(String path, QubbleInterface qubble){
-		String QubjectPath = path + "/qubject";
+		String QubjectPath = path + "qubject/";
 		for (Qubject qubject : qubble.getAllQubjects()){
 			saveQubject(qubject, QubjectPath);
 		}
@@ -29,18 +30,21 @@ public class SaveProject
 	private static void saveQubject(Qubject qubject, String path){
 		Properties prop = new Properties();
 		 //TODO
-//		try {
-//			//set the properties value
-//			prop.setProperty("name", qubject.getName());
-//			prop.setProperty("bitIdentifier", String.valueOf(qubject.getBitIdentifier()));
-//			prop.setProperty("dbpassword", "password");
-//
-//			//save properties to project root folder
-//			prop.store(new FileOutputStream("config.properties"), null);
-//		}
-//		catch(Exception e){
-//			e.printStackTrace();
-//		}
+		try {
+			//set the properties value
+			prop.setProperty("name", qubject.getName());
+			prop.setProperty("bitIdentifier", String.valueOf(qubject.getBitIdentifier()));
+			
+			for(QubjectProperty qubjectProp : QubjectProperty.values()){
+				prop.setProperty(qubjectProp.toString(), qubject.getModifierForProperty(qubjectProp).getName());
+			}
+			
+			//save properties to project root folder
+			prop.store(new FileOutputStream("config.properties"), null);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	private static void saveGlobalParams(String path, QubbleInterface qubble){

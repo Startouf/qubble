@@ -39,6 +39,19 @@ public final class Qubject implements QRInterface, MediaInterface {
 		//(done here or somewhere else ?)
 	}
 	
+	public Qubject(String name, int bitIdentifier, SampleInterface sampleWhenPlayed, 
+			EffectType yAxisModifier, EffectType rotationModifier,
+			AnimationInterface whenPutOnTable,
+			AnimationInterface animationwhenPlayed){
+		this.name = name;
+		this.bitIdentifier = bitIdentifier;
+		this.animationwhenPlayed = animationwhenPlayed;
+		this.rotationModifier = rotationModifier;
+		this.sampleWhenPlayed = sampleWhenPlayed;
+		this.whenPutOnTable = whenPutOnTable;
+		this.yAxisModifier = yAxisModifier;
+	}
+	
 	@Override
 	public int getBitIdentifier(){
 		return this.bitIdentifier;

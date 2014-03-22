@@ -35,7 +35,6 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Variables de données
 	 */
-	private final Data data;
 	private final ArrayList<Qubject> configuredQubjects;
 	private final ArrayList<Qubject> qubjectsOnTable;
 	
@@ -100,21 +99,16 @@ public class Qubble implements QubbleInterface {
 	 */
 	public static final int QUBJECT_SIZE = 50;
 	
-	/*
-	 * Variables de référence Thread (synchronisation)
-	 * TODO : remove final to make a PANIC button that restarts the threads
-	 * (or maybe it's possible to use some trick ?)
-	 */
-	private final Thread sequencerThread, playerThread, projectionThread, cameraThread;
+	//Variables de référence Thread
+	private Thread sequencerThread, playerThread, projectionThread, cameraThread;
 	private boolean hasStarted = false, isPlaying = false;
 
 	/**
 	 * New project overload
 	 * @param data reference to Data assets class
 	 */
-	public Qubble(Data data){
+	public Qubble(){
 		super();
-		this.data = data;
 		player = new Player(this);
 		projection = new ProjectorOutput();
 		camera = new FakeCamera(this);
@@ -135,9 +129,8 @@ public class Qubble implements QubbleInterface {
 	 * @param data Reference to Data assets class
 	 * @param path The path of the saved project
 	 */
-	public Qubble(Data data, String path){
+	public Qubble(String path){
 		super();
-		this.data = data;
 		player = new Player(this);
 		sequencer = new Sequencer(this, period);
 		camera = new FakeCamera(this);
@@ -151,32 +144,6 @@ public class Qubble implements QubbleInterface {
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-	}
-
-	/**
-	 * Debug Overload : don't start threads !
-	 * @param data
-	 */
-	public Qubble(Data data, boolean runThreads){
-		super();
-		this.data = data;
-		player = new Player(this);
-		projection = new ProjectorOutput();
-		camera = new FakeCamera(this);
-		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
-		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
-		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
-		initialiseSampleControllers();
-		sequencer = new Sequencer(this, period);
-		
-		cameraThread = new Thread((Runnable) camera, "Camera Thread");
-		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
-		playerThread = new Thread((Runnable) player, "Player Thread");
-		
-		if (runThreads){
-			start();
-		}
 	}
 	
 	/**
@@ -222,8 +189,7 @@ public class Qubble implements QubbleInterface {
 
 	/**
 	 * Plays the Qubject sample and trigger its animation
-	 * TODO : synchronise (when the player tells us a Sound is over, may data race with sequencer)
-	 * (and if multiple threads are used by the sequencer, might data race simply put.)
+	 * Synchronized with Player Thread
 	 */
 	@Override
 	public void playQubject(Qubject qubject) {
@@ -336,9 +302,7 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void close() {
 		sequencer.terminate();
-		sequencerThread.interrupt();
 		player.destroy();
-		sequencer.terminate();
 		projection.terminate();
 	}
 
@@ -396,5 +360,18 @@ public class Qubble implements QubbleInterface {
 	//TODO : remove if period is fixed to 30
 	public void setPeriod(float period) {
 		this.period = period;
+	}
+
+	@Override
+	public void panic() {
+		close();
+		
+		hasStarted = false;
+		isPlaying = false;
+		
+		cameraThread = new Thread((Runnable) camera, "Camera Thread");
+		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
+		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
+		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 }

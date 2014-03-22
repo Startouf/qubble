@@ -31,7 +31,6 @@ public class ProjectController implements ProjectControllerInterface
 
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
-		//TODO : change the JLabels of globalPanel + title of tabs
 	}
 
 	public QubbleInterface getQubble() {
@@ -48,5 +47,10 @@ public class ProjectController implements ProjectControllerInterface
 	public void close() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void panic() {
+		this.qubble.panic();
 	}
 }

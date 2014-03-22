@@ -29,10 +29,4 @@ public interface GlobalControllerInterface {
 	 */
 	public ArrayList<AnimationInterface> getAnimations();
 
-	/**
-	 * TODO
-	 * We don't care about this one ??? Data is somewhat already an implementation ?
-	 * @return data which contains all the above stuff
-	 */
-	public Data getData();
 }

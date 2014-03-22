@@ -21,6 +21,6 @@ public class LoadProjectAction extends AbstractAction
 		this.app.setProjectOpened(true);
 		//TODO : open FolderSelector popup and pick a path
 		String path = null;
-		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble(app.getGlobalController().getData(), path)));
+		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble(path)));
 	}
 }
