@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ScheduledFuture;
 
 import org.lwjgl.Sys;
 import org.lwjgl.util.Point;
@@ -80,6 +81,8 @@ public class Qubble implements QubbleInterface {
 	 */
 	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
 	
+	private final Hashtable<Qubject, ScheduledFuture<?>> tasks;
+	
 	/*
 	 * Variables liés à la taille de la table projetée
 	 * (Pour les variables de calibration, utiliser les variables decalibration.Calibrate)
@@ -100,7 +103,7 @@ public class Qubble implements QubbleInterface {
 	public static final int QUBJECT_SIZE = 50;
 	
 	//Variables de référence Thread
-	private Thread sequencerThread, playerThread, projectionThread, cameraThread;
+	private Thread playerThread, projectionThread, cameraThread;
 	private boolean hasStarted = false, isPlaying = false;
 
 	/**
@@ -115,12 +118,12 @@ public class Qubble implements QubbleInterface {
 		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+		tasks = new Hashtable<Qubject, ScheduledFuture<?>>();
 		initialiseSampleControllers();
 		sequencer = new Sequencer(this, period);
 		
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 
@@ -138,11 +141,11 @@ public class Qubble implements QubbleInterface {
 		configuredQubjects = InitialiseProject.loadQubjectsFromProject(path);
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+		tasks = new Hashtable<Qubject, ScheduledFuture<?>>();
 		initialiseSampleControllers();
 		
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 	
@@ -223,9 +226,12 @@ public class Qubble implements QubbleInterface {
 		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
+				
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
-				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(pos);
-				qubject.setCoords(glCoords);
+				qubject.setCoords(Calibrate.mapToOpenGL(pos));
+				
+				//On planifie la tâche
+				tasks.put(qubject, sequencer.schedule(qubject));
 				
 				//On indique a openGL qu'on a un Qubject 
 				projection.triggerQubject(qubject.getCoords());
@@ -235,12 +241,11 @@ public class Qubble implements QubbleInterface {
 				
 				//...et on demande le verrou pour ajouter à la liste des objets sur la table
 				synchronized(qubjectsOnTable){
-					qubjectsOnTable.add(qubject);
-					//Tell the sequencer somehting must be done
-					sequencerThread.interrupt();					
+					qubjectsOnTable.add(qubject);				
+				}
+				
 				//Has been found, so we can end the loop
 				return;
-				}
 			}
 		}
 		//If the qubject was not found
@@ -252,12 +257,19 @@ public class Qubble implements QubbleInterface {
 		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : qubjectsOnTable){
 			if (qubject.getBitIdentifier() == bitIdentifier){
-				//Si on l'a trouvé on demande le verrou pour l'écriture
+				//On annule la tâche
+				tasks.get(qubject).cancel(true);
+				
+				//TODO : dire au player d'arrêter le son
+				
+				//On masque son ancien emplacement 
+				projection.triggerQubject(qubject.getCoords());
+				
+				//On l'enlève de la liste des qubjects présents sur la table
 				synchronized (qubjectsOnTable){
 					qubjectsOnTable.remove(qubject);
-					//Has been found, so we can end the loop
-					return;
 				}
+				return;
 			}
 		}
 		//If the qubject was not found
@@ -269,21 +281,24 @@ public class Qubble implements QubbleInterface {
 		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
-				//Si on l'a trouvé, on masque son ancien emplacement 
-				projection.triggerQubject(qubject.getCoords());
-				
+
 				//on change les coordonnées caméra -> OpenGL
 				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
 				qubject.setCoords(glCoords);
 				
+				//On replanifie
+				sequencer.reschedule(tasks.get(qubject), qubject);
+				
+				//On masque son ancien emplacement 
+				projection.triggerQubject(qubject.getCoords());
+				
 				//On indique son nouvel emplacement
 				projection.triggerQubject(qubject.getCoords());
-
-				//On dit au séquenceur de recalculer
-				sequencerThread.interrupt();					
+				
 				return;
 				}
 			}
+		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
 	}
 
 	@Override
@@ -301,7 +316,7 @@ public class Qubble implements QubbleInterface {
 				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
 			}
 			isPlaying = !isPlaying;
-			sequencer.playPause(sequencerThread);
+			sequencer.playPause();
 			projection.playPause(projectionThread);
 			player.playPause();
 		}
@@ -309,7 +324,7 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public void close() {
-		sequencer.terminate();
+		sequencer.destroy();
 		player.destroy();
 		projection.terminate();
 	}
@@ -320,7 +335,6 @@ public class Qubble implements QubbleInterface {
 			startTime = Sys.getTime();
 			projectionThread.start();
 			playerThread.start();
-			sequencerThread.start();
 			cameraThread.start();
 			hasStarted = true;
 			isPlaying = true;
@@ -364,6 +378,10 @@ public class Qubble implements QubbleInterface {
 	public float getPeriod() {
 		return period;
 	}
+	
+	public Hashtable<Qubject, ScheduledFuture<?>> getTasks() {
+		return tasks;
+	}
 
 	//TODO : remove if period is fixed to 30
 	public void setPeriod(float period) {
@@ -379,7 +397,7 @@ public class Qubble implements QubbleInterface {
 		
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
+		//TODO : cancel all tasks
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 

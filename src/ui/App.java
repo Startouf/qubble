@@ -65,6 +65,7 @@ public class App extends JFrame
 	private final PlaySampleAction playSampleAction = new PlaySampleAction(this);
 	private final PlayPauseAction playPauseAction = new PlayPauseAction(this);
 	private final ToggleGridAction toggleGridAction = new ToggleGridAction(this);
+	private final PanicAction panicAction = new PanicAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -254,6 +255,10 @@ public class App extends JFrame
 
 	public ToggleGridAction getToggleGridAction() {
 		return toggleGridAction;
+	}
+
+	public PanicAction getPanicAction() {
+		return panicAction;
 	}
 
 	/**

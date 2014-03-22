@@ -20,6 +20,7 @@ private boolean play = false;
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.getActiveProject().getQubble().playPause();
+		//Qubble checks if the table has already been started
 		this.app.getActiveProject().getQubble().start();
 		// If was playing, pause, and show Play button
 		if (play){ 

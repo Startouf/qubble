@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,29 +29,23 @@ import qubject.Qubject;
  * Seems like using ScheduledExecutor Service is the most recent way to handle tasks
  *
  */
-public class Sequencer implements Runnable
+public class Sequencer implements SequencerInterface
 {
 	//TODO : store these variables somewhere else
 	private final int NUM_THREADS = 2;
 	
 	private final ScheduledExecutorService fScheduler;
 	/**
-	 * period in seconds
-	 */
-	private float period;
-	/**
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
-	private boolean play = true;;
-	private boolean isCloseRequested = false;
-	private boolean hasFinishedRecalculating = false;
+	private boolean play = false;
 	private final Qubble qubble;
 	/**
 	 * List of scheduled tasks
 	 * Initialise with the number of qubjects 
 	 * (and eventually multiply if they need more tasks)
 	 */
-	private final ArrayList<ScheduledFuture<?>> scheduledQubjects;
+	//private final ArrayList<ScheduledFuture<?>> scheduledQubjects;
 	
 	/**
 	 * @param qubble
@@ -58,48 +53,18 @@ public class Sequencer implements Runnable
 	 */
 	public Sequencer(Qubble qubble, float tempo){
 		this.qubble = qubble;
-		this.period = tempo;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
-		scheduledQubjects = new ArrayList<ScheduledFuture<?>>(qubble.getAllQubjects().size());
-	}
-	
-	@Override
-	public synchronized void run() {
-		while(!isCloseRequested){
-			
-			//Try recalculating assuming nothing moves on the Qubble
-//			while(hasFinishedRecalculating == false){
-				try {
-					recalculate();
-				} catch (QubbleUpdatedException e) {
-					//If big changes are detected, start recalculating from scratch
-				}
-//			}
-			
-			//If we managed to recalculate everything, wait for further orders
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				//Change on Qubjects detected => let's recalculate
-			}
-		}
 	}
 
 	/**
 	 * Reschedule the actions for EVERY Qubject (destroys every existing Schedule Actions)
+	 * DOES NOT ASSUME TASKS HAVE BEEN CLEARED
 	 */
-	private void recalculate() throws QubbleUpdatedException{
-		destroyScheduledActions();
-		//remove the nulls from the list
-		this.scheduledQubjects.clear();
-		ArrayList<Qubject> qubjects = this.qubble.getQubjectsOnTable();
-		synchronized(qubjects){
-			for (Qubject qubject : qubjects){
-				//Schedule when the Qubject should be played
-				Runnable qubjectTask = new QubjectTask(qubble, qubject);
-				ScheduledFuture<?> scheduledQubjectTask = fScheduler.scheduleAtFixedRate(
-						qubjectTask, qubble.computeQubjectStartingTime(qubject), (long)qubble.getPeriod(), TimeUnit.MILLISECONDS
-						);
+	private void recalculate(Hashtable<Qubject, ScheduledFuture<?>> tasks){
+		ArrayList<Qubject> list;
+		synchronized(list = this.qubble.getQubjectsOnTable()){
+			for (Qubject qubject : list){
+				tasks.put(qubject, schedule(qubject));
 			}
 		}
 	}
@@ -107,56 +72,43 @@ public class Sequencer implements Runnable
 	/**
 	 * Forcefully removes every task (any running task will end ASAP without finishing)
 	 */
-	private void destroyScheduledActions(){
-		for(ScheduledFuture<?> qubjectTask : scheduledQubjects){
-			//Note : Parameter is MayInterruptIfRunning
-			//What about letting the musics and animations end before we crush everything ??
-			//But then if the table restarts just after, it may end up weird....
-			qubjectTask.cancel(true);
+	public void destroyScheduledtasks(Hashtable<Qubject, ScheduledFuture<?>> tasks){
+		for (ScheduledFuture<?> task : tasks.values()){
+			task.cancel(true);
 		}
-
 	}
+
+	@Override
+	public ScheduledFuture<?> schedule(Qubject qubject) {
+		Runnable qubjectTask = new QubjectTask(qubble, qubject);
+		return fScheduler.scheduleAtFixedRate(
+				qubjectTask, qubble.computeQubjectStartingTime(qubject), 
+				(long) qubble.getPeriod(), TimeUnit.MILLISECONDS
+				);
+	}
+
+	@Override
+	public void reschedule(ScheduledFuture<?> task, Qubject qubject) {
+		task = schedule(qubject);
+	}
+
 	/**
 	 * Should be called before closing a project : 
 	 * asks to get of the infinite loop
 	 * TODO: Does the garbage collector handle this task well ?
 	 */
-	public void terminate(){
+	@Override
+	public void destroy() {
 		fScheduler.shutdownNow();
-		isCloseRequested = true;
 	}
-	
-	/**
-	 * Method called by the sequencerThread
-	 * TODO :
-	 * Stop all tasks and restart them or...
-	 * Find a way to Pause all tasks ?
-	 */
-	public void playPause(){
-		if (play = false){ //Lance la lecture
-			play = true;
+
+	@Override
+	public void playPause() {
+		if(play){ //pause the sequencer
+			destroyScheduledtasks(this.qubble.getTasks());
 		}
 		else{
-			destroyScheduledActions();
-			play = false;
+			recalculate(this.qubble.getTasks());
 		}
-	}
-
-	/**
-	 * Method called by the Qubble/GUI Thread
-	 * @param sequencerThread
-	 */
-	public void playPause(Thread sequencerThread) {
-		
-	}
-
-	/**
-	 * If both period and current time are changed, please use another method
-	 * (otherwise, would recalculate 2 times the schedule)
-	 * @param period
-	 */
-	public void setPeriod(float period, Thread t) {
-		this.period = period;
-		t.interrupt();
 	}
 }

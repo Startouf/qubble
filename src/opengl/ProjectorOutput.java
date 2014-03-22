@@ -271,6 +271,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void run() {
 		isPlaying = true;
+		hasStarted = true;
 		start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
 	}
 	
@@ -293,7 +294,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		if(hasStarted){
 			//Synchronisation done with volatile keyword
 			isPlaying = !isPlaying;
-			
 			//TODO? : handle both play and pause with an Interruption by adding throws PlayPause exception everywhere ???
 		}
 	}
