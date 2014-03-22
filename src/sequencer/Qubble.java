@@ -220,6 +220,7 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public synchronized void QubjectDetected(int bitIdentifier, imageObject.Point pos) {
+		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
@@ -248,6 +249,7 @@ public class Qubble implements QubbleInterface {
 	
 	@Override
 	public void QubjectRemoved(int bitIdentifier) {
+		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : qubjectsOnTable){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé on demande le verrou pour l'écriture
@@ -264,6 +266,7 @@ public class Qubble implements QubbleInterface {
 	
 	@Override
 	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position) {
+		//TODO : use a Hashtable to speed up the process
 		for (Qubject qubject : configuredQubjects){
 			if (qubject.getBitIdentifier() == bitIdentifier){
 				//Si on l'a trouvé, on masque son ancien emplacement 
@@ -283,6 +286,11 @@ public class Qubble implements QubbleInterface {
 			}
 	}
 
+	@Override
+	public void QubjectHasTurned(int bitIdentifier, float dR) {
+		// TODO Auto-generated method stub
+	}
+	
 	@Override
 	public void playPause(){
 		if (hasStarted){
@@ -374,4 +382,5 @@ public class Qubble implements QubbleInterface {
 		sequencerThread = new Thread((Runnable) sequencer, "Thread Sequencer");
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
+
 }

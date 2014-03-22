@@ -52,7 +52,7 @@ public class CalibrationProjection implements Runnable{
 	
 	private void renderGL(){
 		glColor3f(1f,1f,1f);
-		
+		//Show a white border
 		Squares.rectangleHorizontal2f(0f, (float)WIDTH, 0f, thickness);
 		Squares.rectangleHorizontal2f(0f, (float)WIDTH, (float)HEIGHT-thickness, (float)HEIGHT);
 		Squares.rectangleHorizontal2f(0f, thickness, 0f, (float)HEIGHT);

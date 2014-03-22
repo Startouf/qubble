@@ -27,7 +27,7 @@ public class SaveProject
 		}
 	}
 	
-	private static void saveQubject(Qubject qubject, String path){
+	private static void saveQubject(Qubject qubject, String qubjectPath){
 		Properties prop = new Properties();
 		 //TODO
 		try {

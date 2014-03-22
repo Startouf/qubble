@@ -45,6 +45,12 @@ public class Calibrate{
 		ratioY = OpenGL_HEIGHT/(CAMERA_PIXEL_UPPER_LEFT.getY()-CAMERA_PIXEL_LOWER_LEFT.getY());
 	}
 
+	/**
+	 * Convert to OpenGL Coords system
+	 * (get the equivalent of the OpenGL pixel for the given camera pixel)
+	 * @param pos camera Pixel Point
+	 * @return OpenGL position (lwjgl.util.point)
+	 */
 	static public org.lwjgl.util.Point mapToOpenGL(Point pos){
 		return new org.lwjgl.util.Point(mapXToOpenGL(pos.getX()), mapYToOpenGL(pos.getY()));
 	}
@@ -55,7 +61,7 @@ public class Calibrate{
 			System.out.println("Point outside openGL window");
 		return(xGL);
 	}
-
+	
 	static private int mapYToOpenGL(int y){
 		int yGL = (int) ((y-CAMERA_PIXEL_LOWER_LEFT.getY())*ratioY);
 		if (yGL > OpenGL_HEIGHT) //Point outside of openGL display

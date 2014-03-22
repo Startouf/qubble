@@ -45,6 +45,12 @@ public interface QubbleInterface {
 	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position);
 
 	/**
+	 * 
+	 * @param dR
+	 */
+	public void QubjectHasTurned(int bitIdentifier, float dR);
+
+	/**
 	 * When a Qubject is no longer on the table
 	 * (may play a "missing" sound/animation)
 	 * @param bitIdentifier its ID
@@ -85,7 +91,9 @@ public interface QubbleInterface {
 	public void toggleGrid();
 	
 	/**
-	 * 
+	 * Used in the GUI to show object position on the grid
+	 * Return a formated string
+	 * ...or change to a java.awt.Point so that the GUI can format it better ?
 	 * @param qubject
 	 * @return A user friendly String 
 	 */

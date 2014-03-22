@@ -31,4 +31,17 @@ public interface QRInterface {
 	 * @param pos currently a Java.awt.Point
 	 */
 	public void setCoords(Point pos);
+
+	/**
+	 * The relative rotation in float radians
+	 * @return
+	 */
+	public float getRotation();
+	
+	/**
+	 * Adjusts the relative rotation in float radians
+	 * @param relativeRotation
+	 */
+	public void setRotation(float floatRadians);
+	
 }
