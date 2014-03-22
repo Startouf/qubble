@@ -89,6 +89,7 @@ public class Sequencer implements SequencerInterface
 
 	@Override
 	public void reschedule(ScheduledFuture<?> task, Qubject qubject) {
+		task.cancel(true);
 		task = schedule(qubject);
 	}
 

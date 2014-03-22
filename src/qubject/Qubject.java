@@ -36,7 +36,7 @@ public final class Qubject implements QRInterface, MediaInterface {
 	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 	private EffectType yAxisModifier = EffectType.Volume;
 	private EffectType rotationModifier = EffectType.Distortion;
-	private AnimationInterface whenPutOnTable = new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class); //TODO
+	private AnimationInterface whenPutOnTable = new Animation("Pixel explosion", new File("data/animations/controllers/wave/PixelExplosion.java"), WaterWave.class); //TODO
 	private AnimationInterface animationwhenPlayed = new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class); //TODO : default !
 	
 	public static final float SIZE = 30f;

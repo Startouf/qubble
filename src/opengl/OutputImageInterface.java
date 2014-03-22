@@ -17,7 +17,7 @@ public interface OutputImageInterface
 	 * Render the shadow/contour of a qubject
 	 * @param qubject
 	 */
-	public void triggerQubject(Point qubject);
+	public void highlightQubject(Point qubject);
 	
 	/**
 	 * Trigger a QubjectEffect. Called by a Task from the sequencer

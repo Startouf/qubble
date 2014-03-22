@@ -32,15 +32,41 @@ import qubject.Qubject;
  *
  */
 public class Qubble implements QubbleInterface {
-	
 	/*
-	 * Variables de données
+	 * Constantes de projection
+	 * (Pour les variables de calibration, utiliser les variables decalibration.Calibrate)
 	 */
-	private final ArrayList<Qubject> configuredQubjects;
-	private final ArrayList<Qubject> qubjectsOnTable;
+	public static final int TABLE_LENGTH = 1200;
+	public static final int TABLE_HEIGHT = 600;
+	public static final int TABLE_OFFSET_X = 50; 
+	public static final int TABLE_OFFSET_Y=50;
+	public static final float GRID_COLUMNS_PER_SEC = 1f;
+	public static final float GRID_ROWS_PER_SEC = 10f;
+	public static final float TEST_PERIOD_SEC = 30f;
+	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD_SEC/GRID_COLUMNS_PER_SEC;
+	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
+	
+	//TODO : compute from above stuff
+	public static final int NB_TILES_X = 30;
+	public static final int NB_TILES_Y = 10;
+	
+	public static final float CURSOR_WIDTH =10f;
+	
+	/**
+	 * Qubject size in millimeters
+	 */
+	public static final int QUBJECT_SIZE = 50;
 	
 	/*
-	 * Variables séquenceur/Dispatching d'évènements
+	 * Qubjects
+	 */
+	private final ArrayList<Qubject> configuredQubjects
+		= InitialiseProject.loadQubjectsForNewProject();
+	private final ArrayList<Qubject> qubjectsOnTable
+		= new ArrayList<Qubject> (configuredQubjects.size());
+	
+	/*
+	 * Variables de temps
 	 */
 	/**
 	 * Current time in float MS(0<= currentTime < period);
@@ -53,21 +79,29 @@ public class Qubble implements QubbleInterface {
 	/**
 	 * Sys time when click on pause
 	 */
-	private long startPauseTime;
+	private long startPauseTime = Long.MIN_VALUE;
 	/**
 	 * Period in float milliseconds
 	 */
 	private float period = 30000f; 
-	public static final float TEST_PERIOD_SEC = 30f;
-	private final PlayerInterface player;
-	private final OutputImageInterface projection;
+	
+	/*
+	 * Attributs coeur
+	 */
+	private final PlayerInterface player = new Player(this);
+	private final OutputImageInterface projection = new ProjectorOutput();
 	private final CameraInterface camera;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonnanceur 
 	 * qui associera des threads à l'éxécution des tâches
 	 */
 	private final Sequencer sequencer;
-	
+
+	/**
+	 * Use a Hashtable to make it faster when receiving
+	 */
+	private final Hashtable<Integer, Qubject> qrCodes
+		= new Hashtable<Integer, Qubject>();
 	/**
 	 * NOTE : Utile car on avait dit qu'un qubjet pouvait jouer un son quand placé, etc...
 	 * When a Qubject plays a sound, a sampleController reference must be kept to be able to tweak the sound
@@ -77,30 +111,13 @@ public class Qubble implements QubbleInterface {
 	 * ...and a quick access when deleting (ie: a Sample just finished playing)
 	 * Useful information: follow this link http://stackoverflow.com/questions/322715/when-to-use-linkedlist-over-arraylist
 	 * TODO : check that indeed LinkedList > ArrayList (but anyway we're only talking about only a few refs per List, so any should be fine)
-	 * TODO : check if we need to use a concurrent version (CoucurrentHashMap, ConcurrentLinkedQueue...) 
 	 */
-	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
+	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers
+		= new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+	private final Hashtable<Qubject, ScheduledFuture<?>> tasks
+		= new Hashtable<Qubject, ScheduledFuture<?>>();
 	
-	private final Hashtable<Qubject, ScheduledFuture<?>> tasks;
 	
-	/*
-	 * Variables liés à la taille de la table projetée
-	 * (Pour les variables de calibration, utiliser les variables decalibration.Calibrate)
-	 */
-	public static final int TABLE_LENGTH = 1200;
-	public static final int TABLE_HEIGHT = 600;
-	public static final int TABLE_OFFSET_X = 50; 
-	public static final int TABLE_OFFSET_Y=50;
-	public static final float GRID_COLUMNS_PER_SEC = 1f;
-	public static final float GRID_ROWS_PER_SEC = 10f;
-	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD_SEC/GRID_COLUMNS_PER_SEC;
-	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
-	
-	public static final float CURSOR_WIDTH =10f;
-	/**
-	 * Qubject size in millimeters
-	 */
-	public static final int QUBJECT_SIZE = 50;
 	
 	//Variables de référence Thread
 	private Thread playerThread, projectionThread, cameraThread;
@@ -112,16 +129,11 @@ public class Qubble implements QubbleInterface {
 	 */
 	public Qubble(){
 		super();
-		player = new Player(this);
-		projection = new ProjectorOutput();
 		camera = new FakeCamera(this);
-		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
-		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
-		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
-		tasks = new Hashtable<Qubject, ScheduledFuture<?>>();
-		initialiseSampleControllers();
-		sequencer = new Sequencer(this, period);
+		initialise();
 		
+		//The sequencer no longer needs to be run
+		sequencer = new Sequencer(this, period);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
@@ -134,15 +146,9 @@ public class Qubble implements QubbleInterface {
 	 */
 	public Qubble(String path){
 		super();
-		player = new Player(this);
 		sequencer = new Sequencer(this, period);
 		camera = new FakeCamera(this);
-		projection = new ProjectorOutput();
-		configuredQubjects = InitialiseProject.loadQubjectsFromProject(path);
-		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
-		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
-		tasks = new Hashtable<Qubject, ScheduledFuture<?>>();
-		initialiseSampleControllers();
+		initialise();
 		
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
@@ -150,11 +156,14 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	/**
-	 * Put every Qubject in the Hashtable, and initialise LinkedLists of their sampleControllers
+	 * Put every Qubject in the Hashtable
+	 * 		qrCodes
+	 * 		List for SampleControllers
 	 */
-	private void initialiseSampleControllers(){
+	private void initialise(){
 		for (Qubject qubject : configuredQubjects){
 			sampleControllers.put(qubject, new LinkedList<SampleControllerInterface>());
+			qrCodes.put(qubject.getBitIdentifier(), qubject);
 		}
 	}
 	
@@ -166,13 +175,18 @@ public class Qubble implements QubbleInterface {
 	 */
 	public long computeQubjectStartingTime(Qubject qubject){
 		//don't forget to divide double by double and not int !
-		double absoluteStartingTime = 
-				((double)qubject.getCoords().getX()-(double)TABLE_OFFSET_X)
-				/((double)TABLE_LENGTH)		*period;
-//		System.out.println("Demarrage relatif Qubject " + qubject.getName() 
-//				+ " At absolute time : "+ (absoluteStartingTime-currentTime+totalPauseTime)/1000f + " seconds");
+		float absoluteStartingTime = 
+				(float)((getTile(qubject.getCoords()).getWidth())/NB_TILES_X)*period;
+		//Make sure the starting time is POSITIVE
+		//Use  (a % b + b) % b (when a can be negative) 
 		updateCurrentTime();
-		return (long) (absoluteStartingTime-currentTime+totalPauseTime);
+		float relativeStartingTime = absoluteStartingTime-currentTime+totalPauseTime;
+		relativeStartingTime = (relativeStartingTime % period + period) % period;
+		//-----DEBUG
+		System.out.println("Demarrage Qubject <<" + qubject.getName() 
+				+ ">> at relative time : <<"+ relativeStartingTime/1000f + ">> seconds");
+		//----->> END DEBUG
+		return (long) (relativeStartingTime);
 	}
 	
 	private void updateCurrentTime(){
@@ -223,82 +237,75 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public synchronized void QubjectDetected(int bitIdentifier, imageObject.Point pos) {
-		//TODO : use a Hashtable to speed up the process
-		for (Qubject qubject : configuredQubjects){
-			if (qubject.getBitIdentifier() == bitIdentifier){
-				
-				//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
-				qubject.setCoords(Calibrate.mapToOpenGL(pos));
-				
-				//On planifie la tâche
-				tasks.put(qubject, sequencer.schedule(qubject));
-				
-				//On indique a openGL qu'on a un Qubject 
-				projection.triggerQubject(qubject.getCoords());
-				
-				//On joue l'animation posé sur la table
-				projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
-				
-				//...et on demande le verrou pour ajouter à la liste des objets sur la table
-				synchronized(qubjectsOnTable){
-					qubjectsOnTable.add(qubject);				
-				}
-				
-				//Has been found, so we can end the loop
-				return;
-			}
+		Qubject qubject = qrCodes.get(bitIdentifier);
+		
+		if (qubject == null){
+			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			return;
 		}
-		//If the qubject was not found
-		System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+		
+		//Si on l'a trouvé, on change les coordonnées caméra -> OpenGL
+		qubject.setCoords(Calibrate.mapToOpenGL(pos));
+
+		//On planifie la tâche
+		tasks.put(qubject, sequencer.schedule(qubject));
+
+		//On indique a openGL qu'on a un Qubject 
+		projection.highlightQubject(qubject.getCoords());
+
+		//On joue l'animation posé sur la table
+		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
+
+		//...et on demande le verrou pour ajouter à la liste des objets sur la table
+		synchronized(qubjectsOnTable){
+			qubjectsOnTable.add(qubject);				
+		}
 	}
 	
 	@Override
 	public void QubjectRemoved(int bitIdentifier) {
-		//TODO : use a Hashtable to speed up the process
-		for (Qubject qubject : qubjectsOnTable){
-			if (qubject.getBitIdentifier() == bitIdentifier){
-				//On annule la tâche
-				tasks.get(qubject).cancel(true);
-				
-				//TODO : dire au player d'arrêter le son
-				
-				//On masque son ancien emplacement 
-				projection.triggerQubject(qubject.getCoords());
-				
-				//On l'enlève de la liste des qubjects présents sur la table
-				synchronized (qubjectsOnTable){
-					qubjectsOnTable.remove(qubject);
-				}
-				return;
-			}
+		Qubject qubject = qrCodes.get(bitIdentifier);
+
+		if (qubject == null){
+			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			return;
 		}
-		//If the qubject was not found
-		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
+		
+		//On annule la tâche
+		tasks.get(qubject).cancel(true);
+
+		//TODO : dire au player d'arrêter le son
+
+		//On masque son ancien emplacement 
+		projection.highlightQubject(qubject.getCoords());
+
+		//On l'enlève de la liste des qubjects présents sur la table
+		synchronized (qubjectsOnTable){
+			qubjectsOnTable.remove(qubject);
+		}
+		return;
 	}
 	
 	@Override
 	public void QubjectHasMoved(int bitIdentifier, imageObject.Point position) {
-		//TODO : use a Hashtable to speed up the process
-		for (Qubject qubject : configuredQubjects){
-			if (qubject.getBitIdentifier() == bitIdentifier){
+		Qubject qubject = qrCodes.get(bitIdentifier);
+		
+		if (qubject == null){
+			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			return;
+		}
+		//On masque son ancien emplacement 
+		projection.highlightQubject(qubject.getCoords());
 
-				//on change les coordonnées caméra -> OpenGL
-				org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
-				qubject.setCoords(glCoords);
-				
-				//On replanifie
-				sequencer.reschedule(tasks.get(qubject), qubject);
-				
-				//On masque son ancien emplacement 
-				projection.triggerQubject(qubject.getCoords());
-				
-				//On indique son nouvel emplacement
-				projection.triggerQubject(qubject.getCoords());
-				
-				return;
-				}
-			}
-		System.err.print("Le Qubject était supposé déjà sur la table mais ne l'est pas" + bitIdentifier);
+		//on change les coordonnées caméra -> OpenGL
+		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
+		qubject.setCoords(glCoords);
+
+		//On replanifie
+		sequencer.reschedule(tasks.get(qubject), qubject);
+
+		//On indique son nouvel emplacement
+		projection.highlightQubject(qubject.getCoords());
 	}
 
 	@Override

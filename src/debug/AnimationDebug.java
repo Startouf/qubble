@@ -63,10 +63,10 @@ public class AnimationDebug implements OutputImageInterface {
 	private long lastFrameTime = Sys.getTime();
 
 	private void debug(){
-		triggerQubject(new Point(400,400));
+		highlightQubject(new Point(400,400));
 		needsToBeLoaded.add(new PixelExplosion(new Point (400,400)));
 		
-		triggerQubject(new Point(600, 300));
+		highlightQubject(new Point(600, 300));
 		activeAnimations.add(new WaterWave(new Point(595,325)));
 	}
 	
@@ -98,7 +98,7 @@ public class AnimationDebug implements OutputImageInterface {
 	}
 
 	@Override
-	public void triggerQubject(Point qubjectPos) {
+	public void highlightQubject(Point qubjectPos) {
 		Dimension tile = getTile(qubjectPos);
 		for (Dimension dim : occupiedTiles){
 			if (dim.width == tile.width && dim.height == tile.height){

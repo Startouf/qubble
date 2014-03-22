@@ -91,14 +91,19 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     }
 
 	@Override
-	public void triggerQubject(Point qubjectPos) {
+	public void highlightQubject(Point qubjectPos) {
 		Dimension tile = Qubble.getTile(qubjectPos);
-		for (Dimension dim : occupiedTiles){
+		Iterator<Dimension> iter = occupiedTiles.iterator();
+		while(iter.hasNext()){
+			Dimension dim = iter.next();
 			if (dim.width == tile.width && dim.height == tile.height){
-				occupiedTiles.remove(dim);
+				//If the tile is already highlighted, remove it
+				iter.remove();
 				return;
 			}
 		}
+		
+		//If not found, then highlight the tile
 		occupiedTiles.add(tile);
 	}
 
@@ -131,21 +136,26 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void render(){
 		//Grid
-		if(isPlaying){
+		if (showGrid)
+			//Note : comment the below line to make a nice effect with the grid
 			GL11.glColor3f(1f, 1f, 1f);
-			if (showGrid)
-				BaseRoutines.renderList(gridDL);
-			
-			//Cursor 
-			//TODO : Curseur stylé avec shader
-			VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
-			
-			//Highlight tiles where qubjects are present
-			GL11.glColor3f(0.8f, 0f, 0f);
+			BaseRoutines.renderList(gridDL);
+		
+		//Highlight tiles where qubjects are present
+		GL11.glColor3f(0.8f, 0f, 0f);
+		synchronized(occupiedTiles){
 			for (Dimension dim : occupiedTiles){
 				BaseRoutines.HighlightTile(dim);
 			}
-			
+
+		}
+		
+		//Cursor 
+		//TODO : Curseur stylé avec shader
+		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
+		
+		//Note : remove the if(isPlaying) to show frozen animations
+		if(isPlaying){
 			//Render animations
 			for (AnimationControllerInterface anim : activeAnimations){
 				anim.renderAnimation();
