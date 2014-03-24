@@ -109,6 +109,9 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		occupiedTiles.add(tile);
 	}
 
+	/**
+	 * Used by Sequencer thread (asynchronous)
+	 */
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
@@ -160,10 +163,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void render(){
 		//Grid
-		if (showGrid)
+		if (showGrid){
 			//Note : comment the below line to make a nice effect with the grid
 			GL11.glColor3f(1f, 1f, 1f);
 			BaseRoutines.renderList(gridDL);
+		}
 		
 		//Highlight tiles where qubjects are present
 		GL11.glColor3f(0.8f, 0f, 0f);

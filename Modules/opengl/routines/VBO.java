@@ -242,11 +242,11 @@ public final class VBO
 		if (vboID==0) return;
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		glVertexPointer(2, GL_FLOAT, 6, 0); //2D
+		glVertexPointer(2, GL_FLOAT, (2+4)*4, 0); //2D -> stride of 6*sizeOf(float)
 
 			glEnableClientState(GL11.GL_COLOR_ARRAY);
 			glBindBuffer(GL_ARRAY_BUFFER, vboID);
-			glColorPointer(4, GL11.GL_FLOAT, 0, 2);
+			glColorPointer(4, GL11.GL_FLOAT, (2+4)*4, 2*4);
 
 		glDrawArrays(GL11.GL_QUAD_STRIP, 0, 1); 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
