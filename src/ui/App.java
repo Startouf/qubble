@@ -59,6 +59,8 @@ public class App extends JFrame
 	private final LoadProjectAction loadAction = new LoadProjectAction(this);
 	private final OpenIndividualSettingsAction openIndividualSettingsAction 
 		= new OpenIndividualSettingsAction(this);
+	private final OpenListSettingsAction openListSettingsAction 
+		= new OpenListSettingsAction(this);
 	private final ChangeQubjectAction changeQubjectAction 
 		= new ChangeQubjectAction(this);
 	private final ChangeQubjectModifierAction changeQubjectModifierAction 
@@ -132,8 +134,11 @@ public class App extends JFrame
 	 * 		tant qu'un projet n'aura pas été ouvert !
 	 */
 	public OpenIndividualSettingsAction getOpenIndividualSettingsAction() {
-		
 		return openIndividualSettingsAction;
+	}
+	
+	public OpenListSettingsAction getOpenListSettingsAction() {
+		return openListSettingsAction;
 	}
 
 	public NewProjectAction getNewAction() {

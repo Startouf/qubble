@@ -7,6 +7,12 @@ import qubject.QubjectModifierInterface;
 import qubject.QubjectProperty;
 
 public class ViewListPanel extends ViewQubjects {
+	
+	private App app;
+
+	public ViewListPanel(App app) {
+		this.app = app;
+	}
 
 	@Override
 	public void setActiveQubject(MediaInterface selectedQubject) {
