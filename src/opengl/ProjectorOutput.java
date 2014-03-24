@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 
-import explosion.PixelExplosion;
+import explosion.PixelSpray;
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;

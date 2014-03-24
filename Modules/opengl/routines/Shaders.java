@@ -151,6 +151,20 @@ public class Shaders
 		GL20.glDeleteProgram(pID);
 	}
 
+	/**
+	 * Destroy a Shader built with loadShadersGL
+	 * @param shaderIDs {vertex Shader ID, fragment Shader ID, program ID}
+	 */
+	public static void destroyShader(int shaderIDs[]){
+		GL20.glUseProgram(0);
+		GL20.glDetachShader(shaderIDs[2], shaderIDs[0]);
+		GL20.glDetachShader(shaderIDs[2], shaderIDs[1]);
+
+		GL20.glDeleteShader(shaderIDs[0]);
+		GL20.glDeleteShader(shaderIDs[1]);
+		GL20.glDeleteProgram(shaderIDs[2]);
+	}
+
 	private static String getLogInfo(int obj) {
         return GL20.glGetShaderInfoLog(obj, GL20.glGetShaderi(obj, GL20.GL_SHADER_SOURCE_LENGTH));
     }
