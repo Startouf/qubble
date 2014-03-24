@@ -65,13 +65,28 @@ public final class VBO
 		return vbo_id;
 	}
 
+	/**
+	 * Overload : provide the VBO
+	 * @param vbo_id
+	 * @param values
+	 */
+	public static void loadDynamicDrawVBO(int vbo_id, float[] values)
+	{
+		//chargeons les données dans un FloatBuffer
+		FloatBuffer verticesBuffer = FB(values);
+
+		//et copions les données dans la mémoire du GPU en spécifiant l'utilisation
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+		glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_DYNAMIC_DRAW);
+	}
+
 	//Shortcut
 	public static int getVBO_ID(float[] values){
 		return (loadStaticDrawVBO(values));
 	}
 
 	/**
-	 * float[] overload
+	 * Will overwrite the VBO from its start up to  
 	 * @param vboID
 	 * @param values
 	 */
@@ -89,6 +104,11 @@ public final class VBO
 	public static void overwrite(int vboID, FloatBuffer FB){
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
 	}
+	
+	public static void destroy(int vboID){
+		GL15.glDeleteBuffers(vboID);
+	}
+	
 	/*****************************************
 	 * LOAD VBO
 	 *****************************************/
@@ -208,6 +228,28 @@ public final class VBO
 		glDrawArrays(GL11.GL_QUAD_STRIP, 0, vertices); 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
 		if (colorID != 0) 
+			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+	}
+
+	/**
+	 * Interleaved vertices, color
+	 * Using color4f !!
+	 * @param vboID
+	 */
+	public static void drawColoredPoints2f(int vboID, int count) {
+		if (vboID==0) return;
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, vboID);
+		glVertexPointer(2, GL_FLOAT, 6, 0); //2D
+
+			glEnableClientState(GL11.GL_COLOR_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, vboID);
+			glColorPointer(4, GL11.GL_FLOAT, 0, 2);
+
+		glDrawArrays(GL11.GL_QUAD_STRIP, 0, 1); 
+		glDisableClientState(GL11.GL_VERTEX_ARRAY);
 			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
