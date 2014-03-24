@@ -16,7 +16,7 @@ public class InitialiseProject
 {
 	public static ArrayList<Qubject> loadQubjectsFromProject(String savePath){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles(savePath);
+		File[] files = InitialiseTools.getDotProperties(savePath);
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();

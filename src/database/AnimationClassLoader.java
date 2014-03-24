@@ -25,8 +25,8 @@ public class AnimationClassLoader extends ClassLoader {
 	}
 
     /** A convenience method that calls the 2-argument form of this method */
-    public Class loadClass (String name) throws ClassNotFoundException { 
-      return loadClass(name, true); 
+    public Class loadClass (File dotClassFile) throws ClassNotFoundException { 
+      return loadClass(dotClassFile.getAbsolutePath(), true); 
     }
 
     /**
@@ -38,18 +38,22 @@ public class AnimationClassLoader extends ClassLoader {
      * load superclasses that are system classes, and it must take this into account.
      */
     @Override
-    public Class loadClass (String dotClassFile, boolean resolve) throws ClassNotFoundException {
+    public Class loadClass (String dotClassFileAbsolutePath, boolean resolve) throws ClassNotFoundException {
+    	// Create a File object. Interpret the filename relative to the
+    	// directory specified for this ClassLoader.
+    	File f = new File(directory, dotClassFileAbsolutePath);
+     	
       try {
         // Our ClassLoader superclass has a built-in cache of classes it has
         // already loaded. So, first check the cache.
-        Class c = findLoadedClass(dotClassFile);
+        Class c = findLoadedClass(dotClassFileAbsolutePath);
 
         // After this method loads a class, it will be called again to
         // load the superclasses. Since these may be system classes, we've
         // got to be able to load those too. So try to load the class as
         // a system class (i.e. from the CLASSPATH) and ignore any errors
         if (c == null) {
-          try { c = findSystemClass(dotClassFile); }
+          try { c = findSystemClass(dotClassFileAbsolutePath); }
           catch (Exception ex) {}
         }
 
@@ -61,9 +65,6 @@ public class AnimationClassLoader extends ClassLoader {
         if (c == null) {
           // Figure out the filename
 
-          // Create a File object. Interpret the filename relative to the
-          // directory specified for this ClassLoader.
-          File f = new File(directory, dotClassFile);
 
           // Get the length of the class file, allocate an array of bytes for
           // it, and read it in all at once.
@@ -74,7 +75,7 @@ public class AnimationClassLoader extends ClassLoader {
           in.close();
 
           // Now call an inherited method to convert those bytes into a Class
-          c = defineClass(dotClassFile, classbytes, 0, length);
+          c = defineClass(dotClassFileAbsolutePath, classbytes, 0, length);
         }
 
         // If the resolve argument is true, call the inherited resolveClass method.

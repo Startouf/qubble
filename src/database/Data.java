@@ -25,10 +25,10 @@ public final class Data
 	private static final ArrayList<AnimationInterface> animations;
 
 	static{
-		qubjects = InitialiseAssets.loadQubjects();
 		samples = InitialiseAssets.loadSamples();
 		soundEffects = InitialiseAssets.loadSoundEffects();
 		animations = InitialiseAssets.loadAnimations();
+		qubjects = InitialiseAssets.loadQubjects();
 	}
 	
 	public static ArrayList<Qubject> getQubjects() {

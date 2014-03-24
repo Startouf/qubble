@@ -6,9 +6,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
 
 import explosion.PixelExplosion;
-
 import audio.EffectType;
 import audio.SoundEffect;
 import audio.SoundEffectInterface;
@@ -33,12 +33,7 @@ import wave.WaterWave;
  */
 public class InitialiseAssets
 {
-	private static final File controllersDir = new File("data/animations/controllers");
-	
-	/*
-	 * Note : cannot factorise more without using Class objects
-	 * 	The instructions inside the try/catch block should be different for every Object type
-	 */
+	private static final String controllersDir = "data/animations/controllers/";
 
 	/**
 	 * Currently loaded props : name and file
@@ -46,7 +41,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SampleInterface> loadSamples(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/samples/");
+		File[] files = InitialiseTools.getDotProperties("data/samples/");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -62,7 +57,7 @@ public class InitialiseAssets
 	}
 
 	/**
-	 * Currently loaded props : name and file
+	 * Loading Hard-coded EffectTypes
 	 * @return
 	 */
 	public static ArrayList<EffectType> loadSoundEffects(){
@@ -71,49 +66,35 @@ public class InitialiseAssets
 		for (EffectType effect : EffectType.values()){
 			list.add(effect);
 		}
-		
-		//OLD :
-//		Properties prop;
-//		File[] files = InitialiseTools.getFiles("data/sound_effects/");
-//		ArrayList<SoundEffectInterface> list = new ArrayList<SoundEffectInterface>(files.length);
-//		for (File entry : files){ //TODO : use fileInputStream
-//			prop = new Properties();
-//			try {
-//				prop.load(new FileInputStream(entry));	
-//				//TODO load other params
-//				list.add(new SoundEffect(prop.getProperty("name"), prop.getProperty("file")));
-//			} catch (IOException ex) {
-//				ex.printStackTrace();
-//			}
-//		}
 		return list;
 	}
 
 	/**
 	 * Currently loaded props : name and file from data/animations
+	 * Will try to load external classes found in /controllers/[...]
 	 * @return
 	 */
 	public static ArrayList<AnimationInterface> loadAnimations(){
+		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>();
 		//Dummy Load
-		ArrayList<AnimationInterface> list = new ArrayList<AnimationInterface>(2);
-		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class));
-		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"), PixelExplosion.class));
-		
-		/*
+//		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class));
+//		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"), PixelExplosion.class));
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/animations/");
+		File[] files = InitialiseTools.getDotProperties("data/animations/");
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
 			try {
 				prop.load(new FileInputStream(entry));
-				File dotJavaFile = new File ("data/animations/controllers/" + prop.getProperty("dotJavaFile"));
+				File dotJavaFile = new File (controllersDir + prop.getProperty("dotJavaFile"));
 				if (prop.getProperty("dotClassFile") == null){
+					//TODO : check the date to see if it needs to be recompiled
+					//(Use a sort of makefile)
 					InitialiseTools.compileAnimation(dotJavaFile);
 					prop.setProperty("dotClassFile", InitialiseTools.getDotClassFromDotJava(prop.getProperty("dotJavaFile")));
 					prop.store(new FileOutputStream(entry), null);
 				}				
 				list.add(new Animation(prop.getProperty("name"),dotJavaFile,
-						loadAnimation(new File("data/animations/controllers/" + prop.getProperty("dotClassFile")))));
+						loadAnimation(new File(controllersDir + prop.getProperty("dotClassFile")))));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			} catch (CannotLoadAnimationException e) {
@@ -121,7 +102,7 @@ public class InitialiseAssets
 				e.printStackTrace();
 			}
 		}
-		*/
+		
 		
 		return list;
 	}
@@ -132,11 +113,14 @@ public class InitialiseAssets
 	 * @throws CannotLoadAnimationException
 	 */
 	private static Class loadAnimation(File dotClassFile) throws CannotLoadAnimationException{
-		
 		try {
-			AnimationClassLoader cl = new AnimationClassLoader(controllersDir);
-			return cl.loadClass(controllersDir.toURI().relativize(dotClassFile.toURI()).getPath());
+			URLClassLoader cl = new URLClassLoader(new URL[]{(new File(controllersDir)).toURI().toURL()});
+			Class<?> clazz = cl.loadClass(InitialiseTools.getBinaryClassNameFromDotClass(new File(controllersDir), dotClassFile));
+			return clazz;
 		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -151,19 +135,43 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<Qubject> loadQubjects(){
 		Properties prop;
-		File[] files = InitialiseTools.getFiles("data/qubjects/");
+		File[] files = InitialiseTools.getDotProperties("data/qubjects/");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
 			try {
 				prop.load(new FileInputStream(entry));	
-				//TODO load other params (default) + try/catch
-				list.add(new Qubject(prop.getProperty("name"), 
+				//TODO can swap getRandomlyConfiguredQubject(..) to new Qubject(...)
+				list.add(getRandomlyConfiguredQubject(prop.getProperty("name"), 
 						Integer.parseInt(prop.getProperty("bitIdentifier"))));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}
 		return list;
+	}
+	
+	private static Random rand = new Random();
+	
+	public static Qubject getRandomlyConfiguredQubject(String name, int id){
+		return(new Qubject(name, id, 
+				getRandomSample(),
+				getRandomEffect(),
+				getRandomEffect(),
+				getRandomAnimation(),
+				getRandomAnimation()));
+	}
+	
+	private static SampleInterface getRandomSample(){
+		ArrayList<SampleInterface> list = Data.getSamples();
+		return Data.getSamples().get(rand.nextInt(Data.getSamples().size()));
+	}
+	
+	private static EffectType getRandomEffect(){
+		return Data.getSoundEffects().get(rand.nextInt(Data.getSoundEffects().size()));
+	}
+	
+	private static AnimationInterface getRandomAnimation(){
+		return Data.getAnimations().get(rand.nextInt(Data.getAnimations().size()));
 	}
 }

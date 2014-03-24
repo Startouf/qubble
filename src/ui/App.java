@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import org.lwjgl.util.glu.Project;
 
+import database.Data;
 import qubject.Animation;
 import qubject.AnimationInterface;
 import qubject.MediaInterface;
@@ -84,6 +85,12 @@ public class App extends JFrame
 		super("Qubble");
 		activeProject  = null;
 		projectOpened  = false;
+		
+		//DEBUG :::
+		Data.getAnimations();
+		Data.getQubjects();
+		Data.getSamples();
+		Data.getSoundEffects();
 		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));

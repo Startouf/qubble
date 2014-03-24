@@ -33,11 +33,11 @@ public final class Qubject implements QRInterface, MediaInterface {
 	/*
 	 * TODO : default properties initialisation should be done in database.InitialiseAssets !
 	 */
-	private SampleInterface sampleWhenPlayed = new Sample("Cool sound", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
-	private EffectType yAxisModifier = EffectType.Volume;
-	private EffectType rotationModifier = EffectType.Distortion;
-	private AnimationInterface whenPutOnTable = new Animation("Pixel explosion", new File("data/animations/controllers/wave/PixelExplosion.java"), WaterWave.class); //TODO
-	private AnimationInterface animationwhenPlayed = new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class); //TODO : default !
+	private SampleInterface sampleWhenPlayed;
+	private EffectType yAxisModifier;
+	private EffectType rotationModifier;
+	private AnimationInterface whenPutOnTable;
+	private AnimationInterface animationwhenPlayed;
 	
 	public static final float SIZE = 30f;
 

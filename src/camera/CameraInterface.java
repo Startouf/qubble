@@ -1,5 +1,12 @@
 package camera;
-
+/**
+ * La caméra|Detection du mouvement doivent utiliser ces méthodes de QubbleInterface :
+ * 		QubjectDetected(int ID, cameraPos pos)
+ * 		QubjectHasMoved(int ID, cameraPos pos)
+ * 		QubjectRemoved(int ID)
+ * 		QubjectHasTurned(int ID, float dR)
+ * @author Cyril
+ */
 public interface CameraInterface
 {
 	/**

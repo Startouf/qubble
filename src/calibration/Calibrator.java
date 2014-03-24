@@ -31,7 +31,6 @@ public class Calibrator implements Runnable{
 	
 	public static void main(String[] args){
 		Calibrator calib = new Calibrator();
-		
 	}
 
 }

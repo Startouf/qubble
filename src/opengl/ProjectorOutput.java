@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -110,24 +112,46 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void triggerEffect(Point qubjectCoords, AnimationInterface anim) {
 		//get the controller for the animation
-		//TODO : Reflection to load the class from CLASS Object provided by the animationInterface
 		AnimationControllerInterface controller;
 		
 		//Dummy load
-		if (anim.getName().equals("Water wave"))
-			controller = new WaterWave(qubjectCoords);
-		else
-			controller = new PixelExplosion(qubjectCoords);
+//		if (anim.getName().equals("Water wave"))
+//			controller = new WaterWave(qubjectCoords);
+//		else
+//			controller = new PixelExplosion(qubjectCoords);
 		
-		synchronized(needsToBeLoaded){
-			needsToBeLoaded.add(controller);
+		//Try some java reflexion !
+		try {
+			Class<?> clazz = anim.getAnimationControllerClass();
+			Constructor<?> cstr= clazz.getConstructor(Point.class); 
+			controller = (AnimationControllerInterface) 
+					cstr.newInstance(qubjectCoords);
+			
+			//Will be moved to activeAnimations during the load() method
+			synchronized(needsToBeLoaded){
+				needsToBeLoaded.add(controller);
+			}
+			
+			return;
+			
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
 		}
-		//Will be moved to activeAnimations during the load() method
 	}
 
 	@Override
 	public void triggerOtherEffect(AnimationInterface anim) {
-		
+		//TODO
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class InitialiseTools
 	 * @param directory
 	 * @return list of files in the directory filtered by filename (current : *.properties)
 	 */
-	public static File[] getFiles(String directory){
+	public static File[] getDotProperties(String directory){
 		File dir = new File(directory);
 		//test
 		boolean ok = dir.isDirectory();
@@ -54,5 +54,12 @@ public class InitialiseTools
 	
 	public static File getDotClassFromDotJava(File file){
 		return new File(getDotClassFromDotJava(file.getAbsolutePath()));
+	}
+	
+	public static String getBinaryClassNameFromDotClass(File baseDir, File dotClassFile){
+		String relative = baseDir.toURI().relativize(dotClassFile.toURI()).getPath();
+		relative = FilenameUtils.removeExtension(relative);
+		relative = relative.replace("/", ".");
+		return relative;
 	}
 }
