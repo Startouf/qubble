@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import more_ex.GridWithLabels;
-
 import opengl.AnimationControllerInterface;
 import opengl.BaseRoutines;
 import opengl.InitRoutines;
@@ -23,8 +22,8 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 
+import explosion.FireExplosion;
 import explosion.PixelSpray;
-
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
@@ -67,7 +66,7 @@ public class AnimationDebug implements OutputImageInterface {
 		needsToBeLoaded.add(new PixelSpray(new Point (400,400)));
 		
 		highlightQubject(new Point(600, 300));
-		activeAnimations.add(new WaterWave(new Point(595,325)));
+		needsToBeLoaded.add(new FireExplosion(new Point(595,325)));
 	}
 	
 	public void start(int width, int height){
