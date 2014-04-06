@@ -12,6 +12,7 @@ public class PanicAction extends AbstractAction
 
 	public PanicAction(App app) {
 		this.app = app;
+		putValue(NAME, "Panic");
 	}
 
 	@Override

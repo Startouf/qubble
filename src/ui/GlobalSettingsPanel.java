@@ -13,7 +13,7 @@ public class GlobalSettingsPanel extends JPanel
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
-	private final JButton toggleGrid, playPause;
+	private final JButton toggleGrid, playPause, panic;
 	private JLabel activeProject;
 
 	public GlobalSettingsPanel(App app)
@@ -24,17 +24,9 @@ public class GlobalSettingsPanel extends JPanel
 		layout.setHgap(25);
 		setLayout(layout);
 
-		//Labels
+		//Project Name
 		JLabel project = new JLabel("Active project:");
 		project.setHorizontalAlignment(JLabel.CENTER);
-		JLabel volume = new JLabel("Volume");
-		volume.setHorizontalAlignment(JLabel.CENTER);
-//		JLabel time = new JLabel("Time");
-//		time.setHorizontalAlignment(JLabel.CENTER);
-		JLabel playPauseLabel = new JLabel("Play/Pause");
-		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
-		
-		//Project Name
 		activeProject = new JLabel();
 		activeProject.setHorizontalAlignment(JLabel.CENTER);
 		activeProject.setText("No Project");
@@ -43,6 +35,8 @@ public class GlobalSettingsPanel extends JPanel
 		//TODO : Il faut un JLabel plus stylé pour le nom de projet!
 
 		//Volume Slider : (, min, max, initial) Volume
+		JLabel volume = new JLabel("Volume");
+		volume.setHorizontalAlignment(JLabel.CENTER);
 		volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
 		volumeSlider.setMajorTickSpacing(25);
 		volumeSlider.setMinorTickSpacing(5);
@@ -60,29 +54,38 @@ public class GlobalSettingsPanel extends JPanel
 		toggleGrid = new JButton(this.app.getToggleGridAction());
 
 		//Time Slider : Removed because time synchronization is harddddd
-		//TODO : afficher le temps actuel/temps total
-		//With fixed values
+//		JLabel time = new JLabel("Time");
+//		time.setHorizontalAlignment(JLabel.CENTER);
 		timeBar = new JProgressBar(0,240);
-		timeBar.setStringPainted(true);
+//		timeBar.setStringPainted(true);
 		
 		//Play/Pause Button
+		JLabel playPauseLabel = new JLabel("Play/Pause");
+		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
 		playPause = new JButton(new ImageIcon("data/ui/PauseButton.png"));
-		//TODO : play/Pause action !!!!!
 		playPause.setAction(this.app.getPlayPauseAction());
 		//TODO : Size not adjustable with current layout ??
-		playPause.setSize(new Dimension(300,50));
+		playPause.setPreferredSize(new Dimension(300,50));
+		
+		//Panic button
+		JLabel panicLabel = new JLabel("Panic");
+		panicLabel.setHorizontalAlignment(JLabel.CENTER);
+		panic = new JButton(this.app.getPanicAction());
+		panic.setPreferredSize(new Dimension(200,50));
 
 		//add in order (left to right)
 		add(project);
 		add(volume);
 		add(playPauseLabel);
 //		add(time);
+		add(panicLabel);
 
 		add(activeProject);
 		add(toggleGrid);
 //		add(volumeSlider);
 		add(playPause);
 //		add(timeBar);
+		add(panic);
 
 		setBackground(Color.WHITE);
 	}

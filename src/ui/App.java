@@ -96,7 +96,9 @@ public class App extends JFrame
 		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
-
+		
+		showWelcomePanel();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -115,10 +117,17 @@ public class App extends JFrame
 		
 		setJMenuBar(menu = new MenuBar(this, true));
 		setContentPane(mainPanel = new MainPanel(this));
+		
+		showWelcomePanel();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
+	}
+	
+	private void showWelcomePanel() {
+		this.mainPanel.getSettingsTabs().addTab(
+				"Accueil ", new WelcomePanel(this));
 	}
 
 	public MenuBar getMenu() {

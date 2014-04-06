@@ -15,6 +15,7 @@ public class LoadProjectAction extends AbstractAction
 
 	public LoadProjectAction(App app){
 		this.app = app;
+		putValue(NAME, "Charger un projet");
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

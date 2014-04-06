@@ -17,7 +17,7 @@ import javax.swing.JTabbedPane;
 public class MainPanel extends JPanel
 {
 	private final App app;
-	private final SettingsTab settingsTabs;
+	private final JTabbedPane settingsTabs;
 	private final GlobalSettingsPanel globalSettingsPanel;
 	
 	public MainPanel(App app)
@@ -28,7 +28,8 @@ public class MainPanel extends JPanel
 		this.setPreferredSize(new Dimension(650, 600));
 		this.setLayout(new BorderLayout());
 
-		add(settingsTabs = new SettingsTab(app), BorderLayout.CENTER);
+		//Tabs are added by the app
+		add(settingsTabs = new JTabbedPane(), BorderLayout.CENTER);
 		add(globalSettingsPanel = new GlobalSettingsPanel(app), BorderLayout.SOUTH);
 	}
 
@@ -41,7 +42,7 @@ public class MainPanel extends JPanel
 		repaint();
 	}
 
-	public SettingsTab getSettingsTabs() {
+	public JTabbedPane getSettingsTabs() {
 		return settingsTabs;
 	}
 

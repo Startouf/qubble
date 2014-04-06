@@ -15,6 +15,7 @@ public class NewProjectAction extends AbstractAction
 	
 	public NewProjectAction(App app){
 		this.app = app;
+		putValue(NAME, "Nouveau projet");
 	}
 	
 	@Override
