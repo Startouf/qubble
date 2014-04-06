@@ -8,9 +8,21 @@ package qubject;
  */
 
 public enum QubjectProperty {
-	SAMPLE_WHEN_PLAYED,
-	AUDIO_EFFECT_Y_AXIS,
-	AUDIO_EFFECT_ROTATION,
-	ANIM_WHEN_DETECTED,
-	ANIM_WHEN_PLAYED;
+	SAMPLE_WHEN_PLAYED("Son quand joué"),
+	AUDIO_EFFECT_Y_AXIS("Effet quand translaté en Y"),
+	AUDIO_EFFECT_ROTATION("Effet quand tourné"),
+	ANIM_WHEN_DETECTED("Anim. quand détecté"),
+	ANIM_WHEN_PLAYED("Anim. quand joué");
+	
+	private final String userFriendlyString;
+	
+	private QubjectProperty(String userFriendly){
+		this.userFriendlyString = userFriendly;
+	}
+
+	public String getUserFriendlyString(){
+		return userFriendlyString;
+	}
 }
+
+

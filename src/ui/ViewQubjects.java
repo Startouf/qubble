@@ -22,8 +22,16 @@ public abstract class ViewQubjects extends JPanel {
 	 */
 	public abstract void setActiveQubject(MediaInterface selectedQubject);
 	
+	/**
+	 * Refresh the display (highlight active property ?)
+	 * @param property
+	 */
 	public abstract void setActiveProperty(QubjectProperty property);
 	
+	/**
+	 * Refresh the display (change JLabels, etc..)
+	 * @param modifier
+	 */
 	public abstract void setModifierOfActiveProperty(QubjectModifierInterface modifier);
 
 	public MediaInterface getActiveQubject(){

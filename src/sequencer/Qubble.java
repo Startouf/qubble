@@ -354,11 +354,10 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public String whereIsIt(MediaInterface qubject) {
+	public Dimension getPosition(MediaInterface qubject) {
 		QRInterface qr = (QRInterface) qubject;
 		Point pos = qr.getCoords();
-		Dimension tile = getTile(pos);
-		return new String("X : " + tile.width + " Y : " + tile.height);
+		return getTile(pos);
 	}
 	
 	/**
