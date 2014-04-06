@@ -95,8 +95,7 @@ public class Sequencer implements SequencerInterface
 
 	/**
 	 * Should be called before closing a project : 
-	 * asks to get of the infinite loop
-	 * TODO: Does the garbage collector handle this task well ?
+	 * terminates the Scheduler Thread
 	 */
 	@Override
 	public void destroy() {

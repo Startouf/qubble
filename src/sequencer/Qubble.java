@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ScheduledFuture;
 
 import org.lwjgl.Sys;
+import org.lwjgl.input.Controllers;
 import org.lwjgl.util.Point;
 
 import calibration.Calibrate;
@@ -28,13 +29,13 @@ import qubject.Qubject;
 /**
  * 
  * @author duchon
- * Should share the thread of the GUI
+ * Acts as an observable for the audio, GUI and openGL modules
  *
  */
 public class Qubble implements QubbleInterface {
 	/*
 	 * Constantes de projection
-	 * (Pour les variables de calibration, utiliser les variables decalibration.Calibrate)
+	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
 	 */
 	public static final int TABLE_LENGTH = 1200;
 	public static final int TABLE_HEIGHT = 600;
@@ -82,8 +83,9 @@ public class Qubble implements QubbleInterface {
 	private long startPauseTime = Long.MIN_VALUE;
 	/**
 	 * Period in float milliseconds
+	 * Set to 32 secs because samples are 128 bpm
 	 */
-	private float period = 30000f; 
+	private float period = 32000f; 
 	
 	/*
 	 * Attributs coeur
@@ -225,10 +227,13 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void soundHasFinishedPlaying(SampleControllerInterface sc) {
 		for(LinkedList<SampleControllerInterface> list : sampleControllers.values()){
-			for (SampleControllerInterface controller : list){
-				if (sc == controller){
-					list.remove(sc);
-					return;
+			synchronized(list){
+				Iterator<SampleControllerInterface> iter = list.iterator();
+				while (iter.hasNext()){
+					if (sc == iter.next()){
+						iter.remove();
+						return;
+					}
 				}
 			}
 		}
@@ -274,7 +279,7 @@ public class Qubble implements QubbleInterface {
 		//On annule la tâche
 		tasks.get(qubject).cancel(true);
 
-		//TODO : dire au player d'arrêter le son
+		//TODO : dire au player d'arrêter le son ??
 
 		//On masque son ancien emplacement 
 		projection.highlightQubject(qubject.getCoords());
@@ -310,7 +315,19 @@ public class Qubble implements QubbleInterface {
 
 	@Override
 	public void QubjectHasTurned(int bitIdentifier, float dR) {
-		// TODO Auto-generated method stub
+		Qubject qubject = qrCodes.get(bitIdentifier);
+		
+		if (qubject == null){
+			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			return;
+		}
+		
+		qubject.setRotation((float) ((qubject.getRotation()+dR)%(2*Math.PI)));
+		
+		for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
+			//TODO : float --> int ? (for value of tweaksample)
+			player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
+		}
 	}
 	
 	@Override
@@ -390,21 +407,22 @@ public class Qubble implements QubbleInterface {
 		return tasks;
 	}
 
-	//TODO : remove if period is fixed to 30
 	public void setPeriod(float period) {
 		this.period = period;
 	}
 
 	@Override
 	public void panic() {
-		close();
+		player.destroy();
+		projection.terminate();
+		camera.terminate();
 		
 		hasStarted = false;
 		isPlaying = false;
 		
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		//TODO : cancel all tasks
+		sequencer.destroyScheduledtasks(tasks);
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 

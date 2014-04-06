@@ -46,7 +46,7 @@ public interface QubbleInterface {
 
 	/**
 	 * 
-	 * @param dR
+	 * @param dR a float radian between 0 and 2.pi
 	 */
 	public void QubjectHasTurned(int bitIdentifier, float dR);
 
