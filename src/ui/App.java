@@ -91,12 +91,6 @@ public class App extends JFrame
 		activeProject  = null;
 		projectOpened  = false;
 		
-		//DEBUG :::
-		Data.getAnimations();
-		Data.getQubjects();
-		Data.getSamples();
-		Data.getSoundEffects();
-		
 		setJMenuBar(menu = new MenuBar(this));
 		setContentPane(mainPanel = new MainPanel(this));
 		
@@ -181,7 +175,7 @@ public class App extends JFrame
 
 	public SamplePalette getSamplePalette() {
 		if(samplePalette != null){
-//			samplePalette.setVisible(true);
+			samplePalette.setVisible(true);
 			return samplePalette;
 		}
 		else{
@@ -193,7 +187,7 @@ public class App extends JFrame
 	
 	public AnimationPalette getAnimationPalette() {
 		if(animationPalette != null){
-//			animationPalette.setVisible(true);
+			animationPalette.setVisible(true);
 			return animationPalette;
 		}
 		else{
@@ -205,7 +199,7 @@ public class App extends JFrame
 	
 	public SoundEffectPalette getSoundEffectPalette() {
 		if(soundEffectPalette != null){
-//			soundEffectPalette.setVisible(true);
+			soundEffectPalette.setVisible(true);
 			return soundEffectPalette;
 		}
 		else{

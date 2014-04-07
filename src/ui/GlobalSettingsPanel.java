@@ -62,10 +62,11 @@ public class GlobalSettingsPanel extends JPanel
 		//Play/Pause Button
 		JLabel playPauseLabel = new JLabel("Play/Pause");
 		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
-		playPause = new JButton(new ImageIcon("data/ui/PauseButton.png"));
+		playPause = new JButton();
 		playPause.setAction(this.app.getPlayPauseAction());
-		//TODO : Size not adjustable with current layout ??
-		playPause.setPreferredSize(new Dimension(300,50));
+		ImageIcon img = new ImageIcon("data/ui/PauseButton.png");
+		playPause.setSize(img.getIconWidth(), img.getIconHeight());
+		img = null;
 		
 		//Panic button
 		JLabel panicLabel = new JLabel("Panic");

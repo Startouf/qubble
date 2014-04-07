@@ -9,7 +9,9 @@ import audio.EffectType;
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.MediaInterface;
+import qubject.Qubject;
 import qubject.QubjectModifierInterface;
+import qubject.QubjectProperty;
 import qubject.SampleInterface;
 import ui.App;
 import ui.ReferenceButton;
@@ -61,6 +63,37 @@ private final App app;
 			this.app.getActiveTab().getActiveQubject().setYAxisEffect(effect2);
 			this.app.getActiveTab().setModifierOfActiveProperty(effect2);
 			this.app.getSoundEffectPalette().setVisible(false);
+			break;
+		default:
+			//Should never happen !!!
+			System.out.println("Incorrect Modifier");
+			break;
+		}
+	}
+	
+	public void changeModifier(Qubject qubject, QubjectProperty prop, QubjectModifierInterface modif){
+		switch (prop){
+		//Proto final
+		case AUDIO_EFFECT_ROTATION:
+			qubject.setRotationEffect((EffectType) modif);
+//			this.app.getActiveTab().setModifierOfActiveProperty(effect);
+			break;
+		case SAMPLE_WHEN_PLAYED:
+			qubject.setSampleWhenPlayed((SampleInterface) modif);
+//			this.app.getActiveTab().setModifierOfActiveProperty(sample);
+			break;
+		case ANIM_WHEN_PLAYED:
+			qubject.setAnimationWhenPlayed((AnimationInterface) modif);
+//			this.app.getActiveTab().setModifierOfActiveProperty(anim);
+			break;
+			//Proto final
+		case ANIM_WHEN_DETECTED:
+			qubject.setAnimationWhenDetected((AnimationInterface) modif);
+//			this.app.getActiveTab().setModifierOfActiveProperty(anim2);
+			break;
+		case AUDIO_EFFECT_Y_AXIS:
+			qubject.setYAxisEffect((EffectType) modif);
+//			this.app.getActiveTab().setModifierOfActiveProperty(effect2);
 			break;
 		default:
 			//Should never happen !!!

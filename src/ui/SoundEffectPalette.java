@@ -14,7 +14,6 @@ public class SoundEffectPalette extends QubjectModifierPalette {
 
 	public SoundEffectPalette(App app) {
 		super(app, "Palette de choix d'effet sonore");
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -26,9 +25,10 @@ public class SoundEffectPalette extends QubjectModifierPalette {
 	@Override
 	protected JComboBox fillCombo() {
 		JComboBox combo = new JComboBox();
+		combo.setRenderer(new ModifierComboBoxRenderer());
 	  	for (EffectType effect : this.app.getGlobalController().getSoundEffects())
     	{
-    		combo.addItem(effect.getName());
+    		combo.addItem(effect);
     	}
 	  	return combo;
 	}
@@ -41,13 +41,7 @@ public class SoundEffectPalette extends QubjectModifierPalette {
 
 	@Override
 	public QubjectModifierInterface getSelectedModifier() {
-		String str = (String) combo.getSelectedItem();
-		for (EffectType effect : this.app.getGlobalController().getSoundEffects()){
-			if(effect.getName().equals(str)){
-				return effect;
-			}
-		}
-		return null;
+		return (QubjectModifierInterface) combo.getSelectedItem();
 	}
 
 }

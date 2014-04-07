@@ -115,7 +115,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	public abstract QubjectModifierInterface getSelectedModifier();
 
 	public JComboBox getCombo() {
-		return combo;
+		return fillCombo();
 	}
 
 	/**
