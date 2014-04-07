@@ -62,6 +62,8 @@ public class CalibrationProjection implements Runnable{
 	public static void main(String[] args){
         CalibrationProjection app = new CalibrationProjection();
         app.start();
+        
+        
     }
 
 	@Override
