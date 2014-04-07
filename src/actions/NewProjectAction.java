@@ -21,7 +21,12 @@ public class NewProjectAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.setProjectOpened(true);
+		//TODO : switch projects
+		//<-----
+		this.app.getWelcomePanel().disableProjects();
+		//--->
 		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble()));
+		this.app.getWelcomePanel().addProjectEntry(this.app.getActiveProject());
 	}
 
 }

@@ -14,6 +14,8 @@ import qubject.AnimationInterface;
 import qubject.MediaInterface;
 import qubject.QRInterface;
 import qubject.Qubject;
+import qubject.QubjectModifierInterface;
+import qubject.QubjectProperty;
 import qubject.SampleInterface;
 import actions.*;
 import audio.SoundEffectInterface;
@@ -69,6 +71,8 @@ public class App extends JFrame
 	private final PlayPauseAction playPauseAction = new PlayPauseAction(this);
 	private final ToggleGridAction toggleGridAction = new ToggleGridAction(this);
 	private final PanicAction panicAction = new PanicAction(this);
+	private final SwitchActiveProjectAction switchActivePojectAction 
+		= new SwitchActiveProjectAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -81,6 +85,7 @@ public class App extends JFrame
 	 * This one contains everything important !
 	 */
 	private final MainPanel mainPanel;
+	private final WelcomePanel welcomePanel = new WelcomePanel(this);
 
 	/**
 	 * Normal Overload that should be used in the prototype/final project
@@ -124,7 +129,11 @@ public class App extends JFrame
 	
 	private void showWelcomePanel() {
 		this.mainPanel.getSettingsTabs().addTab(
-				"Accueil ", new WelcomePanel(this));
+				"Accueil", welcomePanel);
+	}
+	
+	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
+		this.mainPanel.setConfigForQubject(activeProject, qubject, prop, modifier);
 	}
 
 	public MenuBar getMenu() {
@@ -273,6 +282,7 @@ public class App extends JFrame
 	public PlayPauseAction getPlayPauseAction() {
 		return playPauseAction;
 	}
+	
 
 	public ToggleGridAction getToggleGridAction() {
 		return toggleGridAction;
@@ -280,6 +290,18 @@ public class App extends JFrame
 
 	public PanicAction getPanicAction() {
 		return panicAction;
+	}
+	
+	public ArrayList<ProjectController> getProjects() {
+		return projects;
+	}
+
+	public SwitchActiveProjectAction getSwitchActivePojectAction() {
+		return switchActivePojectAction;
+	}
+
+	public WelcomePanel getWelcomePanel() {
+		return welcomePanel;
 	}
 
 	/**

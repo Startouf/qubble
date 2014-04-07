@@ -1,10 +1,15 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import qubject.MediaInterface;
+import qubject.QubjectModifierInterface;
+import qubject.QubjectProperty;
 
 /**
  * @author Cyril
@@ -50,5 +55,16 @@ public class MainPanel extends JPanel
 		return globalSettingsPanel;
 	}
 	
-	
+	public void setConfigForQubject(ProjectController project, MediaInterface qubject, 
+			QubjectProperty prop, QubjectModifierInterface modifier){
+		for (int i=0; i< settingsTabs.getTabCount(); i++){
+			Component p = settingsTabs.getTabComponentAt(i);
+			if (p instanceof ViewQubjects){
+				ViewQubjects view = (ViewQubjects)p;
+				if(view.isLinkedToProject(project)){
+					view.setConfigForQubject(qubject, prop, modifier);
+				}
+			}
+		}
+	}
 }

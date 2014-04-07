@@ -105,7 +105,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	}
 
 	@Override
-	public void setModifier(Qubject qubject, QubjectProperty prop,
+	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop,
 			QubjectModifierInterface modifier) {
 		// TODO Auto-generated method stub
 		
