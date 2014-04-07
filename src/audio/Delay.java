@@ -11,8 +11,8 @@ public class Delay extends SoundEffect {
 		
 		super(EffectType.Delay, amount);
 		rate = 15000;
-		decay = 4;
-		feedback = 2;
+		decay = 2;
+		feedback = 5;
 		
 	}
 
@@ -21,7 +21,7 @@ public class Delay extends SoundEffect {
 		SampleController s = (SampleController) sc;
 		//*//Comme ça ça marche mais c'est pas idéal.
 		
-		for (int i = s.getRelativeCursor(); i < s.getRelativeCursor() + size; i++) {
+		for (int i = s.getRelativeCursor(); i < s.getRelativeCursor() + size && i < s.size(); i++) {
 			for (int j = 1; j < feedback; j++) {
 				s.addTo(j*rate + i, s.get(i)/(j*decay));
 			}

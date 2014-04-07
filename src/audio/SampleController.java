@@ -11,6 +11,7 @@ public class SampleController implements SampleControllerInterface {
 	int offSet; //indice du premier échantillon dans la boucle principale
 	int relativeCursor; //echantillon qui sera renvoyé par la fonction getNext.
 	ArrayList<Integer> samples;
+	ArrayList<Integer> effected;
 	private ArrayList<SoundEffect> soundEffects;
 	Player player;
 	float volume;
@@ -29,10 +30,12 @@ public class SampleController implements SampleControllerInterface {
 		
 		try {
 			samples = AudioUtility.getSamples(file);
-			//System.out.println(samples.size());
+			effected = (ArrayList<Integer>)samples.clone();
+			//System.out.println("samples.size() : " + samples.size());
 		} catch (Exception e) {
 			System.out.println("In SampleController Constructor : " + e.getMessage());
 		}
+		
 	}
 	
 	@Override
@@ -67,20 +70,26 @@ public class SampleController implements SampleControllerInterface {
 	
 	@Override
 	public void effectNextChunk(int size) {
+		ArrayList<Integer> samplesCopy = (ArrayList<Integer>)samples.clone();
 		for (int i = 0; i < soundEffects.size(); i++) {
 			soundEffects.get(i).effectNextChunk(this, size);
+			samples = (ArrayList<Integer>)effected.clone();
 		}
+		samples = (ArrayList<Integer>)samplesCopy.clone();
 	}
 	
 	@Override
 	public int getNext() {
-		if (relativeCursor < samples.size()) {
-			int res = (samples.get(relativeCursor));
+		//System.out.println("samples.size(bite) : " + samples.size() + "; relativeCursor : " + relativeCursor);
+		if (relativeCursor < effected.size()) {
+			int res = (effected.get(relativeCursor));
 			relativeCursor++;
 			//System.out.println(relativeCursor);
 			return res;
 		}
 		else {
+			System.out.println("samples.size(bite) : " + samples.size());
+			System.out.println("effected.size() : " + effected.size());
 			if (qi != null) {
 				qi.soundHasFinishedPlaying(this);
 			}
@@ -98,22 +107,25 @@ public class SampleController implements SampleControllerInterface {
 	}
 	
 	public int get(int index) {
-		return samples.get(index);
+		if (index < samples.size()) {
+			return samples.get(index);
+		}
+		else return 0;
 	}
 	
 	public int size() {
 		return samples.size();
 	}
 	public void set(int index, int element) {
-		if (index >= samples.size()) {
-			
-			while (samples.size() < index) {
-				samples.add(0);	
+		if (index >= effected.size()) {
+			//System.out.println("plus grand");
+			while (effected.size() < index) {
+				effected.add(0);	
 			}
-			samples.add(element);
+			effected.add(element);
 			
 		} else {
-			samples.set(index, element);
+			effected.set(index, element);
 		}
 	}
 	
@@ -126,7 +138,7 @@ public class SampleController implements SampleControllerInterface {
 	
 	public void multiply(int index, int factor) {
 		if (index < samples.size()) {
-			samples.set(index, (samples.get(index)*factor)/100);
+			effected.set(index, (samples.get(index)*factor)/100);
 		}
 	}
 	
