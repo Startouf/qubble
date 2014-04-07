@@ -13,6 +13,7 @@ public class OpenIndividualSettingsAction extends AbstractAction {
 	
 	public OpenIndividualSettingsAction(App app) {
 		this.app = app;
+		putValue(NAME, "Vue individuelle");
 	}
 
 	@Override

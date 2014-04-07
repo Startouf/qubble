@@ -14,6 +14,7 @@ private final App app;
 	
 	public OpenListSettingsAction(App app) {
 		this.app = app;
+		putValue(NAME, "Vue tableur");
 	}
 
 	@Override

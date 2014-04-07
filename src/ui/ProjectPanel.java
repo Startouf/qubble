@@ -1,9 +1,11 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,19 +20,24 @@ public class ProjectPanel extends JPanel {
 	
 	public ProjectPanel(App app, ProjectController project){
 		this.project = project;
-		this.projectName = new JLabel(project.getProjectName());
+		projectName = new JLabel(project.getProjectName());
+		projectName.setHorizontalAlignment(JLabel.LEFT);
 		
-		this.status = new JLabel("Active");
+		status = new JLabel("Active");
 		status.setFont(new Font(null, Font.BOLD, 14));
 		status.setForeground(activeColor);
+		status.setHorizontalAlignment(JLabel.LEFT);
 		
-		this.switchTo = new JButton(app.getSwitchActivePojectAction());
+		switchTo = new JButton(app.getSwitchActivePojectAction());
+		switchTo.setHorizontalAlignment(JLabel.LEFT);
 		
+		this.add(Box.createRigidArea(new Dimension (100,10)));
 		this.add(switchTo);
 		this.add(status);
+		this.add(Box.createHorizontalGlue());
 		this.add(projectName);
 		
-		this.setSize(500, 50);
+		this.setSize(700, 50);
 	}
 	
 	public void refresh(){

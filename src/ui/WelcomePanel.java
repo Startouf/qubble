@@ -8,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class WelcomePanel extends JPanel
 {
@@ -15,6 +16,7 @@ public class WelcomePanel extends JPanel
 	private final JButton newProject, loadProject;
 	private final ArrayList<ProjectPanel> projects = new ArrayList<ProjectPanel>();
 	private final JPanel main = new JPanel();
+	private final JPanel config = new JPanel(); 
 	
 	public WelcomePanel(App app){
 		super();
@@ -31,6 +33,10 @@ public class WelcomePanel extends JPanel
 		
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 		this.add(main, BorderLayout.CENTER);
+		
+		config.add(new JButton(this.app.getOpenIndividualSettingsAction()));
+		config.add(new JButton(this.app.getOpenListSettingsAction()));
+		this.add(config, BorderLayout.SOUTH);
 	}
 	
 	public void addProjectEntry(ProjectController project){
@@ -39,6 +45,9 @@ public class WelcomePanel extends JPanel
 
 		projects.add(panel);
 		main.add(panel);
+		
+		config.setVisible(true);
+		
 		repaint();
 	}
 	
@@ -51,6 +60,14 @@ public class WelcomePanel extends JPanel
 	public void disableProjects(){
 		for (ProjectPanel project : projects){
 			project.setStatus(false);
+		}
+	}
+	
+	public void removeProject(){
+		//TODO
+		
+		if (projects.size() == 0){
+			config.setVisible(false);
 		}
 	}
 }
