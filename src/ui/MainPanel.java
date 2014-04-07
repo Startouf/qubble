@@ -17,7 +17,7 @@ import javax.swing.JTabbedPane;
 public class MainPanel extends JPanel
 {
 	private final App app;
-	private final JTabbedPane settingsTabs;
+	private final JTabbedPane settingsTabs;	//Utilisation d'onglets
 	private final GlobalSettingsPanel globalSettingsPanel;
 	
 	public MainPanel(App app)

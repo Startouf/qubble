@@ -14,6 +14,15 @@ import qubject.QubjectProperty;
 public abstract class ViewQubjects extends JPanel {
 	protected MediaInterface activeQubject;
 	protected QubjectProperty activeProperty = QubjectProperty.SAMPLE_WHEN_PLAYED;
+	
+	/**
+	 * Will be used to determine whether this JPanel should be updated or not when a Qubble is changed
+	 */
+	protected final ProjectController project;
+	
+	public ViewQubjects(ProjectController controller){
+		this.project=controller;
+	}
 
 	/**
 	 * Change the active Qubject that will be modified by the Palettes
@@ -40,5 +49,9 @@ public abstract class ViewQubjects extends JPanel {
 	
 	public QubjectProperty getActiveProperty(){
 		return activeProperty;
+	}
+	
+	public boolean isLinkedToProject(ProjectController controller){
+		return (controller == project);
 	}
 }

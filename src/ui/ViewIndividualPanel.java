@@ -37,6 +37,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private final JLabel qubjectPosition;
 	
 	public ViewIndividualPanel(App app) {
+		super(app.getActiveProject());
 		this.app = app;
 		this.project = app.getActiveProject();
 		this.activeQubject = (Qubject) project.getQubjects().get(0);

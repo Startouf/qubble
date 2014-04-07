@@ -24,6 +24,7 @@ public class ViewListPanel extends ViewQubjects {
 	private final String[] EXTRA_COLS = {"time", "qubject"};
 
 	public ViewListPanel(App app) {
+		super(app.getActiveProject());
 		this.app = app;
 		labels = new JLabel[app.getQubjects().size()+1][EXTRA_COLS.length+QubjectProperty.values().length];
 		this.setLayout(new GridLayout(2+QubjectProperty.values().length,app.getQubjects().size()+1));

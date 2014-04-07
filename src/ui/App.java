@@ -77,6 +77,9 @@ public class App extends JFrame
 	private SoundEffectPalette soundEffectPalette = null;
 	private AnimationPalette animationPalette = null;
 	private final MenuBar menu;
+	/**
+	 * This one contains everything important !
+	 */
 	private final MainPanel mainPanel;
 
 	/**
