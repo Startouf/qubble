@@ -1,17 +1,28 @@
 package ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.util.Hashtable;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.Scrollable;
 
 import qubject.MediaInterface;
 import qubject.Qubject;
@@ -31,6 +42,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	private final int WIDTH, HEIGHT;
 	private Hashtable<Integer, QubjectProperty> propertyMap;
 	private Hashtable<Integer, Qubject> qubjectMap;
+	private JPanel content;
 	
 	/**
 	 * Additional columns
@@ -42,15 +54,33 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		super(app.getActiveProject());
 		this.app = app;
 		
+		
 		WIDTH = EXTRA_COLS.length+QubjectProperty.values().length;
 		HEIGHT = app.getQubjects().size()+1;
 		cell = new JComponent[HEIGHT][WIDTH];
-		this.setLayout(new GridLayout(HEIGHT,WIDTH));
 		
+	
+		
+		
+		
+		content = new ScrollablePanel(this);
+		
+		content.setLayout(new GridLayout(HEIGHT,WIDTH));
+
 		prepare();
 		addHeader();
 		addRows();
 		updateRows();
+		
+		JScrollPane scroll = new JScrollPane();
+
+		scroll.setViewportView(content);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setViewportBorder(
+	                BorderFactory.createLineBorder(Color.black));
+		this.add(scroll);
+		setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+		this.revalidate();
 	}
 	
 	private void prepare(){
@@ -68,28 +98,28 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		
 		for(i=1; i<app.getQubjects().size()+1; i++){
 			//Time (position of Qubject on X axis)
-			this.add(cell[i][0] = new JLabel("rr"));
+			content.add(cell[i][0] = new JLabel("rr"));
 			//Logo of the qubject -> Put into a JLabel
-			this.add(cell[i][1] = new JLabel("rrr"));
+			content.add(cell[i][1] = new JLabel("rrr"));
 			
 			int j=2;
 			
 			for(QubjectProperty prop : QubjectProperty.values()){
 				switch (prop){
 				case ANIM_WHEN_DETECTED:
-					this.add(cell[i][j] = this.app.getAnimationPalette().getCombo());
+					content.add(cell[i][j] = this.app.getAnimationPalette().getCombo());
 					break;
 				case ANIM_WHEN_PLAYED:
-					this.add(cell[i][j] = this.app.getAnimationPalette().getCombo());
+					content.add(cell[i][j] = this.app.getAnimationPalette().getCombo());
 					break;
 				case AUDIO_EFFECT_ROTATION:
-					this.add(cell[i][j] = this.app.getSoundEffectPalette().getCombo());
+					content.add(cell[i][j] = this.app.getSoundEffectPalette().getCombo());
 					break;
 				case AUDIO_EFFECT_Y_AXIS:
-					this.add(cell[i][j] = this.app.getSoundEffectPalette().getCombo());
+					content.add(cell[i][j] = this.app.getSoundEffectPalette().getCombo());
 					break;
 				case SAMPLE_WHEN_PLAYED:
-					this.add(cell[i][j] = this.app.getSamplePalette().getCombo());
+					content.add(cell[i][j] = this.app.getSamplePalette().getCombo());
 					break;
 				default:
 					System.err.println("missing case in viewlist");
@@ -104,12 +134,12 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	private void addHeader(){
 		int j=0;
 		for(String col : EXTRA_COLS){
-			this.add(cell[0][j] = new JLabel(col));
+			content.add(cell[0][j] = new JLabel(col));
 			j++;
 		}
 		
 		for(QubjectProperty prop : QubjectProperty.values()){
-			this.add(cell[0][j] = new JLabel(prop.getUserFriendlyString()));
+			content.add(cell[0][j] = new JLabel(prop.getUserFriendlyString()));
 			j++;
 		}
 	}
@@ -192,4 +222,6 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	  
 }
