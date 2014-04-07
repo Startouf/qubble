@@ -19,6 +19,7 @@ public class ConnexeComponent {
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
+	private Point[] corner = new Point[4];
 	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
@@ -62,6 +63,8 @@ public class ConnexeComponent {
 		yMax = 0;
 		xMin = Window.imageWidth;
 		yMin = Window.imageHeight;
+		for(int i = 0 ; i<4 ; i++)
+			corner[i] = new Point(0, 0);
 	}
 	
 	/**
@@ -72,14 +75,23 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			if(pt.getX() > xMax)
+			if(pt.getX() > xMax || (pt.getX() == xMax && pt.getY() > corner[2].getY())){
 				xMax = pt.getX();
-			if(pt.getY() > yMax)
+				corner[2] = pt;
+			}
+			if(pt.getY() > yMax){
 				yMax = pt.getY();
-			if(pt.getX() < xMin)
+				corner[3] = pt;
+			}
+			if(pt.getX() < xMin){
 				xMin = pt.getX();
-			if(pt.getY() < yMin)
+				corner[1] = pt;
+			}	
+			if(pt.getY() < yMin || (pt.getY() == yMin && pt.getX() > corner[0].getX())){
 				yMin = pt.getY();
+				corner[0] = pt;				
+			}
+				
 		}
 		
 	}
@@ -177,7 +189,7 @@ public class ConnexeComponent {
 	public int getLength(){
 		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
 		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
-		return 	(int) (xMax-xMin + yMax-yMin)/2;
+		return 	(int) (Math.sqrt(Math.pow(corner[2].getY() - corner[0].getY(), 2) + Math.pow(corner[2].getX() - corner[0].getX(), 2)));
 	}
 
 	public int getxMax() {
@@ -204,6 +216,12 @@ public class ConnexeComponent {
 		return yCenter;
 	}
 	
+	public Point getCorner(int id){
+		if(id < 4 && id >= 0){
+			return corner[id];
+		}else
+			return null;
+	}
 	
 
 }

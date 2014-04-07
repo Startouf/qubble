@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class QRCode {
 	// Taille de la fenêtre pour définir si une zone contient une composante (demi-longueur)
-	public static int sizeWindow = 1;
+	public static int sizeWindow = 4;
 	
 	private ConnexeComponent border;
 	//private ArrayList<ConnexeComponent> landmark;
@@ -101,20 +101,24 @@ public class QRCode {
 	 * @return
 	 **/
 	public int getValeur(){
-		// Vecteur directeur [0][]: selon x // [1][]: selon y et [][0]: valeur x // [][1]: valeur y
+		// Vecteur directeur 1 [0][] // [1][]: selon y et [][0]: valeur x // [][1]: valeur y
 		int[][] vector = new int[2][2];
 		// On divise par 7 pour avoir la valeur unitaire d'une case
-		vector[0][0] = (border.getxMax()-border.getxMin())/7;
+		/*vector[0][0] = (border.getxMax()-border.getxMin())/7;
 		vector[0][1] = 0;
 		vector[1][0] = 0;
-		vector[1][1] = (border.getyMax()-border.getyMin())/7;
-		int offX = vector[0][0]/2, offY = vector[1][1]/2;		
+		vector[1][1] = (border.getyMax()-border.getyMin())/7;*/
+		vector[0][0] = (border.getCorner(2).getX() - border.getCorner(1).getX())/7;
+		vector[0][1] = (border.getCorner(2).getY() - border.getCorner(1).getY())/7;
+		vector[1][0] = (border.getCorner(1).getX() - border.getCorner(0).getX())/7;
+		vector[1][1] = (border.getCorner(1).getY() - border.getCorner(0).getY())/7;
+		int offX = vector[0][0]/2, offY = vector[0][1]/2;		
 		int valeur = 0;
 		int masque = 1;
 		
 		for(int i = 2 ; i < 5; i++){
 			for(int j = 2 ; j < 5; j++){
-				if(isBlack(border.getxMin() + offX + i*vector[0][0], border.getyMin() +  offY + j*vector[1][1])){
+				if(isBlack(border.getCorner(1).getX() + offX + i*(vector[0][0]), border.getCorner(1).getY() +  offY + i*(vector[0][1]))){
 					valeur |= masque; 
 				}
 				masque = masque << 1;
