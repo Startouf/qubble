@@ -173,7 +173,6 @@ public class App extends JFrame
 	 */
 	public QubjectPalette getQubjectPalette() {
 		if(qubjectPalette != null){
-			qubjectPalette.setVisible(true);
 			return qubjectPalette;
 		}
 		else{ 
@@ -184,36 +183,30 @@ public class App extends JFrame
 
 	public SamplePalette getSamplePalette() {
 		if(samplePalette != null){
-			samplePalette.setVisible(true);
 			return samplePalette;
 		}
 		else{
 			samplePalette = new SamplePalette(this);
-			samplePalette.setVisible(false);
 			return samplePalette;
 		}
 	}
 	
 	public AnimationPalette getAnimationPalette() {
 		if(animationPalette != null){
-			animationPalette.setVisible(true);
 			return animationPalette;
 		}
 		else{
 			animationPalette = new AnimationPalette(this);
-			animationPalette.setVisible(false);
 			return animationPalette;
 		}
 	}
 	
 	public SoundEffectPalette getSoundEffectPalette() {
 		if(soundEffectPalette != null){
-			soundEffectPalette.setVisible(true);
 			return soundEffectPalette;
 		}
 		else{
 			soundEffectPalette = new SoundEffectPalette(this);
-			soundEffectPalette.setVisible(false);
 			return soundEffectPalette;
 		}
 	}

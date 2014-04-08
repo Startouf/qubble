@@ -69,7 +69,7 @@ public class QubjectPalette extends JFrame implements ActionListener
         	
         	this.setContentPane(qubjectSelection);
         	pack();
-        	this.setVisible(true); 
+        	this.setVisible(false); 
 	}
 
 	/**

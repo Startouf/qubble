@@ -24,14 +24,13 @@ public class SelectorButton extends JButton implements ActionListener{
 	private final boolean isQubject;
 	private final QubjectProperty modifier;
 
-	//Constructor for the select QUbject selector
+	//Constructor for the select Qubject selector
 	public SelectorButton(App app, MediaInterface Qubject) {
 		super(new ImageIcon("data/ui/arrow.png"));
 		addActionListener(this);
 		this.app=app;
 		isQubject=true;
 		this.modifier = null;
-		//TODO : add action listener with the pattern
 		setPreferredSize(new Dimension(35,35));
 	}
 
@@ -49,27 +48,27 @@ public class SelectorButton extends JButton implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		if (isQubject == true)
 		{
-			app.getQubjectPalette();
+			app.getQubjectPalette().setVisible(true);
 		}
 		else{
 			this.app.getActiveTab().setActiveProperty(modifier);
 			switch (modifier){
 			//Proto final
 			case AUDIO_EFFECT_ROTATION:
-				this.app.getSoundEffectPalette();
+				this.app.getSoundEffectPalette().setVisible(true);
 				break;
 			case SAMPLE_WHEN_PLAYED:
-				this.app.getSamplePalette();
+				this.app.getSamplePalette().setVisible(true);
 				break;
 			case ANIM_WHEN_PLAYED:
-				this.app.getAnimationPalette();
+				this.app.getAnimationPalette().setVisible(true);
 				break;
 				//Proto final
 			case ANIM_WHEN_DETECTED:
-				this.app.getAnimationPalette();
+				this.app.getAnimationPalette().setVisible(true);
 				break;
 			case AUDIO_EFFECT_Y_AXIS:
-				this.app.getSoundEffectPalette();
+				this.app.getSoundEffectPalette().setVisible(true);
 				break;
 			default:
 				//Should never happen !!!

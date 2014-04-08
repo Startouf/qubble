@@ -77,21 +77,8 @@ public class Selector extends JPanel {
 	}
 
 	
-	private String getNameFor(MediaInterface q, QubjectProperty selectedParam){
-		switch(selectedParam){
-		case ANIM_WHEN_PLAYED:
-			return q.getAnimationWhenPlayed().getName();
-		case AUDIO_EFFECT_ROTATION:
-			return q.getRotationEffect().getName();
-		case SAMPLE_WHEN_PLAYED:
-			return q.getSampleWhenPlayed().getName();
-		case ANIM_WHEN_DETECTED:
-			return q.getAnimationWhenDetected().getName();
-		case AUDIO_EFFECT_Y_AXIS:
-			return q.getYAxisEffect().getName();
-		default:
-			return ("Should Not exist");
-		}
+	private String getNameFor(MediaInterface qubject, QubjectProperty selectedParam){
+		return qubject.getModifierForProperty(selectedParam).getName();
 	}
 	
 	public void setQubject(MediaInterface qubject){
