@@ -39,9 +39,9 @@ public class Qubble implements QubbleInterface {
 	/** 
 	 * Period (time to make a loop) in float milliseconds
 	 * Samples are 128 bpm
-	 * -> total period of 60s/4 = 26s (/4 because it's nice)
+	 * -> total period of 60s/4 = 15s (/4 because it's nice)
 	 */
-	public static final float LOOP_MS = 26000f; //	= 26000f; 
+	public static final float LOOP_MS = 15000f; //	= 15000f; 
 	/*
 	 * Constantes de projection
 	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
@@ -145,8 +145,10 @@ public class Qubble implements QubbleInterface {
 		//The sequencer no longer needs to be run
 		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
+		cameraThread.setPriority(Thread.MIN_PRIORITY);
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
+		playerThread.setPriority(Thread.MAX_PRIORITY);
 	}
 
 	/**

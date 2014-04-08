@@ -7,7 +7,6 @@ public class FakeCamera implements CameraInterface, Runnable
 {
 	private final QubbleInterface qubble;
 	
-	
 	public FakeCamera(QubbleInterface qubble){
 		this.qubble = qubble;
 	}
@@ -17,7 +16,6 @@ public class FakeCamera implements CameraInterface, Runnable
 		try {
 			wait(300); //in milliseconds
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		qubble.QubjectDetected(100100, new Point(150, 350));
@@ -25,11 +23,10 @@ public class FakeCamera implements CameraInterface, Runnable
 		qubble.QubjectDetected(100110, new Point(450, 350));
 		qubble.QubjectDetected(100111, new Point(760, 550));
 		qubble.QubjectDetected(101000, new Point(950, 150));
-		qubble.QubjectDetected(101001, new Point(1100, 650));
+		qubble.QubjectDetected(101001, new Point(1100, 250));
 		try {
 			wait(10000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		qubble.QubjectHasMoved(100100, new Point(150, 550));
@@ -38,10 +35,14 @@ public class FakeCamera implements CameraInterface, Runnable
 		qubble.QubjectHasMoved(100111, new Point(760, 550));
 		qubble.QubjectHasMoved(101000, new Point(950, 150));
 		
+		long i = 0;
+		while(i<=500000000){
+			i++;
+		}
+		
 		try {
 			wait();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

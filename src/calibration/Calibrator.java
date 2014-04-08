@@ -31,7 +31,7 @@ public class Calibrator{
 		//TODO : reconnaissance d'images
 		MyImage image;
 		try {
-			image = new MyImage(ImageIO.read(new File("Modules/image/database.test/qr_1.jpg")));
+			image = new MyImage(ImageIO.read(new File("test/calibration/photo miroir sale.png")));
 			image.getGreyMyImage();
 			image.getBinaryMyImage();
 			
@@ -46,16 +46,17 @@ public class Calibrator{
 			
 			ComponentsAnalyser analyser = new ComponentsAnalyser (image);
 			ArrayList<ConnexeComponent> CClist = analyser.getCClist();
-			int k=0;
-			while (CClist.get(k).getLength() < 100) {
-				k++;
-			}
-			ConnexeComponent CalibrationSquare = CClist.get(k);
+//			int k=0;
+//			while (CClist.get(k).getLength() < 10) {
+//				k++;
+//			}
+			ConnexeComponent CalibrationSquare = CClist.get(0);
 			
 			Calibrate.CAMERA_PIXEL_LOWER_RIGHT = new Point (CalibrationSquare.getxMax(), CalibrationSquare.getyMin());
 			Calibrate.CAMERA_PIXEL_LOWER_LEFT = new Point (CalibrationSquare.getxMin(), CalibrationSquare.getyMin());
 			Calibrate.CAMERA_PIXEL_UPPER_LEFT = new Point (CalibrationSquare.getxMin(), CalibrationSquare.getyMax());
 			Calibrate.CAMERA_PIXEL_UPPER_RIGHT = new Point (CalibrationSquare.getxMax(), CalibrationSquare.getyMax());
+			
 		} 
 		
 		catch (IOException e) {
@@ -64,7 +65,7 @@ public class Calibrator{
 		}
 			
 		//TODO : close image
-		App app = new App();
+//		App app = new App();
 	}
 
 }
