@@ -18,7 +18,7 @@ import audio.EffectType;
  * The Qubject class
  *
  */
-public final class Qubject implements QRInterface, MediaInterface {
+public final class Qubject implements QRInterface, MediaInterface, Comparable {
 
 	private final String name;
 	private final int bitIdentifier;
@@ -176,4 +176,14 @@ public final class Qubject implements QRInterface, MediaInterface {
 	public void setRotation(float floatRadians) {
 		this.rotation = floatRadians;
 	}
-}
+
+	@Override
+	public int compareTo(Object o) {
+		if (o instanceof Qubject){
+			return(this.getCoords().getX()-((Qubject)o).getCoords().getX());
+		} else{
+			System.err.println("Not sorting Qubjects!");
+			return 0;
+		}
+	}
+}	

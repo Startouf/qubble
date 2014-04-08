@@ -59,10 +59,6 @@ public class Qubble implements QubbleInterface {
 	public static final float SPACING_X = (float)TABLE_LENGTH/GRID_COLUMNS;
 	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS;
 	
-	//TODO : compute from above stuff
-	public static final int NB_TILES_X = 10;
-	public static final int NB_TILES_Y = 10;
-	
 	public static final float CURSOR_WIDTH =10f;
 	
 	/**
@@ -145,10 +141,8 @@ public class Qubble implements QubbleInterface {
 		//The sequencer no longer needs to be run
 		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
-		cameraThread.setPriority(Thread.MIN_PRIORITY);
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
-		playerThread.setPriority(Thread.MAX_PRIORITY);
 	}
 
 	/**
@@ -368,6 +362,8 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public void start() {
 		if(!hasStarted){
+			cameraThread.setPriority(Thread.MIN_PRIORITY);
+			playerThread.setPriority(Thread.MAX_PRIORITY);
 			startTime = Sys.getTime();
 			projectionThread.start();
 			playerThread.start();

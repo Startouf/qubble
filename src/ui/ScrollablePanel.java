@@ -23,7 +23,6 @@ class ScrollablePanel extends JPanel implements Scrollable{
 
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
-		// TODO Auto-generated method stub
 		return new Dimension(600, 100);
 	}
 
@@ -36,14 +35,16 @@ class ScrollablePanel extends JPanel implements Scrollable{
 
 	@Override
 	public boolean getScrollableTracksViewportHeight() {
-		// TODO Auto-generated method stub
-		return true;
+		final Container viewport = getParent();
+		//TODO : value should be a function of QubjectList.size
+		return viewport.getHeight() > 400;			
 	}
 
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		final Container viewport = getParent();
-		return viewport.getWidth() > 400;
+		//TODO : value should be a function of EXTRA_COLS and QubjectProperty.values().size
+		return viewport.getWidth() > 800;
 	}
 
 	@Override

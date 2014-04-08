@@ -12,6 +12,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
@@ -53,18 +54,13 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	public ViewListPanel(App app) {
 		super(app.getActiveProject());
 		this.app = app;
-		
+		this.setLayout(new BorderLayout(10,10));
 		
 		WIDTH = EXTRA_COLS.length+QubjectProperty.values().length;
 		HEIGHT = app.getQubjects().size()+1;
 		cell = new JComponent[HEIGHT][WIDTH];
 		
-	
-		
-		
-		
 		content = new ScrollablePanel(this);
-		
 		content.setLayout(new GridLayout(HEIGHT,WIDTH));
 
 		prepare();
@@ -90,6 +86,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		int j = EXTRA_COLS.length;
 		for(QubjectProperty prop : QubjectProperty.values()){
 			propertyMap.put(j, prop);
+			j++;
 		}
 	}
 	
@@ -98,9 +95,9 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		
 		for(i=1; i<app.getQubjects().size()+1; i++){
 			//Time (position of Qubject on X axis)
-			content.add(cell[i][0] = new JLabel("rr"));
+			content.add(cell[i][0] = new JLabel("Error not initialized"));
 			//Logo of the qubject -> Put into a JLabel
-			content.add(cell[i][1] = new JLabel("rrr"));
+			content.add(cell[i][1] = new JLabel("Error not initialized"));
 			
 			int j=2;
 			
@@ -145,22 +142,22 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	}
 	
 	private void updateRows(){
-		//TODO : sort Qubject List
-		//TODO synchronize ??
-//		int i=1, j=0;	//1st row is HEADER
-//		for(Qubject qubject:this.app.getQubjects()){
-//			labels[i][j].setText(Double.toString(this.app.getActiveProject().getQubble().getPosition(qubject).getWidth()));
-//			j++;
-//			labels[i][j].setText(qubject.getName());
-//			j++;
-//			
-//			for(QubjectProperty prop : QubjectProperty.values()){
-//				labels[i][j].setText(qubject.getModifierForProperty(prop).getName());
-//				j++;
-//			}
-//			i++;
-//			j=0;
-//		}
+		//TODO : Assumes the list of Qubjects is sorted !!
+		//TODO : synchronize qubjectList ?
+		int i=1, j=0;	//1st row is HEADER
+		for(Qubject qubject:this.app.getQubjects()){
+			((JLabel) cell[i][j]).setText(Double.toString(this.app.getActiveProject().getQubble().getPosition(qubject).getWidth()));
+			j++;
+			((JLabel) cell[i][j]).setText(qubject.getName());
+			j++;
+			
+			for(QubjectProperty prop : QubjectProperty.values()){
+				((JComboBox)cell[i][j]).setSelectedItem(qubject.getModifierForProperty(prop));
+				j++;
+			}
+			i++;
+			j=0;
+		}
 	}
 	
 	@Override
@@ -188,28 +185,30 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		for(int i=0; i<HEIGHT; i++){
 			for(int j=0; j<WIDTH; j++){
 				if (arg0.getSource() == cell[i][j]){
-					this.activeQubject = qubjectMap.get(i);
-					this.activeProperty = propertyMap.get(j);
-					JComboBox combo = (JComboBox) (cell[i][j]);
-					switch (activeProperty){
-					case ANIM_WHEN_DETECTED:
-						this.app.getAnimationPalette().getCombo();
-						break;
-					case ANIM_WHEN_PLAYED:
-						this.app.getAnimationPalette().getCombo();
-						break;
-					case AUDIO_EFFECT_ROTATION:
-						this.app.getSoundEffectPalette().getCombo();
-						break;
-					case AUDIO_EFFECT_Y_AXIS:
-						this.app.getSoundEffectPalette().getCombo();
-						break;
-					case SAMPLE_WHEN_PLAYED:
-						this.app.getSamplePalette().getCombo();
-						break;
-					default:
-						System.err.println("missing case in viewlist");
-						break;
+					if(j>=EXTRA_COLS.length){
+						this.activeQubject = qubjectMap.get(i);
+						this.activeProperty = propertyMap.get(j);
+						JComboBox combo = (JComboBox) (cell[i][j]);
+						switch (activeProperty){
+						case ANIM_WHEN_DETECTED:
+							this.app.getAnimationPalette().getCombo();
+							break;
+						case ANIM_WHEN_PLAYED:
+							this.app.getAnimationPalette().getCombo();
+							break;
+						case AUDIO_EFFECT_ROTATION:
+							this.app.getSoundEffectPalette().getCombo();
+							break;
+						case AUDIO_EFFECT_Y_AXIS:
+							this.app.getSoundEffectPalette().getCombo();
+							break;
+						case SAMPLE_WHEN_PLAYED:
+							this.app.getSamplePalette().getCombo();
+							break;
+						default:
+							System.err.println("missing case in viewlist");
+							break;
+						}
 					}
 				}
 			}
