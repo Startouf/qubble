@@ -69,11 +69,12 @@ public class MyImage extends BufferedImage{
 		for(int i = 0 ; i < this.getWidth() ; i++){
 			for(int j = 0 ; j < this.getHeight() ; j++){
 				// Calcul du niveau de gris
-				red = this.getRGB(i, j) >> 16 & 0xff;
-				green = this.getRGB(i, j) >> 8 & 0xff;
-				blue = this.getRGB(i, j) & 0xff;
+				int pix = this.getRGB(i, j);
+				red   = pix >> 16 & 0xff;
+				green = pix >> 8 & 0xff;
+				blue  = pix & 0xff;
 				//greyValue = (int) (0.114 * red +  0.299 * green + 0.587 * blue);
-				greyValue = (int) (0.333 * red +  0.333 * green + 0.333 * blue);
+				greyValue = (int) (0.299 * red +  0.587 * green + 0.114 * blue);
 				greyImage.setRGB(i, j, (new Color(greyValue, greyValue, greyValue).getRGB()));
 			}
 		}
