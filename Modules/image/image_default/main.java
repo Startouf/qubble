@@ -31,10 +31,12 @@ public class main {
 		//wind.readImage(new File("Modules/image/database/test/QR_photo_720p.jpg"), true, 180, 570, 110);
 		//wind.readImage(new File("Modules/image/database/test/qr_code_light.jpg"), true, 180, 200, 0);
 		//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym.jpg"), true, 180, 210, 0);
-		//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym_small.jpg"), true, 180, 50, 0);
+		//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym_small.jpg"), true, 180, 21, 0);
+		//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 0);
+		wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 0);
 		// Image avec des carrés
 		//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10
-		wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);
+		//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);
 		
 		
 	}
