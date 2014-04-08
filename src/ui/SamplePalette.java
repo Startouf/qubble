@@ -20,9 +20,10 @@ public class SamplePalette extends QubjectModifierPalette
 	@Override
 	protected JComboBox fillCombo() {
 		JComboBox combo = new JComboBox();
+		combo.setRenderer(new ModifierComboBoxRenderer());
 	  	for (SampleInterface sound : this.app.getGlobalController().getSamples())
     	{
-    		combo.addItem(sound.getName());
+    		combo.addItem(sound);
     	}
 	  	return combo;
 	}
@@ -45,12 +46,6 @@ public class SamplePalette extends QubjectModifierPalette
 
 	@Override
 	public QubjectModifierInterface getSelectedModifier() {
-		String str = (String) combo.getSelectedItem();
-		for (SampleInterface sample : this.app.getGlobalController().getSamples()){
-			if(sample.getName().equals(str)){
-				return sample;
-			}
-		}
-		return null;
+		return (QubjectModifierInterface) combo.getSelectedItem();
 	}
 }

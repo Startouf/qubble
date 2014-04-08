@@ -33,6 +33,10 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	protected final JPanel itemSelectionPanel = new JPanel();
     private JButton boutonVal;
     private JButton boutonAnn; 
+
+    /**
+     * Note : other components use the combo created by the palettes !
+     */
 	protected final JComboBox combo;
 
 	
@@ -105,10 +109,14 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
 	protected abstract JPanel addPrevisualisation();
 
 	/**
-	 * Selected modifier grabbed by several actions
+	 * Selected modifier grabbed by several actions AND other components
 	 * @return
 	 */
 	public abstract QubjectModifierInterface getSelectedModifier();
+
+	public JComboBox getCombo() {
+		return fillCombo();
+	}
 
 	/**
 	 * Change the active Modifier

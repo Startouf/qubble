@@ -95,7 +95,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void highlightQubject(Point qubjectPos) {
-		Dimension tile = Qubble.getTile(qubjectPos);
+		Dimension tile = new Dimension(Qubble.getTile(qubjectPos), qubjectPos.getY());
 		Iterator<Dimension> iter = occupiedTiles.iterator();
 		while(iter.hasNext()){
 			Dimension dim = iter.next();
@@ -171,7 +171,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		}
 		
 		//Highlight tiles where qubjects are present
-		GL11.glColor3f(0.8f, 0f, 0f);
+		GL11.glColor3f(0.5f, 0f, 0f);
 		synchronized(occupiedTiles){
 			for (Dimension dim : occupiedTiles){
 				BaseRoutines.HighlightTile(dim);
@@ -270,9 +270,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 				new float[]{
 						Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 
 						Qubble.TABLE_OFFSET_Y, Qubble.TABLE_HEIGHT+Qubble.TABLE_OFFSET_Y, 0f,-1f}, 
-						new float[]{Qubble.SPACING_X,60f,0f}, 	
-						//TODO : using TEST_PERIOD here
-				new int[]{2,2,2}, new float[]{1f/Qubble.TABLE_LENGTH*Qubble.TEST_PERIOD_SEC,1f/Qubble.TABLE_HEIGHT*100f,1f}, 
+						new float[]{Qubble.SPACING_X,Qubble.SPACING_Y,0f}, 	
+				new int[]{2,2,2}, new float[]{1f/Qubble.TABLE_LENGTH*(Qubble.LOOP_MS/1000f),1f/Qubble.TABLE_HEIGHT*100f,1f}, 
 				new String[]{"Time", "Effect"}, fontTNR);			 
 	}
 

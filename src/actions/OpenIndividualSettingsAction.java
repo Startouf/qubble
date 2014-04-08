@@ -13,12 +13,15 @@ public class OpenIndividualSettingsAction extends AbstractAction {
 	
 	public OpenIndividualSettingsAction(App app) {
 		this.app = app;
+		putValue(NAME, "Vue individuelle");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		ViewIndividualPanel view = new ViewIndividualPanel(app);
 		app.getMainPanel().getSettingsTabs().addTab(
-				"Config. indiv. "+app.getActiveProject().getProjectName(), new ViewIndividualPanel(app));
+				"Config. indiv. "+app.getActiveProject().getProjectName(), view);
+		app.getMainPanel().getSettingsTabs().setSelectedComponent(view);
 	}
 
 }

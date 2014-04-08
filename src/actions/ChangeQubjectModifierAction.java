@@ -9,7 +9,9 @@ import audio.EffectType;
 import audio.SoundEffectInterface;
 import qubject.AnimationInterface;
 import qubject.MediaInterface;
+import qubject.Qubject;
 import qubject.QubjectModifierInterface;
+import qubject.QubjectProperty;
 import qubject.SampleInterface;
 import ui.App;
 import ui.ReferenceButton;
@@ -67,5 +69,32 @@ private final App app;
 			System.out.println("Incorrect Modifier");
 			break;
 		}
+	}
+	
+	public void changeModifier(Qubject qubject, QubjectProperty prop, QubjectModifierInterface modifier){
+		switch (prop){
+		//Proto final
+		case AUDIO_EFFECT_ROTATION:
+			qubject.setRotationEffect((EffectType) modifier);
+			break;
+		case SAMPLE_WHEN_PLAYED:
+			qubject.setSampleWhenPlayed((SampleInterface) modifier);
+			break;
+		case ANIM_WHEN_PLAYED:
+			qubject.setAnimationWhenPlayed((AnimationInterface) modifier);
+			break;
+			//Proto final
+		case ANIM_WHEN_DETECTED:
+			qubject.setAnimationWhenDetected((AnimationInterface) modifier);
+			break;
+		case AUDIO_EFFECT_Y_AXIS:
+			qubject.setYAxisEffect((EffectType) modifier);
+			break;
+		default:
+			//Should never happen !!!
+			System.out.println("Incorrect Modifier");
+			break;
+		}
+		this.app.setConfigForQubject(qubject, prop, modifier);
 	}
 }

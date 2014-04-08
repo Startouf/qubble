@@ -24,9 +24,10 @@ public class AnimationPalette extends QubjectModifierPalette {
 	@Override
 	protected JComboBox fillCombo() {
 		JComboBox combo = new JComboBox();
+		combo.setRenderer(new ModifierComboBoxRenderer());
 	  	for (AnimationInterface anim : this.app.getGlobalController().getAnimations())
     	{
-    		combo.addItem(anim.getName());
+    		combo.addItem(anim);
     	}
 	  	return combo;
 	}
@@ -37,13 +38,7 @@ public class AnimationPalette extends QubjectModifierPalette {
 	}
 
 	public QubjectModifierInterface getSelectedModifier() {
-		String str = (String) combo.getSelectedItem();
-		for (AnimationInterface anim : this.app.getGlobalController().getAnimations()){
-			if(anim.getName().equals(str)){
-				return anim;
-			}
-		}
-		return null;
+		return (QubjectModifierInterface) combo.getSelectedItem();
 	}
 
 }

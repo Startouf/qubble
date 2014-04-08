@@ -33,6 +33,15 @@ import qubject.Qubject;
  *
  */
 public class Qubble implements QubbleInterface {
+	
+	public static final int BPM = 128;
+	public static final float BPS = BPM*60f/(float)BPM;
+	/** 
+	 * Period (time to make a loop) in float milliseconds
+	 * Samples are 128 bpm
+	 * -> total period of 60s/4 = 26s (/4 because it's nice)
+	 */
+	public static final float LOOP_MS = 26000f; //	= 26000f; 
 	/*
 	 * Constantes de projection
 	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
@@ -41,14 +50,17 @@ public class Qubble implements QubbleInterface {
 	public static final int TABLE_HEIGHT = 600;
 	public static final int TABLE_OFFSET_X = 50; 
 	public static final int TABLE_OFFSET_Y=50;
-	public static final float GRID_COLUMNS_PER_SEC = 1f;
-	public static final float GRID_ROWS_PER_SEC = 10f;
-	public static final float TEST_PERIOD_SEC = 30f;
-	public static final float SPACING_X = (float)TABLE_LENGTH/TEST_PERIOD_SEC/GRID_COLUMNS_PER_SEC;
-	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS_PER_SEC;
+	
+	/**
+	 * One measure displayed on Qubble
+	 */
+	public static final float GRID_COLUMNS = 8f;
+	public static final float GRID_ROWS = 1f;
+	public static final float SPACING_X = (float)TABLE_LENGTH/GRID_COLUMNS;
+	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS;
 	
 	//TODO : compute from above stuff
-	public static final int NB_TILES_X = 30;
+	public static final int NB_TILES_X = 10;
 	public static final int NB_TILES_Y = 10;
 	
 	public static final float CURSOR_WIDTH =10f;
@@ -82,10 +94,6 @@ public class Qubble implements QubbleInterface {
 	 */
 	private long startPauseTime = Long.MIN_VALUE;
 	/**
-	 * Period in float milliseconds
-	 * Set to 32 secs because samples are 128 bpm
-	 */
-	private float period = 32000f; 
 	
 	/*
 	 * Attributs coeur
@@ -135,7 +143,7 @@ public class Qubble implements QubbleInterface {
 		initialise();
 		
 		//The sequencer no longer needs to be run
-		sequencer = new Sequencer(this, period);
+		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
@@ -148,7 +156,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	public Qubble(String path){
 		super();
-		sequencer = new Sequencer(this, period);
+		sequencer = new Sequencer(this, LOOP_MS);
 		camera = new FakeCamera(this);
 		initialise();
 		
@@ -176,23 +184,25 @@ public class Qubble implements QubbleInterface {
 	 * @return time in MILLISECONDS
 	 */
 	public long computeQubjectStartingTime(Qubject qubject){
-		//don't forget to divide double by double and not int !
+		//don't forget to divide float by float and not int !
 		float absoluteStartingTime = 
-				(float)((getTile(qubject.getCoords()).getWidth())/NB_TILES_X)*period;
+				((float)(getTile(qubject.getCoords()))*LOOP_MS/GRID_COLUMNS);
 		//Make sure the starting time is POSITIVE
 		//Use  (a % b + b) % b (when a can be negative) 
 		updateCurrentTime();
-		float relativeStartingTime = absoluteStartingTime-currentTime+totalPauseTime;
-		relativeStartingTime = (relativeStartingTime % period + period) % period;
+		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS)+totalPauseTime;
+		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS;
+		
 		//-----DEBUG
 		System.out.println("Demarrage Qubject <<" + qubject.getName() 
 				+ ">> at relative time : <<"+ relativeStartingTime/1000f + ">> seconds");
 		//----->> END DEBUG
+		
 		return (long) (relativeStartingTime);
 	}
 	
 	private void updateCurrentTime(){
-		currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-startTime)%period;
+		currentTime = BaseRoutines.convertSysTimeToMS(Sys.getTime()-startTime)%LOOP_MS;
 	}
 	
 	/**
@@ -279,7 +289,7 @@ public class Qubble implements QubbleInterface {
 		//On annule la tâche
 		tasks.get(qubject).cancel(true);
 
-		//TODO : dire au player d'arrêter le son ??
+		//TODO : dire au player d'arrêter le son ?? (A discuter)
 
 		//On masque son ancien emplacement 
 		projection.highlightQubject(qubject.getCoords());
@@ -371,21 +381,18 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public String whereIsIt(MediaInterface qubject) {
+	public Dimension getPosition(MediaInterface qubject) {
 		QRInterface qr = (QRInterface) qubject;
 		Point pos = qr.getCoords();
-		Dimension tile = getTile(pos);
-		return new String("X : " + tile.width + " Y : " + tile.height);
+		return new Dimension(getTile(pos), qr.getCoords().getY());
 	}
 	
 	/**
-	 * 
 	 * @param pos
-	 * @return the X,Y tile where the qubject is
+	 * @return the column where the point is 
 	 */
-	public static Dimension getTile(org.lwjgl.util.Point pos){
-		return new Dimension((int)((pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X),
-				(int)((pos.getY()-Qubble.TABLE_OFFSET_Y)/Qubble.SPACING_Y));
+	public static int getTile(org.lwjgl.util.Point pos){
+		return (int) Math.floor((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
 	}
 	
 
@@ -400,15 +407,11 @@ public class Qubble implements QubbleInterface {
 	}
 	
 	public float getPeriod() {
-		return period;
+		return LOOP_MS;
 	}
 	
 	public Hashtable<Qubject, ScheduledFuture<?>> getTasks() {
 		return tasks;
-	}
-
-	public void setPeriod(float period) {
-		this.period = period;
 	}
 
 	@Override

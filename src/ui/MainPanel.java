@@ -1,10 +1,15 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import qubject.MediaInterface;
+import qubject.QubjectModifierInterface;
+import qubject.QubjectProperty;
 
 /**
  * @author Cyril
@@ -17,7 +22,7 @@ import javax.swing.JTabbedPane;
 public class MainPanel extends JPanel
 {
 	private final App app;
-	private final SettingsTab settingsTabs;
+	private final JTabbedPane settingsTabs;	//Utilisation d'onglets
 	private final GlobalSettingsPanel globalSettingsPanel;
 	
 	public MainPanel(App app)
@@ -28,7 +33,8 @@ public class MainPanel extends JPanel
 		this.setPreferredSize(new Dimension(650, 600));
 		this.setLayout(new BorderLayout());
 
-		add(settingsTabs = new SettingsTab(app), BorderLayout.CENTER);
+		//Tabs are added by the app
+		add(settingsTabs = new JTabbedPane(), BorderLayout.CENTER);
 		add(globalSettingsPanel = new GlobalSettingsPanel(app), BorderLayout.SOUTH);
 	}
 
@@ -41,7 +47,7 @@ public class MainPanel extends JPanel
 		repaint();
 	}
 
-	public SettingsTab getSettingsTabs() {
+	public JTabbedPane getSettingsTabs() {
 		return settingsTabs;
 	}
 
@@ -49,5 +55,16 @@ public class MainPanel extends JPanel
 		return globalSettingsPanel;
 	}
 	
-	
+	public void setConfigForQubject(ProjectController project, MediaInterface qubject, 
+			QubjectProperty prop, QubjectModifierInterface modifier){
+		for (int i=0; i< settingsTabs.getTabCount(); i++){
+			Component p = settingsTabs.getTabComponentAt(i);
+			if (p instanceof ViewQubjects){
+				ViewQubjects view = (ViewQubjects)p;
+				if(view.isLinkedToProject(project)){
+					view.setConfigForQubject(qubject, prop, modifier);
+				}
+			}
+		}
+	}
 }

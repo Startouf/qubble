@@ -7,9 +7,11 @@ import java.awt.Font;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.Point;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
+import qubject.Qubject;
 import routines.Fonts;
 import routines.Grids;
 import routines.Time;
@@ -21,6 +23,7 @@ public class BaseRoutines
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
 	static float cursorPos = 0f;
+	public static final float H_DELTA = 10f;
 	
 	/*
 	 * ################
@@ -219,7 +222,7 @@ public class BaseRoutines
 		float newPos = uniformModulusTranslation(
 				//TODO : test period
 				cursorPos, Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 
-				1f/(Qubble.TEST_PERIOD_SEC*1000f),dt);
+				1f/(Qubble.LOOP_MS),dt);
 		cursorVertices[0] = newPos;
 		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
 		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
@@ -294,14 +297,18 @@ public class BaseRoutines
 		//TODO : Something else
 		glPushMatrix();
 		GL11.glTranslatef(((float)dim.width)*Qubble.SPACING_X+Qubble.TABLE_OFFSET_X, 
-				+((float)dim.height)*Qubble.SPACING_Y+Qubble.TABLE_OFFSET_Y, 0f);
+				+((float)dim.height)+Qubble.TABLE_OFFSET_Y, 0f);
 		glBegin(GL_QUADS);
 		glNormal3f(0f,0f,1f);
-		glVertex2f(0f,0f);
-		glVertex2f(Qubble.SPACING_X,0f);
-		glVertex2f(Qubble.SPACING_X,Qubble.SPACING_Y);
-		glVertex2f(0f,Qubble.SPACING_Y);
+		glVertex2f(0f,-Qubject.SIZE/2);
+		glVertex2f(Qubble.SPACING_X,-Qubject.SIZE/2);
+		glVertex2f(Qubble.SPACING_X,Qubject.SIZE/2+ H_DELTA);
+		glVertex2f(0f,Qubject.SIZE/2+ H_DELTA);
 		glEnd();
 		glPopMatrix();
+	}
+	
+	public static void highlightQubject(Point qubject){
+		//TODO
 	}
 }

@@ -1,7 +1,10 @@
 package sequencer;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import org.lwjgl.util.Point;
 
 import audio.SampleControllerInterface;
 import qubject.MediaInterface;
@@ -97,7 +100,7 @@ public interface QubbleInterface {
 	 * @param qubject
 	 * @return A user friendly String 
 	 */
-	public String whereIsIt(MediaInterface qubject);
+	public Dimension getPosition(MediaInterface qubject);
 	
 	/**
 	 * Quick restart (keep Qubject config)

@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -36,6 +37,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private final JLabel qubjectPosition;
 	
 	public ViewIndividualPanel(App app) {
+		super(app.getActiveProject());
 		this.app = app;
 		this.project = app.getActiveProject();
 		this.activeQubject = (Qubject) project.getQubjects().get(0);
@@ -56,7 +58,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 		c.gridy=1;
 		c.gridx=0;
 		add(new JLabel("Position : "));
-		qubjectPosition = new JLabel(this.app.getActiveProject().getQubble().whereIsIt(activeQubject));
+		Dimension dim = this.app.getActiveProject().getQubble().getPosition(activeQubject);
+		qubjectPosition = new JLabel("t = " + dim.getWidth() + " Intensité = " + dim.getHeight());
 		c.gridx = 1;
 		add(qubjectPosition);
 		
@@ -84,7 +87,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 	public void setActiveQubject(MediaInterface selectedQubject) {
 		activeQubject= selectedQubject;
 		qubjectSelector.setQubject(selectedQubject);
-		qubjectPosition.setText(this.app.getActiveProject().getQubble().whereIsIt(activeQubject));
+		Dimension dim = this.app.getActiveProject().getQubble().getPosition(activeQubject);
+		qubjectPosition.setText("t = " + dim.getWidth() + " Intensité = " + dim.getHeight());
 		for (QubjectProperty property : QubjectProperty.values()){
 			this.selectors.get(property).setModifier(selectedQubject.getModifierForProperty(property));
 		}
@@ -98,5 +102,12 @@ public class ViewIndividualPanel extends ViewQubjects {
 	@Override
 	public void setModifierOfActiveProperty(QubjectModifierInterface modifier) {
 		this.selectors.get(activeProperty).setModifier(modifier);		
+	}
+
+	@Override
+	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop,
+			QubjectModifierInterface modifier) {
+		// TODO Auto-generated method stub
+		
 	}
 }
