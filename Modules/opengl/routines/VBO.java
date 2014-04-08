@@ -86,23 +86,24 @@ public final class VBO
 	}
 
 	/**
-	 * Will overwrite the VBO from its start up to  
+	 * Will replace the values from the beginning of the VBO   
 	 * @param vboID
 	 * @param values
 	 */
 	public static void overwrite(int vboID, float[] values){
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		FloatBuffer FB = Buffers.FB(values);
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
+		overwrite(vboID, values, 0);
 	}
 
 	/**
-	 * FloatBuffer overload
+	 * Will replace the values from 'offset' 
 	 * @param vboID
-	 * @param FB
+	 * @param values
+	 * @param offset
 	 */
-	public static void overwrite(int vboID, FloatBuffer FB){
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, FB); 
+	public static void overwrite(int vboID, float[] values, int offset){
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		FloatBuffer FB = Buffers.FB(values);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, offset, FB); 
 	}
 	
 	public static void destroy(int vboID){
@@ -244,13 +245,13 @@ public final class VBO
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		glVertexPointer(2, GL_FLOAT, (2+4)*4, 0); //2D -> stride of 6*sizeOf(float)
 
-			glEnableClientState(GL11.GL_COLOR_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, vboID);
-			glColorPointer(4, GL11.GL_FLOAT, (2+4)*4, 2*4);
+		glEnableClientState(GL11.GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, vboID);
+		glColorPointer(4, GL11.GL_FLOAT, (2+4)*4, 2*4);
 
-		glDrawArrays(GL11.GL_QUAD_STRIP, 0, 1); 
+		glDrawArrays(GL11.GL_POINTS, 0, 1); 
 		glDisableClientState(GL11.GL_VERTEX_ARRAY);
-			GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+		GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 	}

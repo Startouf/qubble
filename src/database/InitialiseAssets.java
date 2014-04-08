@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 
-import explosion.PixelExplosion;
+import explosion.PixelSpray;
 import audio.EffectType;
 import audio.SoundEffect;
 import audio.SoundEffectInterface;
