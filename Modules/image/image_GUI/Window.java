@@ -1,8 +1,9 @@
 package image_GUI;
 
-import imageTransform.ComponentAnalyser;
+import imageTransform.ComponentsAnalyser;
 import imageTransform.MyImage;
 import imageTransform.QRCodesAnalyser;
+import imageTransform.SquaresAnalyser;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
@@ -39,7 +40,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private ImageView imageView;
 	private JPanel control;
 	private JButton suivant, action, precedent;
-	private JTextField greyLevel, bigSquareSize, smallSquareSize;
+	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
+	private boolean qrCodesSearch;
 	
 	public Window(){
 		this.setSize(800, 600);
@@ -66,22 +68,22 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(new JLabel("Niveau de gris (0-255)"));
 		control.add(new JLabel("Taille petit carré"));
 		control.add(new JLabel("Taille grand carré"));
-		greyLevel = new JTextField(String.valueOf(MyImage.GREY_LEVEL));
-		bigSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
-		smallSquareSize = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
+		binaryLevelJTF = new JTextField(String.valueOf(MyImage.BINARY_LEVEL));
+		bigSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
+		smallSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
 		
 		// Ajouter la relation entre le document et le jtextfield
-		greyLevel.getDocument().putProperty("parent", greyLevel);
-		bigSquareSize.getDocument().putProperty("parent", bigSquareSize);
-		smallSquareSize.getDocument().putProperty("parent", smallSquareSize);
+		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
+		bigSquareSizeJTF.getDocument().putProperty("parent", bigSquareSizeJTF);
+		smallSquareSizeJTF.getDocument().putProperty("parent", smallSquareSizeJTF);
 		
-		greyLevel.getDocument().addDocumentListener(this);
-		bigSquareSize.getDocument().addDocumentListener(this);
-		smallSquareSize.getDocument().addDocumentListener(this);
+		binaryLevelJTF.getDocument().addDocumentListener(this);
+		bigSquareSizeJTF.getDocument().addDocumentListener(this);
+		smallSquareSizeJTF.getDocument().addDocumentListener(this);
 		
-		control.add(greyLevel);
-		control.add(smallSquareSize);
-		control.add(bigSquareSize);
+		control.add(binaryLevelJTF);
+		control.add(smallSquareSizeJTF);
+		control.add(bigSquareSizeJTF);
 		
 		imageView = new ImageView();
 		this.setLayout(new BorderLayout());
@@ -90,11 +92,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		this.setVisible(true);
 	}
 	
-	/** Lit une image de l'ordinateur
+	/** Lit une image de l'ordinateur avec en spécification si la recherche porte sur des qr codes ou sur des carrés
 	 * 
 	 * @param fichier
 	 */
-	public void readImage(File fichier){
+	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
 		try {
 			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
 			imageWidth = imageView.getImage(imageView.COLOR).getWidth();
@@ -104,6 +106,13 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.qrCodesSearch = qrCodesSearch;
+		this.changeBinaryLevel(binaryLevel);
+		this.binaryLevelJTF.setText(String.valueOf(binaryLevel));
+		this.changeBigSquareSize(bigSquare);
+		this.bigSquareSizeJTF.setText(String.valueOf(bigSquare));
+		this.changeSmallSquareSize(smallSquare);
+		this.smallSquareSizeJTF.setText(String.valueOf(smallSquare));
 	}
 	
 	private void affiche(){
@@ -117,25 +126,39 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * Gestion des actions lors d'un appui sur un bouton de la fênetre
 	 */
 	public void actionPerformed(ActionEvent e) {
+		// Lancement de la reconnaissance de forme
 		if(e.getSource() == action){
 			long startTime = System.currentTimeMillis();
+			// Transformation en niveau de gris
 			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
 			long greyTime = System.currentTimeMillis();
+			// Transformation binaire
 			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
 			long binaryTime = System.currentTimeMillis();
-			ComponentAnalyser test = new ComponentAnalyser(imageView.getImage(imageView.BINARY));
-			imageView.setImage(test.getCCMyImage(), imageView.CONNEXE);
+			// Recherche des composantes connexes
+			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(imageView.BINARY));
+			imageView.setImage(compoConnex.getCCMyImage(), imageView.CONNEXE);
 			long componentTime = System.currentTimeMillis();
-			QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(imageView.BINARY), test);
-			imageView.setImage(qrImage.getImage(), imageView.QR_CODE);
-			long qrTime = System.currentTimeMillis();
 			
+			if(qrCodesSearch){
+				// Recherche des QR codes
+				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
+				imageView.setImage(qrImage.getQRCodesImage(), imageView.QR_CODE);
+			}else{
+				// Recherche des carrés
+				SquaresAnalyser squareImage = new SquaresAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
+				imageView.setImage(squareImage.getQRCodesImage(), imageView.QR_CODE);
+				squareImage.getSquarePosition();
+			}
+			
+			long qrTime = System.currentTimeMillis();
+						
 			long endTime = System.currentTimeMillis();
 			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
 			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
-			System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
+			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 			
 		}
 		if(e.getSource() == suivant){
@@ -180,11 +203,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			
 		}
 		//System.out.println(value);
-		if(e.getDocument().equals(greyLevel.getDocument())){
-			changeGreyLevel(value);			
-		}else if(e.getDocument().equals(bigSquareSize.getDocument())){
+		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
+			changeBinaryLevel(value);			
+		}else if(e.getDocument().equals(bigSquareSizeJTF.getDocument())){
 			changeBigSquareSize(value);	
-		}else if(e.getDocument().equals(smallSquareSize.getDocument())){
+		}else if(e.getDocument().equals(smallSquareSizeJTF.getDocument())){
 			changeSmallSquareSize(value);	
 		}
 	}
@@ -197,11 +220,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value <= 255 sinon false
 	 */
-	private boolean changeGreyLevel(int value){
+	private boolean changeBinaryLevel(int value){
 		if(value < 0 || value > 255){
 			return false;
 		}else{
-			MyImage.GREY_LEVEL = value;
+			MyImage.BINARY_LEVEL = value;
 			return true;
 		}
 	}

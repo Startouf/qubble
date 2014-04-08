@@ -14,11 +14,12 @@ import java.util.ArrayList;
  *
  */
 public class ConnexeComponent {
-	
-	public static final float SQUARETRIGGER = (float) 0.5;
+	// Coefficient pour accepter qu'une composante est un carré
+	public static final float SQUARETRIGGER = (float) 0.60;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
+	private Point[] corner = new Point[4];
 	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
@@ -62,6 +63,8 @@ public class ConnexeComponent {
 		yMax = 0;
 		xMin = Window.imageWidth;
 		yMin = Window.imageHeight;
+		for(int i = 0 ; i<4 ; i++)
+			corner[i] = new Point(0, 0);
 	}
 	
 	/**
@@ -72,14 +75,23 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			if(pt.getX() > xMax)
+			if(pt.getX() > xMax || (pt.getX() == xMax && pt.getY() > corner[2].getY())){
 				xMax = pt.getX();
-			if(pt.getY() > yMax)
+				corner[2] = pt;
+			}
+			if(pt.getY() > yMax){
 				yMax = pt.getY();
-			if(pt.getX() < xMin)
+				corner[3] = pt;
+			}
+			if(pt.getX() < xMin){
 				xMin = pt.getX();
-			if(pt.getY() < yMin)
+				corner[1] = pt;
+			}	
+			if(pt.getY() < yMin || (pt.getY() == yMin && pt.getX() > corner[0].getX())){
 				yMin = pt.getY();
+				corner[0] = pt;				
+			}
+				
 		}
 		
 	}
@@ -92,7 +104,7 @@ public class ConnexeComponent {
 	 * Returne true si la composante connexe à l'allure d'un carré
 	 * @return
 	 */
-	public boolean isSquare(Graphics g){
+	public boolean isSquare(){
 		this.getCenter();
 		
 		float[] mySquare = new float[180];
@@ -113,10 +125,10 @@ public class ConnexeComponent {
 			}
 		}
 		
-		 //Afficher la composante connexe sous forme de courbe.
-//		for(int i = 0; i<180; i += 2){
-//			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-//		}
+/*		 //Afficher la composante connexe sous forme de courbe.
+		for(int i = 0; i<180; i += 2){
+			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
+		}*/
 		
 		
 		for(int i = 0; i<180; i++){
@@ -129,7 +141,7 @@ public class ConnexeComponent {
 		float save = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
 			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) >SQUARETRIGGER ){
+			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > SQUARETRIGGER ){
 				System.out.println("True : " + save);
 				return true;
 			}
@@ -175,7 +187,9 @@ public class ConnexeComponent {
 	 * Retourne la taille du coté du carré
 	 */
 	public int getLength(){
-		return 	(int) (xMax-xMin + yMax-yMin)/2;
+		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
+		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
+		return 	(int) (Math.sqrt(Math.pow(corner[2].getY() - corner[0].getY(), 2) + Math.pow(corner[2].getX() - corner[0].getX(), 2)));
 	}
 
 	public int getxMax() {
@@ -202,6 +216,12 @@ public class ConnexeComponent {
 		return yCenter;
 	}
 	
+	public Point getCorner(int id){
+		if(id < 4 && id >= 0){
+			return corner[id];
+		}else
+			return null;
+	}
 	
 
 }
