@@ -29,6 +29,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import camera.Camera;
+
 /**
  * Affiche une fenetre
  * @author masseran
@@ -42,8 +44,18 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private JButton suivant, action, precedent;
 	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
 	private boolean qrCodesSearch;
+	private Camera wb;
 	
 	public Window(){
+		init();
+	}
+	
+	public Window(Camera wb){
+		init();
+		this.wb = wb;
+	}
+	
+	private void init(){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -128,6 +140,12 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	public void actionPerformed(ActionEvent e) {
 		// Lancement de la reconnaissance de forme
 		if(e.getSource() == action){
+			if(wb != null){
+					imageView.setImage(wb.getImage(), imageView.COLOR);
+					imageWidth = imageView.getImage(imageView.COLOR).getWidth();
+					imageHeight = imageView.getImage(imageView.COLOR).getHeight();
+					affiche();
+			}
 			long startTime = System.currentTimeMillis();
 			// Transformation en niveau de gris
 			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);

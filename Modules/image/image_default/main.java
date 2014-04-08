@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 
+import camera.Camera;
+
 
 public class main {
 
@@ -16,8 +18,11 @@ public class main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Window wind = new Window();
 		
+		Camera wb = new Camera();
+		wb.start();
+		
+		Window wind = new Window(wb);
 		// Image avec un qr code
 		//wind.readImage(new File("Modules/image/database/test/qr_bis.jpg"), true, 180, 200, 50);
 		//wind.readImage(new File("Modules/image/database/test/qr_bis_rot.jpg"), true);
@@ -33,12 +38,10 @@ public class main {
 		//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym.jpg"), true, 180, 210, 0);
 		//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym_small.jpg"), true, 180, 21, 0);
 		//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 0);
-		wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 0);
+		//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 0);
 		// Image avec des carrés
 		//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10
-		//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);
-		
-		
+		//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);		
 	}
 	
 	
