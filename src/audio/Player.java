@@ -70,13 +70,15 @@ public class Player implements PlayerInterface, Runnable {
 	public void write(int[] dataInt) {
 		short[] d = new short[dataInt.length];
 		for (int i = 0; i < dataInt.length; i++) {
+			/*
 			if (dataInt[i] >= 32767) {
 				d[i] = 32767;
 			}
 			if (dataInt[i] <= -32767) {
 				d[i] = 32767;
 			}
-			else d[i] = (short) (dataInt[i]);
+			
+			else */d[i] = (short) (dataInt[i]);
 		}
 		//printArray(d);
 		write(d);

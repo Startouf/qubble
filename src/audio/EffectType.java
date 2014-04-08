@@ -8,6 +8,7 @@ public enum EffectType implements QubjectModifierInterface {
 	Flanger,
 	Delay,
 	Distortion,
+	LPFilter,
 	Volume;
 
 	@Override

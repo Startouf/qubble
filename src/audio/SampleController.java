@@ -113,6 +113,13 @@ public class SampleController implements SampleControllerInterface {
 		else return 0;
 	}
 	
+	public int getEffected(int index) {
+		if (index < effected.size()) {
+			return effected.get(index);
+		}
+		else return 0;
+	}
+	
 	public int size() {
 		return samples.size();
 	}

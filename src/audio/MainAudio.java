@@ -31,20 +31,20 @@ public class MainAudio {
 		SampleInterface sample = new Sample("pute", new File("data/samples/files/VEH1 House Loop - 058Mono.wav"));
 		SampleInterface melody = new Sample("pute2", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 		SampleInterface melody2 = new Sample("pute3", new File("data/samples/files/VEE Melody Kits 18 128 BPM Root EMono.wav"));
+		SampleInterface sine = new Sample("pute4", new File("/Users/vincentcouteaux/wavs/triangle.wav"));
 		
 		try {
 			
-			SampleControllerInterface sc3 = player.playSample(melody);
-			player.tweakSample(sc3, EffectType.Delay, 60);
+			player.playSample(sine);
+			//player.tweakSample(sc3, EffectType.Delay, 60);
 			//player.tweakSample(sc3, EffectType.Distortion, 60);
-			Thread.sleep(1*bar);
-			player.tweakSample(sc3, EffectType.Distortion, 20);
-			Thread.sleep(1*bar);
-			player.tweakSample(sc3, EffectType.Volume, 20);
-			
-			
-			
-			Thread.sleep(6*bar);
+			Thread.sleep(2*bar);
+			SampleControllerInterface sc3 = player.playSample(sine);
+			player.tweakSample(sc3, EffectType.Distortion, 65);
+			Thread.sleep(500);
+			player.tweakSample(sc3, EffectType.LPFilter, 5);
+			Thread.sleep(2*bar);
+		
 			//player.playSample(sample); 
 			
 			/*
