@@ -24,6 +24,7 @@ import org.newdawn.slick.TrueTypeFont;
 
 import explosion.FireExplosion;
 import explosion.PixelSpray;
+import fissure.Fissure;
 import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
@@ -66,7 +67,7 @@ public class AnimationDebug implements OutputImageInterface {
 		needsToBeLoaded.add(new PixelSpray(new Point (400,400)));
 		
 		highlightQubject(new Point(600, 300));
-		needsToBeLoaded.add(new FireExplosion(new Point(595,325)));
+		needsToBeLoaded.add(new Fissure(new Point(800,325)));
 	}
 	
 	public void start(int width, int height){

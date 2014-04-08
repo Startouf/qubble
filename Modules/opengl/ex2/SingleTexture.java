@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.*;
 import org.newdawn.slick.util.ResourceLoader;
 
+import routines.Squares;
 import routines.Time;
 
 import static routines.Buffers.*;
@@ -59,7 +61,7 @@ public class SingleTexture
 	private void initTextures(){
 		try {
 			// load texture from PNG file
-			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("data/opengl/trollface.jpg"));
+			texture = TextureLoader.getTexture("GIF", ResourceLoader.getResourceAsStream("data/animations/textures/fissures2.gif"));
  
 			System.out.println("Texture loaded: "+texture);
 			System.out.println(">> Image width: "+texture.getImageWidth());
@@ -73,6 +75,9 @@ public class SingleTexture
 	}
 
 	private void renderGL(){
+		texture.bind();
+		Squares.square3DWithTexture(new float[]{100, 100, 0},  new float[]{200,100,0}, new float[]{200,200,0}, new float[]{100,200,0});
+		
 		drawCubeWithTexture(coords.getX(), coords.getY(), -30f, 200f, texture);
 	}
 
