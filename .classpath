@@ -21,25 +21,25 @@
 	<classpathentry kind="lib" path="lib/jfreechart/jcommon-1.0.21.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.17.jar"/>
 	<classpathentry kind="lib" path="lib/apache commons/commons-io-2.4/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-android-arm.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-linux-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-linux-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-macosx-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-windows-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/ffmpeg-2.1.1-windows-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacpp.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-android-arm.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-linux-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-linux-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-macosx-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-windows-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/javacv-windows-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-android-arm.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-linux-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-linux-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-macosx-x86_64.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-windows-x86.jar"/>
-	<classpathentry kind="lib" path="/home/eric/workspace/Pact/lib/javacv7/opencv-2.4.8-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-android-arm.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/ffmpeg-2.1.1-windows-x86.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacpp.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-android-arm.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv-windows-x86.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/javacv.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-android-arm.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv7/opencv-2.4.8-windows-x86.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,26 +1,18 @@
 package image_GUI;
 
 import imageTransform.ComponentsAnalyser;
-import imageTransform.MedianFilter;
 import imageTransform.MyImage;
 import imageTransform.QRCodesAnalyser;
 import imageTransform.SquaresAnalyser;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 
 import camera.Camera;
 
@@ -38,6 +29,9 @@ import camera.Camera;
  *
  */
 public class Window extends JFrame implements ActionListener, DocumentListener{
+	
+	// Index pour retrouver les images spécifiques dans le lecteur
+	public int COLOR = -1, GREY = -1, BINARY = -1, CONNEXE = -1, QR_CODE = -1, COURBE = -1; 
 	
 	public static int imageWidth, imageHeight;
 	private ImageView imageView;
@@ -111,9 +105,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 */
 	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
 		try {
-			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
-			imageWidth = imageView.getImage(imageView.COLOR).getWidth();
-			imageHeight = imageView.getImage(imageView.COLOR).getHeight();
+			COLOR = imageView.setImage(new MyImage(ImageIO.read(fichier)));
+			imageWidth = imageView.getImage(COLOR).getWidth();
+			imageHeight = imageView.getImage(COLOR).getHeight();
 			affiche();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -141,33 +135,38 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	public void actionPerformed(ActionEvent e) {
 		// Lancement de la reconnaissance de forme
 		if(e.getSource() == action){
+			
 			if(wb != null){
-					imageView.setImage(wb.getImage(), imageView.COLOR);
-					imageWidth = imageView.getImage(imageView.COLOR).getWidth();
-					imageHeight = imageView.getImage(imageView.COLOR).getHeight();
+					imageView.resetList(true);
+					COLOR = imageView.setImage(wb.getImage());
+					imageWidth = imageView.getImage(COLOR).getWidth();
+					imageHeight = imageView.getImage(COLOR).getHeight();
 					affiche();
+			}else{
+				imageView.resetList(false);
 			}
 			long startTime = System.currentTimeMillis();
 			// Transformation en niveau de gris
-			MedianFilter md = new MedianFilter(3);
-			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
+			GREY = imageView.setImage(imageView.getImage(COLOR).getGreyMyImage());
+			imageView.getImage(GREY).getHistogramme();
+			imageView.setImage(imageView.getImage(GREY).getHistogramImage());
 			long greyTime = System.currentTimeMillis();
 			// Transformation binaire
-			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(false), imageView.BINARY);
+			BINARY = imageView.setImage(imageView.getImage(GREY).getBinaryMyImageByBlock());
 			long binaryTime = System.currentTimeMillis();
 			// Recherche des composantes connexes
-			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(imageView.BINARY));
-			imageView.setImage(compoConnex.getCCMyImage(), imageView.CONNEXE);
+			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(BINARY));
+			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
 			long componentTime = System.currentTimeMillis();
 			
 			if(qrCodesSearch){
 				// Recherche des QR codes
-				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
-				imageView.setImage(qrImage.getQRCodesImage(), imageView.QR_CODE);
+				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(BINARY), compoConnex);
+				QR_CODE = imageView.setImage(qrImage.getQRCodesImage());
 			}else{
 				// Recherche des carrés
-				SquaresAnalyser squareImage = new SquaresAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
-				imageView.setImage(squareImage.getQRCodesImage(), imageView.QR_CODE);
+				SquaresAnalyser squareImage = new SquaresAnalyser(imageView.getImage(BINARY), compoConnex);
+				QR_CODE = imageView.setImage(squareImage.getQRCodesImage());
 				squareImage.getSquarePosition();
 			}
 			
