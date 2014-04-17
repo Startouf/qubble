@@ -1,6 +1,7 @@
 package image_GUI;
 
 import imageTransform.ComponentsAnalyser;
+import imageTransform.MedianFilter;
 import imageTransform.MyImage;
 import imageTransform.QRCodesAnalyser;
 import imageTransform.SquaresAnalyser;
@@ -148,10 +149,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			}
 			long startTime = System.currentTimeMillis();
 			// Transformation en niveau de gris
+			MedianFilter md = new MedianFilter(3);
 			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
 			long greyTime = System.currentTimeMillis();
 			// Transformation binaire
-			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
+			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(false), imageView.BINARY);
 			long binaryTime = System.currentTimeMillis();
 			// Recherche des composantes connexes
 			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(imageView.BINARY));
