@@ -73,7 +73,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	public void start(int width, int height){
 		lastFrameTime = Sys.getTime();
-        InitRoutines.initDisplay(width, height);
+        InitRoutines.initDisplayOnSecondDevice(width, height);
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);

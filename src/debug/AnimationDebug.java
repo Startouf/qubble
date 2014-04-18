@@ -71,7 +71,7 @@ public class AnimationDebug implements OutputImageInterface {
 	}
 	
 	public void start(int width, int height){
-        InitRoutines.initDisplay(width, height);
+        InitRoutines.initDisplayOnSecondDevice(width, height);
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);
