@@ -5,7 +5,7 @@ import java.io.File;
 
 public abstract class SoundEffect implements SoundEffectInterface{
 	
-	private EffectType type;
+	protected EffectType type;
 	protected int amount;
 	
 	public SoundEffect(EffectType type, int amount) {

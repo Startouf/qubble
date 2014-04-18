@@ -107,14 +107,31 @@ public class SampleController implements SampleControllerInterface {
 	}
 	
 	public int get(int index) {
-		if (index < samples.size()) {
+		if (index < samples.size() && index >= 0) {
 			return samples.get(index);
 		}
 		else return 0;
 	}
 	
+	public int get(double index) { //interpolation linéaire;
+		if (index <= samples.size() - 1 && index >= 0) {
+			int floor = (int) index;
+			int ceil = floor + 1;
+			double frac = index - floor;
+			double y = (samples.get(ceil) - samples.get(floor))*frac + samples.get(floor);
+			//System.out.println("index : " + index + ", floor : " + floor + ", frac : " + frac + ", samples.get(ceil) : " + samples.get(ceil)
+				//	 + ", samples.get(floor) : " + samples.get(floor) + ", y : " + y);
+			return (int) y;
+		}
+		else return 0;
+	}
+	
+	public int get(float index) {
+		return get((double) index);
+	}
+	
 	public int getEffected(int index) {
-		if (index < effected.size()) {
+		if (index < effected.size() && index >= 0) {
 			return effected.get(index);
 		}
 		else return 0;

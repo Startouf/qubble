@@ -9,6 +9,8 @@ public enum EffectType implements QubjectModifierInterface {
 	Delay,
 	Distortion,
 	LPFilter,
+	HPFilter,
+	Shifter,
 	Volume;
 
 	@Override
