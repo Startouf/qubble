@@ -152,8 +152,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			imageView.setImage(imageView.getImage(GREY).getHistogramImage());
 			long greyTime = System.currentTimeMillis();
 			// Transformation binaire
-			BINARY = imageView.setImage(imageView.getImage(GREY).getBinaryMyImageByBlock());
+			BINARY = imageView.setImage(imageView.getImage(GREY).getVarianceFilterImage(3, 5));
 			long binaryTime = System.currentTimeMillis();
+			
 			// Recherche des composantes connexes
 			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(BINARY));
 			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
@@ -161,7 +162,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			
 			if(qrCodesSearch){
 				// Recherche des QR codes
-				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(BINARY), compoConnex);
+				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(GREY), imageView.getImage(BINARY), compoConnex);
 				QR_CODE = imageView.setImage(qrImage.getQRCodesImage());
 			}else{
 				// Recherche des carrés

@@ -185,17 +185,24 @@ public class ComponentsAnalyser {
 		for (ConnexeComponent listPoint : listCC) {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
 			
+			// Affichage des coins des composantes connexes
+			/*for(int i = 0 ; i < 4 ; i++){
+				g.fillRect(listPoint.getCorner(i).getX()-1, listPoint.getCorner(i).getY()-1, 2, 2);
+			}*/
 			
-			/* Affichage de l'image ou on ne voit que les points principaux (bordures  et centre)
-			 * g.setColor(compoColor);
-			listPoint.getCenter();
-			g.fillRect(listPoint.getxMin(), listPoint.getyMin(), 2, 2);
-			g.fillRect(listPoint.getxMin(), listPoint.getyMax(), 2, 2);
-			g.fillRect(listPoint.getxMax(), listPoint.getyMin(), 2, 2);
-			g.fillRect(listPoint.getxMax(), listPoint.getyMax(), 2, 2);
-			g.fillRect(listPoint.getxCenter(), listPoint.getyCenter(), 2, 2);
 			
-			System.out.println("---------");
+			// Affichage de l'image ou on ne voit que les points principaux (bordures  et centre)
+/*			if(listPoint.getConnexePoints().size() > 100){
+				g.setColor(compoColor);
+				listPoint.getCenter();
+				g.fillRect(listPoint.getxMin(), listPoint.getyMin(), 2, 2);
+				g.fillRect(listPoint.getxMin(), listPoint.getyMax(), 2, 2);
+				g.fillRect(listPoint.getxMax(), listPoint.getyMin(), 2, 2);
+				g.fillRect(listPoint.getxMax(), listPoint.getyMax(), 2, 2);
+				g.fillRect(listPoint.getxCenter(), listPoint.getyCenter(), 2, 2);
+			}*/
+
+			/*System.out.println("---------");
 			System.out.println(listPoint.getxMin());
 			System.out.println(listPoint.getxMax());
 			System.out.println(listPoint.getyMin());
@@ -203,9 +210,11 @@ public class ComponentsAnalyser {
 			System.out.println("---------");*/
 			
 			// Affichages des composantes connexes par couleurs
-			for (Point pixel : listPoint.getConnexePoints()) {
-					if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
-						CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
+			if(listPoint.getConnexePoints().size() > 100){
+				for (Point pixel : listPoint.getConnexePoints()) {
+						if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
+							CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
+				}	
 			}
 			
 		}

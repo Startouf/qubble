@@ -174,6 +174,9 @@ public class MyImage extends BufferedImage{
 	 * @return
 	 */
 	private int getBinaryLevel(){		
+		if(histogramme == null){
+			getHistogramme();
+		}
 		int i, l, totl, g=0;
         double toth, h;
         for (i = 1; i < 256; i++) {
@@ -211,7 +214,7 @@ public class MyImage extends BufferedImage{
 	
 	// Get binary treshold using Otsu's method
 	private int otsuTreshold() {
-	 
+		
 	    int[] histogram = histogramme;
 	    int total = this.getHeight() * this.getWidth();
 	 
@@ -260,6 +263,10 @@ public class MyImage extends BufferedImage{
 		}
 	}
 	
+	/**
+	 * 
+	 * @return une image de l'histogramme
+	 */
 	public BufferedImage getHistogramImage(){
 		BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		if(true){
@@ -284,4 +291,66 @@ public class MyImage extends BufferedImage{
 		return image;
 	}
 	
+	/*% *************************************************************************
+	% Title: Function-Compute Variance map of the image
+	% Inputs: Input Image (var: inputImage), Window Size (var: windowSize),
+	% Threshold (var: thresh) Typical value is 140
+	% Outputs: Variance Map (var: varianceImg) , Time taken (var: timeTaken)
+	% Example Usage of Function: [varianceImg, timeTaken]=funcVarianceMap('MonopolyLeftColor.png', 5, 9);
+	% **************************************************************************/
+	/**
+	 * Lis une image en niveau de gris
+	 * @param thresh
+	 * @return
+	 */
+	public MyImage getVarianceFilterImage(int window, int thresh){
+		int height = this.getHeight();
+		int width = this.getWidth();
+		int windowSize, sum, var;
+		
+		// Vérification que windowSize est un nombre impair
+		if(window%2 == 1 && window>2){
+			windowSize = (window-1)/2;
+		}else{
+			windowSize = (window)/2;
+		}
+		
+		MyImage mean = new MyImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		MyImage varianceImg = new MyImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		// Parcours de l'image
+		for(int i = windowSize; i < width-windowSize; i++){
+			for(int j = windowSize; j < height-windowSize; j++){
+				sum = 0;
+				// Parcours de la fenêtre
+				for(int a = -windowSize; a <= windowSize; a++){
+					for(int b = -windowSize; b <= windowSize; b++){
+						sum += (this.getRGB(i+a, j+b) & 0xff);
+					}
+				}
+				mean.setRGB(i, j, (sum/(window*window)));
+			}
+		}
+		
+		// Parcours de l'image
+				for(int i = windowSize; i < width-windowSize; i++){
+					for(int j = windowSize; j < height-windowSize; j++){
+						sum = 0;
+						// Parcours de la fenêtre
+						for(int a = -windowSize; a <= windowSize; a++){
+							for(int b = -windowSize; b <= windowSize; b++){
+								sum += Math.pow(((this.getRGB(i+a, j+b) & 0xff) - mean.getRGB(i, j)), 2);
+							}
+						}
+						var = sum/((window*window)-1);
+						//System.out.println(var);
+						if(var > thresh){
+							varianceImg.setRGB(i, j, Color.black.getRGB());
+						}else{
+							varianceImg.setRGB(i, j, Color.white.getRGB());
+						}
+					}
+				}
+				return varianceImg;
+		
+	}
 }

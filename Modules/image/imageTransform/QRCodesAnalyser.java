@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
+
 /**
  * Traite les différentes composantes connexes de l'image pour en faire ressortir les QR codes et les afficher.
  * @author masseran
@@ -17,8 +19,8 @@ import java.util.HashMap;
  */
 public class QRCodesAnalyser {
 	
-	public static int BIGSQUARESIZE = 210;
-	public static int SMALLSQUARESIZE = 35;
+	public static int BIGSQUARESIZE = 116;
+	public static int SMALLSQUARESIZE = 88;
 	
 	private ArrayList<QRCode> listQRcode;
 	// Contient les ids des QR codes et sa position
@@ -26,10 +28,10 @@ public class QRCodesAnalyser {
 	private MyImage image;
 	
 	
-	public QRCodesAnalyser(MyImage binaryImage, ComponentsAnalyser componentResult){
+	public QRCodesAnalyser(MyImage tableImage, MyImage varianceImage, ComponentsAnalyser componentResult){
 		
-		int imageHeight = binaryImage.getHeight();
-		int imageWidth = binaryImage.getWidth();
+		int imageHeight = tableImage.getHeight();
+		int imageWidth = tableImage.getWidth();
 		
 		//ArrayList<ConnexeComponent> smallSquare = new ArrayList<ConnexeComponent>();
 		listQRcode = new ArrayList<QRCode>();
@@ -38,14 +40,13 @@ public class QRCodesAnalyser {
 				
 		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
 		for(ConnexeComponent cc : componentResult.getCClist()){
-			// Affichage de la longueur des compos afin de trouver quel seuil prendre pour la détection des carrés
-			//System.out.println("Longueur : " + cc.getLength());
-			
-/*			if(Math.abs(SMALLSQUARESIZE - cc.getLength()) < 5 && cc.isSquare()){
-				smallSquare.add(cc);
-			}else*/ if(Math.abs(BIGSQUARESIZE - cc.getLength()) < 10 && cc.isSquare()){
-				listQRcode.add(new QRCode(cc, binaryImage));
+
+			if(cc.getConnexePoints().size() > 100){
+				if(((Math.abs(SMALLSQUARESIZE - cc.getLength()) < 10)/* || (Math.abs(BIGSQUARESIZE - cc.getLength()) < 10)*/) && cc.isSquare()){
+					listQRcode.add(new QRCode(cc, tableImage, new MyImage(tableImage.getSubimage(cc.getCorner(0).getX()-5, cc.getCorner(2).getY()-5, 160, 160))));
+				}
 			}
+			
 		}
 		
 		// Assembler les QrCodes

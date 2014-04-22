@@ -63,8 +63,7 @@ public class ConnexeComponent {
 		yMax = 0;
 		xMin = Window.imageWidth;
 		yMin = Window.imageHeight;
-		for(int i = 0 ; i<4 ; i++)
-			corner[i] = new Point(0, 0);
+
 	}
 	
 	/**
@@ -75,23 +74,31 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			if(pt.getX() > xMax || (pt.getX() == xMax && pt.getY() > corner[2].getY())){
-				xMax = pt.getX();
+			int i = 0;
+			while(i < 4 && corner[i] == null){
+				corner[i] = pt;
+				i++;
+			}
+			// Coin à gauche
+			if(corner[0].getX() > pt.getX()){
+				corner[0] = pt;
+			}
+			
+			// Coin à droite
+			if(corner[1].getX() < pt.getX()){
+				corner[1] = pt;
+			}
+			
+			// Coin en haut
+			if(corner[2].getY() > pt.getY()){
 				corner[2] = pt;
 			}
-			if(pt.getY() > yMax){
-				yMax = pt.getY();
+			
+			// Coin en bas
+			if(corner[3].getY() < pt.getY()){
 				corner[3] = pt;
 			}
-			if(pt.getX() < xMin){
-				xMin = pt.getX();
-				corner[1] = pt;
-			}	
-			if(pt.getY() < yMin || (pt.getY() == yMin && pt.getX() > corner[0].getX())){
-				yMin = pt.getY();
-				corner[0] = pt;				
-			}
-				
+
 		}
 		
 	}
@@ -189,7 +196,7 @@ public class ConnexeComponent {
 	public int getLength(){
 		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
 		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
-		return 	(int) (Math.sqrt(Math.pow(corner[2].getY() - corner[0].getY(), 2) + Math.pow(corner[2].getX() - corner[0].getX(), 2)));
+		return 	(int) (Math.sqrt(Math.pow(corner[0].getX() - corner[2].getX(), 2) + Math.pow(corner[0].getY() - corner[2].getY(), 2)));
 	}
 
 	public int getxMax() {
