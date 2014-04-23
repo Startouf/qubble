@@ -2,6 +2,7 @@ package database;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -39,13 +40,22 @@ public class InitialiseTools
 		return files;
 	}
 
-	public static File compileAnimation(File dotJavaFile){
+	public static void compileAnimation(File dotJavaFile){
 		//Some Copy Paste. Check
 		//TODO
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		//TODO : check
-		compiler.run(null, null, null, dotJavaFile.getAbsoluteFile().toString());
-		return null;
+		String file;
+		try {
+			file = dotJavaFile.getCanonicalPath().toString();
+			compiler.run(null, null, null, file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e){
+			System.err.println("Couldn't compile animation!");
+			e.printStackTrace();
+		}
 	}
 	
 	public static String getDotClassFromDotJava(String dotJavaFile){
