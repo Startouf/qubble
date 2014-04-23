@@ -46,8 +46,8 @@ public class QRCode {
 		if(sizeWindow>0){
 			for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
 				for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
-					if(x>=0 && x<qrImage.getWidth() && y >= 0 && y<qrImage.getHeight()){
-						if(qrImage.getRGB(i, j) == Color.BLACK.getRGB()){
+					if(x>=0 && x<greyImage.getWidth() && y >= 0 && y<greyImage.getHeight()){
+						if(greyImage.getRGB(i, j) == Color.BLACK.getRGB()){
 							moy++;
 						}
 					}
@@ -66,8 +66,8 @@ public class QRCode {
 			}
 			// Recherche sur 1 pixel
 		}else if(sizeWindow == 0){
-					if(x>=0 && x<qrImage.getWidth() && y >= 0 && y<qrImage.getHeight()){
-						if(qrImage.getRGB(x, y) == Color.BLACK.getRGB()){
+					if(x>=0 && x<greyImage.getWidth() && y >= 0 && y<greyImage.getHeight()){
+						if(greyImage.getRGB(x, y) == Color.BLACK.getRGB()){
 							moy++;
 						}
 					}
@@ -105,16 +105,20 @@ public class QRCode {
 	public int getValeur(){
 		int offsetX = 22, offsetY = 25;
 		int angleX = Math.abs(border.getCorner(2).getX() - border.getCorner(0).getX())/5;
-		int angleY = Math.abs(border.getCorner(0).getY() - border.getCorner(2).getY())/5;;
+		int angleY = Math.abs(border.getCorner(0).getY() - border.getCorner(2).getY())/5;
+		int angleX2 = Math.abs(border.getCorner(3).getX() - border.getCorner(0).getX())/5;
+		int angleY2 = Math.abs(border.getCorner(0).getY() - border.getCorner(3).getY())/5;
 		int pas = 16;
+		
 		int X = 5;
 		int Y = border.getCorner(0).getY()-border.getCorner(2).getY()+5;
+
 		
 		int valeur = 0, masque = 1;
 		
 		for(int i = 0 ; i < 3; i++){
 			for(int j = 0 ; j < 3; j++){
-				if(isBlack(X + offsetX + j*(angleX), Y +  offsetY - i*(angleY))){
+				if(isBlack( border.getCorner(0).getX() + j*(angleX+angleX2), border.getCorner(0).getY() + i*(angleY+angleY2))){
 					valeur |= masque; 
 				}
 				masque = masque << 1;

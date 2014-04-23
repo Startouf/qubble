@@ -81,15 +81,11 @@ public class QRCodesAnalyser {
 			for(Point pt : qr.getBorder().getConnexePoints()){
 				image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
 			}
-			image.setRGB(qr.getBorder().getCorner(0).getX(), qr.getBorder().getCorner(0).getY(), Color.cyan.getRGB());
-			image.setRGB(qr.getBorder().getCorner(1).getX(), qr.getBorder().getCorner(1).getY(), Color.yellow.getRGB());
-			image.setRGB(qr.getBorder().getCorner(2).getX(), qr.getBorder().getCorner(2).getY(), Color.red.getRGB());
-			image.setRGB(qr.getBorder().getCorner(3).getX(), qr.getBorder().getCorner(3).getY(), Color.blue.getRGB());
-/*			for(ConnexeComponent landmark : qr.getLandMark()){
-				for(Point pt : landmark.getConnexePoints()){
-					image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
-				}
-			}*/
+			
+			g.setColor(Color.black);
+			for(int i = 0; i<4; i++){
+				g.fillRect(qr.getBorder().getCorner(i).getX()-4, qr.getBorder().getCorner(i).getY()-4, 8, 8);
+			}
 			
 		}
 		

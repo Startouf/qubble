@@ -214,7 +214,8 @@ public class ComponentsAnalyser {
 				for (Point pixel : listPoint.getConnexePoints()) {
 						if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
 							CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
-				}	
+				}
+				
 			}
 			
 		}
