@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import more_ex.GridWithLabels;
@@ -27,9 +28,11 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 import explosion.PixelSpray;
 import qubject.AnimationInterface;
+import qubject.QRInterface;
 import routines.Time;
 import routines.VBO;
 import sequencer.Qubble;
+import sequencer.QubbleInterface;
 import wave.WaterWave;
 
 public class ProjectorOutput implements OutputImageInterface, Runnable {
@@ -52,10 +55,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		= new ArrayList<AnimationControllerInterface>(20); //Nombre empirique
 	private final ArrayList<AnimationControllerInterface> needsToBeLoaded
 		= new ArrayList<AnimationControllerInterface>(5);  //Nombre Empirique
-	/**
-	 * TODO : move to Qubble/Séquenceur ?
-	 */
-	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
+	
+	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();	//OLD : to remove ASAP
+	
+	private final Hashtable<QRInterface, QubjectTracker> trackers;
 	
 	/**
 	 * Volatile because those booleans are changed by other Threads
@@ -68,9 +71,18 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private long lastFrameTime;
 	private Float cursorPos = new Float(Qubble.TABLE_OFFSET_X);
+	private final QubbleInterface qubble;
 
-	private void debug(){
-		
+	public ProjectorOutput(QubbleInterface qubble) {
+		this.qubble = qubble;
+		this.trackers = new Hashtable<QRInterface, QubjectTracker>();
+		initTrackers();
+	}
+
+	private void initTrackers(){
+		for(QRInterface qubject : qubble.getAllQubjects()){
+			trackers.put(qubject, new QubjectTracker(qubject));
+		}
 	}
 	
 	public void start(int width, int height){
@@ -120,13 +132,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//get the controller for the animation
 		AnimationControllerInterface controller;
 		
-		//Dummy load
-//		if (anim.getName().equals("Water wave"))
-//			controller = new WaterWave(qubjectCoords);
-//		else
-//			controller = new PixelExplosion(qubjectCoords);
-		
-		//Try some java reflexion !
 		try {
 			Class<?> clazz = anim.getAnimationControllerClass();
 			Constructor<?> cstr= clazz.getConstructor(Point.class); 
@@ -194,6 +199,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 				anim.renderAnimation();
 			}
 //		}
+			
+		//Trackers
+		for(QubjectTracker tracker : trackers.values()){
+			tracker.renderStatusInstant();
+		}
 	}
 
 	/**
@@ -216,6 +226,14 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			updateAnimations(dt);
 		}
 		
+		updateTrackers();
+		
+	}
+	
+	private void updateTrackers(){
+		for (QubjectTracker tracker : trackers.values()){
+			tracker.renderStatusInstant();
+		}
 	}
 
 	/**
@@ -305,12 +323,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		fontTNR = BaseRoutines.TimesNewsRomanTTF();
 	}
 
-	//main used as a test
-	public static void main(String[] args){
-		ProjectorOutput app = new ProjectorOutput();
-		app.start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
-	}
-
 	@Override
 	public void run() {
 		start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
@@ -334,5 +346,15 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	public void playPause() {
 		hasStarted = true;
 		isPlaying = !isPlaying;
+	}
+
+	@Override
+	public void trackQubject(QRInterface qubject) {
+		trackers.get(qubject).setActive(true);
+	}
+
+	@Override
+	public void stopTrackingQubject(QRInterface qubject) {
+		trackers.get(qubject).setActive(false);
 	}
 }
