@@ -1,6 +1,7 @@
 package image_GUI;
 
 import imageTransform.ComponentsAnalyser;
+import imageTransform.Hough;
 import imageTransform.MyImage;
 import imageTransform.QRCodesAnalyser;
 import imageTransform.SquaresAnalyser;
@@ -151,14 +152,20 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			imageView.getImage(GREY).getHistogramme();
 			imageView.setImage(imageView.getImage(GREY).getHistogramImage());
 			long greyTime = System.currentTimeMillis();
-			// Transformation binaire
+			// Transformation par le filtre de variance
 			BINARY = imageView.setImage(imageView.getImage(GREY).getVarianceFilterImage(3, 5));
+			
 			long binaryTime = System.currentTimeMillis();
 			
 			// Recherche des composantes connexes
 			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(BINARY));
 			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
 			long componentTime = System.currentTimeMillis();
+			
+			//Hough instance = new Hough(imageWidth, imageHeight, 50);
+			//CONNEXE = imageView.setImage(instance.doTH(compoConnex.getCCMyImage()));
+			long houghTime = System.currentTimeMillis();
+			
 			
 			if(qrCodesSearch){
 				// Recherche des QR codes
@@ -177,7 +184,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
 			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
+			System.out.println("Temps de calcul pour la transformée de hough: " + (houghTime-componentTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-houghTime) + " ms.");
 			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 			
 		}

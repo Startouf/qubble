@@ -43,22 +43,12 @@ public class QRCodesAnalyser {
 
 			if(cc.getConnexePoints().size() > 100){
 				if(((Math.abs(SMALLSQUARESIZE - cc.getLength()) < 10)/* || (Math.abs(BIGSQUARESIZE - cc.getLength()) < 10)*/) && cc.isSquare()){
-					listQRcode.add(new QRCode(cc, tableImage, new MyImage(tableImage.getSubimage(cc.getCorner(0).getX()-5, cc.getCorner(2).getY()-5, 160, 160))));
+					listQRcode.add(new QRCode(cc, tableImage));
 				}
 			}
 			
 		}
 		
-		// Assembler les QrCodes
-/*		for(ConnexeComponent cc : smallSquare){
-			for(QRCode qr : listQRcode){
-				if(cc.getxMin() > qr.getBorder().getxMin() && cc.getyMin() > qr.getBorder().getyMin() && cc.getxMax() < qr.getBorder().getxMax() && cc.getyMax() < qr.getBorder().getyMax()){
-					qr.addLandMark(cc);
-					break;
-				}
-					
-			}
-		}*/
 		
 		for(QRCode qr : listQRcode){
 			System.out.println("Valeur du QR code : " + qr.getValeur());
@@ -82,10 +72,16 @@ public class QRCodesAnalyser {
 				image.setRGB(pt.getX(), pt.getY(), compoColor.getRGB());
 			}
 			
-			g.setColor(Color.black);
 			for(int i = 0; i<4; i++){
+				g.setColor(new Color(i*255/4, i*255/4, i*255/4));
 				g.fillRect(qr.getBorder().getCorner(i).getX()-4, qr.getBorder().getCorner(i).getY()-4, 8, 8);
 			}
+			
+			g.setColor(Color.green);
+			g.fillRect(qr.getBorder().getConnexePoints().get(0).getX()-4, qr.getBorder().getConnexePoints().get(0).getY()-4, 8, 8);
+			
+			g.setColor(Color.green);
+			g.fillRect(qr.getBorder().getConnexePoints().get(qr.getBorder().getConnexePoints().size()-1).getX()-4, qr.getBorder().getConnexePoints().get(qr.getBorder().getConnexePoints().size()-1).getY()-4, 8, 8);
 			
 		}
 		

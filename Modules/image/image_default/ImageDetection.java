@@ -17,6 +17,7 @@ public class ImageDetection {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		// TODO Auto-generated method stub
 		
 				/*Camera wb = new Camera();
@@ -39,11 +40,11 @@ public class ImageDetection {
 				//wind.readImage(new File("Modules/image/database/test/qr_code_light.jpg"), true, 180, 200, 0);
 				//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym.jpg"), true, 180, 210, 0);
 				//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym_small.jpg"), true, 180, 21, 0);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 0);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 0);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 88);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 88);
 				// Qr moyen : ext : 116px, int : 88 px
-				wind.readImage(new File("Modules/image/database/test/essai_qr.png"), true, 180, 116, 88);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 0);
+				wind.readImage(new File("Modules/image/database/test/essai_qr_petit.png"), true, 180, 116, 59);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 88);
 				// Image avec des carrés
 				//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10
 				//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);	

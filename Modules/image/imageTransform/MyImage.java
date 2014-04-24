@@ -75,7 +75,7 @@ public class MyImage extends BufferedImage{
 				green = pix >> 8 & 0xff;
 				blue  = pix & 0xff;
 				//greyValue = (int) (0.114 * red +  0.299 * green + 0.587 * blue);
-				greyValue = (int) (0.299 * red +  0.587 * green + 0.114 * blue);
+				greyValue = (int)((299 * red +  587 * green + 114 * blue)/1000);
 				greyImage.setRGB(i, j, (new Color(greyValue, greyValue, greyValue).getRGB()));
 			}
 		}

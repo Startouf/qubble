@@ -142,7 +142,7 @@ public class ComponentsAnalyser {
 				
 		}
 		// Affichage du nombre de parcours
-		System.out.println(x);
+		System.out.println("Nombre de parcours dans la recherche des composantes connexes : " + x);
 		
 		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
 		/**
@@ -186,28 +186,9 @@ public class ComponentsAnalyser {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
 			
 			// Affichage des coins des composantes connexes
-			/*for(int i = 0 ; i < 4 ; i++){
+			for(int i = 0 ; i < 4 ; i++){
 				g.fillRect(listPoint.getCorner(i).getX()-1, listPoint.getCorner(i).getY()-1, 2, 2);
-			}*/
-			
-			
-			// Affichage de l'image ou on ne voit que les points principaux (bordures  et centre)
-/*			if(listPoint.getConnexePoints().size() > 100){
-				g.setColor(compoColor);
-				listPoint.getCenter();
-				g.fillRect(listPoint.getxMin(), listPoint.getyMin(), 2, 2);
-				g.fillRect(listPoint.getxMin(), listPoint.getyMax(), 2, 2);
-				g.fillRect(listPoint.getxMax(), listPoint.getyMin(), 2, 2);
-				g.fillRect(listPoint.getxMax(), listPoint.getyMax(), 2, 2);
-				g.fillRect(listPoint.getxCenter(), listPoint.getyCenter(), 2, 2);
-			}*/
-
-			/*System.out.println("---------");
-			System.out.println(listPoint.getxMin());
-			System.out.println(listPoint.getxMax());
-			System.out.println(listPoint.getyMin());
-			System.out.println(listPoint.getyMax());
-			System.out.println("---------");*/
+			}
 			
 			// Affichages des composantes connexes par couleurs
 			if(listPoint.getConnexePoints().size() > 100){
@@ -217,6 +198,12 @@ public class ComponentsAnalyser {
 				}
 				
 			}
+			
+			g.setColor(Color.green);
+			g.fillRect(listPoint.getConnexePoints().get(0).getX()-4, listPoint.getConnexePoints().get(0).getY()-4, 8, 8);
+			
+			g.setColor(Color.green);
+			g.fillRect(listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getX()-4, listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getY()-4, 8, 8);
 			
 		}
 		

@@ -21,9 +21,8 @@ public class QRCode {
 	private MyImage qrImage;
 	private MyImage greyImage;
 	
-	public QRCode(ConnexeComponent border, MyImage greyImage,MyImage binaryImage){
+	public QRCode(ConnexeComponent border, MyImage greyImage){
 		this.border = border;
-		this.qrImage = binaryImage.getBinaryMyImage();
 		this.greyImage = greyImage;
 	}
 	
@@ -47,7 +46,7 @@ public class QRCode {
 			for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
 				for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
 					if(x>=0 && x<greyImage.getWidth() && y >= 0 && y<greyImage.getHeight()){
-						if(greyImage.getRGB(i, j) == Color.BLACK.getRGB()){
+						if((greyImage.getRGB(i, j) & 0xff) < 120){
 							moy++;
 						}
 					}
@@ -56,12 +55,12 @@ public class QRCode {
 			
 			if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
 				g.setColor(Color.red);
-				g.fillRect(x + border.getCorner(0).getX()-5 -sizeWindow, y + border.getCorner(2).getY()-5-sizeWindow, sizeWindow*2, sizeWindow*2);
+				g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return true;
 			}
 			else{
 				g.setColor(Color.blue);
-				g.fillRect(x + border.getCorner(0).getX()-5 -sizeWindow, y + border.getCorner(2).getY()-5-sizeWindow, sizeWindow*2, sizeWindow*2);
+				g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return false;
 			}
 			// Recherche sur 1 pixel
@@ -74,12 +73,12 @@ public class QRCode {
 			
 			if(moy > 0.5){
 				g.setColor(Color.red);
-				g.fillRect(x + border.getCorner(0).getX()-5, y + border.getCorner(2).getY()-5, 1, 1);
+				g.fillRect(x , y , 1, 1);
 				return true;
 			}
 			else{
 				g.setColor(Color.blue);
-				g.fillRect(x + border.getCorner(0).getX()-5, y + border.getCorner(2).getY()-5, 1, 1);
+				g.fillRect(x , y , 1, 1);
 				return false;
 			}
 		}else
@@ -103,22 +102,17 @@ public class QRCode {
 	 * @return
 	 **/
 	public int getValeur(){
-		int offsetX = 22, offsetY = 25;
-		int angleX = Math.abs(border.getCorner(2).getX() - border.getCorner(0).getX())/5;
-		int angleY = Math.abs(border.getCorner(0).getY() - border.getCorner(2).getY())/5;
-		int angleX2 = Math.abs(border.getCorner(3).getX() - border.getCorner(0).getX())/5;
-		int angleY2 = Math.abs(border.getCorner(0).getY() - border.getCorner(3).getY())/5;
-		int pas = 16;
-		
-		int X = 5;
-		int Y = border.getCorner(0).getY()-border.getCorner(2).getY()+5;
 
-		
+		double angleX = (border.getCorner(2).getX() - border.getCorner(0).getX())/5;
+		double angleY = (border.getCorner(2).getY() - border.getCorner(0).getY())/5;
+		double angleX2 = (border.getCorner(3).getX() - border.getCorner(0).getX())/5;
+		double angleY2 = (border.getCorner(3).getY() - border.getCorner(0).getY())/5;
+				
 		int valeur = 0, masque = 1;
 		
-		for(int i = 0 ; i < 3; i++){
-			for(int j = 0 ; j < 3; j++){
-				if(isBlack( border.getCorner(0).getX() + j*(angleX+angleX2), border.getCorner(0).getY() + i*(angleY+angleY2))){
+		for(int i = 1 ; i < 4; i++){
+			for(int j = 1 ; j < 4; j++){
+				if(isBlack( border.getCorner(0).getX() + (int)((j+0.5)*angleX) + (int)((i+0.5)*angleX2), border.getCorner(0).getY() + (int)((j+0.5)*angleY) + (int)((i+0.5)*angleY2))){
 					valeur |= masque; 
 				}
 				masque = masque << 1;
