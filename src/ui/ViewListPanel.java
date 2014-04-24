@@ -25,6 +25,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
+import other.BidirectionalMap;
+
 import qubject.MediaInterface;
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
@@ -41,15 +43,15 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	private final JComponent[][] cell;
 	private int activeCol = 1, activeRow = 3;
 	private final int WIDTH, HEIGHT;
-	private Hashtable<Integer, QubjectProperty> propertyMap;
-	private Hashtable<Integer, Qubject> qubjectMap;
+	private BidirectionalMap<Integer, QubjectProperty> propertyMap;
+	private BidirectionalMap<Integer, MediaInterface> qubjectMap;
 	private JPanel content;
 	
 	/**
 	 * Additional columns
 	 * (normal columns = the Qubject Properties)
 	 */
-	private final String[] EXTRA_COLS = {"time", "qubject"};
+	private final String[] EXTRA_COLS = {"Temps", "Qubject"};
 
 	public ViewListPanel(App app) {
 		super(app.getActiveProject());
@@ -80,8 +82,8 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	}
 	
 	private void prepare(){
-		qubjectMap = new Hashtable<Integer, Qubject>();
-		propertyMap = new Hashtable<Integer, QubjectProperty>();
+		qubjectMap = new BidirectionalMap<Integer, MediaInterface>();
+		propertyMap = new BidirectionalMap<Integer, QubjectProperty>();
 		
 		int j = EXTRA_COLS.length;
 		for(QubjectProperty prop : QubjectProperty.values()){
@@ -142,14 +144,14 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	}
 	
 	private void updateRows(){
-		//TODO : Assumes the list of Qubjects is sorted !!
-		//TODO : synchronize qubjectList ?
+		//TODO (Check): Assumes the list of Qubjects is sorted !!
 		int i=1, j=0;	//1st row is HEADER
-		for(Qubject qubject:this.app.getQubjects()){
+		for(MediaInterface qubject:this.app.getQubjects()){
 			((JLabel) cell[i][j]).setText(Double.toString(this.app.getActiveProject().getQubble().getPosition(qubject).getWidth()));
 			j++;
 			((JLabel) cell[i][j]).setText(qubject.getName());
 			j++;
+			qubjectMap.put(i, qubject);
 			
 			for(QubjectProperty prop : QubjectProperty.values()){
 				((JComboBox)cell[i][j]).setSelectedItem(qubject.getModifierForProperty(prop));
@@ -162,52 +164,49 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	
 	@Override
 	public void setActiveQubject(MediaInterface selectedQubject) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setActiveProperty(QubjectProperty modifier) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setModifierOfActiveProperty(QubjectModifierInterface modifier) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Dynamically change qubject props !
-		//Find the i,j of the comboBox
-		for(int i=0; i<HEIGHT; i++){
-			for(int j=0; j<WIDTH; j++){
-				if (arg0.getSource() == cell[i][j]){
-					if(j>=EXTRA_COLS.length){
-						this.activeQubject = qubjectMap.get(i);
-						this.activeProperty = propertyMap.get(j);
-						JComboBox combo = (JComboBox) (cell[i][j]);
-						switch (activeProperty){
-						case ANIM_WHEN_DETECTED:
-							this.app.getAnimationPalette().getCombo();
-							break;
-						case ANIM_WHEN_PLAYED:
-							this.app.getAnimationPalette().getCombo();
-							break;
-						case AUDIO_EFFECT_ROTATION:
-							this.app.getSoundEffectPalette().getCombo();
-							break;
-						case AUDIO_EFFECT_Y_AXIS:
-							this.app.getSoundEffectPalette().getCombo();
-							break;
-						case SAMPLE_WHEN_PLAYED:
-							this.app.getSamplePalette().getCombo();
-							break;
-						default:
-							System.err.println("missing case in viewlist");
-							break;
+		if(arg0.getSource() instanceof JComboBox){
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					if (arg0.getSource() == cell[i][j]){
+						if(j>=EXTRA_COLS.length){
+							this.activeQubject = qubjectMap.get(i);
+							this.activeProperty = propertyMap.get(j);
+							JComboBox combo = (JComboBox) (cell[i][j]);
+							switch (activeProperty){
+							case ANIM_WHEN_DETECTED:
+								this.app.getAnimationPalette().getCombo();
+								break;
+							case ANIM_WHEN_PLAYED:
+								this.app.getAnimationPalette().getCombo();
+								break;
+							case AUDIO_EFFECT_ROTATION:
+								this.app.getSoundEffectPalette().getCombo();
+								break;
+							case AUDIO_EFFECT_Y_AXIS:
+								this.app.getSoundEffectPalette().getCombo();
+								break;
+							case SAMPLE_WHEN_PLAYED:
+								this.app.getSamplePalette().getCombo();
+								break;
+							default:
+								System.err.println("missing case in viewlist");
+								break;
+							}
 						}
 					}
 				}
@@ -218,8 +217,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	@Override
 	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop,
 			QubjectModifierInterface modifier) {
-		// TODO Auto-generated method stub
-		
+			((JComboBox) cell[qubjectMap.getKey(qubject)][propertyMap.getKey(prop)]).setSelectedItem(modifier);
 	}
 
 	  

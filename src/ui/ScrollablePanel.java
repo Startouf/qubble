@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-class ScrollablePanel extends JPanel implements Scrollable{
+public final class ScrollablePanel extends JPanel implements Scrollable{
 
 	/**
 	 * 
