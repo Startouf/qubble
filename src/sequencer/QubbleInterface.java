@@ -86,7 +86,7 @@ public interface QubbleInterface {
 	/**
 	 * Start the qubble (first click on play)
 	 */
-	public void start();
+	public void prepare();
 
 	/**
 	 * Toggle the grid
@@ -95,10 +95,9 @@ public interface QubbleInterface {
 	
 	/**
 	 * Used in the GUI to show object position on the grid
-	 * Return a formated string
-	 * ...or change to a java.awt.Point so that the GUI can format it better ?
+	 * Convention : Dimension(-1, -1) for NOT_ON_TABLE
 	 * @param qubject
-	 * @return A user friendly String 
+	 * @return A dimension
 	 */
 	public Dimension getPosition(MediaInterface qubject);
 	

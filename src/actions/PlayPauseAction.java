@@ -24,15 +24,13 @@ private final ImageIcon playIcon = new ImageIcon("data/ui/PauseButton.png"), pau
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.getActiveProject().getQubble().playPause();
 		//Qubble checks if the table has already been started
-		this.app.getActiveProject().getQubble().start();
-		// If was playing, pause, and show Play button
 		if (play){ 
 //			putValue(NAME, "Play");
 			putValue(LARGE_ICON_KEY, playIcon);
 		}
 		else{
 			putValue(NAME, "Pause");
-//			putValue(SMALL_ICON, pauseIcon);
+			putValue(SMALL_ICON, pauseIcon);
 			play = !play;
 		}
 			

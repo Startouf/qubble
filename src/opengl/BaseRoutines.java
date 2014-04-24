@@ -219,14 +219,11 @@ public class BaseRoutines
 	
 
 	public static float updateCursor(float cursorPos, float[] cursorVertices, int cursorPosVBO, float dt){
-		float newPos = uniformModulusTranslation(
-				//TODO : test period
-				cursorPos, Qubble.TABLE_OFFSET_X, Qubble.TABLE_LENGTH+Qubble.TABLE_OFFSET_X, 
-				1f/(Qubble.LOOP_MS),dt);
-		cursorVertices[0] = newPos;
-		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH;
-		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH;
-		cursorVertices[9] = newPos;
+		float newPos = (cursorPos + 1f/(Qubble.LOOP_MS)*dt*(Qubble.TABLE_LENGTH))%(Qubble.TABLE_LENGTH);
+		cursorVertices[0] = newPos+Qubble.TABLE_OFFSET_X;
+		cursorVertices[3] = newPos+Qubble.CURSOR_WIDTH+Qubble.TABLE_OFFSET_X;
+		cursorVertices[6] = newPos+Qubble.CURSOR_WIDTH+Qubble.TABLE_OFFSET_X;
+		cursorVertices[9] = newPos+Qubble.TABLE_OFFSET_X;
 		VBO.overwrite(cursorPosVBO, cursorVertices);
 		return newPos;
 	}

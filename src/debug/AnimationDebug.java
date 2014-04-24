@@ -29,6 +29,7 @@ import qubject.AnimationInterface;
 import routines.Time;
 import routines.VBO;
 import sequencer.Qubble;
+import wave.RainDrops;
 import wave.WaterWave;
 
 public class AnimationDebug implements OutputImageInterface {
@@ -64,14 +65,14 @@ public class AnimationDebug implements OutputImageInterface {
 
 	private void debug(){
 		highlightQubject(new Point(400,400));
-		needsToBeLoaded.add(new PixelSpray(new Point (400,400)));
+		needsToBeLoaded.add(new Fissure(new Point (400,400)));
 		
 		highlightQubject(new Point(600, 300));
-		needsToBeLoaded.add(new Fissure(new Point(800,325)));
+		needsToBeLoaded.add(new RainDrops(new Point(800,325)));
 	}
 	
 	public void start(int width, int height){
-        InitRoutines.initDisplay(width, height);
+        InitRoutines.initDisplayOnSecondDevice(width, height);
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);
@@ -162,14 +163,8 @@ public class AnimationDebug implements OutputImageInterface {
 	 * DEPUIS UN AUTRE THREAD
 	 */
 	@Override
-	public void playPause(Thread t) {
-		if (t.isInterrupted()){
-			playPause = true;
-			t.interrupt();
-		}
-		else{
-			playPause = false;
-		}
+	public void playPause() {
+		playPause = !playPause;
 	}
 
 	/**
@@ -180,6 +175,7 @@ public class AnimationDebug implements OutputImageInterface {
 		//Grid
 		if (showGrid){
 			glColor3f(1f,1f,1f);
+			glBindTexture(GL_TEXTURE_2D, 1);
 			BaseRoutines.renderList(gridDL);
 		}
 

@@ -37,7 +37,7 @@ public interface OutputImageInterface
 	 * This is going to be a tough one to implement
 	 * If thread is in pause, signal Thread t that it must awaken
 	 */
-	public void playPause(Thread t);
+	public void playPause();
 
 	/**
 	 * End everything. Project closed or sthing else happend.

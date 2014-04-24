@@ -143,6 +143,8 @@ public class Qubble implements QubbleInterface {
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
+		
+		prepare();
 	}
 
 	/**
@@ -159,6 +161,8 @@ public class Qubble implements QubbleInterface {
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
+		
+		prepare();
 	}
 	
 	/**
@@ -347,8 +351,15 @@ public class Qubble implements QubbleInterface {
 			}
 			isPlaying = !isPlaying;
 			sequencer.playPause();
-			projection.playPause(projectionThread);
+			projection.playPause();
 			player.playPause();
+		}
+		else{
+			startTime = Sys.getTime();
+			hasStarted = true;
+			isPlaying = true;
+			cameraThread.start();
+			projection.playPause();
 		}
 	}
 
@@ -360,16 +371,12 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public void start() {
+	public void prepare() {
 		if(!hasStarted){
 			cameraThread.setPriority(Thread.MIN_PRIORITY);
 			playerThread.setPriority(Thread.MAX_PRIORITY);
-			startTime = Sys.getTime();
 			projectionThread.start();
 			playerThread.start();
-			cameraThread.start();
-			hasStarted = true;
-			isPlaying = true;
 		}
 	}
 
@@ -381,16 +388,19 @@ public class Qubble implements QubbleInterface {
 	@Override
 	public Dimension getPosition(MediaInterface qubject) {
 		QRInterface qr = (QRInterface) qubject;
+		if (qubjectsOnTable.contains(qubject) == true){
+			return new Dimension(-1, -1);
+		}
 		Point pos = qr.getCoords();
 		return new Dimension(getTile(pos), qr.getCoords().getY());
 	}
 	
 	/**
 	 * @param pos
-	 * @return the column where the point is 
+	 * @return the column where the point is (column from <b>1</b> to 8 !)
 	 */
 	public static int getTile(org.lwjgl.util.Point pos){
-		return (int) Math.floor((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
+		return (int) Math.ceil((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
 	}
 	
 

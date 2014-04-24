@@ -57,11 +57,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
 	
-	//Other
-	public volatile boolean isPlaying = true, hasStarted = false;
 	/**
-	 * Time spent during playPause
-	 * (must be substracted to DT before updating animations
+	 * Volatile because those booleans are changed by other Threads
+	 */
+	public volatile boolean isPlaying = false, hasStarted = false;
+	/**
+	 * Note : dt is always computed even when it's paused
+	 * (The only thing that matters is whether we update the animations with dt or not :) )
 	 * 
 	 */
 	private long lastFrameTime;
@@ -73,7 +75,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	
 	public void start(int width, int height){
 		lastFrameTime = Sys.getTime();
-        InitRoutines.initDisplay(width, height);
+        InitRoutines.initDisplayOnSecondDevice(width, height);
         loadFonts();
         loadDisplayLists();
     	InitRoutines.initView(width, height);
@@ -167,6 +169,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		if (showGrid){
 			//Note : comment the below line to make a nice effect with the grid
 			GL11.glColor3f(1f, 1f, 1f);
+			//Below line sucks but no other fix found to 
+			glBindTexture(GL_TEXTURE_2D, 1);
 			BaseRoutines.renderList(gridDL);
 		}
 		
@@ -183,13 +187,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//TODO : Curseur stylé avec shader
 		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
 		
-		//Note : remove the if(isPlaying) to show frozen animations
-		if(isPlaying){
+		//Note : toggle the if(isPlaying) to show frozen animations
+//		if(hasStarted){
 			//Render animations
 			for (AnimationControllerInterface anim : activeAnimations){
 				anim.renderAnimation();
 			}
-		}
+//		}
 	}
 
 	/**
@@ -198,9 +202,10 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 */
 	private void update(){
 		//Idea : whether the Qubble is Paused or not : compute dt !!!
-		//(So that there is no problem of "removing  the 
+		//So that there is no problem of "removing  the 
 		
 		float dt = BaseRoutines.getDt(lastFrameTime);
+		lastFrameTime = Sys.getTime();
 		
 		if(isPlaying)
 		{
@@ -209,8 +214,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 			//Update animations
 			updateAnimations(dt);
-			lastFrameTime = Sys.getTime();
 		}
+		
 	}
 
 	/**
@@ -308,8 +313,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void run() {
-		isPlaying = true;
-		hasStarted = true;
 		start(Qubble.TABLE_LENGTH+2*Qubble.TABLE_OFFSET_X, Qubble.TABLE_HEIGHT+2*Qubble.TABLE_OFFSET_Y);
 	}
 	
@@ -328,11 +331,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * DEPUIS UN AUTRE THREAD
 	 */
 	@Override
-	public void playPause(Thread t) {
-		if(hasStarted){
-			//Synchronisation done with volatile keyword
-			isPlaying = !isPlaying;
-			//TODO? : handle both play and pause with an Interruption by adding throws PlayPause exception everywhere ???
-		}
+	public void playPause() {
+		hasStarted = true;
+		isPlaying = !isPlaying;
 	}
 }

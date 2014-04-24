@@ -7,6 +7,12 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.awt.Canvas;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
+import javax.swing.JFrame;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -29,5 +35,21 @@ public class InitRoutines
 		} catch (LWJGLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static void initDisplayOnSecondDevice(int width, int height){
+		GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+				if (gd.length >= 2){
+					try {
+						Display.setParent(new Canvas(gd[1].getDefaultConfiguration()));
+					} catch (LWJGLException e) {
+						System.err.println("Error creating Canvas for 2nd monitor display");
+						e.printStackTrace();
+					}
+				} else {
+					System.err.println("Second monitor not detected !");
+					System.err.println("Opening OpenGL output on first device");
+				}
+		initDisplay(width, height);		
 	}
 }

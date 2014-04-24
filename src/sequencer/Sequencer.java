@@ -110,5 +110,6 @@ public class Sequencer implements SequencerInterface
 		else{
 			recalculate(this.qubble.getTasks());
 		}
+		play = !play;
 	}
 }
