@@ -61,29 +61,36 @@ public class Player implements PlayerInterface, Runnable {
 		//System.out.println("write");
 		byte[] test = new byte[dataInt.length * 2];
 		for (int i = 0; i < dataInt.length; i++) {
+			/*
 			test[2*i] = (byte)(dataInt[i] % 256);
+			//test[2*i] = 0;
 			test[2*i + 1] = (byte)(dataInt[i]/256);
+			*/
+			byte byte1 = (byte) (dataInt[i]);
+			byte byte2 = (byte) ((dataInt[i] >> 8) & 0xff); //Ca marche trop bieeeennnn !!
+			test[2*i] = byte1;
+			test[2*i + 1] = byte2;
 		}
 		line.write(test, 0, test.length);
 	}
-	
+	///*
 	public void write(int[] dataInt) {
 		short[] d = new short[dataInt.length];
 		for (int i = 0; i < dataInt.length; i++) {
-			/*
+			
 			if (dataInt[i] >= 32767) {
 				d[i] = 32767;
 			}
 			if (dataInt[i] <= -32767) {
-				d[i] = 32767;
+				d[i] = -32767;
 			}
 			
-			else */d[i] = (short) (dataInt[i]);
+			else d[i] = (short) (dataInt[i]);
 		}
 		//printArray(d);
 		write(d);
 	}
-	
+	//*/
 	public void writeNext() {
 		write(nextArray(bufferSize/2));
 		cursor += bufferSize/2;
@@ -131,6 +138,17 @@ public class Player implements PlayerInterface, Runnable {
 			case Flanger:
 				e = new Flanger(amount);
 				break;
+			case LPFilter:
+				e = new LPFilter(amount);
+				break;
+			case HPFilter:
+				e = new HPFilter(amount);
+				break;
+			case Shifter:
+				e = new PitchShifter(amount);
+				break;
+			case Volume:
+				e = new Volume(amount);
 			default:
 				e = new Volume(amount);
 			}
