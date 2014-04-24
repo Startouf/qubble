@@ -1,5 +1,6 @@
 package image_default;
 
+
 import imageObject.Point;
 import imageTransform.MyImage;
 import image_GUI.Window;
@@ -25,7 +26,10 @@ public class ImageDetection {
 				Window wind = new Window(wb);*/
 				
 				Window wind = new Window();
-				
+				/*
+				 *  1280*760 : ext : 116px, int : 88 px, rayon : 62px
+				 *  800*600 : ext : ?, int : 59 px, rayon : 42px
+				 */
 				// Image avec un qr code
 				//wind.readImage(new File("Modules/image/database/test/qr_bis.jpg"), true, 180, 200, 50);
 				//wind.readImage(new File("Modules/image/database/test/qr_bis_rot.jpg"), true);
@@ -40,12 +44,22 @@ public class ImageDetection {
 				//wind.readImage(new File("Modules/image/database/test/qr_code_light.jpg"), true, 180, 200, 0);
 				//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym.jpg"), true, 180, 210, 0);
 				//wind.readImage(new File("Modules/image/database/test/qr_codes_light_sym_small.jpg"), true, 180, 21, 0);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 88);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 88);
-				// Qr moyen : ext : 116px, int : 88 px
-				wind.readImage(new File("Modules/image/database/test/essai_qr_petit.png"), true, 180, 116, 59);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 88);
-				// Image avec des carrés
+				
+				//Sélection de carré
+				//wind.readImage(new File("Modules/image/database/test/essai_qr_petit.png"), true, 180, 116, 42);
+				//wind.readImage(new File("Modules/image/database/test/essai_qr.png"), true, 180, 116, 59);
+				
+				// Image de la table réelle
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 62);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
+				wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m39s52.png"), true, 180, 21, 62);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 62);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
+				
+				//Useless : 
+					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
+				
+				// Image avec des carrés : old
 				//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10
 				//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);	
 				//wind.readImage(new File("Modules/image/database/test/traite.png"), true, 180, 75, 0);

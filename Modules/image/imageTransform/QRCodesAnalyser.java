@@ -20,6 +20,7 @@ import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
 public class QRCodesAnalyser {
 	
 	public static int BIGSQUARESIZE = 116;
+	// Longueur du côté divisé par racine de 2
 	public static int SMALLSQUARESIZE = 88;
 	
 	private ArrayList<QRCode> listQRcode;
@@ -42,7 +43,7 @@ public class QRCodesAnalyser {
 		for(ConnexeComponent cc : componentResult.getCClist()){
 
 			if(cc.getConnexePoints().size() > 100){
-				if(((Math.abs(SMALLSQUARESIZE - cc.getLength()) < 10)/* || (Math.abs(BIGSQUARESIZE - cc.getLength()) < 10)*/) && cc.isSquare()){
+				if((( Math.abs(SMALLSQUARESIZE - cc.getRayon()) < 5)/*Math.abs(SMALLSQUARESIZE - cc.getLength()) < 10)*/) && cc.isSquare()){
 					listQRcode.add(new QRCode(cc, tableImage));
 				}
 			}
@@ -51,7 +52,7 @@ public class QRCodesAnalyser {
 		
 		
 		for(QRCode qr : listQRcode){
-			System.out.println("Valeur du QR code : " + qr.getValeur());
+			System.out.println("Valeur du QR code : " + qr.getValeurByCenter());
 		}
 		
 	}

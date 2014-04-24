@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ConnexeComponent {
 	// Coefficient pour accepter qu'une composante est un carré
-	public static final float SQUARETRIGGER = (float) 0.60;
+	public static final float SQUARETRIGGER = (float) 0.50;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -197,6 +197,14 @@ public class ConnexeComponent {
 		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
 		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
 		return 	(int) (Math.sqrt(Math.pow(corner[0].getX() - corner[2].getX(), 2) + Math.pow(corner[0].getY() - corner[2].getY(), 2)));
+	}
+	
+	/**
+	 * Retourne la distance entre le premier point (un coin et le centre)
+	 * @return
+	 */
+	public int getRayon(){
+		return 	(int) (Math.sqrt(Math.pow(xCenter-corner[0].getX(), 2) + Math.pow(yCenter-corner[0].getY(), 2)));
 	}
 
 	public int getxMax() {

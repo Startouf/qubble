@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class QRCode {
 	// Taille de la fenêtre pour définir si une zone contient une composante (demi-longueur)
-	public static int sizeWindow = 4;
+	public static int sizeWindow = 3;
 	
 	private ConnexeComponent border;
 	//private ArrayList<ConnexeComponent> landmark;
@@ -117,6 +117,65 @@ public class QRCode {
 				}
 				masque = masque << 1;
 			}
+		}
+		
+		return valeur;
+	
+	}
+	/**
+	 * Analyse la valeur du QR code en se basant sur le centre du contour
+	 * @return
+	 */
+	public int getValeurByCenter(){
+		
+		int xCenter = border.getxCenter();
+		int yCenter = border.getyCenter();
+		int oldPointX = 0, oldPointY = 0;
+		// Coordonnées du point qui controle la valeur de la zone
+		int targetX = 0, targetY = 0;
+		// Coordonnées de la droite directrice
+		int baseX = (xCenter - border.getCorner(0).getX())/3;
+		int baseY = (yCenter - border.getCorner(0).getY())/3;
+		
+		targetX = oldPointX =  (xCenter - baseX);
+		targetY = oldPointY =  (yCenter - baseY);
+				
+		int valeur = 0, masque = 1;
+		
+		if(isBlack(xCenter, yCenter)){
+			valeur |= masque; 
+		}
+		masque = masque << 1;
+		
+		for(int j = 0 ; j < 4; j++){
+			
+				if(isBlack(targetX, targetY)){
+					valeur |= masque; 
+				}
+				targetX = (int) (Math.cos(Math.PI/2) * (oldPointX-xCenter) - Math.sin(Math.PI/2) * (oldPointY-yCenter) + xCenter);
+				targetY = (int) (Math.sin(Math.PI/2) * (oldPointX-xCenter) + Math.cos(Math.PI/2) * (oldPointY-yCenter) + yCenter);
+				oldPointX = targetX;
+				oldPointY = targetY;
+				masque = masque << 1;
+			
+		}
+		
+		targetX = (int) (Math.cos(Math.PI/4) * (oldPointX-xCenter)/Math.sqrt(2) - Math.sin(Math.PI/4) * (oldPointY-yCenter)/Math.sqrt(2) + xCenter);
+		targetY = (int) (Math.sin(Math.PI/4) * (oldPointX-xCenter)/Math.sqrt(2) + Math.cos(Math.PI/4) * (oldPointY-yCenter)/Math.sqrt(2) + yCenter);
+		oldPointX = targetX;
+		oldPointY = targetY;
+		
+		for(int j = 0 ; j < 4; j++){
+			
+			if(isBlack(targetX, targetY)){
+				valeur |= masque; 
+			}
+			targetX = (int) (Math.cos(Math.PI/2) * (oldPointX-xCenter) - Math.sin(Math.PI/2) * (oldPointY-yCenter) + xCenter);
+			targetY = (int) (Math.sin(Math.PI/2) * (oldPointX-xCenter) + Math.cos(Math.PI/2) * (oldPointY-yCenter) + yCenter);
+			oldPointX = targetX;
+			oldPointY = targetY;
+			masque = masque << 1;
+		
 		}
 		
 		return valeur;

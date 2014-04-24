@@ -200,11 +200,13 @@ public class ComponentsAnalyser {
 			}
 			
 			g.setColor(Color.green);
-			g.fillRect(listPoint.getConnexePoints().get(0).getX()-4, listPoint.getConnexePoints().get(0).getY()-4, 8, 8);
+			listPoint.getCenter();
+			g.fillRect(listPoint.getxCenter()-4, listPoint.getyCenter()-4, 8, 8);
+			/*g.fillRect(listPoint.getConnexePoints().get(0).getX()-4, listPoint.getConnexePoints().get(0).getY()-4, 8, 8);
 			
 			g.setColor(Color.green);
 			g.fillRect(listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getX()-4, listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getY()-4, 8, 8);
-			
+			*/
 		}
 		
 		return CCMyImage;
