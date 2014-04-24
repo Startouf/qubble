@@ -1,5 +1,7 @@
 package opengl;
 
+import java.util.Random;
+
 import org.lwjgl.util.Point;
 
 public abstract class AnimationController implements AnimationControllerInterface
@@ -8,6 +10,12 @@ public abstract class AnimationController implements AnimationControllerInterfac
 	 * Lwjgl point
 	 */
 	protected Point sourcePos;
+	protected Vertex2f sourceVtx;
+	/**
+	 * A Random used by many things
+	 */
+	protected static final Random random = new Random();
+
 	/**
 	 * Time since start in milliseconds float
 	 */
@@ -15,6 +23,7 @@ public abstract class AnimationController implements AnimationControllerInterfac
 	
 	public AnimationController(Point source){
 		this.sourcePos = source;
+		this.sourceVtx = new Vertex2f(source.getX(), source.getY());
 	}
 
 	@Override
