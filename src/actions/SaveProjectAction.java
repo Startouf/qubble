@@ -3,6 +3,7 @@ package actions;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 
 import ui.App;
 
@@ -12,6 +13,7 @@ private App app;
 	
 	public SaveProjectAction(App app){
 		this.app = app;
+		putValue(NAME, "Sauvegarder");
 	}
 	
 	@Override
@@ -25,9 +27,18 @@ private App app;
 			//Ask for overwrite confirmation
 			//TODO
 			//Save
-			//TODO
+			JFileChooser chooser = new JFileChooser("save/");
+		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    
+		    String path = null;
+		    
+		    int returnVal = chooser.showOpenDialog(app);
+	        if(returnVal == JFileChooser.APPROVE_OPTION) {
+	           path = chooser.getSelectedFile().getPath();
+	           app.getActiveProject().save(path);
+	        } else return;
 		}
-
+		
 	}
 
 }

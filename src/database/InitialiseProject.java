@@ -63,6 +63,7 @@ public class InitialiseProject
 	}
 	
 	private static SampleInterface findSample(String name){
+		//TODO : Hashtable
 		for (SampleInterface sample : Data.getSamples()){
 			if (name.equals(sample.getName())){
 				return sample;
@@ -74,6 +75,7 @@ public class InitialiseProject
 	}
 	
 	private static AnimationInterface findAnimation(String name){
+		//TODO : Hashtable
 		for (AnimationInterface anim : Data.getAnimations()){
 			if (name.equals(anim.getName())){
 				return anim;
@@ -85,6 +87,7 @@ public class InitialiseProject
 	}
 	
 	private static EffectType findEffect(String name){
+		//TODO : Hashtable
 		for (EffectType effect : EffectType.values()){
 			if (name.equals(effect.toString())){
 				return effect;

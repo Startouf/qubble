@@ -12,6 +12,7 @@ public class SwitchActiveProjectAction extends AbstractAction {
 
 	public SwitchActiveProjectAction(App app) {
 		this.app = app;
+		putValue(NAME, "Basculer");
 	}
 
 	@Override

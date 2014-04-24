@@ -73,6 +73,9 @@ public class App extends JFrame
 	private final PanicAction panicAction = new PanicAction(this);
 	private final SwitchActiveProjectAction switchActivePojectAction 
 		= new SwitchActiveProjectAction(this);
+	private final CloseProjectAction closeProjectAction = 
+			new CloseProjectAction(this);
+	private final SaveProjectAction saveProjectAction = new SaveProjectAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -276,6 +279,9 @@ public class App extends JFrame
 		return playPauseAction;
 	}
 	
+	public SaveProjectAction getSaveProjectAction() {
+		return saveProjectAction;
+	}
 
 	public ToggleGridAction getToggleGridAction() {
 		return toggleGridAction;
@@ -283,6 +289,10 @@ public class App extends JFrame
 
 	public PanicAction getPanicAction() {
 		return panicAction;
+	}
+	
+	public CloseProjectAction getCloseProjectAction(){
+		return closeProjectAction;
 	}
 	
 	public ArrayList<ProjectController> getProjects() {
@@ -297,10 +307,17 @@ public class App extends JFrame
 		return welcomePanel;
 	}
 
+	public void closeProject(ProjectController project) {
+		project.close();
+		welcomePanel.removeProject(project);
+		
+	}
+	
 	/**
 	 * DEBUG --> Use debug.DebugLaunch
 	 */
 	public static void main(String[] args){
 		App DJTable = new App();
 	}
+
 }

@@ -8,16 +8,27 @@ import sequencer.Qubble;
 import sequencer.QubbleInterface;
 import ui.App;
 import ui.ProjectController;
+import ui.ProjectPanel;
+import ui.ReferenceButton;
 
 public class CloseProjectAction extends AbstractAction {
 	private App app;
 	
 	public CloseProjectAction(App app){
 		this.app = app;
+		putValue(NAME, "Fermer");
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//TODO : check if there is still another project opened
+		
+		//TODO : close confirmation/save popup
+		
+		if(e.getSource() instanceof ReferenceButton){
+			ReferenceButton r =((ReferenceButton)e.getSource());
+				if(r.getReference() instanceof ProjectPanel)
+			this.app.closeProject(((ProjectPanel)r.getReference()).getProject());
+		}
+		
 		this.app.setProjectOpened(false);
 	}
 }

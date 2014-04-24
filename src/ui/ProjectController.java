@@ -2,6 +2,8 @@ package ui;
 
 import java.util.ArrayList;
 
+import database.SaveProject;
+
 import qubject.MediaInterface;
 import qubject.Qubject;
 import sequencer.QubbleInterface;
@@ -38,9 +40,8 @@ public class ProjectController implements ProjectControllerInterface
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
+	public void save(String path) {
+		SaveProject.saveTo(path, qubble);
 	}
 
 	@Override

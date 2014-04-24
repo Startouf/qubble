@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,8 +14,9 @@ import javax.swing.SwingUtilities;
 public class WelcomePanel extends JPanel
 {
 	private final App app;
-	private final JButton newProject, loadProject;
-	private final ArrayList<ProjectPanel> projects = new ArrayList<ProjectPanel>();
+	private final JButton newProject, loadProject, saveProject;
+	private final Hashtable<ProjectController, ProjectPanel> projects 
+		= new Hashtable<ProjectController, ProjectPanel>();
 	private final JPanel main = new JPanel();
 	private final JPanel config = new JPanel(); 
 	
@@ -29,6 +31,7 @@ public class WelcomePanel extends JPanel
 		JPanel shortcuts = new JPanel();
 		shortcuts.add(newProject = new JButton(app.getNewAction()));
 		shortcuts.add(loadProject = new JButton(app.getLoadAction()));
+		shortcuts.add(saveProject = new JButton(app.getSaveProjectAction()));
 		this.add(shortcuts, BorderLayout.PAGE_START);
 		
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
@@ -37,37 +40,49 @@ public class WelcomePanel extends JPanel
 		config.add(new JButton(this.app.getOpenIndividualSettingsAction()));
 		config.add(new JButton(this.app.getOpenListSettingsAction()));
 		this.add(config, BorderLayout.SOUTH);
+		
+		hideComponentsWhenNoProject();
 	}
 	
 	public void addProjectEntry(ProjectController project){
 		ProjectPanel panel = new ProjectPanel(app, project);
 		panel.setBorder(BorderFactory.createEtchedBorder());
 
-		projects.add(panel);
+		projects.put(project, panel);
 		main.add(panel);
 		
-		config.setVisible(true);
-		
+		showComponentsWhenProjectOpened();
 		repaint();
 	}
 	
+	private void hideComponentsWhenNoProject(){
+		saveProject.setVisible(false);
+		config.setVisible(false);
+	}
+	
+	private void showComponentsWhenProjectOpened(){
+		saveProject.setVisible(true);
+		config.setVisible(true);
+	}
+	
 	public void refresh(){
-		for (ProjectPanel project : projects){
+		for (ProjectPanel project : projects.values()){
 			project.refresh();
 		}
 	}
 	
 	public void disableProjects(){
-		for (ProjectPanel project : projects){
+		for (ProjectPanel project : projects.values()){
 			project.setStatus(false);
 		}
 	}
 	
-	public void removeProject(){
-		//TODO
+	public void removeProject(ProjectController project){
+		main.remove(projects.get(project));
+		projects.remove(project);
 		
 		if (projects.size() == 0){
-			config.setVisible(false);
+			hideComponentsWhenNoProject();
 		}
 	}
 }

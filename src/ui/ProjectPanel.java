@@ -14,7 +14,7 @@ public class ProjectPanel extends JPanel {
 	private final ProjectController project;
 	private final JLabel projectName;
 	private final JLabel status;
-	private final JButton switchTo;
+	private final JButton switchTo, remove;
 	
 	private final Color activeColor = Color.green, inactiveColor = Color.red;
 	
@@ -31,11 +31,15 @@ public class ProjectPanel extends JPanel {
 		switchTo = new JButton(app.getSwitchActivePojectAction());
 		switchTo.setHorizontalAlignment(JLabel.LEFT);
 		
+		remove = new ReferenceButton(this, app.getCloseProjectAction());
+		
 		this.add(Box.createRigidArea(new Dimension (100,10)));
 		this.add(switchTo);
 		this.add(status);
 		this.add(Box.createHorizontalGlue());
 		this.add(projectName);
+		this.add(Box.createHorizontalGlue());
+		this.add(remove);
 		
 		this.setSize(700, 50);
 	}
@@ -54,5 +58,9 @@ public class ProjectPanel extends JPanel {
 			status.setText("Inactive");
 		}
 		repaint();
+	}
+	
+	public ProjectController getProject(){
+		return this.project;
 	}
 }

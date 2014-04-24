@@ -34,13 +34,15 @@ public class SaveProject
 			//set the properties value
 			prop.setProperty("name", qubject.getName());
 			prop.setProperty("bitIdentifier", String.valueOf(qubject.getBitIdentifier()));
+			prop.setProperty("X", String.valueOf(qubject.getCoords().getX()));
+			prop.setProperty("Y", String.valueOf(qubject.getCoords().getY()));
 			
 			for(QubjectProperty qubjectProp : QubjectProperty.values()){
 				prop.setProperty(qubjectProp.toString(), qubject.getModifierForProperty(qubjectProp).getName());
 			}
 			
 			//save properties to project root folder
-			prop.store(new FileOutputStream("config.properties"), null);
+			prop.store(new FileOutputStream(qubject.getName() + ".properties"), null);
 		}
 		catch(Exception e){
 			e.printStackTrace();
