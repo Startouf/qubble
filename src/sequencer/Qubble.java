@@ -266,7 +266,8 @@ public class Qubble implements QubbleInterface {
 		tasks.put(qubject, sequencer.schedule(qubject));
 
 		//On indique a openGL qu'on a un Qubject 
-		projection.highlightQubject(qubject.getCoords());
+		//projection.highlightQubject(qubject.getCoords());
+		projection.trackQubject(qubject);
 
 		//On joue l'animation posé sur la table
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
@@ -292,7 +293,8 @@ public class Qubble implements QubbleInterface {
 		//TODO : dire au player d'arrêter le son ?? (A discuter)
 
 		//On masque son ancien emplacement 
-		projection.highlightQubject(qubject.getCoords());
+		//projection.highlightQubject(qubject.getCoords());
+		projection.trackQubject(qubject);
 
 		//On l'enlève de la liste des qubjects présents sur la table
 		synchronized (qubjectsOnTable){
@@ -309,8 +311,8 @@ public class Qubble implements QubbleInterface {
 			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
 			return;
 		}
-		//On masque son ancien emplacement 
-		projection.highlightQubject(qubject.getCoords());
+		//On masque son ancien emplacement OLD
+//		projection.highlightQubject(qubject.getCoords());
 
 		//on change les coordonnées caméra -> OpenGL
 		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
@@ -319,8 +321,8 @@ public class Qubble implements QubbleInterface {
 		//On replanifie
 		sequencer.reschedule(tasks.get(qubject), qubject);
 
-		//On indique son nouvel emplacement
-		projection.highlightQubject(qubject.getCoords());
+		//On indique son nouvel emplacement OLD
+//		projection.highlightQubject(qubject.getCoords());
 	}
 
 	@Override
@@ -400,7 +402,7 @@ public class Qubble implements QubbleInterface {
 	 * @return the column where the point is (column from <b>1</b> to 8 !)
 	 */
 	public static int getTile(org.lwjgl.util.Point pos){
-		return (int) Math.ceil((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
+		return (int) Math.floor((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
 	}
 	
 

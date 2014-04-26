@@ -22,6 +22,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureImpl;
@@ -88,10 +89,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	public void start(int width, int height){
 		lastFrameTime = Sys.getTime();
         InitRoutines.initDisplayOnSecondDevice(width, height);
-        loadFonts();
-        loadDisplayLists();
     	InitRoutines.initView(width, height);
-    	loadCursorVBOs();
+    	loadResources();
     	
     	//TODO : add another closeRequested boolean check for external change (project closed...)
         while(!Display.isCloseRequested()){   
@@ -106,6 +105,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
         destroy();
         Display.destroy();
     }
+
+	private void loadResources() {
+		loadFonts();
+        loadDisplayLists();
+        loadCursorVBOs();
+        QubjectTracker.loadShader();
+	}
 
 	@Override
 	public void highlightQubject(Point qubjectPos) {
@@ -201,9 +207,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 //		}
 			
 		//Trackers
+		QubjectTracker.useShader();
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderStatusInstant();
 		}
+		GL20.glUseProgram(0);
 	}
 
 	/**
@@ -226,14 +234,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			updateAnimations(dt);
 		}
 		
-		updateTrackers();
-		
-	}
-	
-	private void updateTrackers(){
+		//trackers
 		for (QubjectTracker tracker : trackers.values()){
-			tracker.renderStatusInstant();
+			tracker.update(dt);
 		}
+		
 	}
 
 	/**
