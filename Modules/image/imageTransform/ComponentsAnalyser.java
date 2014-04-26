@@ -186,9 +186,9 @@ public class ComponentsAnalyser {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
 			
 			// Affichage des coins des composantes connexes
-			for(int i = 0 ; i < 4 ; i++){
+			/*for(int i = 0 ; i < 4 ; i++){
 				g.fillRect(listPoint.getCorner(i).getX()-1, listPoint.getCorner(i).getY()-1, 2, 2);
-			}
+			}*/
 			
 			// Affichages des composantes connexes par couleurs
 			if(listPoint.getConnexePoints().size() > 100){
@@ -199,14 +199,14 @@ public class ComponentsAnalyser {
 				
 			}
 			
-			g.setColor(Color.green);
-			listPoint.getCenter();
-			g.fillRect(listPoint.getxCenter()-4, listPoint.getyCenter()-4, 8, 8);
-			/*g.fillRect(listPoint.getConnexePoints().get(0).getX()-4, listPoint.getConnexePoints().get(0).getY()-4, 8, 8);
-			
-			g.setColor(Color.green);
-			g.fillRect(listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getX()-4, listPoint.getConnexePoints().get(listPoint.getConnexePoints().size()-1).getY()-4, 8, 8);
-			*/
+			if(listPoint.getConnexePoints().size()> 100){
+				g.setColor(Color.green);
+				g.fillRect(listPoint.getCorner(0).getX()-4, listPoint.getCorner(0).getY()-4, 8, 8);
+				
+				g.setColor(Color.green);
+				g.fillRect(listPoint.getxCenter()-4, listPoint.getyCenter()-4, 8, 8);
+				
+			}
 		}
 		
 		return CCMyImage;

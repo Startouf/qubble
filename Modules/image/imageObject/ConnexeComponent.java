@@ -63,7 +63,7 @@ public class ConnexeComponent {
 		yMax = 0;
 		xMin = Window.imageWidth;
 		yMin = Window.imageHeight;
-
+		yCenter = xCenter = -1;
 	}
 	
 	/**
@@ -109,16 +109,20 @@ public class ConnexeComponent {
 	
 	/**
 	 * Returne true si la composante connexe à l'allure d'un carré
+	 * rayon : valeur du rayon/2 désiré pour filtrer les carrés
 	 * @return
 	 */
-	public boolean isSquare(){
-		this.getCenter();
-		
+	public boolean isSquare(int rayon){
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
+				
 		float[] mySquare = new float[180];
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
 		float distance = 0;
+		int distanceMax = 0;
 		// Calculer la distance
 		for(Point pt : list){
 			distance = (float) Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
@@ -130,7 +134,19 @@ public class ConnexeComponent {
 				// Ajout de la distance
 				mySquare[angle] = distance;
 			}
+			if(distanceMax < distance){
+				distanceMax = (int)distance;
+				corner[0] = pt;
+			}
 		}
+		
+		// La composante étudiée est top grande
+		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
+		if(Math.abs(distanceMax-rayon) > 3){
+			return false;
+		}
+		
+		
 		
 /*		 //Afficher la composante connexe sous forme de courbe.
 		for(int i = 0; i<180; i += 2){
@@ -143,6 +159,7 @@ public class ConnexeComponent {
 		}
 		mySquareAverage /= 180;
 		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
+		
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0;
@@ -193,6 +210,7 @@ public class ConnexeComponent {
 	/**
 	 * Retourne la taille du coté du carré
 	 */
+	@Deprecated
 	public int getLength(){
 		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
 		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
@@ -203,8 +221,9 @@ public class ConnexeComponent {
 	 * Retourne la distance entre le premier point (un coin et le centre)
 	 * @return
 	 */
+	@Deprecated
 	public int getRayon(){
-		return 	(int) (Math.sqrt(Math.pow(xCenter-corner[0].getX(), 2) + Math.pow(yCenter-corner[0].getY(), 2)));
+		return 	0;
 	}
 
 	public int getxMax() {
@@ -224,10 +243,16 @@ public class ConnexeComponent {
 	}
 
 	public int getxCenter() {
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
 		return xCenter;
 	}
 
 	public int getyCenter() {
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
 		return yCenter;
 	}
 	

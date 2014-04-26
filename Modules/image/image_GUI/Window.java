@@ -207,6 +207,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			
 			QRCodesAnalyser qrImage = new QRCodesAnalyser(grey, variance, compoConnex);
 			
+			qrImage.getValeur(imageView.getImage(COLOR));
+			
 			long qrTime = System.currentTimeMillis();
 						
 			long endTime = System.currentTimeMillis();
@@ -235,7 +237,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		        try {
 		            // obtention d'un objet File qui désigne le répertoire courant. Le
 		            // "getCanonicalFile" : meilleurs formatage
-		        	currentFolder = new File(".").getCanonicalFile();
+		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
 		        } catch(IOException err) {}
 			}
 	         

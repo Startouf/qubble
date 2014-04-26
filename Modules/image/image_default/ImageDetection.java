@@ -12,7 +12,7 @@ import java.util.HashMap;
 import camera.Camera;
 
 
-public class ImageDetection {
+public class ImageDetection implements Runnable{
 
 	/**
 	 * @param args
@@ -20,7 +20,7 @@ public class ImageDetection {
 	public static void main(String[] args) {
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		// TODO Auto-generated method stub
-		
+				
 				/*Camera wb = new Camera();
 				wb.start();
 				Window wind = new Window(wb);*/
@@ -54,7 +54,9 @@ public class ImageDetection {
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m39s52.png"), true, 180, 21, 62);
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 62);
-				wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
+				
+				wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0_petit.png"), true, 180, 21, 42);
 				
 				//Useless : 
 					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
@@ -67,21 +69,20 @@ public class ImageDetection {
 	 * @param screen
 	 * @return une hashmap avec l'id du qr code et sa position sur la table?image
 	 */
-	public static HashMap<Integer, Point> getQRcodes(TabImage screen){
+	public static HashMap<Integer, Point> getQRcodes(BufferedImage screen){
 		HashMap<Integer, Point> finalQRcodes = new HashMap<Integer, Point>();
 		
 		return finalQRcodes;
 	}
 	
-	/**
-	 * Recherche tous les carrés sur l'image (version simplifiée)
-	 * @param screen
-	 * @return une hashmap avec l'id du carré et sa position sur la table?image
-	 */
-	public static HashMap<Integer, Point> getSquares(TabImage screen){
-		HashMap<Integer, Point> finalQRcodes = new HashMap<Integer, Point>();
-		
-		return finalQRcodes;
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		Camera wb = new Camera();
+		wb.start();
+		getQRcodes(wb.getImage());
 	}
 
 }

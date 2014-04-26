@@ -5,6 +5,7 @@ import imageTransform.TabImage;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Représente un QR Code détecté par l'ordinateur
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public class QRCode {
 	// Taille de la fenêtre pour définir si une zone contient une composante (demi-longueur)
-	public static int sizeWindow = 3;
+	public static int sizeWindow = 2;
 	
 	private ConnexeComponent border;
 	//private ArrayList<ConnexeComponent> landmark;
@@ -38,13 +39,13 @@ public class QRCode {
 	 * @param y
 	 * @return
 	 */
-	private boolean isBlack(int x, int y){
+	private boolean isBlack(int x, int y, HashMap<Point, Boolean> target){
 		int moy = 0;
 		
 		if(sizeWindow>0){
 			for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
 				for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
-					if(x>=0 && x<greyImage.getWidth() && y >= 0 && y<greyImage.getHeight()){
+					if(i>=0 && i<greyImage.getWidth() && j >= 0 && j<greyImage.getHeight()){
 						if((greyImage.getRGB(i, j) & 0xff) < 120){
 							moy++;
 						}
@@ -53,11 +54,11 @@ public class QRCode {
 			}
 			
 			if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
-				//g.setColor(Color.red);
-				//g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
+				target.put(new Point(x, y), true);
 				return true;
 			}
 			else{
+				target.put(new Point(x, y), false);
 				//g.setColor(Color.blue);
 				//g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return false;
@@ -71,11 +72,13 @@ public class QRCode {
 					}
 			
 			if(moy > 0.5){
+				target.put(new Point(x, y), true);
 				//g.setColor(Color.red);
 				//g.fillRect(x , y , 1, 1);
 				return true;
 			}
 			else{
+				target.put(new Point(x, y), false);
 				//g.setColor(Color.blue);
 				//g.fillRect(x , y , 1, 1);
 				return false;
@@ -86,46 +89,12 @@ public class QRCode {
 			
 	}
 	
-	/**
-	 * Renvoie la valeur associée au QR code
-	 * # : Bord
-	 * #######
-	 * #     #
-	 * # 012 #
-	 * # 345 #
-	 * # 678 #
-	 * #     #
-	 * #######
-	 * @return int : bit pd fort >> 876543210 << bit pd faible
-	 *
-	 * @return
-	 **/
-	public int getValeur(){
-
-		double angleX = (border.getCorner(2).getX() - border.getCorner(0).getX())/5;
-		double angleY = (border.getCorner(2).getY() - border.getCorner(0).getY())/5;
-		double angleX2 = (border.getCorner(3).getX() - border.getCorner(0).getX())/5;
-		double angleY2 = (border.getCorner(3).getY() - border.getCorner(0).getY())/5;
-				
-		int valeur = 0, masque = 1;
-		
-		for(int i = 1 ; i < 4; i++){
-			for(int j = 1 ; j < 4; j++){
-				if(isBlack( border.getCorner(0).getX() + (int)((j+0.5)*angleX) + (int)((i+0.5)*angleX2), border.getCorner(0).getY() + (int)((j+0.5)*angleY) + (int)((i+0.5)*angleY2))){
-					valeur |= masque; 
-				}
-				masque = masque << 1;
-			}
-		}
-		
-		return valeur;
 	
-	}
 	/**
 	 * Analyse la valeur du QR code en se basant sur le centre du contour
 	 * @return
 	 */
-	public int getValeurByCenter(){
+	public int getValeurByCenter(HashMap<Point, Boolean> target){
 		
 		int xCenter = border.getxCenter();
 		int yCenter = border.getyCenter();
@@ -141,14 +110,14 @@ public class QRCode {
 				
 		int valeur = 0, masque = 1;
 		
-		if(isBlack(xCenter, yCenter)){
+		if(isBlack(xCenter, yCenter, target)){
 			valeur |= masque; 
 		}
 		masque = masque << 1;
 		
 		for(int j = 0 ; j < 4; j++){
 			
-				if(isBlack(targetX, targetY)){
+				if(isBlack(targetX, targetY, target)){
 					valeur |= masque; 
 				}
 				targetX = (int) (Math.cos(Math.PI/2) * (oldPointX-xCenter) - Math.sin(Math.PI/2) * (oldPointY-yCenter) + xCenter);
@@ -166,8 +135,10 @@ public class QRCode {
 		
 		for(int j = 0 ; j < 4; j++){
 			
-			if(isBlack(targetX, targetY)){
+			if(isBlack(targetX, targetY, target)){
 				valeur |= masque; 
+			}else{
+				
 			}
 			targetX = (int) (Math.cos(Math.PI/2) * (oldPointX-xCenter) - Math.sin(Math.PI/2) * (oldPointY-yCenter) + xCenter);
 			targetY = (int) (Math.sin(Math.PI/2) * (oldPointX-xCenter) + Math.cos(Math.PI/2) * (oldPointY-yCenter) + yCenter);
