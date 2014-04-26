@@ -42,15 +42,20 @@ public class InitialiseTools
 
 	public static void compileAnimation(File dotJavaFile){
 		//Some Copy Paste. Check
-		//TODO
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		//TODO : check
+		if (compiler == null){
+			System.err.println("Compiler not found ! Cannot compile animation :"+ dotJavaFile.getName());
+			return;
+		}
+		//TODO : not working with Windows ?
 		String file;
 		try {
 			file = dotJavaFile.getCanonicalPath().toString();
-			compiler.run(null, null, null, file);
+			 if(compiler.run(null, null, null, file) != 0){
+				 System.err.println("Compilation failed for : " + file);
+			 }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Couldn't compile animation!");
 			e.printStackTrace();
 		} catch (NullPointerException e){
 			System.err.println("Couldn't compile animation!");

@@ -50,8 +50,7 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	public Qubject(String name, int bitIdentifier){
 		this.name = name;
 		this.bitIdentifier = bitIdentifier;
-		//TODO : assign default sample/effect/animation effects 
-		//(done here or somewhere else ?)
+		//Should not be used
 	}
 
 	/**
@@ -70,6 +69,20 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 			AnimationInterface whenPutOnTable,
 			AnimationInterface animationwhenPlayed){
 		this.name = name;
+		this.bitIdentifier = bitIdentifier;
+		this.animationwhenPlayed = animationwhenPlayed;
+		this.rotationModifier = rotationModifier;
+		this.sampleWhenPlayed = sampleWhenPlayed;
+		this.whenPutOnTable = whenPutOnTable;
+		this.yAxisModifier = yAxisModifier;
+	}
+	
+	public Qubject(String name, int bitIdentifier, int lastX, int lastY, SampleInterface sampleWhenPlayed, 
+			EffectType yAxisModifier, EffectType rotationModifier,
+			AnimationInterface whenPutOnTable,
+			AnimationInterface animationwhenPlayed){
+		this.name = name;
+		this.coords = new Point(lastX, lastY);
 		this.bitIdentifier = bitIdentifier;
 		this.animationwhenPlayed = animationwhenPlayed;
 		this.rotationModifier = rotationModifier;

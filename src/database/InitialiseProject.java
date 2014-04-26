@@ -2,6 +2,7 @@ package database;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -14,11 +15,25 @@ import qubject.SampleInterface;
 
 public class InitialiseProject
 {
+	public static String getProjectName(String savePath){
+		Properties prop = new Properties();
+		try {
+			prop.load(new FileInputStream(savePath + "params.properties"));
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not find params.properties");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("Could not read from params.properties");
+			e.printStackTrace();
+		}
+		return prop.getProperty("project_name");
+	}
+	
 	public static ArrayList<Qubject> loadQubjectsFromProject(String savePath){
 		Properties prop;
-		File[] files = InitialiseTools.getDotProperties(savePath);
-		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
-		for (File entry : files){ //TODO : use fileInputStream
+		File[] qubjectProperties = InitialiseTools.getDotProperties(savePath +"qubjects/");
+		ArrayList<Qubject> list = new ArrayList<Qubject>(qubjectProperties.length);
+		for (File entry : qubjectProperties){
 			prop = new Properties();
 			try {
 				prop.load(new FileInputStream(entry));	
@@ -39,21 +54,16 @@ public class InitialiseProject
 
 	/**
 	 * Instanciates a Qubject from .property that contains entries of QubjectProperties.values()
-	 * TODO : add Exceptions and try/catch ?
+	 * TODO : add Exceptions and try/catch/throw ?
 	 * @param prop
 	 * @return
 	 */
 	private static Qubject loadQubjectFromProps(Properties prop){
-		/*			Current Qubject Constructor
-			String name, int bitIdentifier, SampleInterface sampleWhenPlayed, 
-			EffectType yAxisModifier, EffectType rotationModifier,
-			AnimationInterface whenPutOnTable,
-			AnimationInterface animationwhenPlayed
-		 */
-
 		return new Qubject(
 				prop.getProperty("name"),
 				Integer.parseInt(prop.getProperty("bitIdentifier")),
+				Integer.parseInt(prop.getProperty("lastX")),
+				Integer.parseInt(prop.getProperty("lastY")),
 				findSample(prop.getProperty(QubjectProperty.SAMPLE_WHEN_PLAYED.toString())),
 				findEffect(prop.getProperty(QubjectProperty.AUDIO_EFFECT_Y_AXIS.toString())),
 				findEffect(prop.getProperty(QubjectProperty.AUDIO_EFFECT_ROTATION.toString())),
