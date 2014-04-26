@@ -1,22 +1,25 @@
 package image_GUI;
 
 import imageTransform.ComponentsAnalyser;
-import imageTransform.Hough;
-import imageTransform.MyImage;
 import imageTransform.QRCodesAnalyser;
-import imageTransform.SquaresAnalyser;
+import imageTransform.TabImage;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -36,27 +39,50 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	public static int imageWidth, imageHeight;
 	private ImageView imageView;
+	// Barre de contrôle du bas
 	private JPanel control;
 	private JButton suivant, action, precedent;
 	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
+	// Menu 
+	private JMenuBar mainMenu;
+	private JMenu fichier;
+	private JMenuItem ouvrir;
+	
+	private File currentFolder;
+	
 	private boolean qrCodesSearch;
 	private Camera wb;
 	
+	// Utiliser des images enregistrées depuis l'ordinateur 
 	public Window(){
 		init();
 	}
 	
+	// Utiliser les images de la caméra
 	public Window(Camera wb){
 		init();
 		this.wb = wb;
 	}
 	
+	/**
+	 * Initialisation de la fenêtre et création des composants
+	 */
 	private void init(){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		this.setTitle("Reconnaissance de QR Code");
+		currentFolder = null;
+		// Menu
+		mainMenu = new JMenuBar();
+		fichier = new JMenu("Fichier");
+		ouvrir = new JMenuItem("Ouvrir");
+		
+		ouvrir.addActionListener(this);
+		fichier.add(ouvrir);
+		mainMenu.add(fichier);
+		this.setJMenuBar(mainMenu);
 		
 		control = new JPanel();
 		control.setLayout(new GridLayout(3, 3));
@@ -76,7 +102,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(new JLabel("Niveau de gris (0-255)"));
 		control.add(new JLabel("Taille petit carré"));
 		control.add(new JLabel("Taille grand carré"));
-		binaryLevelJTF = new JTextField(String.valueOf(MyImage.BINARY_LEVEL));
+		binaryLevelJTF = new JTextField(String.valueOf(TabImage.BINARY_LEVEL));
 		bigSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
 		smallSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
 		
@@ -101,12 +127,12 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	}
 	
 	/** Lit une image de l'ordinateur avec en spécification si la recherche porte sur des qr codes ou sur des carrés
-	 * 
+	 *  Mise à jour des paramètres de seuil
 	 * @param fichier
 	 */
 	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
 		try {
-			COLOR = imageView.setImage(new MyImage(ImageIO.read(fichier)));
+			COLOR = imageView.setImage(ImageIO.read(fichier));
 			imageWidth = imageView.getImage(COLOR).getWidth();
 			imageHeight = imageView.getImage(COLOR).getHeight();
 			affiche();
@@ -114,6 +140,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// Mise à jour des valeurs de seuil
 		this.qrCodesSearch = qrCodesSearch;
 		this.changeBinaryLevel(binaryLevel);
 		this.binaryLevelJTF.setText(String.valueOf(binaryLevel));
@@ -121,6 +148,23 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		this.bigSquareSizeJTF.setText(String.valueOf(bigSquare));
 		this.changeSmallSquareSize(smallSquare);
 		this.smallSquareSizeJTF.setText(String.valueOf(smallSquare));
+	}
+	
+	/**
+	 * Lis une image pour pouvoir l'analyser
+	 * @param fichier
+	 */
+	public void readImage(File fichier){
+		try {
+			imageView.resetList(false);
+			COLOR = imageView.setImage(ImageIO.read(fichier));
+			imageWidth = imageView.getImage(COLOR).getWidth();
+			imageHeight = imageView.getImage(COLOR).getHeight();
+			affiche();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void affiche(){
@@ -138,54 +182,44 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		if(e.getSource() == action){
 			
 			if(wb != null){
-					imageView.resetList(true);
+					imageView.resetList(false);
 					COLOR = imageView.setImage(wb.getImage());
 					imageWidth = imageView.getImage(COLOR).getWidth();
 					imageHeight = imageView.getImage(COLOR).getHeight();
 					affiche();
 			}else{
-				imageView.resetList(false);
+				imageView.resetList(true);
 			}
 			long startTime = System.currentTimeMillis();
 			// Transformation en niveau de gris
-			GREY = imageView.setImage(imageView.getImage(COLOR).getGreyMyImage());
-			imageView.getImage(GREY).getHistogramme();
-			imageView.setImage(imageView.getImage(GREY).getHistogramImage());
+			TabImage image = new TabImage(imageView.getImage(COLOR));
+			TabImage grey = image.getGrey();
+
 			long greyTime = System.currentTimeMillis();
 			// Transformation par le filtre de variance
-			BINARY = imageView.setImage(imageView.getImage(GREY).getVarianceFilterImage(3, 5));
+			TabImage variance = grey.getVarianceFilter(3, 5);
 			
 			long binaryTime = System.currentTimeMillis();
 			
 			// Recherche des composantes connexes
-			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(BINARY));
-			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
+			ComponentsAnalyser compoConnex = new ComponentsAnalyser(variance);
 			long componentTime = System.currentTimeMillis();
 			
-			//Hough instance = new Hough(imageWidth, imageHeight, 50);
-			//CONNEXE = imageView.setImage(instance.doTH(compoConnex.getCCMyImage()));
-			long houghTime = System.currentTimeMillis();
-			
-			
-			if(qrCodesSearch){
-				// Recherche des QR codes
-				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(GREY), imageView.getImage(BINARY), compoConnex);
-				QR_CODE = imageView.setImage(qrImage.getQRCodesImage());
-			}else{
-				// Recherche des carrés
-				SquaresAnalyser squareImage = new SquaresAnalyser(imageView.getImage(BINARY), compoConnex);
-				QR_CODE = imageView.setImage(squareImage.getQRCodesImage());
-				squareImage.getSquarePosition();
-			}
+			QRCodesAnalyser qrImage = new QRCodesAnalyser(grey, variance, compoConnex);
 			
 			long qrTime = System.currentTimeMillis();
 						
 			long endTime = System.currentTimeMillis();
+			
+			GREY = imageView.setImage(grey.ColorArrayToBufferedImage());
+			BINARY = imageView.setImage(variance.ColorArrayToBufferedImage());
+			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
+			QR_CODE = imageView.setImage(qrImage.getQRCodesImage());
+			
 			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
 			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
 			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
-			System.out.println("Temps de calcul pour la transformée de hough: " + (houghTime-componentTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-houghTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
 			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 			
 		}
@@ -194,6 +228,30 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		}
 		if(e.getSource() == precedent){
 			imageView.previous();
+		}
+		if(e.getSource() == ouvrir){
+	        // Boîte de sélection de fichier à partir du répertoire courant
+			if(currentFolder == null){
+		        try {
+		            // obtention d'un objet File qui désigne le répertoire courant. Le
+		            // "getCanonicalFile" : meilleurs formatage
+		        	currentFolder = new File(".").getCanonicalFile();
+		        } catch(IOException err) {}
+			}
+	         
+	        // création de la boîte de dialogue dans ce répertoire courant
+	        JFileChooser dialogue = new JFileChooser(currentFolder);
+	         
+	        // affichage
+	        dialogue.showOpenDialog(null);
+	        // récupération du fichier sélectionné
+	        if(dialogue.getSelectedFile() != null){
+	        	File selected = dialogue.getSelectedFile();
+	        	System.out.println("Fichier choisi : " + selected);
+		        // Mémorisation du dossier en cours
+		        currentFolder = new File(selected.getParent());
+		        readImage(selected);
+	        }
 		}
 		affiche();
 	}
@@ -252,7 +310,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		if(value < 0 || value > 255){
 			return false;
 		}else{
-			MyImage.BINARY_LEVEL = value;
+			TabImage.BINARY_LEVEL = value;
 			return true;
 		}
 	}

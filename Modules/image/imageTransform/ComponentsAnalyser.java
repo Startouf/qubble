@@ -23,13 +23,13 @@ public class ComponentsAnalyser {
 	
 	private int imageHeight, imageWidth;
 	private ArrayList<ConnexeComponent> listCC;
-	private MyImage image;
+	private TabImage image;
 	
 	/**
 	 * Analyse l'image pour récupérer les composantes connexes
 	 * @param binaryImage
 	 */
-	public ComponentsAnalyser(MyImage binaryImage){
+	public ComponentsAnalyser(TabImage binaryImage){
 		
 		imageHeight = binaryImage.getHeight();
 		imageWidth = binaryImage.getWidth();
@@ -172,8 +172,8 @@ public class ComponentsAnalyser {
 	 *  Créer une image avec chaque composante connexe d'une autre couleur
 	 * @return
 	 */
-	public MyImage getCCMyImage() {
-		MyImage CCMyImage = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+	public BufferedImage getCCMyImage() {
+		BufferedImage CCMyImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
 		Color compoColor = null;
 		
 		// Affichage d'un fond blanc
@@ -211,38 +211,7 @@ public class ComponentsAnalyser {
 		
 		return CCMyImage;
 	} 
-	
-	/**
-	 * Retourne la liste des points qui font le contour de la composante
-	 * On ne ne l'utilise plus
-	 * @return
-	 */
-	@Deprecated
-	public ArrayList<Point> getContour() {
-		ArrayList<Point> contour = new ArrayList<Point>();
 
-		for (int i=0 ; i<image.getHeight(); i++) {
-			for (int j = 0 ; j<image.getWidth(); j++) {
-				Point p = new Point (i,j);
-				Point voisin_bas = new Point (i,j+1);
-				Point voisin_haut = new Point (i,j-1);
-				Point voisin_droite = new Point (i+1,j);
-				Point voisin_gauche = new Point (i-1,j);
-				/*
-				if (this.containsPoint(p)) {
-					if ((this.containsPoint(voisin_haut) && this.containsPoint(voisin_bas)==false)
-						|| (this.containsPoint(voisin_haut)==false) && this.containsPoint(voisin_bas)
-						|| (this.containsPoint(voisin_droite)==false) && this.containsPoint(voisin_gauche)
-						|| (this.containsPoint(voisin_gauche)==false) && this.containsPoint(voisin_droite)) {
-						
-							contour.add(p);
-					}				
-				}
-				*/
-			}
-		}
-		return contour;
-	}
 	
 	public ArrayList<ConnexeComponent> getCClist(){
 		return listCC;

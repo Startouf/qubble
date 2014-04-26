@@ -2,7 +2,7 @@ package image_default;
 
 
 import imageObject.Point;
-import imageTransform.MyImage;
+import imageTransform.TabImage;
 import image_GUI.Window;
 
 import java.awt.image.BufferedImage;
@@ -52,17 +52,13 @@ public class ImageDetection {
 				// Image de la table réelle
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 62);
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
-				wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m39s52.png"), true, 180, 21, 62);
+				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m39s52.png"), true, 180, 21, 62);
 				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 62);
-				//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
+				wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
 				
 				//Useless : 
 					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
 				
-				// Image avec des carrés : old
-				//wind.readImage(new File("Modules/image/database/test/Square_720p.jpg"), false, 10, 50, 0);  // Binary level : 10
-				//wind.readImage(new File("Modules/image/database/test/new_reel.png"), true, 180, 75, 0);	
-				//wind.readImage(new File("Modules/image/database/test/traite.png"), true, 180, 75, 0);
 	}
 	
 	
@@ -71,7 +67,7 @@ public class ImageDetection {
 	 * @param screen
 	 * @return une hashmap avec l'id du qr code et sa position sur la table?image
 	 */
-	public static HashMap<Integer, Point> getQRcodes(MyImage screen){
+	public static HashMap<Integer, Point> getQRcodes(TabImage screen){
 		HashMap<Integer, Point> finalQRcodes = new HashMap<Integer, Point>();
 		
 		return finalQRcodes;
@@ -82,7 +78,7 @@ public class ImageDetection {
 	 * @param screen
 	 * @return une hashmap avec l'id du carré et sa position sur la table?image
 	 */
-	public static HashMap<Integer, Point> getSquares(MyImage screen){
+	public static HashMap<Integer, Point> getSquares(TabImage screen){
 		HashMap<Integer, Point> finalQRcodes = new HashMap<Integer, Point>();
 		
 		return finalQRcodes;

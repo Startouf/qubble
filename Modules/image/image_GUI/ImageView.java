@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import imageTransform.MyImage;
+import imageTransform.TabImage;
 
 import javax.swing.JPanel;
 
@@ -46,10 +46,10 @@ public class ImageView extends JPanel{
 		return nbrImage++;
 	}
 	
-	public MyImage getImage(int type){
+	public BufferedImage getImage(int type){
 		// Vérifier l'index du tableau
 		if(slide.size() >= type)
-			return (MyImage)slide.get(type);
+			return slide.get(type);
 		else
 			return null;
 	}
@@ -77,18 +77,22 @@ public class ImageView extends JPanel{
 		return true;
 	}
 	
+	/**
+	 * Supprime les images mémorisées
+	 * @param keepFirst : garder l'image principale si true
+	 */
 	public void resetList(boolean keepFirst){
 		BufferedImage img = null;
-		if(!keepFirst) {
+		if(keepFirst) {
 			 img = slide.get(0);
 		} 
 		slide.clear();
-		if(!keepFirst){
+		if(keepFirst){
 			slide.add(img);
 			view = 0;
 			nbrImage = 1;
 		}else{
-			view = -1;
+			view = 0;
 			nbrImage = 0;
 		}
 	}

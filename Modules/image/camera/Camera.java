@@ -2,7 +2,7 @@ package camera;
 
 import static com.googlecode.javacv.cpp.opencv_highgui.cvSaveImage;
 
-import imageTransform.MyImage;
+import imageTransform.TabImage;
 
 import java.awt.image.BufferedImage;
 
@@ -14,7 +14,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  *
  */
 public class Camera extends Thread{
-	private MyImage tableImage;
+	private BufferedImage tableImage;
 	public void run(){
 		// Ouverture de la caméra sur le port 0 
 		final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
@@ -32,7 +32,7 @@ public class Camera extends Thread{
 				img = grabber.grab();
 				if(img != null){
 	    			//cvSaveImage("picture.jpg", img);
-					tableImage = new MyImage(img.getBufferedImage());
+					tableImage = img.getBufferedImage();
 					System.out.println("Nouvelle image !");
 					
 	    		}
@@ -50,7 +50,7 @@ public class Camera extends Thread{
 
 	}
 	
-	public MyImage getImage(){
+	public BufferedImage getImage(){
 		return tableImage;
 	}
 

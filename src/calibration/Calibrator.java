@@ -3,7 +3,7 @@ package calibration;
 import imageObject.ConnexeComponent;
 import imageObject.Point;
 import imageTransform.ComponentsAnalyser;
-import imageTransform.MyImage;
+import imageTransform.TabImage;
 
 import java.awt.Color;
 import java.io.File;
@@ -29,9 +29,9 @@ public class Calibrator{
 		Calibrator calib = new Calibrator();
 		
 		//TODO : reconnaissance d'images
-		MyImage image;
+		TabImage image;
 		try {
-			image = new MyImage(ImageIO.read(new File("test/calibration/photo miroir sale.png")));
+			image = new TabImage(ImageIO.read(new File("test/calibration/photo miroir sale.png")));
 			image.getGreyMyImage();
 			image.getBinaryMyImage();
 			

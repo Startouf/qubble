@@ -12,112 +12,111 @@ import java.awt.image.WritableRaster;
 import java.util.Hashtable;
 
 /**
- * Gère les images
+ * Créer
  * Permet de créer une image en niveau de gris ou une image binaire
  * @author masseran
  *
  */
-public class MyImage extends BufferedImage{
+public class TabImage {
 	
 	// Niveau de sensibilité pour l'image binaire
 	public static int BINARY_LEVEL = 180; 
 	private int[] histogramme;
-
-	/*
-	 * Reprise des constructeurs de BufferedImage
-	 */
-	public MyImage(int width, int height, int imageType) {
-		super(width, height, imageType);
-	}
-	
-	public MyImage(ColorModel cm, WritableRaster raster,
-			boolean isRasterPremultiplied, Hashtable<?, ?> properties) {
-		super(cm, raster, isRasterPremultiplied, properties);
-		
-	}	
-
-	public MyImage(int width, int height, int imageType, IndexColorModel cm) {
-		super(width, height, imageType, cm);
-	}
-	
-	public MyImage(BufferedImage img){
-		super(img.getWidth(), img.getHeight(), img.getType());
-		Graphics2D g = this.createGraphics();
-		//g.setComposite(AlphaComposite.Src);      
-	    //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
-		g.dispose();
-	}
+	private int[][] img;
+	private int width, height;
+	private boolean height_bit;
 
 	
-	public MyImage redimensionner(BufferedImage img, int tailleX, int tailleY) {
-			MyImage resizedImage = new MyImage(tailleX,tailleY,BufferedImage.TYPE_INT_ARGB);
+	public TabImage(int width, int height) {
+		this.width = width;
+		this.height = height;
+		img = new int [width][height];
+	}
+	
+	public TabImage(int[][] img, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.img = img;
+	}
+	
+	public TabImage(BufferedImage buf) {
+		this.width = buf.getWidth();
+		this.height = buf.getHeight();
+		img = new int[width][height];
+
+		for(int i = 0; i < width; i++)
+		    for(int j = 0; j < height; j++)
+		    	img[i][j] = buf.getRGB(i, j);
+	}
+	
+	/*public TabImage redimensionner(BufferedImage img, int tailleX, int tailleY) {
+			TabImage resizedImage = new TabImage(tailleX,tailleY,BufferedImage.TYPE_INT_ARGB);
 	       Graphics2D g = resizedImage.createGraphics();
 	       g.setComposite(AlphaComposite.Src);      
 	       g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 	       g.drawImage(img, 0, 0, tailleX, tailleY, null);
 	       g.dispose();
 	       return resizedImage;
-	}
+	}*/
 	
 	/**
 	 * Transforme une image couleur en image niveau de gris
 	 * @return
 	 */
-	public MyImage getGreyMyImage(){
+	public TabImage getGrey(){
 		int greyValue = 0, red = 0, green = 0, blue = 0;
-		MyImage greyImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
-		for(int i = 0 ; i < this.getWidth() ; i++){
-			for(int j = 0 ; j < this.getHeight() ; j++){
+		int[][] greyImage = new int [width][height];
+		for(int i = 0 ; i < width ; i++){
+			for(int j = 0 ; j < height ; j++){
 				// Calcul du niveau de gris
-				int pix = this.getRGB(i, j);
+				int pix = img[i][j];
 				red   = pix >> 16 & 0xff;
 				green = pix >> 8 & 0xff;
 				blue  = pix & 0xff;
 				//greyValue = (int) (0.114 * red +  0.299 * green + 0.587 * blue);
 				greyValue = (int)((299 * red +  587 * green + 114 * blue)/1000);
-				greyImage.setRGB(i, j, (new Color(greyValue, greyValue, greyValue).getRGB()));
+				greyImage[i][j] = (new Color(greyValue, greyValue, greyValue)).getRGB();
 			}
 		}
-		return greyImage;
+		return new TabImage(greyImage, width,height);
 	}
 	
 	/**
 	 * Transforme une image en niveau de gris en une image binaire
 	 * @return
 	 */
-	public MyImage getBinaryMyImage(){
-		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
+/*	public TabImage getBinaryMyImage(){
+		int[][] binaryImage = new int [width][height];
 		
 		int binaryLevel = this.getBinaryLevel();
-		for(int i = 0 ; i < this.getWidth() ; i++){
-			for(int j = 0 ; j < this.getHeight() ; j++){
+		for(int i = 0 ; i < width ; i++){
+			for(int j = 0 ; j < height ; j++){
 				// Calcul du niveau de gris
-				if((this.getRGB(i, j) & 0x000000ff) > binaryLevel)
-					binaryImage.setRGB(i, j, (new Color(255, 255, 255).getRGB()));
+				if((img[i][j] & 0x000000ff) > binaryLevel)
+					binaryImage[i][j] = (new Color(255, 255, 255).getRGB());
 				else
-					binaryImage.setRGB(i, j, (new Color(0, 0, 0).getRGB()));
+					binaryImage[i][j] = (new Color(0, 0, 0).getRGB());
 			}
 		}
-		return binaryImage;
-	}
+		return new TabImage(binaryImage, width,height);
+	}*/
 	
 	/**
 	 * Transforme une image en niveau de gris en une image binaire en décomposant l'image en sous image
 	 * @return
 	 */
-	public MyImage getBinaryMyImageByBlock(){
+	/*public TabImage getBinaryMyImageByBlock(){
 		// Paramètre des blocs de l'image
 		int blockX = 5, blockY = 4;
-		int sizeBlockX = this.getWidth()/blockX, sizeBlockY = this.getHeight()/blockY;
+		int sizeBlockX = width/blockX, sizeBlockY = height/blockY;
 		
 		int[][] binaryTable = new int[blockX][blockY];
-		MyImage binaryImage = new MyImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		int[][] binaryImage = new int [width][height];
 		
 		// Calcul des seuils pour chaque bloc
 		for(int X = 0 ; X < blockX ; X++){
 			for(int Y = 0 ; Y < blockY ; Y++){
-				MyImage sub = new MyImage(this.getSubimage(X*sizeBlockX, Y*sizeBlockY, sizeBlockX-1, sizeBlockY-1));
+				TabImage sub = new TabImage(this.getSubimage(X*sizeBlockX, Y*sizeBlockY, sizeBlockX-1, sizeBlockY-1));
 				sub.getHistogramme();
 				binaryTable[X][Y] = sub.otsuTreshold();
 			}
@@ -167,13 +166,15 @@ public class MyImage extends BufferedImage{
 		}
 		
 		return binaryImage;
-	}
+	}*/
+	
+	
 	/** A IMPLEMENTER
 	 * Calcule le meilleur niveau de binarisation pour l'image afin d'avoir les bonnes composantes en noires
 	 * @param greyImage
 	 * @return
 	 */
-	private int getBinaryLevel(){		
+	/*private int getBinaryLevel(){		
 		if(histogramme == null){
 			getHistogramme();
 		}
@@ -210,13 +211,13 @@ public class MyImage extends BufferedImage{
         }
         BINARY_LEVEL = g;
         return g;
-	}
+	}*/
 	
 	// Get binary treshold using Otsu's method
-	private int otsuTreshold() {
+	/*private int otsuTreshold() {
 		
 	    int[] histogram = histogramme;
-	    int total = this.getHeight() * this.getWidth();
+	    int total = height * width;
 	 
 	    float sum = 0;
 	    for(int i=0; i<256; i++) sum += i * histogram[i];
@@ -249,16 +250,16 @@ public class MyImage extends BufferedImage{
 	 
 	    return threshold;
 	 
-	}
+	}*/
 	
 	/**
 	 * Construction de l'histogramme
 	 */
 	public void getHistogramme(){
 		histogramme = new int[256];
-		for(int i = 0 ; i < this.getWidth() ; i++){
-			for(int j = 0 ; j < this.getHeight() ; j++){
-				histogramme[(this.getRGB(i, j) & 0x000000ff)]++;
+		for(int i = 0 ; i < width ; i++){
+			for(int j = 0 ; j < height ; j++){
+				histogramme[img[i][j] & 0x000000ff]++;
 			}
 		}
 	}
@@ -268,15 +269,15 @@ public class MyImage extends BufferedImage{
 	 * @return une image de l'histogramme
 	 */
 	public BufferedImage getHistogramImage(){
-		BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		if(true){
 			
 			int max = 0;
 			for(int j = 0 ; j < 256 ; j++){
 				max = Math.max(max, histogramme[j]);
 			}
-			int columnWidth = this.getWidth()/256;
-			float stepHeight = (float)(this.getHeight())/(float)(max);
+			int columnWidth = width/256;
+			float stepHeight = (float)(height)/(float)(max);
 			
 			Graphics g = image.getGraphics();
 			for(int j = 0 ; j < 256 ; j++){
@@ -284,7 +285,7 @@ public class MyImage extends BufferedImage{
 					g.setColor(Color.red);
 				else
 					g.setColor(Color.black);
-				g.fillRect(j*columnWidth, this.getHeight()-(int) (histogramme[j]*stepHeight), columnWidth, (int) (histogramme[j]*stepHeight));
+				g.fillRect(j*columnWidth, height-(int) (histogramme[j]*stepHeight), columnWidth, (int) (histogramme[j]*stepHeight));
 			}
 		}
 			
@@ -303,9 +304,7 @@ public class MyImage extends BufferedImage{
 	 * @param thresh
 	 * @return
 	 */
-	public MyImage getVarianceFilterImage(int window, int thresh){
-		int height = this.getHeight();
-		int width = this.getWidth();
+	public TabImage getVarianceFilter(int window, int thresh){
 		int windowSize, sum, var;
 		
 		// Vérification que windowSize est un nombre impair
@@ -315,8 +314,9 @@ public class MyImage extends BufferedImage{
 			windowSize = (window)/2;
 		}
 		
-		MyImage mean = new MyImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		MyImage varianceImg = new MyImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		int[][] mean = new int [width][height];
+		int[][] varianceImg = new int [width][height];
+		
 		// Parcours de l'image
 		for(int i = windowSize; i < width-windowSize; i++){
 			for(int j = windowSize; j < height-windowSize; j++){
@@ -324,10 +324,10 @@ public class MyImage extends BufferedImage{
 				// Parcours de la fenêtre
 				for(int a = -windowSize; a <= windowSize; a++){
 					for(int b = -windowSize; b <= windowSize; b++){
-						sum += (this.getRGB(i+a, j+b) & 0xff);
+						sum += img[i+a][j+b] & 0xff;
 					}
 				}
-				mean.setRGB(i, j, (sum/(window*window)));
+				mean[i][j] = (sum/(window*window));
 			}
 		}
 		
@@ -338,19 +338,54 @@ public class MyImage extends BufferedImage{
 						// Parcours de la fenêtre
 						for(int a = -windowSize; a <= windowSize; a++){
 							for(int b = -windowSize; b <= windowSize; b++){
-								sum += Math.pow(((this.getRGB(i+a, j+b) & 0xff) - mean.getRGB(i, j)), 2);
+								sum += Math.pow(((img[i+a][j+b] & 0xff) - mean[i][j]), 2);
 							}
 						}
 						var = sum/((window*window)-1);
 						//System.out.println(var);
 						if(var > thresh){
-							varianceImg.setRGB(i, j, Color.black.getRGB());
+							varianceImg[i][j] = Color.black.getRGB();
 						}else{
-							varianceImg.setRGB(i, j, Color.white.getRGB());
+							varianceImg[i][j] = Color.white.getRGB();
 						}
 					}
 				}
-				return varianceImg;
+				return new TabImage(varianceImg, width, height);
 		
 	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+	
+	public int getRGB(int x, int y){
+		return img[x][y];
+	}
+	
+	public void setRGB(int x, int y, int value){
+		img[x][y] = value;
+	}
+	
+	/**
+	 * Créer une BufferedImage à partir d'un tableau de pixel
+	 * @param data
+	 * @param w
+	 * @param h
+	 * @return
+	 */
+	public BufferedImage ColorArrayToBufferedImage() {
+		BufferedImage bimg = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+		int[] linearbuffer = new int[width*height];
+		int i=0;
+		for(int y=0;y<height;y++)
+			for(int x=0;x<width;x++)
+				linearbuffer[i++]=img[x][y];
+		bimg.getRaster().setDataElements(0, 0, width, height, linearbuffer);
+		return bimg;
+	}
+	
 }

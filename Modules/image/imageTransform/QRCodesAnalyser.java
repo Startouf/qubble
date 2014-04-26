@@ -26,18 +26,17 @@ public class QRCodesAnalyser {
 	private ArrayList<QRCode> listQRcode;
 	// Contient les ids des QR codes et sa position
 	private HashMap<Integer, Point> qrFound;
-	private MyImage image;
+	private int imageHeight;
+	private int imageWidth;
 	
 	
-	public QRCodesAnalyser(MyImage tableImage, MyImage varianceImage, ComponentsAnalyser componentResult){
+	public QRCodesAnalyser(TabImage tableImage, TabImage varianceImage, ComponentsAnalyser componentResult){
 		
-		int imageHeight = tableImage.getHeight();
-		int imageWidth = tableImage.getWidth();
+		imageHeight = tableImage.getHeight();
+		imageWidth = tableImage.getWidth();
 		
 		//ArrayList<ConnexeComponent> smallSquare = new ArrayList<ConnexeComponent>();
 		listQRcode = new ArrayList<QRCode>();
-		
-		image = new MyImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
 				
 		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
 		for(ConnexeComponent cc : componentResult.getCClist()){
@@ -61,7 +60,8 @@ public class QRCodesAnalyser {
 	 * Retourne une image avec le contour et les 3 repères de chaque QR codes dans une couleur 
 	 * @return
 	 */
-	public MyImage getQRCodesImage() {
+	public BufferedImage getQRCodesImage() {
+		BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);	
 		Graphics g = image.getGraphics();
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		
@@ -94,18 +94,18 @@ public class QRCodesAnalyser {
 	 * de la distance du point central à l'extrémité la plus loin en fonction de l'angle
 	 * @return
 	 */
-	public MyImage getGraphicSquareForm() {
+/*	public TabImage getGraphicSquareForm() {
 		Graphics g = image.getGraphics();
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		
-		/* Afficher la courbe d'un carré parfait */
+		 Afficher la courbe d'un carré parfait 
 //		g.setColor(Color.cyan);
 //		for(int j = 0; j<180; j++){
 //			g.drawLine(j, (int)(ConnexeComponent.perfectSquare[j%90]*100), j, (int)(ConnexeComponent.perfectSquare[j%90]*100));
 //		}
 		
 		return image;
-	}
+	}*/
 	
 	/**
 	 * Affiche pour chaque qr code valide son id

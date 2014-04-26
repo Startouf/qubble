@@ -1,6 +1,6 @@
 package imageObject;
 
-import imageTransform.MyImage;
+import imageTransform.TabImage;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,10 +18,10 @@ public class QRCode {
 	
 	private ConnexeComponent border;
 	//private ArrayList<ConnexeComponent> landmark;
-	private MyImage qrImage;
-	private MyImage greyImage;
+	private TabImage qrImage;
+	private TabImage greyImage;
 	
-	public QRCode(ConnexeComponent border, MyImage greyImage){
+	public QRCode(ConnexeComponent border, TabImage greyImage){
 		this.border = border;
 		this.greyImage = greyImage;
 	}
@@ -39,7 +39,6 @@ public class QRCode {
 	 * @return
 	 */
 	private boolean isBlack(int x, int y){
-		Graphics g = greyImage.getGraphics();
 		int moy = 0;
 		
 		if(sizeWindow>0){
@@ -54,13 +53,13 @@ public class QRCode {
 			}
 			
 			if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
-				g.setColor(Color.red);
-				g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
+				//g.setColor(Color.red);
+				//g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return true;
 			}
 			else{
-				g.setColor(Color.blue);
-				g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
+				//g.setColor(Color.blue);
+				//g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return false;
 			}
 			// Recherche sur 1 pixel
@@ -72,13 +71,13 @@ public class QRCode {
 					}
 			
 			if(moy > 0.5){
-				g.setColor(Color.red);
-				g.fillRect(x , y , 1, 1);
+				//g.setColor(Color.red);
+				//g.fillRect(x , y , 1, 1);
 				return true;
 			}
 			else{
-				g.setColor(Color.blue);
-				g.fillRect(x , y , 1, 1);
+				//g.setColor(Color.blue);
+				//g.fillRect(x , y , 1, 1);
 				return false;
 			}
 		}else
