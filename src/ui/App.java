@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.Action;
@@ -258,9 +259,11 @@ public class App extends JFrame
 		this.qubjectPalette = patternSelectionFrame;
 	}
 	
-	public ViewQubjects getActiveTab() {
-		//TODO : handle different type of tab !!!
-		return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
+	public ViewQubjects getActiveViewQubjectsTab() throws NotViewQubjectsTabException{
+		Component selected = mainPanel.getSettingsTabs().getSelectedComponent();
+		if(selected instanceof ViewQubjects){
+			return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
+		} else return null;
 	}
 	
 	public ChangeQubjectAction getChangeQubjectAction() {

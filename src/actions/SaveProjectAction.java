@@ -1,9 +1,20 @@
 package actions;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
+import drawing.HexagonMazeModel;
+import drawing.SquareMazeModel;
 
 import ui.App;
 
@@ -40,5 +51,5 @@ private App app;
 		}
 		
 	}
-
+	
 }

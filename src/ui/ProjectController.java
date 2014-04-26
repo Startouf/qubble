@@ -2,11 +2,9 @@ package ui;
 
 import java.util.ArrayList;
 
-import database.SaveProject;
-
-import qubject.MediaInterface;
 import qubject.Qubject;
 import sequencer.QubbleInterface;
+import database.SaveProject;
 
 public class ProjectController implements ProjectControllerInterface
 {

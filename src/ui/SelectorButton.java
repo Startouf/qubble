@@ -51,7 +51,11 @@ public class SelectorButton extends JButton implements ActionListener{
 			app.getQubjectPalette().setVisible(true);
 		}
 		else{
-			this.app.getActiveTab().setActiveProperty(modifier);
+			try {
+				this.app.getActiveViewQubjectsTab().setActiveProperty(modifier);
+			} catch (NotViewQubjectsTabException e) {
+				e.printStackTrace();
+			}
 			switch (modifier){
 			//Proto final
 			case AUDIO_EFFECT_ROTATION:

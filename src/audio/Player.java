@@ -131,8 +131,15 @@ public class Player implements PlayerInterface, Runnable {
 			case Flanger:
 				e = new Flanger(amount);
 				break;
+			case LPFilter:
+				e = new LPFilter(amount);
+				break;
+			case Volume:
+				e = new Volume(amount);
+				break;
 			default:
 				e = new Volume(amount);
+				break;
 			}
 			ref.addEffect(e);
 		}
