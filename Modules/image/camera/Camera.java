@@ -15,6 +15,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  */
 public class Camera extends Thread{
 	private BufferedImage tableImage;
+	private int i = 0;
 	public void run(){
 		// Ouverture de la caméra sur le port 0 
 		final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
@@ -31,7 +32,8 @@ public class Camera extends Thread{
 			try {
 				img = grabber.grab();
 				if(img != null){
-	    			//cvSaveImage("picture.jpg", img);
+	    			cvSaveImage("picture"+i+".jpg", img);
+	    			i++;
 					tableImage = img.getBufferedImage();
 					System.out.println("Nouvelle image !");
 					
