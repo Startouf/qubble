@@ -319,7 +319,11 @@ public class Qubble implements QubbleInterface {
 		qubject.setCoords(glCoords);
 
 		//On replanifie
-		sequencer.reschedule(tasks.get(qubject), qubject);
+//		sequencer.reschedule(tasks.get(qubject), qubject);
+		
+		for(SampleControllerInterface sample : sampleControllers.get(qrCodes.get(qubject))){
+			player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+		}
 
 		//On indique son nouvel emplacement OLD
 //		projection.highlightQubject(qubject.getCoords());
