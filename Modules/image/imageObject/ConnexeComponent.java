@@ -125,10 +125,18 @@ public class ConnexeComponent {
 		int distanceMax = 0;
 		// Calculer la distance
 		for(Point pt : list){
-			distance = (float) Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
+			distance = (float) Math.sqrt((pt.getX()-xCenter)*(pt.getX()-xCenter) + (pt.getY()- yCenter)*(pt.getY()- yCenter));
 			// Calcul de l'angle : produit sca / diviser par les distances ==> transformer le cosinus
 			// le deuxième vecteur est (1, 0)
-			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
+			
+			if ((pt.getY()-yCenter)/(float)distance >= 0) {
+				angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
+			}
+			//entre 180 et 360� pas pris en compte
+			//else if ((pt.getY()-yCenter)/(float)distance < 0) {		
+				//angle = (int) ((float)2*Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI));
+			//}
+
 			//System.out.println(angle);
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
@@ -139,6 +147,23 @@ public class ConnexeComponent {
 				corner[0] = pt;
 			}
 		}
+		
+		//si mySquare[angle] nul, barycentre entre les deux valeurs non nulles superieure et inferieure
+		for (int i=0; i<180; i++) {
+			if(mySquare[angle] ==0) {
+				int ind_inf=angle - 1;
+				int ind_sup = angle + 1;
+				while (mySquare[ind_inf]==0) {
+					ind_inf --;
+				}
+				while (mySquare[ind_sup] == 0) {
+					ind_sup ++;
+				}
+			
+				mySquare[angle] = (mySquare[ind_inf]*(ind_sup-angle) + mySquare[ind_sup]*(angle-ind_inf)) /(ind_sup-ind_inf);
+			}
+		}
+
 		
 		// La composante étudiée est top grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
