@@ -95,7 +95,7 @@ public class Qubble implements QubbleInterface {
 	 * Attributs coeur
 	 */
 	private final PlayerInterface player = new Player(this);
-	private final OutputImageInterface projection = new ProjectorOutput();
+	private final OutputImageInterface projection = new ProjectorOutput(this);
 	private final CameraInterface camera;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonnanceur 
