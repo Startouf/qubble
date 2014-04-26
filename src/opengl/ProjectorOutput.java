@@ -82,7 +82,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	private void initTrackers(){
 		for(QRInterface qubject : qubble.getAllQubjects()){
-			trackers.put(qubject, new QubjectTracker(qubject));
+			QubjectTracker tracker = new QubjectTracker(qubject);
+			trackers.put(qubject, tracker);
 		}
 	}
 	
@@ -110,7 +111,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		loadFonts();
         loadDisplayLists();
         loadCursorVBOs();
-        QubjectTracker.loadShader();
+        loadTrackerShaders();
+	}
+
+	private void loadTrackerShaders() {
+		for(QubjectTracker tracker : trackers.values()){
+			tracker.loadShader();
+		}
 	}
 
 	@Override
@@ -207,11 +214,9 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 //		}
 			
 		//Trackers
-		QubjectTracker.useShader();
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderStatusInstant();
 		}
-		GL20.glUseProgram(0);
 	}
 
 	/**

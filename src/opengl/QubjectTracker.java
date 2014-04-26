@@ -21,12 +21,12 @@ public class QubjectTracker {
 	 * 		-X Optimise with VBOs
 	 */
 	private static final double OFFSET = 20d;
-	private static final double RADIUS = 10d;
-	private static final int TESSELATION = 100; 
+	private static final double RADIUS = 5d;
+	private static final int TESSELATION = 500; 
 	
-	//Shader
-	private static int[] shader;
-	private static int sourceAddress, maxRadiusAddress, minRadiusAddress, colorNearAddress, colorFarAddress;
+	//Shader : one per tracker
+	private int[] shader;
+	private int sourceAddress, maxRadiusAddress, minRadiusAddress, colorNearAddress, colorFarAddress;
 	
 	private final QRInterface qubject;
 	private float lastTimeMoved = 0f;
@@ -53,13 +53,12 @@ public class QubjectTracker {
 			return;
 		}
 		
-		double x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
+		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		
-		GL20.glUniform2f(sourceAddress, (float)x, (float)y); 
+//		GL20.glUseProgram(shader[2]);
+//		GL20.glUniform2f(sourceAddress, (float)x+Qubject.SIZE/2, (float)y+Qubject.SIZE/2); 
 		
 		double cos, sin, theta;
-		
-		//Outer circle :
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int i=0; i<=TESSELATION; i++){
 			theta = i*2*Math.PI/(double)TESSELATION;
@@ -81,20 +80,17 @@ public class QubjectTracker {
 			glVertex3d(x+(OFFSET+RADIUS+Qubject.SIZE/2d)*cos, y+(OFFSET+RADIUS+Qubject.SIZE/2d)*sin, -2d);
 		}
 		glEnd();
+		GL20.glUseProgram(0);
 		
-		glPopAttrib();
+		glColor4f(0f,0f,0f,1f);
+		glBegin(GL_QUADS);
+		glVertex3f(x-Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
+		glVertex3f(x+Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
+		glVertex3f(x+Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
+		glVertex3f(x-Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
+		glEnd();
 		
-		//hide the qubject (allows for better movement detection) :
-//		glColor4f(0f, 0f, 0f, 1f);
-//		glBegin(GL_TRIANGLE_FAN);
-//		glVertex2d(x,y);
-//		for (int i=0; i<=TESSELATION; i++){
-//			theta = i*2*Math.PI/(double)TESSELATION;
-//			cos = Math.cos(i);
-//			sin = Math.sin(i);
-//			glVertex2d(x+Qubject.SIZE/2d*cos, y+Qubject.SIZE/2d*sin);
-//		}
-//		glEnd();
+		
 	}
 	
 	public void setActive(boolean active){
@@ -102,23 +98,24 @@ public class QubjectTracker {
 		this.active = active;
 	}
 	
-	public static void loadShader(){
+	public void loadShader(){
 		String[] attrib = new String[]{"source", "maxRadius", "minRadius", "colorNear", "colorFar"};
 		shader = Shaders.loadShadersGL(SHADER_PATH + "lazyVertex.vp", SHADER_PATH + "gradation.fp", attrib);
+		GL20.glUseProgram(shader[2]);
 		sourceAddress = GL20.glGetUniformLocation(shader[2], "source");
+		
 		maxRadiusAddress = GL20.glGetUniformLocation(shader[2], "maxRadius");
 		GL20.glUniform1f(maxRadiusAddress, (float) (Qubject.SIZE+OFFSET+RADIUS)); 
+		
 		minRadiusAddress = GL20.glGetUniformLocation(shader[2], "minRadius");
 		GL20.glUniform1f(minRadiusAddress, (float) (Qubject.SIZE+OFFSET)); 
-		colorNearAddress = GL20.glGetUniformLocation(shader[2], "colorNear");
-		colorFarAddress = GL20.glGetUniformLocation(shader[2],  "colorFar");
 		
+		colorNearAddress = GL20.glGetUniformLocation(shader[2], "colorNear");
+		GL20.glUniform4f(colorNearAddress, 0.1f, 0.5f, 0.1f, 0.8f);
+		
+		colorFarAddress = GL20.glGetUniformLocation(shader[2],  "colorFar");
+		GL20.glUniform4f(colorFarAddress, 0.1f, 1.0f, 0.1f, 0.8f);
+		GL20.glUseProgram(0);
 	}
 	
-	/**
-	 * Don't forget to call GL20.glUseProgram(0) when done !
-	 */
-	public static void useShader(){
-		GL20.glUseProgram(shader[2]);
-	}
 }
