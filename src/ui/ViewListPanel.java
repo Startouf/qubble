@@ -62,7 +62,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		HEIGHT = app.getQubjects().size()+1;
 		cell = new JComponent[HEIGHT][WIDTH];
 		
-		content = new ScrollablePanel(this);
+		content = new ScrollablePanel(this, new Dimension(600, 100), 800, 400);
 		content.setLayout(new GridLayout(HEIGHT,WIDTH));
 
 		prepare();
@@ -73,7 +73,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		JScrollPane scroll = new JScrollPane();
 
 		scroll.setViewportView(content);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setViewportBorder(
 	                BorderFactory.createLineBorder(Color.black));
 		this.add(scroll);

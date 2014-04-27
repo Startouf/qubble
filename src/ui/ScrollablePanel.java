@@ -9,21 +9,22 @@ import javax.swing.Scrollable;
 
 public final class ScrollablePanel extends JPanel implements Scrollable{
 
-	/**
-	 * 
-	 */
-	private final ViewListPanel viewList;
+	private final Dimension preferredViewport;
+	private final int widthBeforeScrollBarAppears, heightBeforeScrollBarAppears;
 	
-	public ScrollablePanel(ViewListPanel viewList)
+	private final JPanel container;
+	
+	public ScrollablePanel(JPanel viewList, Dimension viewport, int widthLimit, int heightLimit)
 	{
-		this.viewList=viewList;
+		this.container=viewList;
+		this.preferredViewport = viewport;
+		this.widthBeforeScrollBarAppears = widthLimit;
+		this.heightBeforeScrollBarAppears = heightLimit;
 	}
 	
-	
-
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
-		return new Dimension(600, 100);
+		return preferredViewport;
 	}
 
 	@Override
@@ -37,14 +38,14 @@ public final class ScrollablePanel extends JPanel implements Scrollable{
 	public boolean getScrollableTracksViewportHeight() {
 		final Container viewport = getParent();
 		//TODO : value should be a function of QubjectList.size
-		return viewport.getHeight() > 400;			
+		return viewport.getHeight() > heightBeforeScrollBarAppears;			
 	}
 
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		final Container viewport = getParent();
 		//TODO : value should be a function of EXTRA_COLS and QubjectProperty.values().size
-		return viewport.getWidth() > 800;
+		return viewport.getWidth() > widthBeforeScrollBarAppears;
 	}
 
 	@Override

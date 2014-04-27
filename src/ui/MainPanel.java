@@ -30,7 +30,7 @@ public class MainPanel extends JPanel
 		super();
 		this.app = app;
 		
-		this.setPreferredSize(new Dimension(650, 600));
+		this.setPreferredSize(new Dimension(650, 700));
 		this.setLayout(new BorderLayout());
 
 		//Tabs are added by the app
