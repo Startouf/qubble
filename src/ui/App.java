@@ -313,9 +313,9 @@ public class App extends JFrame
 	}
 
 	public void closeProject(ProjectController project) {
+		this.mainPanel.closeTabsRelatedTo(project);
 		project.close();
 		welcomePanel.removeProject(project);
-		
 	}
 	
 	/**

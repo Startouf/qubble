@@ -107,7 +107,6 @@ public class MainPanel extends JPanel
 
 		// Optionally bring the new tab to the front
 		settingsTabs.setSelectedComponent(tab);
-//		settingsTabs.addTab(title, tab);
 		repaint();
 	}
 
@@ -127,6 +126,18 @@ public class MainPanel extends JPanel
 				ViewQubjects view = (ViewQubjects)p;
 				if(view.isLinkedToProject(project)){
 					view.setConfigForQubject(qubject, prop, modifier);
+				}
+			}
+		}
+	}
+
+	public void closeTabsRelatedTo(ProjectController project) {
+		for(int i=0; i< settingsTabs.getTabCount(); i++){
+			Component c = settingsTabs.getTabComponentAt(i);
+			if (c instanceof ViewQubjects){
+				ViewQubjects view = (ViewQubjects)settingsTabs.getTabComponentAt(i);
+				if(view.isLinkedToProject(project)){
+					settingsTabs.remove(i);
 				}
 			}
 		}

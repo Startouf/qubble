@@ -28,11 +28,19 @@ public class WelcomePanel extends JPanel
 		layout.setHgap(20);
 		this.setLayout(layout);
 		
+		JPanel shortcutsBox = new JPanel();
+		BorderLayout lay = new BorderLayout();
+		lay.setVgap(15);
+		shortcutsBox.setLayout(lay);
 		JPanel shortcuts = new JPanel();
 		shortcuts.add(newProject = new JButton(app.getNewAction()));
 		shortcuts.add(loadProject = new JButton(app.getLoadAction()));
 		shortcuts.add(saveProject = new JButton(app.getSaveProjectAction()));
-		this.add(shortcuts, BorderLayout.PAGE_START);
+		shortcutsBox.add(shortcuts, BorderLayout.NORTH);
+		JLabel label = new JLabel("Liste des projets ouverts :");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		shortcutsBox.add(label, BorderLayout.SOUTH);
+		this.add(shortcutsBox, BorderLayout.PAGE_START);
 		
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 		this.add(main, BorderLayout.CENTER);

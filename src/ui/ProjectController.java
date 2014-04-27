@@ -44,8 +44,7 @@ public class ProjectController implements ProjectControllerInterface
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		this.qubble.close();
 	}
 
 	@Override

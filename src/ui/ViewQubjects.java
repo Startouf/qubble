@@ -62,4 +62,8 @@ public abstract class ViewQubjects extends JPanel {
 	public boolean isLinkedToProject(ProjectController controller){
 		return (controller == project);
 	}
+
+	public ProjectController getProject() {
+		return project;
+	}
 }

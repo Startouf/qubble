@@ -14,7 +14,8 @@ public class GlobalSettingsPanel extends JPanel
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
 	private final JButton toggleGrid, playPause, panic, recordButton;
-	private JLabel activeProject;
+	private JLabel activeProjectLabel, activeProject, volumeLabel, panicLabel, playPauseLabel, 
+	toggleGridLabel, time, recordLabel;
 
 	public GlobalSettingsPanel(App app)
 	{
@@ -26,8 +27,8 @@ public class GlobalSettingsPanel extends JPanel
 		this.setPreferredSize(new Dimension(400, 80));
 
 		//Project Name
-		JLabel project = new JLabel("Projet Actif:");
-		project.setHorizontalAlignment(JLabel.CENTER);
+		activeProjectLabel = new JLabel("Projet Actif:");
+		activeProjectLabel.setHorizontalAlignment(JLabel.CENTER);
 		activeProject = new JLabel();
 		activeProject.setHorizontalAlignment(JLabel.CENTER);
 		activeProject.setText("Pas de projet");
@@ -36,8 +37,8 @@ public class GlobalSettingsPanel extends JPanel
 		//TODO : Il faut un JLabel plus stylé pour le nom de projet!
 
 		//Volume Slider : (, min, max, initial) Volume
-		JLabel volume = new JLabel("Volume");
-		volume.setHorizontalAlignment(JLabel.CENTER);
+		volumeLabel = new JLabel("Volume");
+		volumeLabel.setHorizontalAlignment(JLabel.CENTER);
 		volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
 		volumeSlider.setMajorTickSpacing(25);
 		volumeSlider.setMinorTickSpacing(5);
@@ -52,18 +53,18 @@ public class GlobalSettingsPanel extends JPanel
 		//(AbstractAction would be best : able to sync it from external modif (OS modification ?))
 		
 		//Grid Toggle
-		JLabel toggleGridLabel = new JLabel("Grille on/off");
+		toggleGridLabel = new JLabel("Grille on/off");
 		toggleGridLabel.setHorizontalAlignment(JLabel.CENTER);
 		toggleGrid = new JButton(this.app.getToggleGridAction());
 
 		//Time Slider : Removed because time synchronization is harddddd
-		JLabel time = new JLabel("Time");
+		time = new JLabel("Time");
 		time.setHorizontalAlignment(JLabel.CENTER);
 		timeBar = new JProgressBar(0,240);
 		timeBar.setStringPainted(true);
 		
 		//Play/Pause Button
-		JLabel playPauseLabel = new JLabel("");
+		playPauseLabel = new JLabel("");
 		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
 		playPause = new JButton();
 		playPause.setAction(this.app.getPlayPauseAction());
@@ -74,7 +75,7 @@ public class GlobalSettingsPanel extends JPanel
 		playPause.setBorderPainted(false);
 		
 		//Panic button
-		JLabel panicLabel = new JLabel("Redémarrer");
+		panicLabel = new JLabel("Redémarrer");
 		panicLabel.setHorizontalAlignment(JLabel.CENTER);
 		panic = new JButton(this.app.getPanicAction());
 		panic.setPreferredSize(new Dimension(200,50));
@@ -84,12 +85,12 @@ public class GlobalSettingsPanel extends JPanel
 		recordButton.setOpaque(false);
 		recordButton.setContentAreaFilled(false);
 		recordButton.setBorderPainted(false);
-		JLabel recordLabel = new JLabel("");
+		recordLabel = new JLabel("");
 
 		//add in order (left to right)
-		add(project);
+		add(activeProjectLabel);
 		add(toggleGridLabel);
-//		add(volume);
+//		add(volumeLabel);
 //		add(time);
 		add(panicLabel);
 		add(playPauseLabel);
@@ -108,17 +109,25 @@ public class GlobalSettingsPanel extends JPanel
 	}
 	
 	public void hideComponentsWhenNoProject(){
-		toggleGrid.setVisible(false);
 		panic.setVisible(false);
+		panicLabel.setVisible(false);
+		toggleGrid.setVisible(false);
+		toggleGridLabel.setVisible(false);
 		playPause.setVisible(false);
+		playPauseLabel.setVisible(false);
 		recordButton.setVisible(false);
+		recordLabel.setVisible(false);
 	}
 	
 	public void showComponentsWhenProjectOpened(){
-		toggleGrid.setVisible(true);
 		panic.setVisible(true);
+		panicLabel.setVisible(true);
+		toggleGrid.setVisible(true);
+		toggleGridLabel.setVisible(true);
 		playPause.setVisible(true);
+		playPauseLabel.setVisible(true);
 		recordButton.setVisible(true);
+		recordLabel.setVisible(true);
 	}
 	
 	/**

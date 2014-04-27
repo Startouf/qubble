@@ -58,7 +58,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();
 	
 	//Other
-	public volatile boolean isPlaying = true, hasStarted = false;
+	public volatile boolean isPlaying = true, hasStarted = false, closeRequested = false;
 	/**
 	 * Time spent during playPause
 	 * (must be substracted to DT before updating animations
@@ -80,7 +80,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     	loadCursorVBOs();
     	
     	//TODO : add another closeRequested boolean check for external change (project closed...)
-        while(!Display.isCloseRequested()){   
+        //while(!Display.isCloseRequested()){
+    	while(!closeRequested){
         	loadNewAnims();
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
@@ -320,7 +321,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void terminate() {
-		//TODO : use boolean to request close (2x bool :one to check user didn't click on X, on to check user didn't close project)
+		closeRequested = true;
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class ProjectPanel extends JPanel {
 		projectName = new JLabel(project.getProjectName());
 		projectName.setHorizontalAlignment(JLabel.LEFT);
 		
-		status = new JLabel("Active");
+		status = new JLabel("Actif");
 		status.setFont(new Font(null, Font.BOLD, 14));
 		status.setForeground(activeColor);
 		status.setHorizontalAlignment(JLabel.LEFT);
@@ -33,11 +33,11 @@ public class ProjectPanel extends JPanel {
 		
 		remove = new ReferenceButton(this, app.getCloseProjectAction());
 		
-		this.add(switchTo);
 		this.add(status);
 		this.add(Box.createHorizontalGlue());
 		this.add(projectName);
 		this.add(Box.createHorizontalGlue());
+		this.add(switchTo);
 		this.add(remove);
 		
 		this.setSize(700, 50);
@@ -51,10 +51,10 @@ public class ProjectPanel extends JPanel {
 	public void setStatus(boolean active){
 		if(active){
 			status.setForeground(activeColor);
-			status.setText("Active");
+			status.setText("Actif");
 		} else{
 			status.setForeground(inactiveColor);
-			status.setText("Inactive");
+			status.setText("Inactif");
 		}
 		repaint();
 	}
