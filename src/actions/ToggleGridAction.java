@@ -13,7 +13,7 @@ public class ToggleGridAction extends AbstractAction
 	
 	public ToggleGridAction(App app){
 		this.app = app;
-		putValue(NAME, "Masquer la grille");
+		putValue(NAME, "Masquer");
 	}
 
 	@Override
@@ -21,8 +21,8 @@ public class ToggleGridAction extends AbstractAction
 		//set the active qubject 
 		this.app.getActiveProject().getQubble().toggleGrid();
 		if(grid)
-			putValue(NAME, "Afficher la grille");
+			putValue(NAME, "Afficher");
 		else
-			putValue(NAME, "Masquer la grille");
+			putValue(NAME, "Masquer");
 	}
 }

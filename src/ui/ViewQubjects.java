@@ -12,8 +12,10 @@ import qubject.QubjectProperty;
  *
  */
 public abstract class ViewQubjects extends JPanel {
+	/* The changeQubject/QubjectModifier action will query these via getters */
 	protected MediaInterface activeQubject;
-	protected QubjectProperty activeProperty = QubjectProperty.SAMPLE_WHEN_PLAYED;
+	protected QubjectProperty activeProperty;
+	protected QubjectModifierInterface activeModifier;
 	
 	/**
 	 * Will be used to determine whether this JPanel should be updated or not when a Qubble is changed
@@ -51,6 +53,10 @@ public abstract class ViewQubjects extends JPanel {
 	
 	public QubjectProperty getActiveProperty(){
 		return activeProperty;
+	}
+	
+	public QubjectModifierInterface getActiveModifier(){
+		return activeModifier;
 	}
 	
 	public boolean isLinkedToProject(ProjectController controller){

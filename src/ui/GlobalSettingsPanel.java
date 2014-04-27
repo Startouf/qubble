@@ -23,13 +23,14 @@ public class GlobalSettingsPanel extends JPanel
 		GridLayout layout = new GridLayout(2,4);
 		layout.setHgap(25);
 		setLayout(layout);
+		this.setPreferredSize(new Dimension(400, 80));
 
 		//Project Name
-		JLabel project = new JLabel("Active project:");
+		JLabel project = new JLabel("Projet Actif:");
 		project.setHorizontalAlignment(JLabel.CENTER);
 		activeProject = new JLabel();
 		activeProject.setHorizontalAlignment(JLabel.CENTER);
-		activeProject.setText("No Project");
+		activeProject.setText("Pas de projet");
 		activeProject.setFont(new Font(null, Font.BOLD, 18));
 		activeProject.setForeground(Color.red);
 		//TODO : Il faut un JLabel plus stylé pour le nom de projet!
@@ -51,42 +52,47 @@ public class GlobalSettingsPanel extends JPanel
 		//(AbstractAction would be best : able to sync it from external modif (OS modification ?))
 		
 		//Grid Toggle
+		JLabel toggleGridLabel = new JLabel("Grille on/off");
+		toggleGridLabel.setHorizontalAlignment(JLabel.CENTER);
 		toggleGrid = new JButton(this.app.getToggleGridAction());
 
 		//Time Slider : Removed because time synchronization is harddddd
-//		JLabel time = new JLabel("Time");
-//		time.setHorizontalAlignment(JLabel.CENTER);
+		JLabel time = new JLabel("Time");
+		time.setHorizontalAlignment(JLabel.CENTER);
 		timeBar = new JProgressBar(0,240);
-//		timeBar.setStringPainted(true);
+		timeBar.setStringPainted(true);
 		
 		//Play/Pause Button
-		JLabel playPauseLabel = new JLabel("Play/Pause");
+		JLabel playPauseLabel = new JLabel("");
 		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
 		playPause = new JButton();
 		playPause.setAction(this.app.getPlayPauseAction());
 		ImageIcon img = new ImageIcon("data/ui/PauseButton.png");
 		playPause.setSize(img.getIconWidth(), img.getIconHeight());
-		img = null;
+		playPause.setOpaque(false);
+		playPause.setContentAreaFilled(false);
+		playPause.setBorderPainted(false);
 		
 		//Panic button
-		JLabel panicLabel = new JLabel("Panic");
+		JLabel panicLabel = new JLabel("Redémarrer");
 		panicLabel.setHorizontalAlignment(JLabel.CENTER);
 		panic = new JButton(this.app.getPanicAction());
 		panic.setPreferredSize(new Dimension(200,50));
 
 		//add in order (left to right)
 		add(project);
-		add(volume);
-		add(playPauseLabel);
+		add(toggleGridLabel);
+//		add(volume);
 //		add(time);
 		add(panicLabel);
+		add(playPauseLabel);
 
 		add(activeProject);
 		add(toggleGrid);
 //		add(volumeSlider);
-		add(playPause);
 //		add(timeBar);
 		add(panic);
+		add(playPause);
 
 		setBackground(Color.WHITE);
 	}

@@ -30,6 +30,7 @@ public class SelectorButton extends JButton implements ActionListener{
 		addActionListener(this);
 		this.app=app;
 		isQubject=true;
+		tune();
 		this.modifier = null;
 		setPreferredSize(new Dimension(35,35));
 	}
@@ -37,11 +38,18 @@ public class SelectorButton extends JButton implements ActionListener{
 	//Constructor for the select modifier selector
 	public SelectorButton(App app, QubjectProperty modifier){
 		super(new ImageIcon("data/ui/arrow.png"));
+		tune();
 		addActionListener(this);
 		this.app = app;
 		isQubject=false;
 		this.modifier = modifier;
 		setPreferredSize(new Dimension(35,35));
+	}
+	
+	public void tune(){
+		setContentAreaFilled(false);
+		setBorderPainted(false);
+		addActionListener(this);
 	}
 
 	@Override

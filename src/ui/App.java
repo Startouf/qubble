@@ -136,7 +136,7 @@ public class App extends JFrame
 				"Accueil", welcomePanel);
 	}
 	
-	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
+	public void refreshConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
 		this.mainPanel.setConfigForQubject(activeProject, qubject, prop, modifier);
 	}
 

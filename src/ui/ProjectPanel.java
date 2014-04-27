@@ -33,7 +33,6 @@ public class ProjectPanel extends JPanel {
 		
 		remove = new ReferenceButton(this, app.getCloseProjectAction());
 		
-		this.add(Box.createRigidArea(new Dimension (100,10)));
 		this.add(switchTo);
 		this.add(status);
 		this.add(Box.createHorizontalGlue());

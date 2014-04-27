@@ -15,6 +15,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Hashtable;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -184,29 +185,11 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 				for(int j=0; j<WIDTH; j++){
 					if (arg0.getSource() == cell[i][j]){
 						if(j>=EXTRA_COLS.length){
+							JComboBox combo = (JComboBox) (cell[i][j]);
 							this.activeQubject = qubjectMap.get(i);
 							this.activeProperty = propertyMap.get(j);
-							JComboBox combo = (JComboBox) (cell[i][j]);
-							switch (activeProperty){
-							case ANIM_WHEN_DETECTED:
-								this.app.getAnimationPalette().getCombo();
-								break;
-							case ANIM_WHEN_PLAYED:
-								this.app.getAnimationPalette().getCombo();
-								break;
-							case AUDIO_EFFECT_ROTATION:
-								this.app.getSoundEffectPalette().getCombo();
-								break;
-							case AUDIO_EFFECT_Y_AXIS:
-								this.app.getSoundEffectPalette().getCombo();
-								break;
-							case SAMPLE_WHEN_PLAYED:
-								this.app.getSamplePalette().getCombo();
-								break;
-							default:
-								System.err.println("missing case in viewlist");
-								break;
-							}
+							this.activeModifier = (QubjectModifierInterface) combo.getSelectedItem();
+							this.app.getChangeQubjectModifierAction().actionPerformed(new ActionEvent(this, arg0.getID(), null));
 						}
 					}
 				}

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -36,6 +37,8 @@ public class Selector extends JPanel {
 	private final App app;
 	//change the specific object (pattern or patternmodifier)
 	private JLabel label;
+	private boolean isModifier;
+	private ImageIcon image;
 
 	/**
 	 * Selector for a Qubject
@@ -55,6 +58,7 @@ public class Selector extends JPanel {
 		add(label = new JLabel(qubject.getName()), BorderLayout.WEST);
 		//TODO : show a thumbnail of the object
 		add(new SelectorButton(app,qubject), BorderLayout.EAST);
+		isModifier = false;
 	}
 
 	/**
@@ -69,10 +73,8 @@ public class Selector extends JPanel {
 				new EtchedBorder(), 
 				new EmptyBorder(5, 10, 5, 10)));
 		setLayout(new BorderLayout());
-		
-		//TODO : name
+		isModifier = true;
 		add(label = new JLabel(getNameFor(qubject, modifier)), BorderLayout.WEST);
-		//TODO : show a thumbnail of the object
 		add(new SelectorButton(app, modifier), BorderLayout.EAST);
 	}
 
@@ -83,9 +85,12 @@ public class Selector extends JPanel {
 	
 	public void setQubject(MediaInterface qubject){
 		label.setText(qubject.getName());
+		image.setImage(qubject.getImage());
 	}
 	
 	public void setModifier(QubjectModifierInterface modifier){
 		label.setText(modifier.getName());
+		image.setImage(modifier.getImage());
 	}
+	
 }

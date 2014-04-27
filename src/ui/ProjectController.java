@@ -10,7 +10,7 @@ public class ProjectController implements ProjectControllerInterface
 {
 	private final App app;
 	private final QubbleInterface qubble;
-	private String projectName = "New Project";
+	private String projectName = "Nouveau projet";
 	
 	public ProjectController(App app, QubbleInterface qubble){
 		this.app=app;
