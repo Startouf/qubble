@@ -315,9 +315,12 @@ public class Qubble implements QubbleInterface {
 		//on change les coordonnées caméra -> OpenGL
 		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
 		qubject.setCoords(glCoords);
+		for(SampleControllerInterface sample : sampleControllers.get(qubject)){
+		player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+		}
 
 		//On replanifie
-		sequencer.reschedule(tasks.get(qubject), qubject);
+//		sequencer.reschedule(tasks.get(qubject), qubject);
 
 		//On indique son nouvel emplacement
 		projection.highlightQubject(qubject.getCoords());
@@ -402,7 +405,6 @@ public class Qubble implements QubbleInterface {
 	public static int getTile(org.lwjgl.util.Point pos){
 		return (int) Math.ceil((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
 	}
-	
 
 	@Override
 	public ArrayList<Qubject> getAllQubjects() {
