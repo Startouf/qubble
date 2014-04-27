@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ConnexeComponent {
 	// Coefficient pour accepter qu'une composante est un carrÃ©
-	public static final float SQUARETRIGGER = (float) 0.50;
+	public static float SQUARETRIGGER = (float) 0.80;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -132,7 +132,7 @@ public class ConnexeComponent {
 			if ((pt.getY()-yCenter)/(float)distance >= 0) {
 				angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
 			}
-			//entre 180 et 360° pas pris en compte
+			//entre 180 et 360ï¿½ pas pris en compte
 			//else if ((pt.getY()-yCenter)/(float)distance < 0) {		
 				//angle = (int) ((float)2*Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI));
 			//}

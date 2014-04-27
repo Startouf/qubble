@@ -301,7 +301,8 @@ public class TabImage {
 	% **************************************************************************/
 	/**
 	 * Lis une image en niveau de gris
-	 * @param thresh
+	 * @param window : taille de la fenêtre en pixel pour faire la moyenne
+	 * @param thresh : seuil de binarisation de la variance
 	 * @return
 	 */
 	public TabImage getVarianceFilter(int window, int thresh){

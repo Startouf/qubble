@@ -2,10 +2,18 @@ package camera;
 
 import static com.googlecode.javacv.cpp.opencv_highgui.cvSaveImage;
 
-import imageTransform.TabImage;
-
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import sequencer.QubbleInterface;
+
+import main.TerminateThread;
+
+import com.googlecode.javacv.FrameGrabber.Exception;
 import com.googlecode.javacv.OpenCVFrameGrabber;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 /**
@@ -13,47 +21,86 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  * @author eric
  *
  */
-public class Camera extends Thread{
-	private BufferedImage tableImage;
+public class Camera implements Runnable, TerminateThread{
+	private boolean run, cameraOK;
+	private ImageDetectionInterface controlImage;
+	private final OpenCVFrameGrabber grabber;
+	private IplImage tableImage;
 	private int i = 0;
-	public void run(){
+	
+	public Camera(ImageDetectionInterface controlImage){
+		cameraOK = true;
+		this.controlImage = controlImage;
 		// Ouverture de la caméra sur le port 0 
-		final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-    	// Démarage de la caméra
-    	try{
-    		grabber.start();
-     	}catch(Exception e){
-    		e.printStackTrace();
-    	}
-    	
+		grabber = new OpenCVFrameGrabber(0);
+		// Tentative de démarage de la caméra
+		try{
+			grabber.start();
+		}catch(ExceptionInInitializerError | Exception e){
+			e.printStackTrace();
+			System.out.println("Impossible de démarrer la caméra");
+			cameraOK = false;
+	   	}
+	}
+	
+
+	public void run(){
     	// Récupération et sauvegarde de l'image
-    	while(true){
-    		IplImage img;
-			try {
-				img = grabber.grab();
-				if(img != null){
-	    			cvSaveImage("picture"+i+".jpg", img);
-	    			i++;
-					tableImage = img.getBufferedImage();
-					System.out.println("Nouvelle image !");
-					
-	    		}
-			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				Thread.sleep(4000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    	while(run){
+    		// Si la caméra fonctionne, récupérer une image
+    		if(cameraOK){
+    			try {
+    				tableImage = grabber.grab();
+    				if(tableImage != null){
+    	    			//cvSaveImage("picture"+i+".png", img);
+    	    			//i++;
+    	    			controlImage.setImage(tableImage.getBufferedImage());
+    					//System.out.println("Nouvelle image !");
+    					
+    	    		}
+    			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {
+    				e.printStackTrace();
+    			}
+    			// Pause de 200 ms avant la prochaine capture
+    			try {
+    				Thread.sleep(200);
+    			} catch (InterruptedException e) {
+    				e.printStackTrace();
+    			}
+    		// Sinon récupérer une image prédéfinie sur le disque dur
+    		}else{
+    			try {
+					controlImage.setImage(ImageIO.read(new File("Modules/image/database/test/picture6.jpg")));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+    					
+    					// Image de la table réelle
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 62);
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m39s52.png"), true, 180, 21, 62);
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m54s173.png"), true, 180, 21, 62);
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0.png"), true, 180, 21, 62);
+    					
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0_petit.png"), true, 180, 21, 42);
+    					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-14h55m22s0_tres_petit.png"), true, 180, 21, 42);
+    					
+    					//qrWindow.readImage(new File("Modules/image/database/test/picture6.jpg"), true, 180, 21, 42);
+    					//Useless : 
+    						//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
+    		}
+    			
+			
     	}
 
 	}
 	
-	public BufferedImage getImage(){
+	/*public BufferedImage getImage(){
 		return tableImage;
+	}*/
+	
+	@Override
+	public void terminate() {
+		run = false;
 	}
-
 }

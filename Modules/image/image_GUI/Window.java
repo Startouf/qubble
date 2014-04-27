@@ -1,7 +1,6 @@
 package image_GUI;
 
-import imageTransform.ComponentsAnalyser;
-import imageTransform.QRCodesAnalyser;
+import imageObject.ConnexeComponent;
 import imageTransform.TabImage;
 
 import java.awt.BorderLayout;
@@ -25,7 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import camera.Camera;
+import qrDetection.ComponentsAnalyser;
+import qrDetection.QRCodesAnalyser;
+import qrDetection.QR_Detection;
 
 /**
  * Affiche une fenetre
@@ -33,6 +34,8 @@ import camera.Camera;
  *
  */
 public class Window extends JFrame implements ActionListener, DocumentListener{
+	
+	private QR_Detection controlDetection;
 	
 	// Index pour retrouver les images spécifiques dans le lecteur
 	public int COLOR = -1, GREY = -1, BINARY = -1, CONNEXE = -1, QR_CODE = -1, COURBE = -1; 
@@ -51,23 +54,17 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private File currentFolder;
 	
 	private boolean qrCodesSearch;
-	private Camera wb;
 	
 	// Utiliser des images enregistrées depuis l'ordinateur 
-	public Window(){
-		init();
+	public Window(QR_Detection controlDetection, int binary, int rayon, float square){
+		this.controlDetection = controlDetection;
+		init(binary, rayon, square);
 	}
-	
-	// Utiliser les images de la caméra
-	public Window(Camera wb){
-		init();
-		this.wb = wb;
-	}
-	
+		
 	/**
 	 * Initialisation de la fenêtre et création des composants
 	 */
-	private void init(){
+	private void init(int binary, int rayon, float square){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -99,12 +96,15 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(precedent);
 		control.add(action);
 		control.add(suivant);
-		control.add(new JLabel("Niveau de gris (0-255)"));
-		control.add(new JLabel("Taille petit carré"));
-		control.add(new JLabel("Taille grand carré"));
-		binaryLevelJTF = new JTextField(String.valueOf(TabImage.BINARY_LEVEL));
-		bigSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
-		smallSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
+		control.add(new JLabel("Binarisation (0-255)"));
+		control.add(new JLabel("Taille rayon"));
+		control.add(new JLabel("Détection du carré (0-1)"));
+		binaryLevelJTF = new JTextField(String.valueOf(binary));
+		bigSquareSizeJTF = new JTextField(String.valueOf(rayon));
+		smallSquareSizeJTF = new JTextField(String.valueOf(square));
+		changeBinaryLevel(binary);
+		changeSquareSize(rayon);
+		changeSquareTrigger(square);
 		
 		// Ajouter la relation entre le document et le jtextfield
 		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
@@ -126,41 +126,15 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		this.setVisible(true);
 	}
 	
-	/** Lit une image de l'ordinateur avec en spécification si la recherche porte sur des qr codes ou sur des carrés
-	 *  Mise à jour des paramètres de seuil
-	 * @param fichier
-	 */
-	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
-		try {
-			COLOR = imageView.setImage(ImageIO.read(fichier));
-			imageWidth = imageView.getImage(COLOR).getWidth();
-			imageHeight = imageView.getImage(COLOR).getHeight();
-			affiche();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// Mise à jour des valeurs de seuil
-		this.qrCodesSearch = qrCodesSearch;
-		this.changeBinaryLevel(binaryLevel);
-		this.binaryLevelJTF.setText(String.valueOf(binaryLevel));
-		this.changeBigSquareSize(bigSquare);
-		this.bigSquareSizeJTF.setText(String.valueOf(bigSquare));
-		this.changeSmallSquareSize(smallSquare);
-		this.smallSquareSizeJTF.setText(String.valueOf(smallSquare));
-	}
-	
 	/**
-	 * Lis une image pour pouvoir l'analyser
+	 * Lis une image sur le disque dur puis effectue la détection des composantes connexes
 	 * @param fichier
 	 */
 	public void readImage(File fichier){
 		try {
+			ImageIO.read(fichier);
 			imageView.resetList(false);
-			COLOR = imageView.setImage(ImageIO.read(fichier));
-			imageWidth = imageView.getImage(COLOR).getWidth();
-			imageHeight = imageView.getImage(COLOR).getHeight();
-			affiche();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -178,52 +152,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * Gestion des actions lors d'un appui sur un bouton de la fênetre
 	 */
 	public void actionPerformed(ActionEvent e) {
-		// Lancement de la reconnaissance de forme
+		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
-			
-			if(wb != null){
-					imageView.resetList(false);
-					COLOR = imageView.setImage(wb.getImage());
-					imageWidth = imageView.getImage(COLOR).getWidth();
-					imageHeight = imageView.getImage(COLOR).getHeight();
-					affiche();
-			}else{
-				imageView.resetList(true);
-			}
-			long startTime = System.currentTimeMillis();
-			// Transformation en niveau de gris
-			TabImage image = new TabImage(imageView.getImage(COLOR));
-			TabImage grey = image.getGrey();
-
-			long greyTime = System.currentTimeMillis();
-			// Transformation par le filtre de variance
-			TabImage variance = grey.getVarianceFilter(3, 5);
-			
-			long binaryTime = System.currentTimeMillis();
-			
-			// Recherche des composantes connexes
-			ComponentsAnalyser compoConnex = new ComponentsAnalyser(variance);
-			long componentTime = System.currentTimeMillis();
-			
-			QRCodesAnalyser qrImage = new QRCodesAnalyser(grey, variance, compoConnex);
-			
-			qrImage.getValeur(imageView.getImage(COLOR));
-			
-			long qrTime = System.currentTimeMillis();
-						
-			long endTime = System.currentTimeMillis();
-			
-			GREY = imageView.setImage(grey.ColorArrayToBufferedImage());
-			BINARY = imageView.setImage(variance.ColorArrayToBufferedImage());
-			CONNEXE = imageView.setImage(compoConnex.getCCMyImage());
-			QR_CODE = imageView.setImage(qrImage.getQRCodesImage());
-			
-			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
-			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
-			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
-			
+			printQRDetection(controlDetection.getCamera(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 		}
 		if(e.getSource() == suivant){
 			imageView.next();
@@ -238,9 +169,10 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		            // obtention d'un objet File qui désigne le répertoire courant. Le
 		            // "getCanonicalFile" : meilleurs formatage
 		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
-		        } catch(IOException err) {}
+		        } catch(IOException err) {
+		        	currentFolder = new File(".");
+		        }
 			}
-	         
 	        // création de la boîte de dialogue dans ce répertoire courant
 	        JFileChooser dialogue = new JFileChooser(currentFolder);
 	         
@@ -294,9 +226,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
 			changeBinaryLevel(value);			
 		}else if(e.getDocument().equals(bigSquareSizeJTF.getDocument())){
-			changeBigSquareSize(value);	
+			changeSquareSize(value);	
 		}else if(e.getDocument().equals(smallSquareSizeJTF.getDocument())){
-			changeSmallSquareSize(value);	
+			changeSquareTrigger(value);	
 		}
 	}
 	
@@ -322,11 +254,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value sinon false
 	 */
-	private boolean changeBigSquareSize(int value){
+	private boolean changeSquareSize(int value){
 		if(value < 0){
 			return false;
 		}else{
-			QRCodesAnalyser.BIGSQUARESIZE = value;
+			QRCodesAnalyser.SQUARESIZE = value;
 			return true;
 		}
 	}
@@ -336,15 +268,25 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value sinon false
 	 */
-	private boolean changeSmallSquareSize(int value){
-		if(value < 0){
+	private boolean changeSquareTrigger(float value){
+		if(value < 0 || value > 1){
 			return false;
 		}else{
-			QRCodesAnalyser.SMALLSQUARESIZE = value;
+			ConnexeComponent.SQUARETRIGGER = value;
 			return true;
 		}
 	}
 	
+	public void printQRDetection(BufferedImage camera, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal){
+		// Supprime les images en cours
+		imageView.resetList(false);
+		
+		imageView.setImage(camera);
+		imageView.setImage(grey.ColorArrayToBufferedImage());
+		imageView.setImage(variance.ColorArrayToBufferedImage());
+		imageView.setImage(compo.getCCMyImage());
+		imageView.setImage(qrAnal.getQRCodesImage());
+	}
 
 
 }

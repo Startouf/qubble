@@ -2,7 +2,6 @@ package calibration;
 
 import imageObject.ConnexeComponent;
 import imageObject.Point;
-import imageTransform.ComponentsAnalyser;
 import imageTransform.TabImage;
 
 import java.awt.Color;
@@ -11,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+
+import qrDetection.ComponentsAnalyser;
 
 import ui.App;
 

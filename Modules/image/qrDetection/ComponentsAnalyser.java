@@ -1,7 +1,8 @@
-package imageTransform;
+package qrDetection;
 
 import imageObject.ConnexeComponent;
 import imageObject.Point;
+import imageTransform.TabImage;
 
 import java.awt.Color;
 import java.awt.Graphics;

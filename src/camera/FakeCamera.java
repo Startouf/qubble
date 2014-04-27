@@ -1,9 +1,12 @@
 package camera;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import imageObject.Point;
 import sequencer.QubbleInterface;
 
-public class FakeCamera implements CameraInterface, Runnable
+public class FakeCamera implements ImageDetectionInterface, Runnable
 {
 	private final QubbleInterface qubble;
 	
@@ -51,6 +54,30 @@ public class FakeCamera implements CameraInterface, Runnable
 	@Override
 	public void terminate() {
 		
+	}
+
+	@Override
+	public HashMap<Integer, Point> qubjectDetected() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<Integer, Integer> qubjectTranslation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<Integer, Integer> qubjectRotation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Integer> qubjectRemoved() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

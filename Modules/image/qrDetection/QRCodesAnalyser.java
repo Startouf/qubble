@@ -1,14 +1,16 @@
-package imageTransform;
+package qrDetection;
 
 import imageObject.ConnexeComponent;
 import imageObject.Point;
 import imageObject.QRCode;
+import imageTransform.TabImage;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
 
@@ -19,9 +21,8 @@ import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
  */
 public class QRCodesAnalyser {
 	
-	public static int BIGSQUARESIZE = 116;
-	// Longueur du côté divisé par racine de 2
-	public static int SMALLSQUARESIZE = 88;
+	// Longueur du demi-rayon du carré attendu
+	public static int SQUARESIZE = 88;
 	
 	private ArrayList<QRCode> listQRcode;
 	// Liste des points qui ont été analysé pour détecter la valeur du QR
@@ -45,7 +46,7 @@ public class QRCodesAnalyser {
 		for(ConnexeComponent cc : componentResult.getCClist()){
 
 			if(cc.getConnexePoints().size() > 100){
-				if(cc.isSquare(SMALLSQUARESIZE)){
+				if(cc.isSquare(SQUARESIZE)){
 					listQRcode.add(new QRCode(cc, tableImage));
 				}
 			}
