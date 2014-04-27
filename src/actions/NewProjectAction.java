@@ -53,13 +53,14 @@ public class NewProjectAction extends AbstractAction
 		} else if (arg0.getSource() instanceof JButton){
 			fastNewProject();
 		}
+		
+		this.app.getWelcomePanel().disableProjects();
+		this.app.getWelcomePanel().addProjectEntry(this.app.getActiveProject());
+		this.app.setProjectOpened(true);
 	}
 	
 	private void fastNewProject(){
-		this.app.setProjectOpened(true);
-		this.app.getWelcomePanel().disableProjects();
 		this.app.setActiveProject(new ProjectController(app, (QubbleInterface) new Qubble()));
-		this.app.getWelcomePanel().addProjectEntry(this.app.getActiveProject());
 	}
 	
 	private void advancedNewProject(){

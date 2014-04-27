@@ -20,7 +20,7 @@ private final App app;
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ViewListPanel view = new ViewListPanel(app);
-		app.getMainPanel().getSettingsTabs().addTab(
+		app.getMainPanel().addCloseableTab(
 				"Config. list. "+app.getActiveProject().getProjectName(), view);
 		app.getMainPanel().getSettingsTabs().setSelectedComponent(view);
 	}

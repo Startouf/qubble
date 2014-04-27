@@ -77,6 +77,7 @@ public class App extends JFrame
 	private final CloseProjectAction closeProjectAction = 
 			new CloseProjectAction(this);
 	private final SaveProjectAction saveProjectAction = new SaveProjectAction(this);
+	private final RecordAction recordAction = new RecordAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -249,6 +250,7 @@ public class App extends JFrame
 	public void setProjectOpened(boolean projectOpened) {
 		this.projectOpened = projectOpened;
 		this.menu.showProjectSettings(projectOpened);
+		this.getMainPanel().getGlobalSettingsPanel().showProjectSettings(projectOpened);
 	}
 
 	public ArrayList<Qubject> getQubjects() {
@@ -321,6 +323,10 @@ public class App extends JFrame
 	 */
 	public static void main(String[] args){
 		App DJTable = new App();
+	}
+
+	public RecordAction getRecordAction() {
+		return this.recordAction;
 	}
 
 }

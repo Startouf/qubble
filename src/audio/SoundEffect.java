@@ -20,7 +20,7 @@ public abstract class SoundEffect implements SoundEffectInterface{
 		this.amount = amount;
 		Image tryimage = null;
 		try {
-			tryimage = ImageIO.read(new FileInputStream("image name and path"));
+			tryimage = ImageIO.read(new FileInputStream("data/sound_effects/default.png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

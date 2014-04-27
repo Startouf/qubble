@@ -13,14 +13,14 @@ public class GlobalSettingsPanel extends JPanel
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
-	private final JButton toggleGrid, playPause, panic;
+	private final JButton toggleGrid, playPause, panic, recordButton;
 	private JLabel activeProject;
 
 	public GlobalSettingsPanel(App app)
 	{
 		super();
 		this.app = app;
-		GridLayout layout = new GridLayout(2,4);
+		GridLayout layout = new GridLayout(2,0);
 		layout.setHgap(25);
 		setLayout(layout);
 		this.setPreferredSize(new Dimension(400, 80));
@@ -78,6 +78,13 @@ public class GlobalSettingsPanel extends JPanel
 		panicLabel.setHorizontalAlignment(JLabel.CENTER);
 		panic = new JButton(this.app.getPanicAction());
 		panic.setPreferredSize(new Dimension(200,50));
+		
+		//Record button
+		recordButton = new JButton(this.app.getRecordAction());
+		recordButton.setOpaque(false);
+		recordButton.setContentAreaFilled(false);
+		recordButton.setBorderPainted(false);
+		JLabel recordLabel = new JLabel("");
 
 		//add in order (left to right)
 		add(project);
@@ -86,6 +93,7 @@ public class GlobalSettingsPanel extends JPanel
 //		add(time);
 		add(panicLabel);
 		add(playPauseLabel);
+		add(recordLabel);
 
 		add(activeProject);
 		add(toggleGrid);
@@ -93,8 +101,24 @@ public class GlobalSettingsPanel extends JPanel
 //		add(timeBar);
 		add(panic);
 		add(playPause);
+		add(recordButton);
 
+		hideComponentsWhenNoProject();
 		setBackground(Color.WHITE);
+	}
+	
+	public void hideComponentsWhenNoProject(){
+		toggleGrid.setVisible(false);
+		panic.setVisible(false);
+		playPause.setVisible(false);
+		recordButton.setVisible(false);
+	}
+	
+	public void showComponentsWhenProjectOpened(){
+		toggleGrid.setVisible(true);
+		panic.setVisible(true);
+		playPause.setVisible(true);
+		recordButton.setVisible(true);
 	}
 	
 	/**
@@ -105,5 +129,12 @@ public class GlobalSettingsPanel extends JPanel
 		activeProject.setForeground(Color.BLACK);
 		activeProject.setText(name);
 		repaint();
+	}
+
+	public void showProjectSettings(boolean projectOpened) {
+		if (projectOpened)
+			showComponentsWhenProjectOpened();
+		else
+			hideComponentsWhenNoProject();
 	}
 }

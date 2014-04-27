@@ -12,7 +12,8 @@ public class PlayPauseAction extends AbstractAction {
 
 private final App app;
 private boolean play = false;
-private final ImageIcon playIcon = new ImageIcon("data/ui/PauseButton.png"), pauseIcon = null;
+private final ImageIcon playIcon = new ImageIcon("data/ui/play bleu.png");
+private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge.png");
 	
 	public PlayPauseAction(App app) {
 		this.app = app;
@@ -31,8 +32,8 @@ private final ImageIcon playIcon = new ImageIcon("data/ui/PauseButton.png"), pau
 			putValue(LARGE_ICON_KEY, playIcon);
 		}
 		else{
-			putValue(NAME, "Pause");
-//			putValue(SMALL_ICON, pauseIcon);
+//			putValue(NAME, "Pause");
+			putValue(LARGE_ICON_KEY, pauseIcon);
 			play = !play;
 		}
 			
