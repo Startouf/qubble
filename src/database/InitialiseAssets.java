@@ -41,7 +41,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<SampleInterface> loadSamples(){
 		Properties prop;
-		File[] files = InitialiseTools.getDotProperties("data/samples/");
+		File[] files = DataTools.getDotProperties("data/samples/");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
@@ -80,7 +80,7 @@ public class InitialiseAssets
 //		list.add(new Animation("Water wave", new File("data/animations/controllers/wave/WaterWave.java"), WaterWave.class));
 //		list.add(new Animation("Pixel Explosion", new File("data/animations/controllers/explosion/PixelExplosion.java"), PixelExplosion.class));
 		Properties prop;
-		File[] files = InitialiseTools.getDotProperties("data/animations/");
+		File[] files = DataTools.getDotProperties("data/animations/");
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();
 			try {
@@ -89,8 +89,8 @@ public class InitialiseAssets
 				if (prop.getProperty("dotClassFile") == null){
 					//TODO : check the date to see if it needs to be recompiled
 					//(Use a sort of makefile)
-					InitialiseTools.compileAnimation(dotJavaFile);
-					prop.setProperty("dotClassFile", InitialiseTools.getDotClassFromDotJava(prop.getProperty("dotJavaFile")));
+					DataTools.compileAnimation(dotJavaFile);
+					prop.setProperty("dotClassFile", DataTools.getDotClassFromDotJava(prop.getProperty("dotJavaFile")));
 					prop.store(new FileOutputStream(entry), null);
 				}				
 				list.add(new Animation(prop.getProperty("name"),dotJavaFile,
@@ -115,7 +115,7 @@ public class InitialiseAssets
 	private static Class loadAnimation(File dotClassFile) throws CannotLoadAnimationException{
 		try {
 			URLClassLoader cl = new URLClassLoader(new URL[]{(new File(controllersDir)).toURI().toURL()});
-			Class<?> clazz = cl.loadClass(InitialiseTools.getBinaryClassNameFromDotClass(new File(controllersDir), dotClassFile));
+			Class<?> clazz = cl.loadClass(DataTools.getBinaryClassNameFromDotClass(new File(controllersDir), dotClassFile));
 			return clazz;
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -135,7 +135,7 @@ public class InitialiseAssets
 	 */
 	public static ArrayList<Qubject> loadQubjects(){
 		Properties prop;
-		File[] files = InitialiseTools.getDotProperties("data/qubjects/");
+		File[] files = DataTools.getDotProperties("data/qubjects/");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			prop = new Properties();

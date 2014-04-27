@@ -1,5 +1,6 @@
 package database;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
@@ -16,14 +17,16 @@ import sequencer.QubbleInterface;
 public class SaveProject
 {	
 	public static void saveTo(String path, QubbleInterface qubble){
+		DataTools.EnsureDirExists(path);
 		saveQubjects(path, qubble);
 		saveGlobalParams(path, qubble);
 	}
 	
 	private static void saveQubjects(String path, QubbleInterface qubble){
-		String QubjectPath = path + "qubject/";
+		String qubjectPath = path + "qubjects/";
+		DataTools.EnsureDirExists(qubjectPath);
 		for (Qubject qubject : qubble.getAllQubjects()){
-			saveQubject(qubject, QubjectPath);
+			saveQubject(qubject, qubjectPath);
 		}
 	}
 	
@@ -41,8 +44,8 @@ public class SaveProject
 				prop.setProperty(qubjectProp.toString(), qubject.getModifierForProperty(qubjectProp).getName());
 			}
 			
-			//save properties to project root folder
-			prop.store(new FileOutputStream(qubject.getName() + ".properties"), null);
+			String fileName = qubjectPath + qubject.getName() + ".properties";
+			DataTools.saveProperties(prop, fileName);
 		}
 		catch(Exception e){
 			e.printStackTrace();

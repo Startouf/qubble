@@ -71,7 +71,7 @@ public class NewProjectAction extends AbstractAction
 
 		JPanel choicePanel = new JPanel(new GridLayout(0, 1));
 
-		int result = JOptionPane.showConfirmDialog(null, choicePanel, "New Project",
+		int result = JOptionPane.showConfirmDialog(null, choicePanel, "Nouveau Projet",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		//TODO

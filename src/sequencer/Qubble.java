@@ -69,10 +69,8 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Qubjects
 	 */
-	private final ArrayList<Qubject> configuredQubjects
-		= InitialiseProject.loadQubjectsForNewProject();
-	private final ArrayList<Qubject> qubjectsOnTable
-		= new ArrayList<Qubject> (configuredQubjects.size());
+	private final ArrayList<Qubject> configuredQubjects;
+	private final ArrayList<Qubject> qubjectsOnTable;
 	
 	/*
 	 * Variables de temps
@@ -118,8 +116,7 @@ public class Qubble implements QubbleInterface {
 	 * Useful information: follow this link http://stackoverflow.com/questions/322715/when-to-use-linkedlist-over-arraylist
 	 * TODO : check that indeed LinkedList > ArrayList (but anyway we're only talking about only a few refs per List, so any should be fine)
 	 */
-	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers
-		= new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+	private final Hashtable<Qubject, LinkedList<SampleControllerInterface>> sampleControllers;
 	private final Hashtable<Qubject, ScheduledFuture<?>> tasks
 		= new Hashtable<Qubject, ScheduledFuture<?>>();
 	
@@ -135,9 +132,13 @@ public class Qubble implements QubbleInterface {
 	 */
 	public Qubble(){
 		super();
+		configuredQubjects = InitialiseProject.loadQubjectsForNewProject();
+		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
+		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
+		
 		camera = new FakeCamera(this);
 		initialise();
-		
+
 		//The sequencer no longer needs to be run
 		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
@@ -152,10 +153,13 @@ public class Qubble implements QubbleInterface {
 	 */
 	public Qubble(String path){
 		super();
-		sequencer = new Sequencer(this, LOOP_MS);
+		configuredQubjects = InitialiseProject.loadQubjectsFromProject(path);
+		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
+		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		camera = new FakeCamera(this);
 		initialise();
 		
+		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
