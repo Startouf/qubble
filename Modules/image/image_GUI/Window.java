@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import motionEstimation.MotionEstimation;
 import qrDetection.ComponentsAnalyser;
 import qrDetection.QRCodesAnalyser;
 import qrDetection.QR_Detection;
@@ -36,6 +37,7 @@ import qrDetection.QR_Detection;
 public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	private QR_Detection controlDetection;
+	private MotionEstimation controlMotion;
 	
 	// Index pour retrouver les images spécifiques dans le lecteur
 	public int COLOR = -1, GREY = -1, BINARY = -1, CONNEXE = -1, QR_CODE = -1, COURBE = -1; 
@@ -55,10 +57,14 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	private boolean qrCodesSearch;
 	
-	// Utiliser des images enregistrées depuis l'ordinateur 
 	public Window(QR_Detection controlDetection, int binary, int rayon, int square){
 		this.controlDetection = controlDetection;
 		init(binary, rayon, square);
+	}
+	
+	public Window(MotionEstimation controlMotion){
+		this.controlMotion = controlMotion;
+		init(0, 0, 0);
 	}
 		
 	/**
