@@ -46,10 +46,10 @@ public class Qubble implements QubbleInterface {
 	 * Constantes de projection
 	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
 	 */
-	public static final int TABLE_LENGTH = 1200;
-	public static final int TABLE_HEIGHT = 600;
 	public static final int TABLE_OFFSET_X = 50; 
 	public static final int TABLE_OFFSET_Y=50;
+	public static final int TABLE_LENGTH = Calibrate.OpenGL_WIDTH - 2*TABLE_OFFSET_X;
+	public static final int TABLE_HEIGHT = Calibrate.OpenGL_HEIGHT - 2*TABLE_OFFSET_Y;
 	
 	/**
 	 * One measure displayed on Qubble

@@ -7,7 +7,9 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
@@ -41,7 +43,18 @@ public class InitRoutines
 		GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 				if (gd.length >= 2){
 					try {
-						Display.setParent(new Canvas(gd[1].getDefaultConfiguration()));
+						Frame frame = new Frame(gd[1].getDefaultConfiguration());
+						frame.setUndecorated(true); 
+						Canvas c = new Canvas(gd[1].getDefaultConfiguration());
+						c.setSize(1280, 800);
+						c.setFocusable(true);
+						c.requestFocus();
+						c.setIgnoreRepaint(true);
+						c.setVisible(true);
+						frame.add(c, BorderLayout.CENTER);
+						frame.pack();
+						frame.setVisible(true);
+						Display.setParent(c);
 					} catch (LWJGLException e) {
 						System.err.println("Error creating Canvas for 2nd monitor display");
 						e.printStackTrace();
