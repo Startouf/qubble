@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import sequencer.QubbleInterface;
 
+import main.ImageDetectionInterface;
 import main.TerminateThread;
 
 import com.googlecode.javacv.FrameGrabber.Exception;
@@ -30,6 +31,7 @@ public class Camera implements Runnable, TerminateThread{
 	
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
+		run = true;
 		this.controlImage = controlImage;
 		// Ouverture de la caméra sur le port 0 
 		grabber = new OpenCVFrameGrabber(0);
@@ -52,7 +54,7 @@ public class Camera implements Runnable, TerminateThread{
     			try {
     				tableImage = grabber.grab();
     				if(tableImage != null){
-    	    			//cvSaveImage("picture"+i+".png", img);
+    	    			//cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
     					//System.out.println("Nouvelle image !");

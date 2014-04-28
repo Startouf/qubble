@@ -14,8 +14,15 @@ public class TestImageDetection implements QubbleInterface{
 	
 	public static void main(String[] args){
 		ImageDetection imgD = new ImageDetection(new TestImageDetection());
-		imgD.run();
-		while(true){}
+		Thread t_imgD = new Thread(imgD);
+		t_imgD.start();
+		while(true){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

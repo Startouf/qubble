@@ -3,6 +3,8 @@ package camera;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import main.ImageDetectionInterface;
+
 import imageObject.Point;
 import sequencer.QubbleInterface;
 

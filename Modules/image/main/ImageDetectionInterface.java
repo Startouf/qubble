@@ -1,4 +1,4 @@
-package camera;
+package main;
 
 import imageObject.Point;
 
@@ -14,8 +14,8 @@ import java.util.HashMap;
  * 		QubjectHasTurned(int ID, float dR)
  * @author Cyril
  */
-public interface ImageDetectionInterface
-{
+public interface ImageDetectionInterface{
+
 	/**
 	 * Ajouter la dernière image reçue par la caméra
 	 */
@@ -43,11 +43,18 @@ public interface ImageDetectionInterface
 	/**
 	 * Lorsqu'une détection est terminée, prévenir l'objet Qubble des changements
 	 */
-	public void qrDetectionDone(HashMap<Integer, Point> newQubject, ArrayList<Integer> deletedQubject);
+	public void qrDetectionDone();
 	
 	/**
 	 * Lorsqu'une estimation du mouvement est terminée, prévenir l'objet Qubble des déplacements
 	 */
 	public void motionEstimationDone();
+	
+	public void setQrDetectionDone(boolean qrDetectionDone);
+	
+	public void setMotionEstimationDone(boolean motionEstimationDone);
+		
+	
+
 		
 }

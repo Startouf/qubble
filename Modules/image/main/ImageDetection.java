@@ -8,25 +8,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.googlecode.javacv.FrameGrabber.Array;
-
 import motionEstimation.MotionEstimation;
 import qrDetection.QR_Detection;
 import sequencer.QubbleInterface;
 import camera.Camera;
-import camera.ImageDetectionInterface;
 
 
 public class ImageDetection implements Runnable, ImageDetectionInterface, TerminateThread{
 	
 	private QubbleInterface qubble;	
 	
+	private Thread t_webcam, t_qr, t_mo;
 	private Camera webcam;
 	private QR_Detection qr;
 	private MotionEstimation mo;
 	
 	private BufferedImage lastImage;
-	private boolean newImageQR, newImageMotion;
+	private volatile boolean newImageQR, newImageMotion;
 	private boolean qrDetectionDone, motionEstimationDone;
 	
 	// Liste actuelle des cubes détectés
@@ -37,10 +35,14 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	
 	public ImageDetection(QubbleInterface qubble){
 		this.qubble = qubble; 
-		
 		webcam = new Camera(this);
 		qr = new QR_Detection(this, true);
 		mo = new MotionEstimation(this, true);
+		t_webcam = new Thread(webcam);
+		t_qr = new Thread(qr);
+		t_mo = new Thread(mo);
+		
+		qubbleList = new HashMap<Integer, Point>();
 		
 		run = true;
 	}
@@ -49,13 +51,15 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	 * @param args
 	 */
 	public void run() {
-		webcam.run();
-		qr.run();
-		mo.run();
+		t_webcam.start();
+		t_qr.start();
+		t_mo.start();
 		
 		while(run){
-			
-			
+			// Actualiser la liste des QR codes
+			if(qrDetectionDone){
+				qrDetectionDone();
+			}
 		}
 	}
 	
@@ -70,37 +74,70 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 
 	@Override
 	public void setImage(BufferedImage newImage) {
-		lastImage = newImage;
+			lastImage = newImage;
 		newImageQR = newImageMotion = true;
 	}
 
 	@Override
 	public BufferedImage getLastImage() {
-		return lastImage;
+			return lastImage;
 	}
 
 	@Override
 	public boolean isNewImageQR() {
 		return newImageQR;
 	}
+	
+	public void setNewImageQR(boolean newImageQR) {
+		this.newImageQR = newImageQR;
+	}
 
 	@Override
 	public boolean isNewImageMotion() {
 		return newImageMotion;
 	}
-
+	
 	@Override
-	public void qrDetectionDone(HashMap<Integer, Point> newQubject, ArrayList<Integer> deletedQubject){
-		// Suppression des qubjects
+	public void qrDetectionDone(){
+		
+		HashMap<Integer, Point> qrFound = qr.getQrAnal().getQRList();
 		
 		// Ajout des nouveaux qubjects détectés
+		for(int id : qubbleList.keySet()){
+			// Suppression des qubjects
+			if(qrFound.containsKey(id) == false){
+				qubble.QubjectRemoved(id);
+				qubbleList.remove(id);
+			}else{
+				// Le qubject est déjà détecté, on le retire de la liste
+				qrFound.remove(id);
+			}
+			
+			// On rajoute les éléments restants
+			for(int idNew : qrFound.keySet()){
+				qubble.QubjectDetected(idNew, qrFound.get(idNew));
+				qubbleList.put(idNew, qrFound.get(idNew));
+			}
+				
+		}
 		
 	}
-
+ 
 	@Override
 	public void motionEstimationDone() {
 		
 	}
+	
+	@Override
+	public void setQrDetectionDone(boolean qrDetectionDone) {
+		this.qrDetectionDone = qrDetectionDone;
+	}
 
+	@Override
+	public void setMotionEstimationDone(boolean motionEstimationDone) {
+		this.motionEstimationDone = motionEstimationDone;
+	}
+	
+	
 
 }

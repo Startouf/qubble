@@ -22,6 +22,8 @@ public class QRCode {
 	private TabImage qrImage;
 	private TabImage greyImage;
 	
+	private int iD;
+	
 	public QRCode(ConnexeComponent border, TabImage greyImage){
 		this.border = border;
 		this.greyImage = greyImage;
@@ -147,9 +149,14 @@ public class QRCode {
 			masque = masque << 1;
 		
 		}
+		iD = valeur;
 		
 		return valeur;
 	
+	}
+	
+	public int getID(){
+		return iD;
 	}
 	
 	

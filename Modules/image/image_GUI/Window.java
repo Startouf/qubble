@@ -132,8 +132,10 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 */
 	public void readImage(File fichier){
 		try {
-			ImageIO.read(fichier);
+			BufferedImage loadImage = ImageIO.read(fichier);
+			controlDetection.analyseTable(loadImage);
 			imageView.resetList(false);
+			printQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -170,7 +172,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		            // "getCanonicalFile" : meilleurs formatage
 		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
 		        } catch(IOException err) {
-		        	currentFolder = new File(".");
+		        	try {
+						currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
+					} catch (IOException e1) {
+						currentFolder = new File(".");
+					}
 		        }
 			}
 	        // création de la boîte de dialogue dans ce répertoire courant

@@ -41,6 +41,7 @@ public class QRCodesAnalyser {
 		
 		targetQr = new HashMap<Point, Boolean>();
 		listQRcode = new ArrayList<QRCode>();
+		qrFound = new HashMap<Integer, Point>();
 				
 		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
 		for(ConnexeComponent cc : componentResult.getCClist()){
@@ -51,6 +52,11 @@ public class QRCodesAnalyser {
 				}
 			}
 			
+		}
+		// Affichage et calcul des id's de chaque qr
+		for(QRCode qr : listQRcode){
+			System.out.println("Valeur du QR Code : " + qr.getValeurByCenter(targetQr));
+			qrFound.put(qr.getID(), new Point(qr.getBorder().getxCenter(), qr.getBorder().getyCenter()));
 		}
 	}
 	
@@ -78,11 +84,7 @@ public class QRCodesAnalyser {
 			}*/
 			if(qr.getBorder().getConnexePoints().size()> 100){
 				g.setColor(Color.green);
-				g.fillRect(qr.getBorder().getConnexePoints().get(0).getX()-4, qr.getBorder().getConnexePoints().get(0).getY()-4, 8, 8);
-				
-				g.setColor(Color.green);
-				g.fillRect(qr.getBorder().getConnexePoints().get(qr.getBorder().getConnexePoints().size()-1).getX()-4, qr.getBorder().getConnexePoints().get(qr.getBorder().getConnexePoints().size()-1).getY()-4, 8, 8);
-				
+				g.fillRect(qr.getBorder().getConnexePoints().get(0).getX()-4, qr.getBorder().getConnexePoints().get(0).getY()-4, 8, 8);				
 			}
 			
 		}
@@ -118,12 +120,9 @@ public class QRCodesAnalyser {
 	}*/
 	
 	/**
-	 * Affiche pour chaque qr code valide son id
+	 * Affiche pour chaque qr code, les différentes zones analysées pour trouver sa valeur : blue = 0, rouge = 1 
 	 */
-	public void getValeur(BufferedImage img){
-		for(QRCode qr : listQRcode){
-			System.out.println("Valeur du QR Code : " + qr.getValeurByCenter(targetQr));;
-		}
+	public void printValeur(BufferedImage img){
 		Graphics g = img.getGraphics();
 		for(Point pt : targetQr.keySet()){
 			if(targetQr.get(pt)){
@@ -135,6 +134,10 @@ public class QRCodesAnalyser {
 			g.fillRect(pt.getX() - 2, pt.getY() -2, 4, 4);
 		}
 		
+	}
+	
+	public HashMap<Integer, Point> getQRList(){
+		return qrFound;
 	}
 
 }

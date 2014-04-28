@@ -49,16 +49,6 @@ public class TabImage {
 		    	img[i][j] = buf.getRGB(i, j);
 	}
 	
-	/*public TabImage redimensionner(BufferedImage img, int tailleX, int tailleY) {
-			TabImage resizedImage = new TabImage(tailleX,tailleY,BufferedImage.TYPE_INT_ARGB);
-	       Graphics2D g = resizedImage.createGraphics();
-	       g.setComposite(AlphaComposite.Src);      
-	       g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	       g.drawImage(img, 0, 0, tailleX, tailleY, null);
-	       g.dispose();
-	       return resizedImage;
-	}*/
-	
 	/**
 	 * Transforme une image couleur en image niveau de gris
 	 * @return
@@ -329,6 +319,7 @@ public class TabImage {
 					}
 				}
 				mean[i][j] = (sum/(window*window));
+				//System.out.println("mean : " + mean[i][j]);
 			}
 		}
 		
@@ -344,7 +335,7 @@ public class TabImage {
 						}
 						var = sum/((window*window)-1);
 						//System.out.println(var);
-						if(var > thresh){
+						if(var > BINARY_LEVEL){
 							varianceImg[i][j] = Color.black.getRGB();
 						}else{
 							varianceImg[i][j] = Color.white.getRGB();

@@ -1,6 +1,6 @@
 package motionEstimation;
 
-import camera.ImageDetectionInterface;
+import main.ImageDetectionInterface;
 import main.TerminateThread;
 
 
