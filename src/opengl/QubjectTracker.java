@@ -43,12 +43,9 @@ public class QubjectTracker {
 	}
 	
 	/**
-	 * Currently draws 2 full circles : a colored one and a black one
-	 * 2 Purposes :
-	 * 	* Make sure no animation is projected where the QR-code is
-	 * 	* Show the user that the Qubject has been recognized
+	 * Show that the qubject has been detected
 	 */
-	public void renderStatusInstant(){
+	public void renderStatus(){
 		if(!active && !shadow){
 			return;
 		}
@@ -81,16 +78,20 @@ public class QubjectTracker {
 		}
 		glEnd();
 		GL20.glUseProgram(0);
-		
+	}
+	
+	/**
+	 * Hide the are under the qubject so that it's easier to detect movement
+	 */
+	public void renderShadow(){
+		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		glColor4f(0f,0f,0f,1f);
 		glBegin(GL_QUADS);
-		glVertex3f(x-Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
-		glVertex3f(x+Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
-		glVertex3f(x+Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
-		glVertex3f(x-Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
+		glVertex3f(x-Qubject.SIZE/3f, y-Qubject.SIZE/3f, -3f);
+		glVertex3f(x+Qubject.SIZE/3f, y-Qubject.SIZE/3f, -3f);
+		glVertex3f(x+Qubject.SIZE/3f, y+Qubject.SIZE/3f, -3f);
+		glVertex3f(x-Qubject.SIZE/3f, y+Qubject.SIZE/3f, -3f);
 		glEnd();
-		
-		
 	}
 	
 	public void setActive(boolean active){

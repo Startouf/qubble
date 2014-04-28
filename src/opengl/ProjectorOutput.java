@@ -205,6 +205,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//TODO : Curseur stylé avec shader
 		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
 		
+		//Trackers
+		for(QubjectTracker tracker : trackers.values()){
+			tracker.renderStatus();
+		}
+		
 		//Note : toggle the if(isPlaying) to show frozen animations
 //		if(hasStarted){
 			//Render animations
@@ -213,10 +218,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			}
 //		}
 			
-		//Trackers
+		//Hide area under Qubjects for better movement detection
 		for(QubjectTracker tracker : trackers.values()){
-			tracker.renderStatusInstant();
-		}
+			tracker.renderShadow();
+		}	
+			
 	}
 
 	/**
