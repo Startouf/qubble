@@ -23,7 +23,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  *
  */
 public class Camera implements Runnable, TerminateThread{
-	private boolean run, cameraOK;
+	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
 	private final OpenCVFrameGrabber grabber;
 	private IplImage tableImage;
@@ -32,6 +32,7 @@ public class Camera implements Runnable, TerminateThread{
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
+		pause = true;
 		this.controlImage = controlImage;
 		// Ouverture de la caméra sur le port 0 
 		grabber = new OpenCVFrameGrabber(0);
@@ -49,6 +50,14 @@ public class Camera implements Runnable, TerminateThread{
 	public void run(){
     	// Récupération et sauvegarde de l'image
     	while(run){
+    		// Stopper temporairement la capture
+    		while(pause){
+    			try {
+    				Thread.sleep(200);
+    			} catch (InterruptedException e) {
+    				e.printStackTrace();
+    			}
+    		}
     		// Si la caméra fonctionne, récupérer une image
     		if(cameraOK){
     			try {

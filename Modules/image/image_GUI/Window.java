@@ -45,7 +45,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	// Barre de contrôle du bas
 	private JPanel control;
 	private JButton suivant, action, precedent;
-	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
+	private JTextField binaryLevelJTF, squareSizeJTF, squareTriggerJTF;
 	// Menu 
 	private JMenuBar mainMenu;
 	private JMenu fichier;
@@ -56,7 +56,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private boolean qrCodesSearch;
 	
 	// Utiliser des images enregistrées depuis l'ordinateur 
-	public Window(QR_Detection controlDetection, int binary, int rayon, float square){
+	public Window(QR_Detection controlDetection, int binary, int rayon, int square){
 		this.controlDetection = controlDetection;
 		init(binary, rayon, square);
 	}
@@ -64,7 +64,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	/**
 	 * Initialisation de la fenêtre et création des composants
 	 */
-	private void init(int binary, int rayon, float square){
+	private void init(int binary, int rayon, int square){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -97,27 +97,27 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(action);
 		control.add(suivant);
 		control.add(new JLabel("Binarisation (0-255)"));
+		control.add(new JLabel("Détection du carré (0-100)"));
 		control.add(new JLabel("Taille rayon"));
-		control.add(new JLabel("Détection du carré (0-1)"));
 		binaryLevelJTF = new JTextField(String.valueOf(binary));
-		bigSquareSizeJTF = new JTextField(String.valueOf(rayon));
-		smallSquareSizeJTF = new JTextField(String.valueOf(square));
+		squareSizeJTF = new JTextField(String.valueOf(rayon));
+		squareTriggerJTF = new JTextField(String.valueOf(square));
 		changeBinaryLevel(binary);
 		changeSquareSize(rayon);
 		changeSquareTrigger(square);
 		
 		// Ajouter la relation entre le document et le jtextfield
 		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
-		bigSquareSizeJTF.getDocument().putProperty("parent", bigSquareSizeJTF);
-		smallSquareSizeJTF.getDocument().putProperty("parent", smallSquareSizeJTF);
+		squareSizeJTF.getDocument().putProperty("parent", squareSizeJTF);
+		squareTriggerJTF.getDocument().putProperty("parent", squareTriggerJTF);
 		
 		binaryLevelJTF.getDocument().addDocumentListener(this);
-		bigSquareSizeJTF.getDocument().addDocumentListener(this);
-		smallSquareSizeJTF.getDocument().addDocumentListener(this);
+		squareSizeJTF.getDocument().addDocumentListener(this);
+		squareTriggerJTF.getDocument().addDocumentListener(this);
 		
 		control.add(binaryLevelJTF);
-		control.add(smallSquareSizeJTF);
-		control.add(bigSquareSizeJTF);
+		control.add(squareTriggerJTF);
+		control.add(squareSizeJTF);
 		
 		imageView = new ImageView();
 		this.setLayout(new BorderLayout());
@@ -170,13 +170,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		        try {
 		            // obtention d'un objet File qui désigne le répertoire courant. Le
 		            // "getCanonicalFile" : meilleurs formatage
-		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	//currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
 		        } catch(IOException err) {
-		        	try {
-						currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
-					} catch (IOException e1) {
-						currentFolder = new File(".");
-					}
+					currentFolder = new File(".");
+					
 		        }
 			}
 	        // création de la boîte de dialogue dans ce répertoire courant
@@ -231,9 +229,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		//System.out.println(value);
 		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
 			changeBinaryLevel(value);			
-		}else if(e.getDocument().equals(bigSquareSizeJTF.getDocument())){
+		}else if(e.getDocument().equals(squareSizeJTF.getDocument())){
 			changeSquareSize(value);	
-		}else if(e.getDocument().equals(smallSquareSizeJTF.getDocument())){
+		}else if(e.getDocument().equals(squareTriggerJTF.getDocument())){
 			changeSquareTrigger(value);	
 		}
 	}
@@ -274,11 +272,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value sinon false
 	 */
-	private boolean changeSquareTrigger(float value){
-		if(value < 0 || value > 1){
+	private boolean changeSquareTrigger(int value){
+		if(value < 0 || value > 100){
 			return false;
 		}else{
-			ConnexeComponent.SQUARETRIGGER = value;
+			ConnexeComponent.SQUARETRIGGER = value/(float)(100);
 			return true;
 		}
 	}

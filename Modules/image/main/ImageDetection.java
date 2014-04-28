@@ -59,6 +59,13 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 			// Actualiser la liste des QR codes
 			if(qrDetectionDone){
 				qrDetectionDone();
+				qrDetectionDone = false;
+			}
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -101,25 +108,28 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	public void qrDetectionDone(){
 		
 		HashMap<Integer, Point> qrFound = qr.getQrAnal().getQRList();
+		HashMap<Integer, Point> temp = new HashMap<Integer, Point>();
 		
 		// Ajout des nouveaux qubjects détectés
 		for(int id : qubbleList.keySet()){
-			// Suppression des qubjects
+			// Alerter de la suppression des qubjects
 			if(qrFound.containsKey(id) == false){
 				qubble.QubjectRemoved(id);
-				qubbleList.remove(id);
 			}else{
-				// Le qubject est déjà détecté, on le retire de la liste
+				// Le qubject est déjà détecté, on le garde dans la future liste
+				temp.put(id, qrFound.get(id));
+				// On l'enlève de la liste des qr détectés
 				qrFound.remove(id);
-			}
-			
-			// On rajoute les éléments restants
-			for(int idNew : qrFound.keySet()){
-				qubble.QubjectDetected(idNew, qrFound.get(idNew));
-				qubbleList.put(idNew, qrFound.get(idNew));
 			}
 				
 		}
+		// On rajoute les éléments restants et on alerte le processus principale
+		for(int idNew : qrFound.keySet()){
+			qubble.QubjectDetected(idNew, qrFound.get(idNew));
+			temp.put(idNew, qrFound.get(idNew));
+		}
+		
+		qubbleList = temp;
 		
 	}
  

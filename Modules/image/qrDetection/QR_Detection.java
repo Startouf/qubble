@@ -31,7 +31,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		this.windowMode = windowMode;
 		run = true;
 		if(windowMode){
-			qrWindow = new Window(this, 5, 42, (float)0.80);
+			qrWindow = new Window(this, 5, 42, 80);
 		}
 	}
 	
@@ -39,7 +39,14 @@ public class QR_Detection implements Runnable, TerminateThread{
 		while(run){
 			System.out.println("Essai");
 			// Attente d'une nouvelle image
-			while(!controlImage.isNewImageQR()){}
+			while(!controlImage.isNewImageQR()){
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if(controlImage.isNewImageQR()){
 				
 				camera = controlImage.getLastImage();
