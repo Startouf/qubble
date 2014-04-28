@@ -43,5 +43,9 @@ public interface OutputImageInterface
 	 * End everything. Project closed or sthing else happend.
 	 */
 	public void terminate();
+
+	public void stop();
+
+	public void resynchronize(float currentTime);
 	
 }

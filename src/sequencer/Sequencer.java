@@ -38,7 +38,7 @@ public class Sequencer implements SequencerInterface
 	/**
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
-	private boolean play = false;
+	private boolean play = true;
 	private final Qubble qubble;
 	/**
 	 * List of scheduled tasks
@@ -111,5 +111,6 @@ public class Sequencer implements SequencerInterface
 			recalculate(this.qubble.getTasks());
 		}
 		play = !play;
+		System.out.println("Sequencer is playing" + play);
 	}
 }

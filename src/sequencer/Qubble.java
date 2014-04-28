@@ -2,6 +2,7 @@ package sequencer;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -104,7 +105,7 @@ public class Qubble implements QubbleInterface {
 	private final Sequencer sequencer;
 
 	/**
-	 * Use a Hashtable to make it faster when receiving
+	 * Use a Hashtable to make it faster when receiving data from camera
 	 */
 	private final Hashtable<Integer, Qubject> qrCodes
 		= new Hashtable<Integer, Qubject>();
@@ -122,8 +123,6 @@ public class Qubble implements QubbleInterface {
 		= new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 	private final Hashtable<Qubject, ScheduledFuture<?>> tasks
 		= new Hashtable<Qubject, ScheduledFuture<?>>();
-	
-	
 	
 	//Variables de référence Thread
 	private Thread playerThread, projectionThread, cameraThread;
@@ -187,11 +186,13 @@ public class Qubble implements QubbleInterface {
 		//don't forget to divide float by float and not int !
 		float absoluteStartingTime = 
 				((float)(getTile(qubject.getCoords()))*LOOP_MS/GRID_COLUMNS);
-		//Make sure the starting time is POSITIVE
-		//Use  (a % b + b) % b (when a can be negative) 
-		updateCurrentTime();
-		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS)+totalPauseTime;
-		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS;
+		/* 
+		 * Make sure the starting time is POSITIVE
+		 * Use  (a % b + b) % b (when a can be negative) 
+		 * updateCurrentTime();
+		 */
+		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS);
+		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS + totalPauseTime;
 		
 		//-----DEBUG
 		System.out.println("Demarrage Qubject <<" + qubject.getName() 
@@ -273,7 +274,10 @@ public class Qubble implements QubbleInterface {
 
 		//...et on demande le verrou pour ajouter à la liste des objets sur la table
 		synchronized(qubjectsOnTable){
-			qubjectsOnTable.add(qubject);				
+			qubjectsOnTable.add(qubject);		
+			
+			//Pour l'affichage dans le GUI : on trie :
+			Collections.sort(qubjectsOnTable);
 		}
 	}
 	
@@ -286,6 +290,8 @@ public class Qubble implements QubbleInterface {
 			return;
 		}
 		
+		qrCodes.get(bitIdentifier).setCoords(new Point(-1,-1));
+		
 		//On annule la tâche
 		tasks.get(qubject).cancel(true);
 
@@ -297,6 +303,9 @@ public class Qubble implements QubbleInterface {
 		//On l'enlève de la liste des qubjects présents sur la table
 		synchronized (qubjectsOnTable){
 			qubjectsOnTable.remove(qubject);
+			
+			//Pour l'affichage dans le GUI : on trie :
+			Collections.sort(qubjectsOnTable);
 		}
 		return;
 	}
@@ -315,8 +324,9 @@ public class Qubble implements QubbleInterface {
 		//on change les coordonnées caméra -> OpenGL
 		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
 		qubject.setCoords(glCoords);
+		
 		for(SampleControllerInterface sample : sampleControllers.get(qubject)){
-		player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+			player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
 		}
 
 		//On replanifie
@@ -324,6 +334,11 @@ public class Qubble implements QubbleInterface {
 
 		//On indique son nouvel emplacement
 		projection.highlightQubject(qubject.getCoords());
+		
+		//On trie
+		synchronized (qubjectsOnTable){
+			Collections.sort(qubjectsOnTable);
+		}
 	}
 
 	@Override
@@ -338,13 +353,16 @@ public class Qubble implements QubbleInterface {
 		qubject.setRotation((float) ((qubject.getRotation()+dR)%(2*Math.PI)));
 		
 		for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
-			//TODO : float --> int ? (for value of tweaksample)
 			player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
 		}
 	}
 	
 	@Override
 	public void playPause(){
+		/*	Be careful ! When changing play/Pause stuff 
+		 * that every object stats with the boolean play to the right value !
+		 * (OpenGL, Sequencer, Player, etc.)
+		 */
 		if (hasStarted){
 			if(isPlaying){
 				this.startPauseTime = Sys.getTime();
@@ -358,9 +376,9 @@ public class Qubble implements QubbleInterface {
 			player.playPause();
 		}
 		else{
-			startTime = Sys.getTime();
 			hasStarted = true;
 			isPlaying = true;
+			startTime = Sys.getTime();
 			cameraThread.start();
 			projection.playPause();
 		}
@@ -433,10 +451,27 @@ public class Qubble implements QubbleInterface {
 		hasStarted = false;
 		isPlaying = false;
 		
+		sequencer.destroyScheduledtasks(tasks);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
-		sequencer.destroyScheduledtasks(tasks);
 		playerThread = new Thread((Runnable) player, "Player Thread");
+	}
+
+	@Override
+	public void resynchronize() {
+		this.startTime = Sys.getTime();
+		this.totalPauseTime = 0f;
+		this.currentTime = 0f;
+		
+		player.stopAllSounds();
+		projection.resynchronize(currentTime);
+		
+		sequencer.destroyScheduledtasks(tasks);
+		synchronized(qubjectsOnTable){
+			for (Qubject qubject : qubjectsOnTable){
+				sequencer.schedule(qubject);
+			}
+		}
 	}
 
 }

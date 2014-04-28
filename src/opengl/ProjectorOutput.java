@@ -335,4 +335,19 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		hasStarted = true;
 		isPlaying = !isPlaying;
 	}
+
+	@Override
+	public void stop() {
+		cursorPos = new Float(Qubble.TABLE_OFFSET_X);
+		synchronized(activeAnimations){
+			activeAnimations.clear();
+		}
+		isPlaying = false;
+	}
+
+	@Override
+	public void resynchronize(float currentTime) {
+		// TODO Auto-generated method stub
+		
+	}
 }

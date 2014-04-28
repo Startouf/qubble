@@ -22,7 +22,7 @@ public interface SequencerInterface
 	 * @param qubject
 	 */
 	public void reschedule(ScheduledFuture<?> task, Qubject qubject);
-
+	
 	/**
 	 * Pause everything 
 	 */

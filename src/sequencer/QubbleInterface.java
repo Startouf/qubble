@@ -105,4 +105,9 @@ public interface QubbleInterface {
 	 * Quick restart (keep Qubject config)
 	 */
 	public void panic();
+	
+	/**
+	 * In case the Qubble is desynced (openGL/audio)
+	 */
+	public void resynchronize();
 }

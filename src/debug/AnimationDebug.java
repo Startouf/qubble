@@ -309,4 +309,16 @@ public class AnimationDebug implements OutputImageInterface {
 	public void terminate() {
 		//TODO : ass boolean to request close
 	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resynchronize(float currentTime) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,5 +1,6 @@
 package audio;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
@@ -173,6 +174,24 @@ public class Player implements PlayerInterface, Runnable {
 		for (int i = 0; i < sampleControllers.size(); i++) {
 			System.out.println(sampleControllers.get(i).getRelativeCursor());
 		}
+	}
+
+	@Override
+	public void stopAllSounds() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startRecording(File file) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopRecording() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
