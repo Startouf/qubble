@@ -117,7 +117,7 @@ public class ConnexeComponent {
 			this.getCenter();
 		}
 				
-		float[] mySquare = new float[180];
+		float[] mySquare = new float[180]; //pas de 2
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
@@ -129,13 +129,14 @@ public class ConnexeComponent {
 			// Calcul de l'angle : produit sca / diviser par les distances ==> transformer le cosinus
 			// le deuxième vecteur est (1, 0)
 			
+			//entre 0 et 180 degres
 			if ((pt.getY()-yCenter)/(float)distance >= 0) {
-				angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
+				angle = (int) ((Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)/2) %180;
 			}
-			//entre 180 et 360� pas pris en compte
-			//else if ((pt.getY()-yCenter)/(float)distance < 0) {		
-				//angle = (int) ((float)2*Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI));
-			//}
+			//entre 180 et 360 degres 
+			else if ((pt.getY()-yCenter)/(float)distance < 0) {						
+				angle = (360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2 %180;
+			}
 
 			//System.out.println(angle);
 			if(mySquare[angle] < distance){

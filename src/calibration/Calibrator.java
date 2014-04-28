@@ -33,8 +33,8 @@ public class Calibrator{
 		TabImage image;
 		try {
 			image = new TabImage(ImageIO.read(new File("test/calibration/photo miroir sale.png")));
-			image.getGreyMyImage();
-			image.getBinaryMyImage();
+			image.getGrey();
+			image.getVarianceFilter(3,5);
 			
 			for (int i=0 ; i<image.getHeight() ; i++) {
 				for (int j=0 ; j>image.getWidth() ; j++) {
