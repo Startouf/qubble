@@ -37,7 +37,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		this.qubble = qubble; 
 		webcam = new Camera(this);
 		qr = new QR_Detection(this, true);
-		mo = new MotionEstimation(this, true);
+		mo = new MotionEstimation(this, false);
 		t_webcam = new Thread(webcam);
 		t_qr = new Thread(qr);
 		t_mo = new Thread(mo);

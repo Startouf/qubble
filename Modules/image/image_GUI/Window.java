@@ -57,25 +57,25 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	private boolean qrCodesSearch;
 	
-	public Window(QR_Detection controlDetection, int binary, int rayon, int square){
+	public Window(QR_Detection controlDetection, String title, int binary, int rayon, int square){
 		this.controlDetection = controlDetection;
-		init(binary, rayon, square);
+		init(title, binary, rayon, square);
 	}
 	
-	public Window(MotionEstimation controlMotion){
+	public Window(MotionEstimation controlMotion, String title){
 		this.controlMotion = controlMotion;
-		init(0, 0, 0);
+		init(title, 0, 0, 0);
 	}
 		
 	/**
 	 * Initialisation de la fenêtre et création des composants
 	 */
-	private void init(int binary, int rayon, int square){
+	private void init(String title, int binary, int rayon, int square){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-		this.setTitle("Reconnaissance de QR Code");
+		this.setTitle(title);
 		currentFolder = null;
 		// Menu
 		mainMenu = new JMenuBar();
@@ -177,7 +177,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		            // obtention d'un objet File qui désigne le répertoire courant. Le
 		            // "getCanonicalFile" : meilleurs formatage
 		        	//currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
-		        	currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
+		        	//currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
+		        	currentFolder = new File("/home/eric/workspace/Pact/Modules/image/database/test").getCanonicalFile();
 		        } catch(IOException err) {
 					currentFolder = new File(".");
 					

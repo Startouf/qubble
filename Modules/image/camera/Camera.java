@@ -14,6 +14,7 @@ import sequencer.QubbleInterface;
 import main.ImageDetectionInterface;
 import main.TerminateThread;
 
+import com.googlecode.javacv.FFmpegFrameGrabber;
 import com.googlecode.javacv.FrameGrabber.Exception;
 import com.googlecode.javacv.OpenCVFrameGrabber;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
@@ -25,19 +26,24 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 public class Camera implements Runnable, TerminateThread{
 	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
-	private final OpenCVFrameGrabber grabber;
+	private final FFmpegFrameGrabber grabber;
 	private IplImage tableImage;
 	private int i = 0;
 	
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
-		pause = true;
+		pause = false;
 		this.controlImage = controlImage;
 		// Ouverture de la caméra sur le port 0 
-		grabber = new OpenCVFrameGrabber(0);
+		grabber = new FFmpegFrameGrabber("/dev/video0");//
+		// A conserver : ancienne méthode
+		//OpenCVFrameGrabber(0);
 		// Tentative de démarage de la caméra
 		try{
+			grabber.setFormat("video4linux2");
+			grabber.setImageHeight(600);
+			grabber.setImageWidth(800);
 			grabber.start();
 		}catch(ExceptionInInitializerError | Exception e){
 			e.printStackTrace();
@@ -63,7 +69,7 @@ public class Camera implements Runnable, TerminateThread{
     			try {
     				tableImage = grabber.grab();
     				if(tableImage != null){
-    	    			//cvSaveImage("picture.jpg", tableImage);
+    	    			cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
     					//System.out.println("Nouvelle image !");

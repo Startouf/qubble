@@ -1,8 +1,9 @@
-package qrDetection;
+package motionEstimation;
 
 import image_GUI.Window;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import main.ImageDetectionInterface;
 import main.TerminateThread;
@@ -22,7 +23,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 		this.windowMode = windowMode;
 		run = true;
 		if(windowMode){
-			motionWindow = new Window(this);
+			motionWindow = new Window(this, "Estimation du mouvement");
 		}
 	}
 	
@@ -58,15 +59,19 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	 *
 	 */
 	public void analyseTable(BufferedImage cur, BufferedImage ref){
+		// Démarre la détection de mouvement
+		BlockMatching bm = new BlockMatching(50,50, 8, 0);
 		long startTime = System.currentTimeMillis();
 		
-		
-					
+		MotionDetection motion = new MotionDetection(cur, ref, bm);
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(77);
+		motion.searchListMotion(list);
+		//motion.searchAllMotion();
 		long endTime = System.currentTimeMillis();
-		
-		
-		
-		controlImage.setMotionEstimationDone(true);
+		System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
+	
+	
 	}
 
 	public void terminate() {

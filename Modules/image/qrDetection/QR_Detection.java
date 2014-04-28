@@ -31,7 +31,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		this.windowMode = windowMode;
 		run = true;
 		if(windowMode){
-			qrWindow = new Window(this, 5, 42, 80);
+			qrWindow = new Window(this, "Reconnaissance de QR Code", 5, 42, 80);
 		}
 	}
 	
