@@ -19,7 +19,15 @@ private final App app;
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		app.getActiveProject().setProjectName(JOptionPane.showInputDialog("Nom pour votre projet: "));
+		actionPerformed(arg0, JOptionPane.showInputDialog("Nom pour votre projet: "));
+	}
+	
+	public void actionPerformed(ActionEvent arg0, String name) {
+		if (name == null || name.equals("")){
+			return;
+		}
+		app.getActiveProject().setProjectName(name);
+		app.getWelcomePanel().refresh();
 		putValue(NAME, app.getActiveProject().getProjectName());
 		//Bad : should have some kind of PropertyChangeListener
 		if(arg0.getSource() instanceof JButton){

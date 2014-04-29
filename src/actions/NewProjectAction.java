@@ -26,6 +26,7 @@ public class NewProjectAction extends AbstractAction
 {
 	private App app;
 	
+	//For custom Project generation pop up window
 	class PropertyOptionsPanel extends JPanel{
 		private final JRadioButton random= new JRadioButton("Aléatoire"), 
 				none = new JRadioButton("Aucun"), 
@@ -35,7 +36,6 @@ public class NewProjectAction extends AbstractAction
 		public PropertyOptionsPanel(){
 			bg.add(random); bg.add(none); bg.add(stable);
 		}
-		
 	}
 	
 	private Hashtable<QubjectProperty, PropertyOptionsPanel> customizeProps
@@ -57,6 +57,7 @@ public class NewProjectAction extends AbstractAction
 		this.app.getWelcomePanel().disableProjects();
 		this.app.getWelcomePanel().addProjectEntry(this.app.getActiveProject());
 		this.app.setProjectOpened(true);
+		this.app.getChangeProjectNameAction().actionPerformed(arg0, "Nouveau projet");
 	}
 	
 	private void fastNewProject(){

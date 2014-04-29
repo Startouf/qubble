@@ -33,7 +33,7 @@ public class SelectorButton extends JButton implements ActionListener{
 		isQubject=true;
 		tune();
 		this.modifier = null;
-		setPreferredSize(new Dimension(35,35));
+		setPreferredSize(new Dimension(50,35));
 	}
 
 	//Constructor for the select modifier selector
@@ -44,7 +44,7 @@ public class SelectorButton extends JButton implements ActionListener{
 		this.app = app;
 		isQubject=false;
 		this.modifier = modifier;
-		setPreferredSize(new Dimension(35,35));
+		setPreferredSize(new Dimension(50,35));
 	}
 	
 	public void tune(){
