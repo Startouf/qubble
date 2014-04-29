@@ -12,7 +12,9 @@ import java.util.ArrayList;
  *
  */
 public class Block {
-	private int xCenter,yCenter, motionX, motionY, xCorner, yCorner, height, width;
+	private int xCenter,yCenter, motionX, motionY, xCorner, yCorner;
+	private int height, width;
+	
 	private BufferedImage image, bestMotion;
 	
 	/**
@@ -21,6 +23,11 @@ public class Block {
 	 * Deux points importants : Point central (xCenter, yCenter) et le coin supérieur droit (xCorner, yCorner)
 	 */
 	public Block(int xCenter, int yCenter, int imgWidth, int imgHeight, int sizeWidth, int sizeHeight){
+		init(xCenter, yCenter, imgWidth, imgHeight, sizeWidth, sizeHeight);
+	}
+	
+	
+	public void init(int xCenter, int yCenter, int imgWidth, int imgHeight, int sizeWidth, int sizeHeight){
 		this.xCenter = xCenter;
 		this.yCenter = yCenter;
 		// Récupération des coordonnées du coin droit
@@ -44,7 +51,7 @@ public class Block {
 			height = imgHeight - yCorner;
 		}else{
 			height = (yCenter + (sizeHeight/2)) - yCorner;
-		}		
+		}
 	}
 	/*
 	 * je vais faire une liste de tous les blocks d'une image suivant
@@ -114,6 +121,14 @@ public class Block {
 		g.drawImage(rbest, 0, 0, rbest.getWidth(), rbest.getHeight(), null);
 		this.motionX = motionX*3;
 		this.motionY = motionY*3;
+	}
+
+
+	public void move(int bestX, int bestY) {
+		int xMove = bestX-xCorner;
+		int yMove = bestY-yCorner;
+		xCorner = bestX;
+		yCorner = bestY;		
 	}
 
 }

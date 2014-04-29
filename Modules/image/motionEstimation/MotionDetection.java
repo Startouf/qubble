@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -68,10 +69,7 @@ public class MotionDetection {
 	 * La fonction recherche les meilleurs déplacements pour une liste de quelques blocks de l'image.
 	 * Les blocks sont déterminés par les paramètres d'un objet BlockMatching
 	 */
-	public void searchMotion(ArrayList<Block> list){
-
-		HashMap<Integer, Point> qrMoved = new HashMap<Integer, Point>();
-		
+	public void searchMotion(Collection<Block> list){
 		
 		// Parcours des points centraux
 		for (Block bl : list){
@@ -81,6 +79,7 @@ public class MotionDetection {
 				// Recherche de mouvement de rotation
 			}else{
 				// Le block n'a pas bougé
+				System.out.println("Le cube n'a pas bougé.");
 			}
 		}
 
@@ -155,15 +154,17 @@ public class MotionDetection {
 		boolean result =false;
 		int x = bl.getxCenter()-search;
 		int y = bl.getyCenter()-search;
-		while (result!=false){
+		int bestX = bl.getxCorner(), bestY = bl.getyCorner();
+		while (result == false){
 			for (int j = x; j <x+search; j=j+search){
 				for (int k = y; k<y+search; k=k+search){
 					// Surveiller les bords de l'image
 					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
 						try {
-							err = Erreur.errQM(cur, ref, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
+							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
 							if (err < min){
 								min = err;
+								System.out.println("Erreur : " + err);
 								x=j; //-lref.get(i).getX();
 								y=k; //-lref.get(i).getY();
 
@@ -178,16 +179,15 @@ public class MotionDetection {
 				}
 			}
 		}
+		System.out.println("Move : " + bestX + " " + bestY);
+		bl.move(x, y);
 	}
 
-	public void setCur(BufferedImage cur) {
+	public void setNewImage(BufferedImage cur) {
+		this.ref = this.cur;
 		this.cur = new TabImage(cur);
 	}
 
-	public void setRef(BufferedImage ref) {
-		prediction = ref;
-		this.ref = new TabImage(ref);
-	}
 
 
 	/*	public int[] getVector(Block a){

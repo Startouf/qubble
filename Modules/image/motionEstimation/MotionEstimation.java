@@ -1,9 +1,14 @@
 package motionEstimation;
 
+import imageObject.Point;
 import image_GUI.Window;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.color.CMMException;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import main.ImageDetectionInterface;
 import main.TerminateThread;
@@ -11,49 +16,68 @@ import main.TerminateThread;
 
 public class MotionEstimation implements Runnable, TerminateThread{
 	private Window motionWindow;
-	private boolean run, pause;
+	private boolean run, pause, firstTime;
 	private MotionDetection motionAnalyse;
 	private ImageDetectionInterface controlImage;
 	// Liste des blocks à analyser
-	ArrayList<Block> listBlock;
+	HashMap<Integer, Block> listBlock;
 	
 	public static int SQUARESIZE = 52;
 	
 	// Varaible de mémorisation de l'analyse
+	private int imageHeight, imageWidth;
 	BufferedImage ref;
 	BufferedImage cur;
 	
 	public MotionEstimation(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
-		pause = true;
+		// Bloquer le démarrage tant que au moins deux images n'ont pas été récupérés
+		firstTime = true;
+		pause = false;
 		run = true;
-		listBlock = new ArrayList<Block>();
-		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 8, 0));
+		listBlock = new HashMap<Integer, Block>();
+		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 80, 0));
+		imageWidth = controlImage.getWidthCamera();
+		imageHeight = controlImage.getHeightCamera();
 	}
 	
-	public void run() {
+	public void run() {	
 		while(run){
-			System.out.println("Essai");
 			// Attente d'une nouvelle image
-			while(!controlImage.isNewImageMotion() || pause){
+			while(!controlImage.isNewImageMotion() || pause || firstTime){
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			// Afficher la nouvelle image dans Window
-			
+				if(controlImage.isNewImageMotion()){
+					motionAnalyse.setNewImage(controlImage.getLastImage());
+					firstTime = false;
+				}
+			}			
 			// Mise à jour de la liste des blocks à suivre
-			
+			HashMap<Integer, Point> temp = controlImage.getAddedQubbleList();
+			for(int id : temp.keySet()){
+				addQubbleToList(temp.get(id).getX(), temp.get(id).getY(), id);
+			}
+			controlImage.resetAddedQubbleList();
+			for(int id : controlImage.getRemovedQubbleList().keySet()){
+				removeQubbleToList(id);
+			}
+			controlImage.resetRemovedQubbleList();
 			
 			// Récupération du mouvement
 			if(controlImage.isNewImageMotion()){
-				ref = cur;
-				cur = controlImage.getLastImage();
+				motionAnalyse.setNewImage(controlImage.getLastImage());
 				
-				analyseTable(cur, ref);
+				analyseTable();
+			}
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -65,16 +89,16 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	 * @param screen
 	 *
 	 */
-	public void analyseTable(BufferedImage cur, BufferedImage ref){
+	public void analyseTable(){
 		// Démarre la détection de mouvement
 		long startTime = System.currentTimeMillis();
 		
-		motionAnalyse.searchMotion(listBlock);
+		motionAnalyse.searchMotion(listBlock.values());
 
 		long endTime = System.currentTimeMillis();
 		System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
 	
-		controlImage.setQrDetectionDone(true);
+		controlImage.setMotionEstimationDone(true);
 	}
 
 	public void terminate() {
@@ -93,9 +117,31 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	 * prend en entrée la position du qubble et l'incorpore dans la liste des blocs dont nous voulons déterminer le mouvement
 	 * ainsi on ne fait le block matching que sur quelques blocs aulieu de le faire sur tous
 	 */
-	public void addQubbleToList(int positionX, int positionY){
+	public void addQubbleToList(int positionX, int positionY,int id){
 		// Création du cadre/Block qui englobe le Qr code
-		listBlock.add(new Block(positionX, positionY, cur.getWidth(), cur.getHeight(), SQUARESIZE, SQUARESIZE));
+		listBlock.put(id, new Block(positionX, positionY, imageWidth, imageHeight, SQUARESIZE, SQUARESIZE));
+	}
+	
+	public void removeQubbleToList(int id){
+		for(Integer num : listBlock.keySet()){
+			if(num == id){
+				listBlock.remove(num);
+			}
+		}
+	}
+	
+	/**
+	 * Dessine le contour des blocks sur l'image en paramètre
+	 * @param camera
+	 */
+	public void addMotionOnImage(BufferedImage camera){
+		if(camera != null){
+			Graphics g = camera.getGraphics();
+			g.setColor(Color.green);
+			for(Block bl : listBlock.values()){
+				g.drawRect(bl.getxCorner(), bl.getyCorner(), bl.getWidth(), bl.getWidth());
+			}
+		}
 	}
 
 	

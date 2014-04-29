@@ -33,6 +33,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	
 	// Liste actuelle des cubes détectés
 	private volatile HashMap<Integer, Point> qubbleList;
+	// Pour le mouvement
+	// Liste des cubes supprimés depuis la dernière capture
+	private volatile HashMap<Integer, Point> removedQubbleList;
+	// Liste des cubes ajoutés depuis la dernière capture
+	private volatile HashMap<Integer, Point> addedQubbleList;
 	
 	private volatile boolean run;
 	
@@ -47,7 +52,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		t_mo = new Thread(mo);
 		
 		qubbleList = new HashMap<Integer, Point>();
-		
+		removedQubbleList = new HashMap<Integer, Point>();
+		addedQubbleList = new HashMap<Integer, Point>();
+		addedQubbleList.put(888, new Point(640, 360));
 		if(true){
 			window = new Window(qr, mo, 5, 42 ,80);
 		}
@@ -69,11 +76,13 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 				qrDetectionDone();
 				qrDetectionDone = false;
 			}
-			if(newImage){
-				
+			if(motionEstimationDone){
+				motionEstimationDone();
+				motionEstimationDone = false;
 			}
+			mo.addMotionOnImage(lastImage);
 			try {
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -127,6 +136,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 			// Alerter de la suppression des qubjects
 			if(qrFound.containsKey(id) == false){
 				qubble.QubjectRemoved(id);
+				removedQubbleList.put(id, qubbleList.get(id));
 			}else{
 				// Le qubject est déjà détecté, on le garde dans la future liste
 				temp.put(id, qrFound.get(id));
@@ -137,8 +147,10 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		}
 		// On rajoute les éléments restants et on alerte le processus principale
 		for(int idNew : qrFound.keySet()){
-			qubble.QubjectDetected(idNew, qrFound.get(idNew));
-			temp.put(idNew, qrFound.get(idNew));
+			Point pt = qrFound.get(idNew);
+			qubble.QubjectDetected(idNew, pt);
+			temp.put(idNew, pt);
+			addedQubbleList.put(idNew, pt);
 		}
 		
 		qubbleList = temp;
@@ -159,7 +171,29 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	public void setMotionEstimationDone(boolean motionEstimationDone) {
 		this.motionEstimationDone = motionEstimationDone;
 	}
+
+	public HashMap<Integer, Point> getRemovedQubbleList() {
+		return removedQubbleList;
+	}
+
+	public HashMap<Integer, Point> getAddedQubbleList() {
+		return addedQubbleList;
+	}
 	
+	public void resetRemovedQubbleList() {
+		removedQubbleList.clear();
+	}
+
+	public void resetAddedQubbleList() {
+		addedQubbleList.clear();
+	}
 	
+	public int getWidthCamera(){
+		return webcam.IMAGEWIDTH;
+	}
+	
+	public int getHeightCamera(){
+		return webcam.IMAGEHEIGHT;
+	}
 
 }

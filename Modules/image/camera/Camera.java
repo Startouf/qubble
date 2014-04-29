@@ -24,6 +24,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  *
  */
 public class Camera implements Runnable, TerminateThread{
+	public final int IMAGEHEIGHT = 720, IMAGEWIDTH = 1280;
 	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
 	private FFmpegFrameGrabber grabber;
@@ -43,8 +44,8 @@ public class Camera implements Runnable, TerminateThread{
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setFormat("video4linux2");
-			grabber.setImageHeight(720);
-			grabber.setImageWidth(1280);
+			grabber.setImageHeight(IMAGEHEIGHT);
+			grabber.setImageWidth(IMAGEWIDTH);
 			grabber.start();
 		}catch(ExceptionInInitializerError | Exception e){
 			e.printStackTrace();
