@@ -1,20 +1,27 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class GlobalSettingsPanel extends JPanel
 {
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
-	private final JButton toggleGrid, playPause, panic, recordButton;
-	private JLabel activeProjectLabel, activeProject, volumeLabel, panicLabel, playPauseLabel, 
+	private final JButton toggleGrid, playPause, panic, recordButton, activeProject;
+	private JLabel activeProjectLabel, volumeLabel, panicLabel, playPauseLabel, 
 	toggleGridLabel, time, recordLabel;
 
 	public GlobalSettingsPanel(App app)
@@ -22,19 +29,21 @@ public class GlobalSettingsPanel extends JPanel
 		super();
 		this.app = app;
 		GridLayout layout = new GridLayout(2,0);
-		layout.setHgap(25);
+		layout.setHgap(5);
 		setLayout(layout);
 		this.setPreferredSize(new Dimension(400, 80));
 
 		//Project Name
 		activeProjectLabel = new JLabel("Projet Actif:");
 		activeProjectLabel.setHorizontalAlignment(JLabel.CENTER);
-		activeProject = new JLabel();
+		activeProject = new JButton(app.getChangeProjectNameAction());
 		activeProject.setHorizontalAlignment(JLabel.CENTER);
-		activeProject.setText("Pas de projet");
 		activeProject.setFont(new Font(null, Font.BOLD, 18));
 		activeProject.setForeground(Color.red);
-		//TODO : Il faut un JLabel plus stylé pour le nom de projet!
+		activeProject.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		activeProject.setBorderPainted( false );
+		activeProject.setContentAreaFilled(false);
+		
 
 		//Volume Slider : (, min, max, initial) Volume
 		volumeLabel = new JLabel("Volume");
@@ -136,7 +145,6 @@ public class GlobalSettingsPanel extends JPanel
 	 */
 	public void setActiveProjectName(String name){
 		activeProject.setForeground(Color.BLACK);
-		activeProject.setText(name);
 		repaint();
 	}
 

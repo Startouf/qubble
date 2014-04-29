@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.lwjgl.util.glu.Project;
 
@@ -78,6 +80,8 @@ public class App extends JFrame
 			new CloseProjectAction(this);
 	private final SaveProjectAction saveProjectAction = new SaveProjectAction(this);
 	private final RecordAction recordAction = new RecordAction(this);
+	private final ChangeProjectNameAction changeProjectNameAction = 
+			new ChangeProjectNameAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -311,6 +315,10 @@ public class App extends JFrame
 	public WelcomePanel getWelcomePanel() {
 		return welcomePanel;
 	}
+	
+	public ChangeProjectNameAction getChangeProjectNameAction(){
+		return changeProjectNameAction;
+	}
 
 	public void closeProject(ProjectController project) {
 		this.mainPanel.closeTabsRelatedTo(project);
@@ -322,6 +330,10 @@ public class App extends JFrame
 	 * DEBUG --> Use debug.DebugLaunch
 	 */
 	public static void main(String[] args){
+		try {
+			UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
+		} catch (Exception e) {System.out.println("Erreur de chargement ");}
+		
 		App DJTable = new App();
 	}
 

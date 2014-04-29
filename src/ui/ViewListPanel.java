@@ -189,7 +189,8 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 							this.activeQubject = qubjectMap.get(i);
 							this.activeProperty = propertyMap.get(j);
 							this.activeModifier = (QubjectModifierInterface) combo.getSelectedItem();
-							this.app.getChangeQubjectModifierAction().actionPerformed(new ActionEvent(this, arg0.getID(), null));
+							this.app.getChangeQubjectModifierAction().actionPerformed(
+									new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 						}
 					}
 				}
