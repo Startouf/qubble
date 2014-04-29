@@ -73,7 +73,7 @@ public class Camera implements Runnable, TerminateThread{
     	    			//cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
-    					System.out.println("Nouvelle image !");
+    					//System.out.println("Nouvelle image !");
     					
     	    		}
     			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {
@@ -81,7 +81,7 @@ public class Camera implements Runnable, TerminateThread{
     			}
     			// Pause de 200 ms avant la prochaine capture
     			try {
-    				Thread.sleep(200);
+    				Thread.sleep(50);
     			} catch (InterruptedException e) {
     				e.printStackTrace();
     			}

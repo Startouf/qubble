@@ -309,7 +309,7 @@ public class TabImage {
 		int[][] varianceImg = new int [width][height];
 		
 		// Parcours de l'image
-		for(int i = windowSize; i < width-windowSize; i++){
+		/*for(int i = windowSize; i < width-windowSize; i++){
 			for(int j = windowSize; j < height-windowSize; j++){
 				sum = 0;
 				// Parcours de la fenêtre
@@ -324,25 +324,52 @@ public class TabImage {
 		}
 		
 		// Parcours de l'image
-				for(int i = windowSize; i < width-windowSize; i++){
-					for(int j = windowSize; j < height-windowSize; j++){
-						sum = 0;
-						// Parcours de la fenêtre
-						for(int a = -windowSize; a <= windowSize; a++){
-							for(int b = -windowSize; b <= windowSize; b++){
-								sum += Math.pow(((img[i+a][j+b] & 0xff) - mean[i][j]), 2);
-							}
-						}
-						var = sum/((window*window)-1);
-						//System.out.println(var);
-						if(var > BINARY_LEVEL){
-							varianceImg[i][j] = Color.black.getRGB();
-						}else{
-							varianceImg[i][j] = Color.white.getRGB();
-						}
+		for(int i = windowSize; i < width-windowSize; i++){
+			for(int j = windowSize; j < height-windowSize; j++){
+				sum = 0;
+				// Parcours de la fenêtre
+				for(int a = -windowSize; a <= windowSize; a++){
+					for(int b = -windowSize; b <= windowSize; b++){
+						sum += Math.pow(((img[i+a][j+b] & 0xff) - mean[i][j]), 2);
 					}
 				}
-				return new TabImage(varianceImg, width, height);
+				var = sum/((window*window)-1);
+				//System.out.println(var);
+				if(var > BINARY_LEVEL){
+					varianceImg[i][j] = 0xffffffff;
+				}else{
+					varianceImg[i][j] = 0;
+				}
+			}
+		}*/
+		int N = window*window;
+		int sumCarre = 0;
+		int temp;
+	for(int i = windowSize; i < width-windowSize; i++){
+		for(int j = windowSize; j < height-windowSize; j++){
+			sum = 0;
+			sumCarre = 0;
+			// Parcours de la fenêtre
+			for(int a = -windowSize; a <= windowSize; a++){
+				for(int b = -windowSize; b <= windowSize; b++){
+					temp = img[i+a][j+b] & 0xff;
+					sum += temp;
+					sumCarre += temp*temp;
+				}
+			}
+			sum = sum*sum;
+			var = (sumCarre - (sum/N))/N;
+			//System.out.println(var);
+			if(var > BINARY_LEVEL){
+				varianceImg[i][j] = 0xff000000;
+			}else{
+				varianceImg[i][j] = 0xffffffff;
+			}
+			//System.out.println("mean : " + mean[i][j]);
+		}
+	}
+	
+		return new TabImage(varianceImg, width, height);
 		
 	}
 

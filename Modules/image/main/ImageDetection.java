@@ -70,7 +70,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 				qrDetectionDone = false;
 			}
 			if(newImage){
-				window.displayCamera(lastImage);
+				
 			}
 			try {
 				Thread.sleep(100);
@@ -93,6 +93,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	@Override
 	public void setImage(BufferedImage Image) {
 		lastImage = Image;
+		window.displayCamera(lastImage);
 		newImage = newImageQR = newImageMotion = true;
 	}
 

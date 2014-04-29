@@ -17,7 +17,7 @@ import main.TerminateThread;
 
 public class QR_Detection implements Runnable, TerminateThread{
 	private Window qrWindow;
-	private boolean windowMode, run;
+	private boolean run, pause;
 	private ImageDetectionInterface controlImage;
 	
 	// Varaible de mémorisation de l'analyse
@@ -29,28 +29,30 @@ public class QR_Detection implements Runnable, TerminateThread{
 	public QR_Detection(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
 		run = true;
+		pause = false;
 	}
 	
 	public void run() {
 		while(run){
-			System.out.println("Essai");
 			// Attente d'une nouvelle image
-			while(!controlImage.isNewImageQR()){
+			while(!controlImage.isNewImageQR() || pause){
 				try {
-					Thread.sleep(200);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if(controlImage.isNewImageQR()){
-				
 				lastDetection = controlImage.getLastImage();
-				
 				analyseTable(lastDetection);
-				
 				//controlImage.setQrDetectionDone(true);
-				
 			}
 		}
 	}
@@ -91,13 +93,10 @@ public class QR_Detection implements Runnable, TerminateThread{
 		System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
 		System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 		
-		controlImage.setQrDetectionDone(true);
+		//controlImage.setQrDetectionDone(true);
 	}
 
 	public void terminate() {
-		if(windowMode){
-			qrWindow.setVisible(false);
-		}
 		
 	}
 

@@ -133,7 +133,6 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		try {
 			BufferedImage loadImage = ImageIO.read(fichier);
 			controlDetection.analyseTable(loadImage);
-			imageView.resetList();
 			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 			
 		} catch (IOException e) {

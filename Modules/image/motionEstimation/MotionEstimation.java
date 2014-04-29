@@ -11,10 +11,10 @@ import main.TerminateThread;
 
 public class MotionEstimation implements Runnable, TerminateThread{
 	private Window motionWindow;
-	private boolean windowMode, run, pause;
+	private boolean run, pause;
 	private MotionDetection motionAnalyse;
 	private ImageDetectionInterface controlImage;
-	// Lisye des blocks à analyser
+	// Liste des blocks à analyser
 	ArrayList<Block> listBlock;
 	
 	public static int SQUARESIZE = 52;
@@ -33,17 +33,9 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	
 	public void run() {
 		while(run){
-			while(pause){
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 			System.out.println("Essai");
 			// Attente d'une nouvelle image
-			while(!controlImage.isNewImageMotion()){
+			while(!controlImage.isNewImageMotion() || pause){
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -86,10 +78,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	}
 
 	public void terminate() {
-		if(windowMode){
-			motionWindow.setVisible(false);
-		}
-		
+	
 	}
 
 	public BufferedImage getRef() {

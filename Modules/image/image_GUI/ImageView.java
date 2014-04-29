@@ -53,13 +53,23 @@ public class ImageView extends JPanel{
 	}
 	
 	public void setCameraImage(BufferedImage camera){
-		slide.remove(0);
-		slide.set(0, camera);
+		if(slide.size()>0){
+			slide.set(0, camera);
+			// Lors de la première fois
+		}else{
+			slide.add(camera);
+			nbrImage = slide.size();
+		}
 	}
 	
 	public void setLastDetectionImage(BufferedImage lastDetection){
-		slide.remove(1);
-		slide.set(1, lastDetection);
+		if(slide.size()>1){
+			slide.set(1, lastDetection);
+			// Lors de la première fois
+		}else{
+			slide.add(lastDetection);
+			nbrImage = slide.size();
+		}
 	}
 	
 	public BufferedImage getImage(int type){
