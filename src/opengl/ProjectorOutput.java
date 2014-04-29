@@ -207,21 +207,18 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 		//Trackers
 		for(QubjectTracker tracker : trackers.values()){
-			tracker.renderStatus();
+			tracker.renderStatusInstant();
 		}
 		
-		//Note : toggle the if(isPlaying) to show frozen animations
-//		if(hasStarted){
-			//Render animations
-			for (AnimationControllerInterface anim : activeAnimations){
-				anim.renderAnimation();
-			}
-//		}
-			
-		//Hide area under Qubjects for better movement detection
+		//Render animations
+		for (AnimationControllerInterface anim : activeAnimations){
+			anim.renderAnimation();
+		}
+		
+		//Trackers
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderShadow();
-		}	
+		}
 			
 	}
 

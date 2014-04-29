@@ -50,17 +50,16 @@ public class QubjectTracker {
 			return;
 		}
 		
-		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
-		
 //		GL20.glUseProgram(shader[2]);
 //		GL20.glUniform2f(sourceAddress, (float)x+Qubject.SIZE/2, (float)y+Qubject.SIZE/2); 
-		
+		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		double cos, sin, theta;
+		
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int i=0; i<=TESSELATION; i++){
 			theta = i*2*Math.PI/(double)TESSELATION;
-			cos = Math.cos(i);
-			sin = Math.sin(i);
+			cos = Math.cos(theta);
+			sin = Math.sin(theta);
 			if(shadow){
 				glColor4f(0.9f, 0.1f, 0.1f, 1f);
 			} else{
@@ -77,20 +76,32 @@ public class QubjectTracker {
 			glVertex3d(x+(OFFSET+RADIUS+Qubject.SIZE/2d)*cos, y+(OFFSET+RADIUS+Qubject.SIZE/2d)*sin, -2d);
 		}
 		glEnd();
-		GL20.glUseProgram(0);
+//		GL20.glUseProgram(0);
 	}
 	
 	/**
 	 * Hide the are under the qubject so that it's easier to detect movement
 	 */
 	public void renderShadow(){
+		double cos, sin, theta;
 		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		glColor4f(0f,0f,0f,1f);
+		glBegin(GL_TRIANGLE_STRIP);
+		for (int i=0; i<=TESSELATION; i++){
+			theta = i*2*Math.PI/(double)TESSELATION;
+			cos = Math.cos(theta);
+			sin = Math.sin(theta);
+			glVertex3d(x+(Qubject.SIZE/2d)*cos, y+(Qubject.SIZE/2d)*sin, -2d);
+			glVertex3d(x+(Qubject.SIZE/2d)*cos, y+(Qubject.SIZE/2d)*sin, -2d);
+		}
+		glEnd();
+		
+		glColor4f(0f,0f,0f,1f);
 		glBegin(GL_QUADS);
-		glVertex3f(x-Qubject.SIZE/3f, y-Qubject.SIZE/3f, -3f);
-		glVertex3f(x+Qubject.SIZE/3f, y-Qubject.SIZE/3f, -3f);
-		glVertex3f(x+Qubject.SIZE/3f, y+Qubject.SIZE/3f, -3f);
-		glVertex3f(x-Qubject.SIZE/3f, y+Qubject.SIZE/3f, -3f);
+		glVertex3f(x-Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
+		glVertex3f(x+Qubject.SIZE/2f, y-Qubject.SIZE/2f, -2f);
+		glVertex3f(x+Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
+		glVertex3f(x-Qubject.SIZE/2f, y+Qubject.SIZE/2f, -2f);
 		glEnd();
 	}
 	

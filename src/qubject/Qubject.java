@@ -39,7 +39,7 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	private AnimationInterface whenPutOnTable;
 	private AnimationInterface animationwhenPlayed;
 	
-	public static final float SIZE = 100f;
+	public static final float SIZE = 130f;
 
 	/**
 	 * TODO : this constructor should NOT be used 

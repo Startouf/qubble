@@ -14,7 +14,7 @@ public class FakeCamera implements CameraInterface, Runnable
 	@Override
 	public synchronized void run() {
 		try {
-			wait(1500); //in milliseconds
+			wait(100); //in milliseconds
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}

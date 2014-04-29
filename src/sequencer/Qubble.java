@@ -17,6 +17,7 @@ import camera.FakeCamera;
 import opengl.BaseRoutines;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
+import audio.FakePlayer;
 import audio.Player;
 import audio.PlayerInterface;
 import audio.SampleController;
@@ -94,7 +95,7 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Attributs coeur
 	 */
-	private final PlayerInterface player = new Player(this);
+	private final PlayerInterface player = new FakePlayer(this);
 	private final OutputImageInterface projection = new ProjectorOutput(this);
 	private final CameraInterface camera;
 	/**
