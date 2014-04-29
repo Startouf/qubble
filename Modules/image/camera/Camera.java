@@ -26,21 +26,22 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 public class Camera implements Runnable, TerminateThread{
 	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
-	private final FFmpegFrameGrabber grabber;
+	private FFmpegFrameGrabber grabber;
 	private IplImage tableImage;
 	private int i = 0;
 	
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
-		pause = false;
+		pause = true;
 		this.controlImage = controlImage;
-		// Ouverture de la caméra sur le port 0 
-		grabber = new FFmpegFrameGrabber("/dev/video0");//
-		// A conserver : ancienne méthode
-		//OpenCVFrameGrabber(0);
+		grabber = null;
 		// Tentative de démarage de la caméra
 		try{
+			// Ouverture de la caméra sur le port 0 
+			grabber = new FFmpegFrameGrabber("/dev/video0");
+			// A conserver : ancienne méthode
+			//OpenCVFrameGrabber(0);
 			grabber.setFormat("video4linux2");
 			grabber.setImageHeight(600);
 			grabber.setImageWidth(800);

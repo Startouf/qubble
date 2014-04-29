@@ -3,6 +3,7 @@ package main;
 
 
 import imageObject.Point;
+import image_GUI.Window;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	private volatile boolean newImageQR, newImageMotion;
 	private boolean qrDetectionDone, motionEstimationDone;
 	
+	// Gestion de l'interface graphique de suivi
+	private Window window;
+	
 	// Liste actuelle des cubes détectés
 	private volatile HashMap<Integer, Point> qubbleList;
 	
@@ -36,13 +40,17 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	public ImageDetection(QubbleInterface qubble){
 		this.qubble = qubble; 
 		webcam = new Camera(this);
-		qr = new QR_Detection(this, true);
-		mo = new MotionEstimation(this, false);
+		qr = new QR_Detection(this);
+		mo = new MotionEstimation(this);
 		t_webcam = new Thread(webcam);
 		t_qr = new Thread(qr);
 		t_mo = new Thread(mo);
 		
 		qubbleList = new HashMap<Integer, Point>();
+		
+		if(true){
+			window = new Window(qr, mo, 5, 42 ,80);
+		}
 		
 		run = true;
 	}

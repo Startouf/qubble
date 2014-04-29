@@ -379,5 +379,9 @@ public class TabImage {
 		bimg.getRaster().setDataElements(0, 0, width, height, linearbuffer);
 		return bimg;
 	}
+
+	public int[][] getImg() {
+		return img;
+	}
 	
 }

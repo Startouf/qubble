@@ -12,19 +12,22 @@ import main.TerminateThread;
 public class MotionEstimation implements Runnable, TerminateThread{
 	private Window motionWindow;
 	private boolean windowMode, run;
+	private MotionDetection motionAnalyse;
 	private ImageDetectionInterface controlImage;
+	// Lisye des blocks à analyser
+	ArrayList<Block> listBlock;
+	
+	public static int SQUARESIZE = 52;
 	
 	// Varaible de mémorisation de l'analyse
 	BufferedImage ref;
 	BufferedImage cur;
 	
-	public MotionEstimation(ImageDetectionInterface controlImage, boolean windowMode){
+	public MotionEstimation(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
-		this.windowMode = windowMode;
 		run = true;
-		if(windowMode){
-			motionWindow = new Window(this, "Estimation du mouvement");
-		}
+		listBlock = new ArrayList<Block>();
+		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 8, 0));
 	}
 	
 	public void run() {
@@ -33,20 +36,23 @@ public class MotionEstimation implements Runnable, TerminateThread{
 			// Attente d'une nouvelle image
 			while(!controlImage.isNewImageMotion()){
 				try {
-					Thread.sleep(200);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			// Afficher la nouvelle image dans Window
+			
+			// Mise à jour de la liste des blocks à suivre
+			
+			
+			// Récupération du mouvement
 			if(controlImage.isNewImageMotion()){
 				ref = cur;
 				cur = controlImage.getLastImage();
 				
 				analyseTable(cur, ref);
-				
-				//controlImage.setQrDetectionDone(true);
-				
 			}
 		}
 	}
@@ -60,18 +66,14 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	 */
 	public void analyseTable(BufferedImage cur, BufferedImage ref){
 		// Démarre la détection de mouvement
-		BlockMatching bm = new BlockMatching(50,50, 8, 0);
 		long startTime = System.currentTimeMillis();
 		
-		MotionDetection motion = new MotionDetection(cur, ref, bm);
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(77);
-		motion.searchListMotion(list);
-		//motion.searchAllMotion();
+		motionAnalyse.searchMotion(listBlock);
+
 		long endTime = System.currentTimeMillis();
 		System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
 	
-	
+		controlImage.setQrDetectionDone(true);
 	}
 
 	public void terminate() {
@@ -89,7 +91,14 @@ public class MotionEstimation implements Runnable, TerminateThread{
 		return cur;
 	}
 	
-	
+	/**
+	 * prend en entrée la position du qubble et l'incorpore dans la liste des blocs dont nous voulons déterminer le mouvement
+	 * ainsi on ne fait le block matching que sur quelques blocs aulieu de le faire sur tous
+	 */
+	public void addQubbleToList(int positionX, int positionY){
+		// Création du cadre/Block qui englobe le Qr code
+		listBlock.add(new Block(positionX, positionY, cur.getWidth(), cur.getHeight(), SQUARESIZE, SQUARESIZE));
+	}
 
 	
 

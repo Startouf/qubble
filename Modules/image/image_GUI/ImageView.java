@@ -16,8 +16,9 @@ import javax.swing.JPanel;
  *
  */
 public class ImageView extends JPanel{
-	
+	// Liste des images :: 0 : caméra / 1 : Dernière capture de détection de QR / ...
 	private ArrayList<BufferedImage> slide;
+	// Indice de l'image en cours de visualisation
 	private int view;
 	private int nbrImage;
 	
@@ -26,13 +27,17 @@ public class ImageView extends JPanel{
 		this.setSize(new Dimension(800, 600));
 		slide = new ArrayList<BufferedImage>();
 		view = 0;
+		nbrImage = slide.size();
 	}
 	
 	public void paintComponent(Graphics g){
 		if(slide.size() > view)
 			g.drawImage(slide.get(view), 0, 0, this.getWidth(), this.getHeight(), null);
-		else
+		else{
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.drawString("No Image", 350, 250);
+		}
+			
 	}
 	
 	/**
@@ -41,9 +46,20 @@ public class ImageView extends JPanel{
 	 * @param type
 	 * @return la position de l'image dans la liste
 	 */
-	public int setImage(BufferedImage image){
+	public int addImage(BufferedImage image){
 		this.slide.add(image);
-		return nbrImage++;
+		nbrImage = slide.size();
+		return nbrImage-1;
+	}
+	
+	public void setCameraImage(BufferedImage camera){
+		slide.remove(0);
+		slide.set(0, camera);
+	}
+	
+	public void setLastDetectionImage(BufferedImage lastDetection){
+		slide.remove(1);
+		slide.set(1, lastDetection);
 	}
 	
 	public BufferedImage getImage(int type){
@@ -63,7 +79,7 @@ public class ImageView extends JPanel{
 	}
 	
 	public void next(){
-		if(view < (nbrImage-1) && slide.get(view+1) != null){
+		if(view < (nbrImage-1)){
 			view++;
 		}else
 			System.out.println("Pas d'image suivante.");
@@ -78,22 +94,12 @@ public class ImageView extends JPanel{
 	}
 	
 	/**
-	 * Supprime les images mémorisées
-	 * @param keepFirst : garder l'image principale si true
+	 * Supprime les images mémorisées qui détaillent la détection
 	 */
-	public void resetList(boolean keepFirst){
-		BufferedImage img = null;
-		if(keepFirst) {
-			 img = slide.get(0);
-		} 
-		slide.clear();
-		if(keepFirst){
-			slide.add(img);
-			view = 0;
-			nbrImage = 1;
-		}else{
-			view = 0;
-			nbrImage = 0;
+	public void resetList(){
+		for(int i = 2; i < slide.size() ; i++){
+			slide.remove(i);
 		}
+		nbrImage = slide.size();
 	}
 }

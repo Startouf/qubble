@@ -21,18 +21,14 @@ public class QR_Detection implements Runnable, TerminateThread{
 	private ImageDetectionInterface controlImage;
 	
 	// Varaible de mémorisation de l'analyse
-	BufferedImage camera;
+	BufferedImage lastDetection;
 	ComponentsAnalyser compo;
 	QRCodesAnalyser qrAnal;
 	TabImage grey, variance;
 	
-	public QR_Detection(ImageDetectionInterface controlImage, boolean windowMode){
+	public QR_Detection(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
-		this.windowMode = windowMode;
 		run = true;
-		if(windowMode){
-			qrWindow = new Window(this, "Reconnaissance de QR Code", 5, 42, 80);
-		}
 	}
 	
 	public void run() {
@@ -49,9 +45,9 @@ public class QR_Detection implements Runnable, TerminateThread{
 			}
 			if(controlImage.isNewImageQR()){
 				
-				camera = controlImage.getLastImage();
+				lastDetection = controlImage.getLastImage();
 				
-				analyseTable(camera);
+				analyseTable(lastDetection);
 				
 				//controlImage.setQrDetectionDone(true);
 				
@@ -105,8 +101,8 @@ public class QR_Detection implements Runnable, TerminateThread{
 		
 	}
 
-	public BufferedImage getCamera() {
-		return camera;
+	public BufferedImage getLastDetection() {
+		return lastDetection;
 	}
 
 	public ComponentsAnalyser getCompo() {

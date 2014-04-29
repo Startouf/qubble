@@ -24,13 +24,14 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import main.ImageDetectionInterface;
 import motionEstimation.MotionEstimation;
 import qrDetection.ComponentsAnalyser;
 import qrDetection.QRCodesAnalyser;
 import qrDetection.QR_Detection;
 
 /**
- * Affiche une fenetre
+ * Affiche une fenetre pour suivre la réception de la caméra, la détection de forme et le mouvement
  * @author masseran
  *
  */
@@ -38,10 +39,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	
 	private QR_Detection controlDetection;
 	private MotionEstimation controlMotion;
-	
-	// Index pour retrouver les images spécifiques dans le lecteur
-	public int COLOR = -1, GREY = -1, BINARY = -1, CONNEXE = -1, QR_CODE = -1, COURBE = -1; 
-	
+	private ImageDetectionInterface detectionInterface;
+		
 	public static int imageWidth, imageHeight;
 	private ImageView imageView;
 	// Barre de contrôle du bas
@@ -50,32 +49,26 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	private JTextField binaryLevelJTF, squareSizeJTF, squareTriggerJTF;
 	// Menu 
 	private JMenuBar mainMenu;
-	private JMenu fichier;
-	private JMenuItem ouvrir;
+	private JMenu fichier, display;
+	private JMenuItem ouvrir, motion, measure;
 	
 	private File currentFolder;
 	
-	private boolean qrCodesSearch;
 	
-	public Window(QR_Detection controlDetection, String title, int binary, int rayon, int square){
+	public Window(QR_Detection controlDetection, MotionEstimation controlMotion, int binary, int rayon, int square){
 		this.controlDetection = controlDetection;
-		init(title, binary, rayon, square);
+		init(binary, rayon, square);
 	}
 	
-	public Window(MotionEstimation controlMotion, String title){
-		this.controlMotion = controlMotion;
-		init(title, 0, 0, 0);
-	}
-		
 	/**
 	 * Initialisation de la fenêtre et création des composants
 	 */
-	private void init(String title, int binary, int rayon, int square){
+	private void init(int binary, int rayon, int square){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-		this.setTitle(title);
+		this.setTitle("Détection et mouvement");
 		currentFolder = null;
 		// Menu
 		mainMenu = new JMenuBar();
@@ -140,8 +133,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		try {
 			BufferedImage loadImage = ImageIO.read(fichier);
 			controlDetection.analyseTable(loadImage);
-			imageView.resetList(false);
-			printQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			imageView.resetList();
+			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -162,7 +155,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	public void actionPerformed(ActionEvent e) {
 		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
-			printQRDetection(controlDetection.getCamera(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 		}
 		if(e.getSource() == suivant){
 			imageView.next();
@@ -176,9 +169,12 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		        try {
 		            // obtention d'un objet File qui désigne le répertoire courant. Le
 		            // "getCanonicalFile" : meilleurs formatage
-		        	//currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	// Ecole
+		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	// Portable Dell
 		        	//currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
-		        	currentFolder = new File("/home/eric/workspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	// Portable Lenovo
+		        	//currentFolder = new File("/home/eric/workspace/Pact/Modules/image/database/test").getCanonicalFile();
 		        } catch(IOException err) {
 					currentFolder = new File(".");
 					
@@ -288,15 +284,21 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		}
 	}
 	
-	public void printQRDetection(BufferedImage camera, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal){
+	public void displayQRDetection(BufferedImage lastDetection, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal){
 		// Supprime les images en cours
-		imageView.resetList(false);
+		imageView.resetList();
 		
-		imageView.setImage(camera);
-		imageView.setImage(grey.ColorArrayToBufferedImage());
-		imageView.setImage(variance.ColorArrayToBufferedImage());
-		imageView.setImage(compo.getCCMyImage());
-		imageView.setImage(qrAnal.getQRCodesImage());
+		imageView.setLastDetectionImage(lastDetection);
+		imageView.addImage(grey.ColorArrayToBufferedImage());
+		imageView.addImage(variance.ColorArrayToBufferedImage());
+		imageView.addImage(compo.getCCMyImage());
+		imageView.addImage(qrAnal.getQRCodesImage());
+		affiche();
+	}
+	
+	public void displayCamera(BufferedImage camera){
+		imageView.setCameraImage(camera);
+		affiche();
 	}
 
 
