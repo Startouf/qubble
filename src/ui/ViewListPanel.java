@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -27,7 +29,6 @@ import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
 import other.BidirectionalMap;
-
 import qubject.MediaInterface;
 import qubject.Qubject;
 import qubject.QubjectModifierInterface;
@@ -58,12 +59,14 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		super(app.getActiveProject());
 		this.app = app;
 		this.setLayout(new BorderLayout(10,10));
+		this.setOpaque(false);
 		
 		WIDTH = EXTRA_COLS.length+QubjectProperty.values().length;
 		HEIGHT = app.getQubjects().size()+1;
 		cell = new JComponent[HEIGHT][WIDTH];
 		
 		content = new ScrollablePanel(this, new Dimension(600, 100), 800, 400);
+		content.setOpaque(false);
 		content.setLayout(new GridLayout(HEIGHT,WIDTH));
 
 		prepare();
@@ -72,6 +75,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		updateRows();
 		
 		JScrollPane scroll = new JScrollPane();
+		scroll.setOpaque(false);
 
 		scroll.setViewportView(content);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -90,6 +94,21 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		for(QubjectProperty prop : QubjectProperty.values()){
 			propertyMap.put(j, prop);
 			j++;
+		}
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		if(MainPanel.backgroundImage != null){
+			BufferedImage bf = MainPanel.backgroundImage;
+			float scale = (float)bf.getHeight()/(float)this.getHeight();
+			BufferedImage dest = MainPanel.backgroundImage.getSubimage(0, 
+					0, 
+					bf.getWidth(), 
+					bf.getHeight());
+			g.drawImage(dest, 0, 0, getWidth(), getHeight(), this);
 		}
 	}
 	

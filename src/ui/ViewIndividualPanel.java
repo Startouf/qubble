@@ -1,11 +1,17 @@
 package ui;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Hashtable;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -36,6 +42,20 @@ public class ViewIndividualPanel extends ViewQubjects {
 		= new Hashtable<QubjectProperty, Selector>();
 	private final JLabel qubjectPosition;
 	
+	public static final BufferedImage backgroundImage;
+	
+	static{
+		BufferedImage tryImage = null;
+		try {
+			tryImage = ImageIO.read(new FileInputStream("data/ui/fond 1.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		backgroundImage = tryImage;
+	}
+	
 	public ViewIndividualPanel(App app) {
 		super(app.getActiveProject());
 		this.app = app;
@@ -65,6 +85,21 @@ public class ViewIndividualPanel extends ViewQubjects {
 		
 		for(QubjectProperty prop : QubjectProperty.values()){
 			addOption(prop.getUserFriendlyString(), prop);
+		}
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		if(this.backgroundImage != null){
+			BufferedImage bf = this.backgroundImage;
+			float scale = (float)bf.getHeight()/(float)this.getHeight();
+			BufferedImage dest = this.backgroundImage.getSubimage(0, 
+					0, 
+					bf.getWidth(), 
+					bf.getHeight());
+			g.drawImage(dest, 0, 0, getWidth(), getHeight(), this);
 		}
 	}
 	

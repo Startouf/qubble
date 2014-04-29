@@ -12,12 +12,12 @@ public class PlayPauseAction extends AbstractAction {
 
 private final App app;
 private boolean play = false;
-private final ImageIcon playIcon = new ImageIcon("data/ui/play bleu.png");
-private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge.png");
+private final ImageIcon playIcon = new ImageIcon("data/ui/play bleu small.png");
+private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge small.png");
 	
 	public PlayPauseAction(App app) {
 		this.app = app;
-//		putValue(NAME, "Play");
+		putValue(NAME, "Play");
 		putValue(LARGE_ICON_KEY, playIcon);
 	}
 
@@ -28,11 +28,11 @@ private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge.png");
 		this.app.getActiveProject().getQubble().start();
 		// If was playing, pause, and show Play button
 		if (play){ 
-//			putValue(NAME, "Play");
+			putValue(NAME, "Play");
 			putValue(LARGE_ICON_KEY, playIcon);
 		}
 		else{
-//			putValue(NAME, "Pause");
+			putValue(NAME, "Pause");
 			putValue(LARGE_ICON_KEY, pauseIcon);
 			play = !play;
 		}

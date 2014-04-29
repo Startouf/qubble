@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,6 +19,11 @@ import qubject.QubjectProperty;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javax.swing.*;
 
 /**
@@ -34,6 +40,19 @@ public class MainPanel extends JPanel
 	private final JTabbedPane settingsTabs;	//Utilisation d'onglets
 	private final GlobalSettingsPanel globalSettingsPanel;
 	private static final Icon closeIcon = new ImageIcon("data/ui/closeTab.png"); 
+	public static final BufferedImage backgroundImage;
+	
+	static{
+		BufferedImage tryImage = null;
+		try {
+			tryImage = ImageIO.read(new FileInputStream("data/ui/fond 2.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		backgroundImage = tryImage;
+	}
 	
 	public MainPanel(App app)
 	{
@@ -44,8 +63,17 @@ public class MainPanel extends JPanel
 		this.setLayout(new BorderLayout());
 
 		//Tabs are added by the app
-		add(settingsTabs = new JTabbedPane(), BorderLayout.CENTER);
+		settingsTabs = new JTabbedPane();
+		//Note : code below makes the JTabbedPane transparent (e
+		add(settingsTabs, BorderLayout.CENTER);
 		add(globalSettingsPanel = new GlobalSettingsPanel(app), BorderLayout.SOUTH);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if(backgroundImage != null)
+			g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 	}
 
 	public App getApp() {

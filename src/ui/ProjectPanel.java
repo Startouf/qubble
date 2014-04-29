@@ -20,6 +20,7 @@ public class ProjectPanel extends JPanel {
 	
 	public ProjectPanel(App app, ProjectController project){
 		this.project = project;
+		this.setOpaque(false);
 		projectName = new JLabel(project.getProjectName());
 		projectName.setHorizontalAlignment(JLabel.LEFT);
 		

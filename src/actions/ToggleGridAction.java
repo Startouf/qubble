@@ -24,5 +24,6 @@ public class ToggleGridAction extends AbstractAction
 			putValue(NAME, "Afficher");
 		else
 			putValue(NAME, "Masquer");
+		grid = !grid;
 	}
 }

@@ -21,5 +21,9 @@ private final App app;
 	public void actionPerformed(ActionEvent arg0) {
 		app.getActiveProject().setProjectName(JOptionPane.showInputDialog("Nom pour votre projet: "));
 		putValue(NAME, app.getActiveProject().getProjectName());
+		//Bad : should have some kind of PropertyChangeListener
+		if(arg0.getSource() instanceof JButton){
+			((JButton)(arg0.getSource())).setForeground(Color.black);
+		}
 	}
 }

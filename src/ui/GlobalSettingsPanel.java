@@ -41,8 +41,8 @@ public class GlobalSettingsPanel extends JPanel
 		activeProject.setFont(new Font(null, Font.BOLD, 18));
 		activeProject.setForeground(Color.red);
 		activeProject.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		activeProject.setBorderPainted( false );
-		activeProject.setContentAreaFilled(false);
+//		activeProject.setBorderPainted( false );
+//		activeProject.setContentAreaFilled(false);
 		
 
 		//Volume Slider : (, min, max, initial) Volume
@@ -79,9 +79,9 @@ public class GlobalSettingsPanel extends JPanel
 		playPause.setAction(this.app.getPlayPauseAction());
 		ImageIcon img = new ImageIcon("data/ui/PauseButton.png");
 		playPause.setSize(img.getIconWidth(), img.getIconHeight());
-		playPause.setOpaque(false);
-		playPause.setContentAreaFilled(false);
-		playPause.setBorderPainted(false);
+//		playPause.setOpaque(false);
+//		playPause.setContentAreaFilled(false);
+//		playPause.setBorderPainted(false);
 		
 		//Panic button
 		panicLabel = new JLabel("Redémarrer");
