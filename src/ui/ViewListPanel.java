@@ -2,35 +2,25 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.util.Collections;
-import java.util.Hashtable;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.Scrollable;
+import javax.swing.JViewport;
 
 import other.BidirectionalMap;
 import qubject.MediaInterface;
-import qubject.Qubject;
 import qubject.QubjectModifierInterface;
 import qubject.QubjectProperty;
 
@@ -65,7 +55,7 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		HEIGHT = app.getQubjects().size()+1;
 		cell = new JComponent[HEIGHT][WIDTH];
 		
-		content = new ScrollablePanel(this, new Dimension(600, 100), 800, 400);
+		content = new ScrollablePanel(this, new Dimension(600, 100), 800, 2000);
 		content.setOpaque(false);
 		content.setLayout(new GridLayout(HEIGHT,WIDTH));
 
@@ -76,8 +66,12 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		
 		JScrollPane scroll = new JScrollPane();
 		scroll.setOpaque(false);
-
-		scroll.setViewportView(content);
+		
+		JViewport view = new JViewport();
+		view.setView(content);
+		view.setOpaque(false);
+		
+		scroll.setViewport(view);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setViewportBorder(
 	                BorderFactory.createLineBorder(Color.black));
@@ -103,11 +97,8 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 
 		if(MainPanel.backgroundImage != null){
 			BufferedImage bf = MainPanel.backgroundImage;
-			float scale = (float)bf.getHeight()/(float)this.getHeight();
-			BufferedImage dest = MainPanel.backgroundImage.getSubimage(0, 
-					0, 
-					bf.getWidth(), 
-					bf.getHeight());
+			BufferedImage dest = MainPanel.backgroundImage.getSubimage(0, 0, 
+					bf.getWidth(), bf.getHeight());
 			g.drawImage(dest, 0, 0, getWidth(), getHeight(), this);
 		}
 	}
@@ -117,9 +108,11 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		
 		for(i=1; i<app.getQubjects().size()+1; i++){
 			//Time (position of Qubject on X axis)
-			content.add(cell[i][0] = new JLabel("Error not initialized"));
+			content.add(cell[i][0] = new ShadowedJLabel("Error not initialized", Color.white,
+					new Color(0,0,0,85)));
 			//Logo of the qubject -> Put into a JLabel
-			content.add(cell[i][1] = new JLabel("Error not initialized"));
+			content.add(cell[i][1] = new ShadowedJLabel("Error not initialized", Color.white,
+					new Color(0,0,0,85)));
 			
 			int j=2;
 			
@@ -153,12 +146,24 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	private void addHeader(){
 		int j=0;
 		for(String col : EXTRA_COLS){
-			content.add(cell[0][j] = new JLabel(col));
+			JLabel text = new JLabel();
+			text.setForeground(Color.white);
+			text.setText(col);
+			content.add(cell[0][j] = new JPanel());
+			cell[0][j].setBackground( new Color(0, 0, 0, 85) );
+			cell[0][j].add(text);
+			cell[0][j].setForeground(Color.white);
 			j++;
 		}
 		
 		for(QubjectProperty prop : QubjectProperty.values()){
-			content.add(cell[0][j] = new JLabel(prop.getUserFriendlyString()));
+			JLabel text = new JLabel();
+			text.setForeground(Color.white);
+			text.setText(prop.getUserFriendlyString());
+			content.add(cell[0][j] = new JPanel());
+			cell[0][j].setBackground( new Color(0, 0, 0, 85) );
+			cell[0][j].add(text);
+			cell[0][j].setForeground(Color.white);
 			j++;
 		}
 	}
@@ -167,9 +172,11 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		//TODO (Check): Assumes the list of Qubjects is sorted !!
 		int i=1, j=0;	//1st row is HEADER
 		for(MediaInterface qubject:this.app.getQubjects()){
-			((JLabel) cell[i][j]).setText(Double.toString(this.app.getActiveProject().getQubble().getPosition(qubject).getWidth()));
+			((ShadowedJLabel) cell[i][j]).setText(Double.toString(this.app.getActiveProject().getQubble().getPosition(qubject).getWidth()));
 			j++;
-			((JLabel) cell[i][j]).setText(qubject.getName());
+			((ShadowedJLabel) cell[i][j]).setText(qubject.getName());
+			((ShadowedJLabel) cell[i][j]).setIcon(new ImageIcon(
+					qubject.getImage().getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH )));
 			j++;
 			qubjectMap.put(i, qubject);
 			

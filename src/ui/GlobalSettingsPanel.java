@@ -92,8 +92,8 @@ public class GlobalSettingsPanel extends JPanel
 		//Record button
 		recordButton = new JButton(this.app.getRecordAction());
 		recordButton.setOpaque(false);
-		recordButton.setContentAreaFilled(false);
-		recordButton.setBorderPainted(false);
+//		recordButton.setContentAreaFilled(false);
+//		recordButton.setBorderPainted(false);
 		recordLabel = new JLabel("");
 
 		//add in order (left to right)

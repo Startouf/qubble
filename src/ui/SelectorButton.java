@@ -23,10 +23,11 @@ public class SelectorButton extends JButton implements ActionListener{
 	private final App app;
 	private final boolean isQubject;
 	private final QubjectProperty modifier;
+	private static final ImageIcon arrow = new ImageIcon("data/ui/fleche.png");
 
 	//Constructor for the select Qubject selector
 	public SelectorButton(App app, MediaInterface Qubject) {
-		super(new ImageIcon("data/ui/arrow.png"));
+		super(arrow);
 		addActionListener(this);
 		this.app=app;
 		isQubject=true;
@@ -37,7 +38,7 @@ public class SelectorButton extends JButton implements ActionListener{
 
 	//Constructor for the select modifier selector
 	public SelectorButton(App app, QubjectProperty modifier){
-		super(new ImageIcon("data/ui/arrow.png"));
+		super(arrow);
 		tune();
 		addActionListener(this);
 		this.app = app;

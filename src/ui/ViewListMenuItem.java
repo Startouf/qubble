@@ -8,6 +8,6 @@ public class ViewListMenuItem extends JMenuItem {
 	public ViewListMenuItem(App app) {
 		super(app.getOpenListSettingsAction());
 		this.app = app;
-		this.setText("List settings");
+		this.setText("Vue en tableur");
 	}
 }

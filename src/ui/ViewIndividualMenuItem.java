@@ -8,6 +8,6 @@ public class ViewIndividualMenuItem extends JMenuItem {
 	public ViewIndividualMenuItem(App app) {
 		super(app.getOpenIndividualSettingsAction());
 		this.app = app;
-		this.setText("Individual settings");
+		this.setText("Vue individuelle");
 	}
 }

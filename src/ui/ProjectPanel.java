@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class ProjectPanel extends JPanel {
 	private final ProjectController project;
-	private final JLabel projectName;
+	private final ShadowedJLabel projectName;
 	private final JLabel status;
 	private final JButton switchTo, remove;
 	
@@ -21,8 +21,8 @@ public class ProjectPanel extends JPanel {
 	public ProjectPanel(App app, ProjectController project){
 		this.project = project;
 		this.setOpaque(false);
-		projectName = new JLabel(project.getProjectName());
-		projectName.setHorizontalAlignment(JLabel.LEFT);
+		projectName = new ShadowedJLabel(project.getProjectName(), Color.white, new Color(0,0,0,85));
+//		projectName.setHorizontalAlignment(JLabel.LEFT);
 		
 		status = new JLabel("Actif");
 		status.setFont(new Font(null, Font.BOLD, 14));

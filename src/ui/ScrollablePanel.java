@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-public final class ScrollablePanel extends JPanel implements Scrollable{
+public class ScrollablePanel extends JPanel implements Scrollable{
 
 	private final Dimension preferredViewport;
 	private final int widthBeforeScrollBarAppears, heightBeforeScrollBarAppears;

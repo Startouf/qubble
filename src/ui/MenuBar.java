@@ -11,7 +11,7 @@ public class MenuBar extends JMenuBar
     public MenuBar(App app){
     	this.app = app;
     	add(fileMenu = new FileMenu(app, "Fichier", "File Menu", java.awt.event.KeyEvent.VK_F));
-    	add(settingsMenu = new SettingsMenu(app, "Options Qubject", "Set settings for qubjects", java.awt.event.KeyEvent.VK_S));
+    	add(settingsMenu = new SettingsMenu(app, "Propriétés des Qubjects", java.awt.event.KeyEvent.VK_O));
     }
    
     /**
@@ -21,8 +21,8 @@ public class MenuBar extends JMenuBar
      */
     public MenuBar(App ap, boolean showAll){
     	this.app = app;
-    	add(fileMenu = new FileMenu(app, "File", "File Menu", java.awt.event.KeyEvent.VK_F));
-    	add(settingsMenu = new SettingsMenu(app, "Options", "Set settings for patterns", java.awt.event.KeyEvent.VK_S, showAll));
+    	add(fileMenu = new FileMenu(app, "Fichier", "File Menu", java.awt.event.KeyEvent.VK_F));
+    	add(settingsMenu = new SettingsMenu(app, "Options", java.awt.event.KeyEvent.VK_O, showAll));
     }
 
 	public void showProjectSettings(boolean projectOpened) {
