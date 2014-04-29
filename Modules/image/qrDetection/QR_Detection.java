@@ -50,8 +50,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 				e.printStackTrace();
 			}
 			if(controlImage.isNewImageQR()){
-				lastDetection = controlImage.getLastImage();
-				analyseTable(lastDetection);
+				analyseTable(new TabImage(controlImage.getLastImage()));
 				//controlImage.setQrDetectionDone(true);
 			}
 		}
@@ -64,11 +63,11 @@ public class QR_Detection implements Runnable, TerminateThread{
 	 * @param screen
 	 *
 	 */
-	public void analyseTable(BufferedImage camera){
+	public void analyseTable(TabImage camera){
 		long startTime = System.currentTimeMillis();
 		
 		// Transformation en niveau de gris
-		grey = (new TabImage(camera)).getGrey();
+		grey = camera.getGrey();
 		long greyTime = System.currentTimeMillis();
 		
 		// Transformation par le filtre de variance
@@ -81,7 +80,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		
 		// Récupération de la valeur des qr
 		qrAnal = new QRCodesAnalyser(grey, variance, compo);
-		qrAnal.printValeur(camera);
+		lastDetection = qrAnal.printValeur(camera);
 		
 		long qrTime = System.currentTimeMillis();
 					

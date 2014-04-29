@@ -95,20 +95,12 @@ public class ImageView extends JPanel{
 			System.out.println("Pas d'image suivante.");
 	}
 	
-	private boolean hasImage(){
-		for(int i = 0 ; i < nbrImage ; i++){
-			if(slide.get(i) == null)
-				return false;
-		}
-		return true;
-	}
-	
 	/**
 	 * Supprime les images mémorisées qui détaillent la détection
 	 */
 	public void resetList(){
-		for(int i = 2; i < slide.size() ; i++){
-			slide.remove(i);
+		while(slide.size() > 2){
+			slide.remove(2);
 		}
 		nbrImage = slide.size();
 	}

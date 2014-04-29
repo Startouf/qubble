@@ -122,7 +122,8 @@ public class QRCodesAnalyser {
 	/**
 	 * Affiche pour chaque qr code, les différentes zones analysées pour trouver sa valeur : blue = 0, rouge = 1 
 	 */
-	public void printValeur(BufferedImage img){
+	public BufferedImage printValeur(TabImage tab){
+		BufferedImage img = tab.ColorArrayToBufferedImage();
 		Graphics g = img.getGraphics();
 		for(Point pt : targetQr.keySet()){
 			if(targetQr.get(pt)){
@@ -133,6 +134,7 @@ public class QRCodesAnalyser {
 			
 			g.fillRect(pt.getX() - 2, pt.getY() -2, 4, 4);
 		}
+		return img;
 		
 	}
 	
