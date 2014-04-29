@@ -70,6 +70,10 @@ public class ComponentsAnalyser {
 			}
 		}
 
+		ArrayList<Integer> corresp = new ArrayList<Integer>(nbLabels);
+		for (int k=0 ; k<nbLabels ; k++) {
+			corresp.set(k, k);
+		}
 		//Reste du tableau
 		for (int j=1 ; j<imageHeight ; j++){
 			for (int i=1; i<imageWidth ; i++) {
@@ -84,13 +88,53 @@ public class ComponentsAnalyser {
 						
 					}else if (labels[i][j-1] > 0 && labels[i-1][j] > 0){
 						labels[i][j] = Math.min(labels[i-1][j], labels[i][j-1]);
+						//garder en memoire que max doit etre associe à min :
+						corresp.set(Math.max(labels[i-1][j], labels[i][j-1]), Math.min(labels[i-1][j], labels[i][j-1]));
+						
 					}
-				
 				}	
-				
 			}
 		}
 		
+		//Trouver les correspondances finales, code de M Roux
+		
+		for (int objet = 1; objet <= nbLabels; objet++) {
+			int i = objet;
+			int j;
+			do {
+				j = i;
+				i = corresp.get(i); 
+			} while (i != j);
+			
+			corresp.set(objet, i);
+		}
+		
+		int objet = 1;
+		for (int i = 1; i <= nbLabels; i++) {
+			int j;
+			j = corresp.get(i);
+			if ( j == i ){
+				corresp.set(i, corresp.get(j));
+			}
+			else {
+				corresp.set(i, objet++);
+			}
+		}
+		
+		//Appliquer les correspondances définitives à l'image
+		
+		for (int i=0 ; i<imageWidth ; i++) {
+			for (int j=0 ; j<imageHeight ; j++) {
+				for (int k= 0; k< nbLabels ; k++) {
+					if (labels[i][j] == k) {
+						labels[i][j] = corresp.get(k);
+					}
+				}
+			}
+		}
+
+		
+		/** ancien code
 		// Parcours de l'image de haut en bas puis de bas en haut tant qu'il y a des fusions de composantes connexes
 		// Je nÃ©glige les bords de l'image x = 0 ou y = 0
 		boolean modif = true;
@@ -144,6 +188,7 @@ public class ComponentsAnalyser {
 		}
 		// Affichage du nombre de parcours
 		System.out.println("Nombre de parcours dans la recherche des composantes connexes : " + x);
+		**/
 		
 		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
 		/**
