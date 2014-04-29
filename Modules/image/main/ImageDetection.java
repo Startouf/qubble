@@ -25,7 +25,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	private MotionEstimation mo;
 	
 	private BufferedImage lastImage;
-	private volatile boolean newImageQR, newImageMotion;
+	private volatile boolean newImageQR, newImageMotion, newImage;
 	private boolean qrDetectionDone, motionEstimationDone;
 	
 	// Gestion de l'interface graphique de suivi
@@ -69,8 +69,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 				qrDetectionDone();
 				qrDetectionDone = false;
 			}
+			if(newImage){
+				window.displayCamera(lastImage);
+			}
 			try {
-				Thread.sleep(200);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -88,9 +91,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	}
 
 	@Override
-	public void setImage(BufferedImage newImage) {
-			lastImage = newImage;
-		newImageQR = newImageMotion = true;
+	public void setImage(BufferedImage Image) {
+		lastImage = Image;
+		newImage = newImageQR = newImageMotion = true;
 	}
 
 	@Override

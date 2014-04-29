@@ -11,7 +11,7 @@ import main.TerminateThread;
 
 public class MotionEstimation implements Runnable, TerminateThread{
 	private Window motionWindow;
-	private boolean windowMode, run;
+	private boolean windowMode, run, pause;
 	private MotionDetection motionAnalyse;
 	private ImageDetectionInterface controlImage;
 	// Lisye des blocks à analyser
@@ -25,6 +25,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	
 	public MotionEstimation(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
+		pause = true;
 		run = true;
 		listBlock = new ArrayList<Block>();
 		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 8, 0));
@@ -32,6 +33,14 @@ public class MotionEstimation implements Runnable, TerminateThread{
 	
 	public void run() {
 		while(run){
+			while(pause){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			System.out.println("Essai");
 			// Attente d'une nouvelle image
 			while(!controlImage.isNewImageMotion()){

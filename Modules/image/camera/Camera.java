@@ -33,18 +33,18 @@ public class Camera implements Runnable, TerminateThread{
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
-		pause = true;
+		pause = false;
 		this.controlImage = controlImage;
 		grabber = null;
 		// Tentative de démarage de la caméra
 		try{
 			// Ouverture de la caméra sur le port 0 
-			grabber = new FFmpegFrameGrabber("/dev/video0");
+			grabber = new FFmpegFrameGrabber("/dev/video1");
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setFormat("video4linux2");
-			grabber.setImageHeight(600);
-			grabber.setImageWidth(800);
+			grabber.setImageHeight(720);
+			grabber.setImageWidth(1280);
 			grabber.start();
 		}catch(ExceptionInInitializerError | Exception e){
 			e.printStackTrace();
@@ -70,10 +70,10 @@ public class Camera implements Runnable, TerminateThread{
     			try {
     				tableImage = grabber.grab();
     				if(tableImage != null){
-    	    			cvSaveImage("picture.jpg", tableImage);
+    	    			//cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
-    					//System.out.println("Nouvelle image !");
+    					System.out.println("Nouvelle image !");
     					
     	    		}
     			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {
