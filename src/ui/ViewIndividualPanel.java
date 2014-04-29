@@ -132,6 +132,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 
 	@Override
 	public void setModifierOfActiveProperty(QubjectModifierInterface modifier) {
+		this.activeModifier = modifier;
 		this.selectors.get(activeProperty).setModifier(modifier);		
 	}
 

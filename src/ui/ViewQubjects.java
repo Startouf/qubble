@@ -27,23 +27,32 @@ public abstract class ViewQubjects extends JPanel {
 	}
 
 	/**
-	 * Change the active Qubject that will be modified by the Palettes
-	 * The subclasses should Override this method to refresh their display
+	 * <html><br /><b> If overriden, must write </b> this.activeQubject= qubject; <b>or override getter</b>
+	 * <html><br /> <b>Should be overriden !</b>
 	 * @param selectedQubject
 	 */
-	public abstract void setActiveQubject(MediaInterface selectedQubject);
+	public void setActiveQubject(MediaInterface selectedQubject){
+		this.activeQubject = selectedQubject;
+	};
 	
 	/**
 	 * Refresh the display (highlight active property ?)
+	 * <html><br /><b> If overriden, must write </b> this.activeProperty = property; <b>or override getter</b>
 	 * @param property
 	 */
-	public abstract void setActiveProperty(QubjectProperty property);
+	public void setActiveProperty(QubjectProperty property){
+		this.activeProperty = property;
+	};
 	
 	/**
 	 * Refresh the display (change JLabels, etc..)
+	 * <html><br /><b> If overriden, must write </b> this.activeModifier = modifier; <b>or override getter</b>
+	 * <html><br /> <b>Should be overriden !</b>
 	 * @param modifier
 	 */
-	public abstract void setModifierOfActiveProperty(QubjectModifierInterface modifier);
+	public void setModifierOfActiveProperty(QubjectModifierInterface modifier){
+		this.activeModifier = modifier;
+	};
 	
 	public abstract void setConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier);
 

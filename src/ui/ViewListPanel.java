@@ -190,21 +190,6 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	}
 	
 	@Override
-	public void setActiveQubject(MediaInterface selectedQubject) {
-
-	}
-
-	@Override
-	public void setActiveProperty(QubjectProperty modifier) {
-
-	}
-
-	@Override
-	public void setModifierOfActiveProperty(QubjectModifierInterface modifier) {
-		
-	}
-
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource() instanceof JComboBox){
 			for(int i=0; i<HEIGHT; i++){
