@@ -29,7 +29,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 	public QR_Detection(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
 		run = true;
-		pause = true;
+		pause = false;
 	}
 	
 	public void run() {

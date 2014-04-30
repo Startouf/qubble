@@ -37,6 +37,7 @@ public class ComponentsAnalyser {
 		
 		// Tableau de r√©f√©rence
 		int[][] labels = new int[imageWidth][imageHeight];
+		int[] corresp = new int[imageWidth*imageHeight];
 		
 		int nbLabels = 1;
 		
@@ -70,10 +71,10 @@ public class ComponentsAnalyser {
 			}
 		}
 
-		ArrayList<Integer> corresp = new ArrayList<Integer>(nbLabels);
+		/*ArrayList<Integer> corresp = new ArrayList<Integer>(nbLabels);
 		for (int k=0 ; k<nbLabels ; k++) {
-			corresp.set(k, k);
-		}
+			corresp.add(k);
+		}*/
 		//Reste du tableau
 		for (int j=1 ; j<imageHeight ; j++){
 			for (int i=1; i<imageWidth ; i++) {
@@ -88,13 +89,14 @@ public class ComponentsAnalyser {
 						
 					}else if (labels[i][j-1] > 0 && labels[i-1][j] > 0){
 						labels[i][j] = Math.min(labels[i-1][j], labels[i][j-1]);
-						//garder en memoire que max doit etre associe ‡ min :
-						corresp.set(Math.max(labels[i-1][j], labels[i][j-1]), Math.min(labels[i-1][j], labels[i][j-1]));
+						//garder en memoire que max doit etre associe ÔøΩ min :
+						corresp[Math.max(labels[i-1][j], labels[i][j-1])] = Math.min(labels[i-1][j], labels[i][j-1]);
 						
 					}
 				}	
 			}
 		}
+		   
 		
 		//Trouver les correspondances finales, code de M Roux
 		
@@ -103,31 +105,31 @@ public class ComponentsAnalyser {
 			int j;
 			do {
 				j = i;
-				i = corresp.get(i); 
+				i = corresp[i]; 
 			} while (i != j);
 			
-			corresp.set(objet, i);
+			corresp[objet] = i;
 		}
 		
 		int objet = 1;
 		for (int i = 1; i <= nbLabels; i++) {
 			int j;
-			j = corresp.get(i);
+			j = corresp[i]; 
 			if ( j == i ){
-				corresp.set(i, corresp.get(j));
+				corresp[i] = corresp[j];
 			}
 			else {
-				corresp.set(i, objet++);
+				corresp[i] = objet++;
 			}
 		}
 		
-		//Appliquer les correspondances dÈfinitives ‡ l'image
+		//Appliquer les correspondances dÔøΩfinitives ÔøΩ l'image
 		
 		for (int i=0 ; i<imageWidth ; i++) {
 			for (int j=0 ; j<imageHeight ; j++) {
 				for (int k= 0; k< nbLabels ; k++) {
 					if (labels[i][j] == k) {
-						labels[i][j] = corresp.get(k);
+						labels[i][j] = corresp[k];
 					}
 				}
 			}

@@ -33,7 +33,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 		this.controlImage = controlImage;
 		// Bloquer le démarrage tant que au moins deux images n'ont pas été récupérés
 		firstTime = true;
-		pause = false;
+		pause = true;
 		run = true;
 		listBlock = new HashMap<Integer, Block>();
 		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 80, 0));
