@@ -155,9 +155,9 @@ public class WaveForm extends JFrame implements Observer {
 		}
 	}
 	public void play() {
-		//Player.play(file);
+		Player.play(file);
 		//Player.playStream(file);
-		Player.playStream(samplesTab, sliderDrive);
+		//Player.playStream(samplesTab, sliderDrive);
 		/*
 		try {
 			Synthesizer.print(Player.getSpectrum(Player.getSamples(file)));
@@ -203,7 +203,7 @@ public class WaveForm extends JFrame implements Observer {
 	
 	public void synthesize(int form, int freq, int amp, double length) {
 		synth = new Synthesizer(form, freq, amp, 44100);
-		//synth.writeFile(file, 3);
+		System.out.println("la synthetisation commence");
 		samplesTab = synth.generate(length);
 		update(null, null);
 	}

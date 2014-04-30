@@ -9,7 +9,12 @@ public class LPFilter extends Filter {
 		super(amount);
 	}
 
-
+	/**
+	 * 
+	 * Pour un filtre passe bas, on utilise la méthode de la fenetre :
+	 * la réponse impulsionnelle est un sinus cardinal, décalé de N pour qu'il soit causal.
+	 * 
+	 */
 	@Override
 	protected float[] calch(int N) {
 		float fracFreq = cutoff/44100;
@@ -17,7 +22,7 @@ public class LPFilter extends Filter {
 		res[N] = (2 * fracFreq);
 		for (int n = 0; n < res.length; n++) {
 			if (n != N) {
-				res[n] = (float)(Math.sin(2*Math.PI*fracFreq*n)/(Math.PI * n));
+				res[n] = (float)(Math.sin(2*Math.PI*fracFreq*(n-N))/(Math.PI * (n-N)));
 			}
 		}
 		

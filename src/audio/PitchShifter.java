@@ -2,15 +2,22 @@ package audio;
 
 public class PitchShifter extends SoundEffect {
 
-	int ruban[];
-	int posWrite;
-	float pos1;
-	float pos2;
-	int tailleRuban;
-	float vitesse;
-	float volume1;
-	float volume2;
+	int ruban[]; //mémoire circulaire
+	int posWrite; //position de pointeur d'écriture
+	float pos1; //position du pointeur de lecture 1
+	float pos2;	//position du pointeur de lecture 2
+	int tailleRuban; //taille de ruban[]
+	float vitesse; //vitesse en nb d'échantillons/boucle de déplacement des pointeurs de lecture
+	float volume1;	//volume a laquelle l'échantillon lu par le pointeur 1 est joué
+	float volume2;	//  -----------------------------------------------  2 -------
 	
+	/**
+	 * 
+	 * On dispose d'un ruban circulaire <----------------->
+	 * un pointeur d'écriture écrit les échantillons tels qu'ils arrivent
+	 * ceci seront lus par deux pointeurs de lecture qui tournent à une vitesse différente du pointeur d'écriture
+	 * sur le ruban. Ainsi, on obtient une variation du pitch du sample, sans variation de la durée.
+	 */
 	
 	public PitchShifter(int amount) {
 		super(EffectType.Shifter, amount);
@@ -35,19 +42,27 @@ public class PitchShifter extends SoundEffect {
 		
 		for (int i = s.getRelativeCursor(); i < s.getRelativeCursor() + size && i < s.size(); i++) {
 			
+			//--------- on écrit l'échantillon à la position posWrite -------
 			ruban[posWrite] = s.get(i);
 			
+			//--------- on déplace le pointeur d'écriture ------------------
 			posWrite = (posWrite + 1) % tailleRuban;
 			
 			
+			//--------- on lit les échantillons aux positions pos1 et pos2, pondérés par volume1 et volume2
 			s.set(i, (int)(get(ruban, pos1)*volume1 + get(ruban, pos2)*volume2) );
 			
+			
+			//--------- on déplace les deux pointeurs ---------
 			pos1 = (pos1 + vitesse) % tailleRuban;
 			pos2 = (pos2 + vitesse) % tailleRuban;
 			
 			pos1 = pos1<0?(tailleRuban + pos1):pos1;
 			pos2 = pos2<0?(tailleRuban + pos2):pos2;
+			//---------------------------------------------------
 			
+			//----------- On effectue le crossfade des deux pointeurs de lecture, en fonction de la distance
+			//		des pointeurs de lecture par rapport au pointeur d'écriture.
 			float distance1 = posWrite - pos1;
 			distance1 = distance1>0?distance1:-distance1;
 			float distance2 = posWrite - pos2;
@@ -68,6 +83,7 @@ public class PitchShifter extends SoundEffect {
 
 	}
 	
+	//interpolation linéaire
 	public static int get(int[] array, double index) {
 		if (index <= array.length - 1 && index >= 0) {
 			int floor = (int) index;

@@ -2,16 +2,16 @@ package audio;
 
 public abstract class Filter extends SoundEffect {
 	
-	protected float[] h;
-	protected final int N = 30;
-	protected float cutoff;
+	protected float[] h; //h est la réponse impulsionnelle
+	protected final int N = 30; //2*N + 1 est la taille de la fenetre
+	protected float cutoff; //fréquence de coupure
 	
 	public Filter(int amount) {
 		super(EffectType.LPFilter, amount);
 		cutoff = 100*amount;
 		//calcCoefs();
 		h = calch(N);
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	@Override
@@ -42,6 +42,10 @@ public abstract class Filter extends SoundEffect {
 			}
 			s.set(i, res / (2*avg + 1));
 			*/
+			
+			/**
+			 * Simple convolution
+			 */
 			for (int m = 0; m < h.length; m++) {
 				res += s.get(i - m)*h[m];
 			}

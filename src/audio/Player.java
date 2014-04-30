@@ -45,6 +45,16 @@ public class Player implements PlayerInterface, Runnable {
 		}
 	}
 	
+	/**
+	 * 
+	 * Run : fonction principale tu thread.
+	 * les booleans running et paused gerent respectivement l'arret complet et la pause du thread.
+	 * à chaque tour de boucle, effectNextChunk() et writeNext() sont appelés
+	 * 
+	 * writeNext() appelle write(int[]) appelle write(short[])
+	 */
+	
+	
 	@Override
 	public void run() {
 		running = true;
@@ -57,7 +67,15 @@ public class Player implements PlayerInterface, Runnable {
 			}
 		}
 	}
-
+	
+	/**
+	 * 
+	 * write est la méthode appelée en dernier. elle prend en argument le tableau de 1024 short,
+	 * convertit chaque short en 2 byte et les ecrits dans la SourceDataLine.
+	 * La methode SourceDataLine.write ecrit le tableau d'octed donné en argument,
+	 * puis attends que tous les échantillons soient joués pour charger les échantillons suivants.
+	 * C'est ce bloquage qui garantit la lecture en temps réel.
+	 */
 	public void write(short[] dataInt) {
 		//System.out.println("write");
 		byte[] test = new byte[dataInt.length * 2];
@@ -75,6 +93,11 @@ public class Player implements PlayerInterface, Runnable {
 		line.write(test, 0, test.length);
 	}
 	///*
+	
+	/**
+	 * 
+	 * convertit les int en short, en fixant un seuil
+	 */
 	public void write(int[] dataInt) {
 		short[] d = new short[dataInt.length];
 		for (int i = 0; i < dataInt.length; i++) {
@@ -92,17 +115,30 @@ public class Player implements PlayerInterface, Runnable {
 		write(d);
 	}
 	//*/
+	
+	/**
+	 * Selectionne les échantillons à envoyer dans la line
+	 */
 	public void writeNext() {
 		write(nextArray(bufferSize/2));
 		cursor += bufferSize/2;
 	}
 	
+	
+	/**
+	 * Applique les effets à tous les SampleControllers en train d'être joués.
+	 */
 	public void effectNextChunk() {
 		for (int i = 0; i < sampleControllers.size(); i++) {
 			sampleControllers.get(i).effectNextChunk(bufferSize/2);
 		}
 	}
 	
+	/**
+	 * 
+	 * Additionne les size échantillons suivants depuis tous les SampleControllers en train d'être joués,
+	 * 
+	 */
 	public int[] nextArray(int size) {
 		int[] res = new int[size];
 		for (int i = 0; i < size; i++) {
@@ -113,10 +149,20 @@ public class Player implements PlayerInterface, Runnable {
 		return res;
 	}
 	
+	/**
+	 * 
+	 * Quand un SampleController a fini d'être joué, on le supprime de la liste de SampleControllers en train d'être joués
+	 */
 	public void hasFinishedPlaying(SampleController sc) {
 		sampleControllers.remove(sc);
 	}
 	
+	/**
+	 * 
+	 * quand l'utilisateur veut jouer un son, on crée un sample controller à partir de ce son,
+	 * on l'ajoute aux SampleControllers en train d'être joués, et on le renvoie pour que l'utilisateur
+	 * puisse le controller
+	 */
 	@Override
 	public SampleControllerInterface playSample(SampleInterface sample) {
 		SampleController res = new SampleController(cursor, sample.getFile(), qubble, this, (Sample) sample);
@@ -124,6 +170,10 @@ public class Player implements PlayerInterface, Runnable {
 		return res;
 	}
 
+	/**
+	 * 
+	 * tweakSample applique un effet effect au SampleController ref
+	 */
 	@Override
 	public void tweakSample(SampleControllerInterface ref, EffectType effect, int amount) {
 		SampleController r = (SampleController) ref;
@@ -167,7 +217,10 @@ public class Player implements PlayerInterface, Runnable {
 		
 	}
 
-	
+	/**
+	 * 
+	 * mets le booleen running à false
+	 */
 	@Override
 	public void destroy() {
 		running = false;

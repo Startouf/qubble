@@ -15,54 +15,47 @@ public class MainAudio {
 		Thread thread = new Thread(player);
 		thread.start();
 		
-		int[] a = new int[] {2, 4, 5, 1};
-		int[] b = new int[] {2, -3, 1};
-		int[] axb = LPFilter.convol(a, b);
-		for (int i = 0; i < axb.length; i++) {
-			System.out.print(axb[i] + ", ");
-		}
+		//System.out.println(Math.pow(3, 5));
 		
 		
 		sleep(1);
 		
-		SampleInterface beat = new Sample("pute", new File("data/samples/files/VEH1 House Loop - 093Mono.wav"));
-		SampleInterface sample = new Sample("pute", new File("data/samples/files/VEH1 House Loop - 058Mono.wav"));
-		SampleInterface melody = new Sample("pute2", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
-		SampleInterface melody2 = new Sample("pute3", new File("data/samples/files/VEE Melody Kits 18 128 BPM Root EMono.wav"));
-		SampleInterface sine = new Sample("pute4", new File("/Users/vincentcouteaux/wavs/triangle.wav"));
-		SampleInterface saw = new Sample("pute5", new File("data/samples/saw2.wav"));
+		SampleInterface beat = new Sample("a", new File("data/samples/files/VEH1 House Loop - 093Mono.wav"));
+		SampleInterface sample = new Sample("b", new File("data/samples/files/VEH1 House Loop - 058Mono.wav"));
+		SampleInterface melody = new Sample("c", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
+		SampleInterface melody2 = new Sample("d", new File("data/samples/files/VEE Melody Kits 18 128 BPM Root EMono.wav"));
+		SampleInterface sine = new Sample("e", new File("/Users/vincentcouteaux/wavConvertis/beep.wav"));
+		SampleInterface clap = new Sample("e", new File("/Users/vincentcouteaux/wavConvertis/VEC1 Clap 012Mono.wav"));
+		SampleInterface saw = new Sample("f", new File("data/samples/saw2.wav"));
 		
 		try {
 			
 			player.playSample(beat);
 			sleep(2);
-			
-			SampleControllerInterface sc3 = player.playSample(beat);
-			player.tweakSample(sc3, EffectType.LPFilter, 5);
-			sleep(0.5);
+			SampleControllerInterface sci = player.playSample(beat);
+			player.tweakSample(sci, EffectType.LPFilter, 5);
 			sleep(3);
 			
-			//player.playSample(sample); 
+			
 			/*
+			player.playSample(beat);
+			sleep(2);
 			
-			Thread.sleep(3*bar);
+			SampleControllerInterface sc3 = player.playSample(beat);
+			//player.tweakSample(sc3, EffectType.Distortion, 50);
+			player.tweakSample(sc3, EffectType.LPFilter, 10);
+			sleep(1);
+			player.tweakSample(sc3, EffectType.LPFilter, 5);
+			sleep(1);
 			
-			SampleControllerInterface sc2 = player.playSample(melody);
-			Thread.sleep(3000);
-			player.tweakSample(sc2, EffectType.Distortion, 35);
-			Thread.sleep(2000);
-			player.tweakSample(sc2, EffectType.Distortion, 65);
-			Thread.sleep(2500);
-			sc2 = player.playSample(melody);
-			player.playSample(sample);
-			Thread.sleep(2000);
-			player.tweakSample(sc2, EffectType.Distortion, 85);
-			Thread.sleep(2000);
-			player.playPause();
-			Thread.sleep(500);
-			player.playPause();
-			Thread.sleep(3500);
+			SampleControllerInterface sc4 = player.playSample(beat);
+			
+			player.tweakSample(sc4, EffectType.HPFilter, 75);
+			sleep(1);
+			player.tweakSample(sc4, EffectType.HPFilter, 100);
+			sleep(7);
 			*/
+			
 		
 			player.destroy();
 		} catch(Exception e) {

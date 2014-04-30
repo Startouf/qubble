@@ -9,7 +9,7 @@ public class SliderDrive extends JSlider implements ChangeListener {
 	WaveForm window;
 	
 	public SliderDrive(WaveForm w) {
-		super(1, 60, 10);
+		super(10, 70, 10);
 		window = w;
 		addChangeListener(this);
 	}

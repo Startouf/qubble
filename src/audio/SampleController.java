@@ -37,19 +37,23 @@ public class SampleController implements SampleControllerInterface {
 		}
 		
 	}
-	
+	/**
+	 * les deux méthodes suivante servent plus
+	 */
 	@Override
 	public int getOffset() {
 		
 		return offSet;
 	}
-
+	
 	@Override
 	public int[] getNextArray(int cursor, int bufferSize) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	/**
+	 * Les deux suivantes non plus, le volume est géré comme un effet.
+	 */
 	@Override
 	public float getVolume() {
 		// TODO Auto-generated method stub
@@ -68,6 +72,10 @@ public class SampleController implements SampleControllerInterface {
 		}
 	}
 	
+	/**
+	 * 
+	 * Copie les échantillons originaux, puis applique tous les effets stockés dans soundEffects
+	 */
 	@Override
 	public void effectNextChunk(int size) {
 		ArrayList<Integer> samplesCopy = (ArrayList<Integer>)samples.clone();
@@ -78,6 +86,10 @@ public class SampleController implements SampleControllerInterface {
 		samples = (ArrayList<Integer>)samplesCopy.clone();
 	}
 	
+	/**
+	 * 
+	 * renvoie l'échantillon suivant. Si on est arrivé au bout, on le signal au player et à la qubble
+	 */
 	@Override
 	public int getNext() {
 		//System.out.println("samples.size(bite) : " + samples.size() + "; relativeCursor : " + relativeCursor);
@@ -88,8 +100,7 @@ public class SampleController implements SampleControllerInterface {
 			return res;
 		}
 		else {
-			System.out.println("samples.size(bite) : " + samples.size());
-			System.out.println("effected.size() : " + effected.size());
+			System.out.println(this.sample.getName() + " has finished playing");
 			if (qi != null) {
 				qi.soundHasFinishedPlaying(this);
 			}
@@ -98,14 +109,26 @@ public class SampleController implements SampleControllerInterface {
 		}
 	}
 	
+	/**
+	 * 
+	 * ajoute un effet.
+	 */
 	public void addEffect(SoundEffectInterface effect) {
 		soundEffects.add((SoundEffect)effect);
 	}
 	
+	/**
+	 * 
+	 * Bon, bin, pas grand chose à dire
+	 */
 	public int getRelativeCursor() {
 		return relativeCursor;
 	}
 	
+	/**
+	 * 
+	 * Retourne le indexieme element des echantillons originaux
+	 */
 	public int get(int index) {
 		if (index < samples.size() && index >= 0) {
 			return samples.get(index);
@@ -113,6 +136,10 @@ public class SampleController implements SampleControllerInterface {
 		else return 0;
 	}
 	
+	/**
+	 * 
+	 * permet d'acceder à un élément non entier d'un tableau au moyen d'une interpolation linéaire
+	 */
 	public int get(double index) { //interpolation linéaire;
 		if (index <= samples.size() - 1 && index >= 0) {
 			int floor = (int) index;
@@ -130,6 +157,10 @@ public class SampleController implements SampleControllerInterface {
 		return get((double) index);
 	}
 	
+	/**
+	 * 
+	 * retourne les indexieme élément des echantillons auxquels on a appliqué les différents effets.
+	 */
 	public int getEffected(int index) {
 		if (index < effected.size() && index >= 0) {
 			return effected.get(index);
@@ -140,6 +171,11 @@ public class SampleController implements SampleControllerInterface {
 	public int size() {
 		return samples.size();
 	}
+	
+	/**
+	 * 
+	 * définie la valeur de l'échantillon index des echantillons affectés.
+	 */
 	public void set(int index, int element) {
 		if (index >= effected.size()) {
 			//System.out.println("plus grand");
@@ -153,13 +189,22 @@ public class SampleController implements SampleControllerInterface {
 		}
 	}
 	
+	/**
+	 * 
+	 * ajoute value à l'échantillon index des échantillons modifiés
+	 */
 	public void addTo(int index, int value) {
+		//System.out.println(index);
 		if (index < size()) {
-			set(index, samples.get(index) + value);
+			set(index, effected.get(index) + value);
 		}
 		else set(index, value);
 	}
 	
+	/**
+	 * 
+	 * pareil qu'au dessus, mais multiplie
+	 */
 	public void multiply(int index, int factor) {
 		if (index < samples.size()) {
 			effected.set(index, (samples.get(index)*factor)/100);
@@ -170,6 +215,11 @@ public class SampleController implements SampleControllerInterface {
 		return sample;
 	}
 	
+	/**
+	 * 
+	 * verifie qu'un certain type d'effet soit déja appliqué à this. renvoie l'effet en question si
+	 * c'est le cas, renvoie null sinon.
+	 */
 	public SoundEffect effectAlreadyIn(EffectType et) {
 		for (int i = 0; i < soundEffects.size(); i++) {
 			if (soundEffects.get(i).getType() == et) {
