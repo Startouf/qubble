@@ -10,6 +10,7 @@ import javax.sound.sampled.SourceDataLine;
 
 import qubject.*;
 import sequencer.Qubble;
+import wav.WavFile;
 
 public class Player implements PlayerInterface, Runnable {
 	
@@ -17,6 +18,9 @@ public class Player implements PlayerInterface, Runnable {
 	
 	private Qubble qubble;
 	
+	private ArrayList<Integer> recording;
+	private boolean isRecording;
+	private File toRecord;
 	
 	private SourceDataLine line;
 	private AudioFormat format;
@@ -27,6 +31,11 @@ public class Player implements PlayerInterface, Runnable {
 	boolean paused;
 	
 	public Player(Qubble qubble) {
+		
+		isRecording = false;
+		toRecord = null;
+		
+		
 		this.qubble = qubble;
 		sampleControllers = new ArrayList<SampleController>();
 		bufferSize = 2048;
@@ -111,7 +120,11 @@ public class Player implements PlayerInterface, Runnable {
 			
 			else d[i] = (short) (dataInt[i]);
 		}
-		//printArray(d);
+		if (isRecording) {
+			for (int i = 0; i < dataInt.length; i++) {
+				recording.add((int)d[i]);
+			}
+		}
 		write(d);
 	}
 	//*/
@@ -231,22 +244,42 @@ public class Player implements PlayerInterface, Runnable {
 
 	@Override
 	public void stopAllSounds() {
+		destroy(); //Cyril, je ne vois pas l'interet de cette méthode
+		
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void startRecording(File file) {
-		// TODO Auto-generated method stub
-		
+		isRecording = true;
+		recording = new ArrayList<Integer>();
+		toRecord = file;
 	}
 
 	@Override
 	public void stopRecording() {
-		// TODO Auto-generated method stub
-		
+		isRecording = false;
+		writeFile(toRecord, recording);
 	}
-
+	
+	public static void writeFile(File file, ArrayList<Integer> samplesTab) {
+		try {
+			int[] newSamples = new int[samplesTab.size()];
+			for (int i = 0 ; i < newSamples.length ; i++) {
+				newSamples[i] = samplesTab.get(i);
+			}
+			WavFile wavFile = WavFile.newWavFile(file, 1, newSamples.length, 16, 44100);
+			
+			wavFile.writeFrames(newSamples, newSamples.length);
+			
+			
+			wavFile.close();
+		}
+		catch (Exception e) {
+			System.out.println("writeFile : " + e.getMessage());
+		}
+	}
 	
 
 }
