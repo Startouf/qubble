@@ -1,47 +1,50 @@
 ##############################################
-##    Bibliographie Module Synthèse 2D/3D   ##
+#    Bibliographie Module Synthèse 2D/3D   
 ##############################################
 
-Cette biblio se fera tout au long de votre module, et comprendra de manière succincte:
-     - 
-##1 Explication du modèle OpenGL pour le fonctionnement du processeur graphique: quels sont les blocs fonctionnels du GPU et
-     à quoi servent-ils
-##2 Principes de base de OpenGL: Représentation des données et des transformations géometriques: Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
-##3 Principes de base de OpenGL: Texture et système de coordonnées
-##4 Principes de base de OpenGL: Modèle de lumière            
-##5 Principes de base de OpenGL: Expliquez les différences entre DisplayList, VeretxArray et VertexBufferObject
+####1- Explication du modèle OpenGL pour le fonctionnement du processeur graphique: quels sont les blocs fonctionnels du GPU et
+à quoi servent-ils
+####2- Principes de base de OpenGL: Représentation des données et des transformations géometriques: Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
+####3- Principes de base de OpenGL: Texture et système de coordonnées
+####4- Principes de base de OpenGL: Modèle de lumière            
+####5- Principes de base de OpenGL: Expliquez les différences entre DisplayList, VertexArray et VertexBufferObject
+####6- Principe de fonctionnement des shaders
+
+
 
 ##############################################
-##1 OpenGL Rendering Pipeline and the GPU
+#1- OpenGL Rendering Pipeline and the GPU
 ##############################################
 
 
-¤OpenGL et le GPU
+## OpenGL et le GPU
 
 OpenGl est un ensemble de fonctions normalisées qui interagissent avec le GPU (Graphic 
 Processing Unit). Comme son nom l’indique le GPU permet de générer des rendus 
 graphiques. Pour ce faire, ce dernier possède une architecture particulière, avec entre 
 autre une forte parallélisassions des circuits qui lui permet d’accomplir un nombre 
 conséquent de tâches pour faire du rendu 3D.
+
 Le pipeline graphique fait référence à toutes les étapes qu’il faut réaliser avant d’obtenir 
 une image 2D ou 3D. Il s’organise en différents groupes :
-- Liste d’affichage : tout ce qui est en rapport avec l’affichage doit être présent dans 
-cette liste pour pouvoir être utilisé
-- Les évaluateurs : permettent de faire des opérations sur les sommets pour 
-engendrer une surface par exemple
-- Les opérations par sommet : les opérations effectuées sur les sommets
-- Les assembleurs primitifs : permet le clipping c’est-à-dire de supprimer les 
-détails à partir d’un certain plan. Par exemple si on représente une ville et ses 
-voitures, on affichera les voitures pour une distance de vue de 500 m, au-delà on 
-ne verra plus rien (pour limiter les calculs graphiques)
-- Les opérations de pixels : convertit le format des pixels pour être approprié à leur tâche
-- L’assembleur de texture : permet de mettre des textures dans l’image 3D
-- La rastérisation : il s’agit de convertir une image vectorielle en une image 
-matricielle. Autrement dit ça convertit les pixels géométriques en fragments
-- Les opérations de fragment : ce sont les opérations qui agissent sur les fragments 
-précédemment cités
 
-¤Qu’est ce qu’un VBO : (mieux détaillé dans ##5)
++ 	Liste d’affichage : tout ce qui est en rapport avec l’affichage doit être présent dans 
+	cette liste pour pouvoir être utilisé
++ 	Les évaluateurs : permettent de faire des opérations sur les sommets pour 
+	engendrer une surface par exemple
++	Les opérations par sommet : les opérations effectuées sur les sommets
++	Les assembleurs primitifs : permet le clipping c’est-à-dire de supprimer les 
+	détails à partir d’un certain plan. Par exemple si on représente une ville et ses 
+	voitures, on affichera les voitures pour une distance de vue de 500 m, au-delà on 
+	ne verra plus rien (pour limiter les calculs graphiques)
++	Les opérations de pixels : convertit le format des pixels pour être approprié à leur tâche
++	L’assembleur de texture : permet de mettre des textures dans l’image 3D
++	La rastérisation : il s’agit de convertir une image vectorielle en une image 
+	matricielle. Autrement dit ça convertit les pixels géométriques en fragments
++	Les opérations de fragment : ce sont les opérations qui agissent sur les fragments 
+	précédemment cités
+
+## Qu’est ce qu’un VBO : (mieux détaillé dans #5)
 
 Un VBO (Vertex Buffer Object) permet d’envoyer des données graphiques 3D vers la 
 carte graphique pour y faire les calculs. On tamponne les données graphiques avant de 
@@ -51,7 +54,7 @@ que la mise en mémoire est primordiale, et d’où l’importance des VBO. Cont
 à la display list ( liste d’affichage) vue précédemment qui ne faisait qu’enregistrer des 
 données sur la carte graphique, le VBO lui permet la mise à jour de ces données
 
-¤Le format des couleurs :
+## Le format des couleurs :
 
 En informatique on parle souvent de RGB : red green blue, qui représente le code 
 couleur utilisé par les pixels. Autrement dit, chaque pixel se verra attribué une certaine 
@@ -63,11 +66,11 @@ de rouge. Les valeurs de R,G, et B vont de 0,0 à 1,0 où 0,0 signifie aucune in
 modèle YUV, pour lequel la composante Y symbolise la luminance et U,V la chrominance
 
 ############################################################################################
-##2 Principes de base de OpenGL: Représentation des données et des transformations géometriques: 
-##	Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
+#2- Principes de base de OpenGL: Représentation des données et des transformations géometriques: 
+Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
 ############################################################################################
 
-¤ Les données de base OpenGL	
+## Les données de base OpenGL	
 Les objets que OpenGl et le GPU savent bien traiter s'appellent les primitives (points, lignes et polygones). 
 Elles crées à partir de sommets, dont on donne coordonnées spatiales entre les instructions glBegin() et glEnd().
 La plupart des surfaces sont construites à partir de triangles. Ainsi l'approximation de surfaces courbées se fait grâce à une décomposition en triangles, 
@@ -77,31 +80,31 @@ L'intérêt d'OpenGL est de représenter ces primitives dans un espace 3D,
 de naviguer dans cet espace 3D et de choisir un point d'observation.
 On peut alors, à l'aide de transformations matricielles, projeter ce qu'on voit depuis ce point d'observation sur un écran 2D. 
 
-¤¤ Les transformations (produits matriciels)
+## Les transformations (produits matriciels)
 
-¤ La transformation viewport
+### La transformation viewport
 
 Permet d'indiquer sur quelle partie de la fenêtre on va occuper
-glViewPort() 
+		glViewPort() 
 
-¤ La transformation de projection (définit l'espace qui sera rendu)
+### La transformation de projection (définit l'espace qui sera rendu)
 
 Projection Perspective :
 Analogie : choisir la lentille de la caméra
 Spécifier la transformation qui rend les objets plus petits quand il sont loin, et borner l'espace qui sera rendu
-glFrustum(-x1,x1,-y1,y1, distance au plan1, distance au plan2) 
+		glFrustum(-x1,x1,-y1,y1, distance au plan1, distance au plan2) 
 
 Projection Orthonormale :
 Analogie : Observation à l'infini
-glOrtho(-x,x,-y,y-,z,z)
+		glOrtho(-x,x,-y,y-,z,z)
 
-¤ Les transformations Viewing 
+### Les transformations Viewing 
 Analogie : positioner et viser avec la caméra
 Faire un reset des transformations (matrice identité :) glLoadIdentity()
 Choisir la translation de la caméra glTranslate[fdl]() et la rotation associée
 OU utiliser la routine glu : gluLookAt() : spécifier la position de la caméra, un pt de référence, et le "haut" de la caméra
 
-¤ Les transformations Modeling
+### Les transformations Modeling
 Analogie : placer les éléments sur la scène
 Positioner, orienter et scaler le modèle utilisé
 On utilise les matrices de transformations entre glBegin() et glEnd()
@@ -110,135 +113,195 @@ On utilisera le stack des matrices glMatrixPush et glMatrixPop
 Note : Si l'on considère un repère absolu, considérer les transformations en ordre inverse
 
 #####################################################################
-##3 Principes de base de OpenGL: Texture et système de coordonnées
+#3 Principes de base de OpenGL: Texture et système de coordonnées
 ####################################################################
 
-#Texture de base
+## Texture de base
 Une texture est un objet 2D que l'on va "plaquer" sur un objet 3D. 
 
 On associe un repère à la texture :
 Le système de coordonnées des textures est parfois appelé "UV coordinates". U et V sont compris entre 0 et 1.
 
 Il faut préciser à OpenGL quelle partie de la texture on souhaite plaquer sur telle surface
-Il suffira de donner pour chaque vertex, à quel niveau de la texture on se situe, et OpenGL fait le reste
+Il suffira de donner pour chaque vertex, à quel niveau de la texture on se situe, et OpenGL fait le reste (interpolation...)
 
-#Mipmaps et filtres
-//TODO
-#Texture et shaders
-//TODO
+!! Ne pas oublier de détruire les textures après utilisation
+
+## Mipmaps et filtres
+Idée : rassembler la même image de plusieurs tailles différentes dans une seule Texture.
+Avantage : meilleure qualité/interpolation entre les tailles
+Des techniques plus avancées permettent d'augmenter la qualité visuelle en se basant sur l'angle de vue, avec des Mipmap non uniformes
+(Les Mipmaps n'étant pas utilisés ici, je me contente d'une description succinte)
+
+## Texture et shaders
+L'idée est d'utiliser le fragment shader pour du traitement avancé sur les textures.
+Le but est de pouvoir trouver, selon la position du fragment, la couleur correspondante sur la texture
+On peut alors exploiter la texture avec d'autres paramètres: 
+Par exemple, du multi-texturing, gérer la transparence, la lumière, etc... 
 
 ##################################################
-##4 Principes de base de OpenGL: Modèle de lumière
+#4- Principes de base de OpenGL: Modèle de lumière
 ##################################################
 
 OpenGL raisonne sur des sources de lumières en RVB            
 Division de l'éclairage en 4 : lumière  émissive, ambiante, diffuse, spéculaire
 
-#Ambient illumination
+## Ambient illumination
 Phénomène physique réel : réflection de la lumière sur les surfaces banales (murs, objects non réfléchissants, etc.)
 Approximation OpenGL : impossible de déterminer l'origine des sources, donc on considère un niveau global de lumière dans l'espace
 Elle est éparpillée dans toutes les directions
 
-#Diffuse light
+## Diffuse light
 Phénomène physique réel : modèle facile utilisé par les télécom, réflection par les isolants
 OpenGL : Lumière qui arrive d'une direction particulière, mais qui est réfléchie dans toutes les directions au contact d'un objet
 
-#Specular light
+## Specular light
 Phénomène physique réel : exemple : effet de peau dans les métaux
 OpenGL : Lumière qui arrive d'une direction particulière, et est renvoyée dans une autre direction particulière
 C'est ce qu'on utilisera pour les points lumineux sur les objets
 
-#Emissive color : 
+## Emissive color : 
 Fonction de gain sur la lumière reçue et éclairement de base, sans augmenter la lumière renvoyée dans l'environnement.
 
-#Affichage de la couleur
+## Affichage de la couleur
 OpenGL gère l'absorption de fréquences via l'absorption de R, V et B de l'objet. La couleur affichée sera en taux de R,V, et B renvoyée par les objets.
 Pour les flux lumineux/sources, (R,V,B) définissent l'intensité de la lumière (~quantité d'énergie, maximum = tous les pixels allumés, blanc)
 Pour les objets, (R,V,B) définissent la partie réfléchie
 Addition des couleurs renvoyées par chaque objet
 
-#Rendering light :
+## Rendering light :
 Définir les vecteur normaux pour chaque surface (vers l'extérieur !)
 Définir des sources
 Choisir un modèle de lumière (lumière ambiante, etc.)
 Définir les propriétés des matériaux
 
 ################################################################################################################
-##5 Principes de base de OpenGL: Expliquez les différences entre DisplayList, VeretxArray et VertexBufferObject
+#5- Principes de base de OpenGL: Expliquez les différences entre DisplayList, VeretxArray et VertexBufferObject
 ###############################################################################################################
 
-# DisplayList
+## DisplayList
 Lorsque l'on fabrique des objets statiques, il est superflu de recalculer tous les paramêtres(vertex, normales, couleur...) à chaque fois que l'on veur render()
 Il est intéressant alors, de charger une DisplayList (~une macro) qui va enregistrer l'état 
 Les étapes sont :
-¤Créer un ID unique pour al liste (avec un équivalent lwjgl des Gl[type])
-    myList = glGenLists(1);
-    // start recording the display list
-    glNewList(myList, GL_COMPILE); // just record for now
-       // start rendering the display list
-       glBegin (GL_POLYGON);
-          ... ... details
-          // finish rendering the stock scene
-       glEnd ();
-    glEndList();
-    //finish creating the display list
 
-¤Render : on demande au GPU de rendre une ou plusieurs listes
-	(transformations)
-	glCallList(theTorus);
-	glFlush();
-	(/transformations)
++	Créer un ID unique pour al liste (avec un équivalent lwjgl des Gl[type])
+    		myList = glGenLists(1);
+    Start recording the display list
+    		glNewList(myList, GL_COMPILE); // just record for now
+    Start rendering the display list
+       		glBegin (GL_POLYGON);
+          	... ... 
+    Finish rendering the stock scene
+       		glEnd ();
+    		glEndList();
++	Render : on demande au GPU de rendre une ou plusieurs listes
+			(transformations)
+			glCallList(theTorus);
+			glFlush();
+			(/transformations)
+	+ executing multiple display lists 
+			glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
++	 La ou on gagne avec les DisplayLists : si des routines complexes sont utilisées
+	+ 	Opérations matricielles
+	+ 	Rasterisation bitmaps et images
+	+ 	Textures (utilisation objet Texture > opengl 1.1)
+	+ 	Propriétés du matériaux / lighting
+	+ 	Pattern polygone pointillés (stipple)
+	+ 	Le texte affiché à l'écran (load fonts)
 
-	- executing multiple display lists 
-		glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
-	
-¤ La ou on gagne avec les DisplayLists : si des routines complexes sont utilisées
-	- Opérations matricielles
-	- Rasterisation bitmaps et images
-	- Textures (utilisation objet Texture > opengl 1.1)
-	- Propriétés du matériaux / lighting
-	- Pattern polygone pointillés (stipple)
-	- Le texte affiché à l'écran (load fonts)
+## Vertex Array Object
 
-# VertexArray
+Il s'agit d'un objet OpenGL qui retient toutes les informations nécessaires au rendu de primitives
 
-//TODO
++	Position
++	Couleur
++	Normales
++	Autres attributs
 
-# VertexBufferedObject (VBO)
+Ces informations ne sont pas stockées directement dans le VAO, mais sous formes de références (buffers/VBO)
+
+En fait les Vertex Array Objects constituent une encapsulation des VBO :
+Sans les VAO, il faut refaire des appels à VertexAttribPointer à chaque fois qu'on attache un VBO différent.
+Le VAO se souvient de ces appels (dès lors que les références ne changent pas), et il suffit alors de binder le VAO et de rendre
+Les VAO peuvent donc être utilisés pour rendre rapidement des gros objets *mesh* constitués de plusieurs sous-parties 
+
+
+## VertexBufferedObject (VBO)
 
 Permet de stocker des données de vertex dans la VRAM (mémoire GPU)
 Permet un accès très rapide par le GPU et évite les échanges CPU <--> GPU qui sont souvent sources de lenteur
 
-¤¤Création d'un VBO
-¤Sous lwjgl, il faut recréer l'équivalent des GLint, GLfloat, etc...
+### Création d'un VBO
++	Sous lwjgl, il faut recréer l'équivalent des GLint, GLfloat, etc...
 	Créer un [Type]Buffer en spécifiant la taille ou un tableau déjà rempli (BufferUtils.create[TYPE]Buffer(SIZE || Float[]);
-¤Réserver un buffer GPU (et récupérer son ID) à l'aide de glGenBuffersARB(buffer) (méthode de ARBVertexBufferObject)
++	Réserver un buffer GPU (et récupérer son ID) à l'aide de glGenBuffersARB(buffer) (méthode de ARBVertexBufferObject)
 	(renvoi d'un int id)				OU avec glGenBuffers(buffer) (méthode de GL15)
-¤Choisir le buffer GPU actif à l'aide de l'ID généré si le GPU sait faire *
-	GL15/ARB.glBindBuffer(GL15/ARB.GL_ARRAY_BUFFER, id); 
-¤Envoyer les données dans le Buffer GPU (équivalent java : [Type]Buffer)
++	Choisir le buffer GPU actif à l'aide de l'ID généré si le GPU sait faire *
+			GL15/ARB.glBindBuffer(GL15/ARB.GL_ARRAY_BUFFER, id); 
++	Envoyer les données dans le Buffer GPU (équivalent java : [Type]Buffer)
  ...En précisant l'utilisation des données et la fréquence de leur usage/modif**
-	GL15/ARB.glBufferData(GL15/ARB.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+			GL15/ARB.glBufferData(GL15/ARB.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	
-**On peut demander si le GPU sait faire avec :
-if(GLContext.getCapabilities().GL_ARB_vertex_buffer_object)	(équivalent GL15 aussi ?)
-*	GL_(STATIC | STREAM | DYNAMIC)_(DRAW | READ | COPY). From the OpenGL docs:
-STATIC - The data store contents will be modified once and used many times.
-STREAM - The data store contents will be modified once and used at most a few times.
-DYNAMIC - The data store contents will be modified repeatedly and used many times.
-DRAW - The data store contents are modified by the application, and used as the source for GL drawing and image specification commands.
-READ - The data store contents are modified by reading data from the GL, and used to return that data when queried by the application.
-COPY - The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.
+On peut demander si le GPU sait faire avec :
+		if(GLContext.getCapabilities().GL_ARB_vertex_buffer_object)	(équivalent GL15 aussi ?)
+GL_(STATIC | STREAM | DYNAMIC)_(DRAW | READ | COPY). From the OpenGL docs:
 
-¤¤Utilisation d'un VBO (render)
-¤Dire au client d'activer les vertexArray, colorArray, etc...
-glEnableClientState(int param) param = GL_VERTEX_ARRAY, GL_COLOR_ARRAY, etc.
-	Pour les Shaders, utiliser glEnableVertexAttribArray(int index)
-¤Spécifier le type d'objet à rendre (Vertex, etc...) et sa position dans l'array
-gl(Vertex|Color|Normal)Pointer(int size, int type, int stride, long offset)
++	STATIC - The data store contents will be modified once and used many times.
++	STREAM - The data store contents will be modified once and used at most a few times.
++	DYNAMIC - The data store contents will be modified repeatedly and used many times.
++	DRAW - The data store contents are modified by the application, and used as the source for GL drawing and image specification commands.
++	READ - The data store contents are modified by reading data from the GL, and used to return that data when queried by the application.
++	COPY - The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.
+
+### Utilisation d'un VBO (render)
++	Dire au client d'activer les vertexArray, colorArray, etc...
+			glEnableClientState(int param) param = GL_VERTEX_ARRAY, GL_COLOR_ARRAY, etc.
+	Pour les Shaders, utiliser 
+			glEnableVertexAttribArray(int index)
++	Spécifier le type d'objet à rendre (Vertex, etc...) et sa position dans l'array
+			gl(Vertex|Color|Normal)Pointer(int size, int type, int stride, long offset)
 	size = dimension (2,3,4), type = GL_[type], stride = distance entre 2 objets du même type (for interleawed arrays), offset = position du premier objet cherché
-	Version shaders : glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
-¤Dire de tracer :
-glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
-	pour les IBO : glDrawElements(int mode, int count, int type, long offset)
+	Version shaders : 
+			glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
++	Dire de tracer :
+			glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
+	pour les IBO : 
+			glDrawElements(int mode, int count, int type, long offset)
 	(Il existe aussi d'autres fonctions : glDrawRangeElements, glMultiDrawArray, glMultiDrawElements
++	!! Ne pas oublier de détruire le VBO après utilisation
+##################################################
+#6- Principes de fonctionnement des shaders
+##################################################
+
+## Le Shader = un programme
+Un shader est un programme écrit en GLSL qui va être éxécuté par le GPU à différents moments. 
+Il caractérise la "programmable pipeline" du GPU : on remplace le traitement normal des primitives par un traitement personnalisé.
+
+## Chargement des Shader
+On regroupe plusieurs shaders dans un "program", qui sera attaché au moment du rendu des primitives / tracé via glDrawElements
++	Compilation des fichiers textes contenant le code des shaders
+	(Il y a donc une pré-phase de lecture du fichier)
++	Creation du programme, on y attache les shaders
++	Definition des attributs : ils permettent de mettre à jour le shader 
+			GL20.glBindAttribLocation(pID, i, attrib[i]);
++	Validation du programme
+
+## Utilisation
+Il suffit de faire 
+		glUseShaderProgram(id) 
+		...
+		// Mise à jour
+		GL20.glUniform[dim][type](address, newValues); 
+		...
+		glUseProgram(0)
+
+!! Ne pas oublier de détruire le shader après utilisation
+
+## Shaders utilisé
+Bien qu'il existe plusieurs types de shaders différents, seuls les vertex shaders et fragment shaders ont été utilisés
+
+### Vertex Shader
+Il est appelé lors de de la création d'un vertex. On peut agir sur sa position et sur sa couleur.
+On peut ensuite transmettre certaines informations aux fragment shader via le mot clé varying/out
+
+!!Note : la syntaxe plus récente utilise les mots clés in/out, plus explicites
