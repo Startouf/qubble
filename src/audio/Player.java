@@ -164,6 +164,12 @@ public class Player implements PlayerInterface, Runnable {
 		}
 	}
 
+	@Override
+	public void mute() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }

@@ -106,4 +106,9 @@ public interface QubbleInterface {
 	 * Quick restart (keep Qubject config)
 	 */
 	public void panic();
+
+	/**
+	 * Mute/unmute
+	 */
+	public void mute();
 }

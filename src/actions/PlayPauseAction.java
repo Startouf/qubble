@@ -34,8 +34,8 @@ private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge small.png
 		else{
 			putValue(NAME, "Pause");
 			putValue(LARGE_ICON_KEY, pauseIcon);
-			play = !play;
 		}
+		play = !play;
 			
 	}
 

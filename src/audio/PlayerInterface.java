@@ -30,4 +30,9 @@ public interface PlayerInterface
 	 * (la destruction se fait par le Garbage Collector, en gros il faut juste terminer les threads)
 	 */
 	public void destroy();
+	
+	/**
+	 * mute ON/OFF
+	 */
+	public void mute();
 }

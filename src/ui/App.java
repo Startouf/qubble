@@ -82,6 +82,7 @@ public class App extends JFrame
 	private final RecordAction recordAction = new RecordAction(this);
 	private final ChangeProjectNameAction changeProjectNameAction = 
 			new ChangeProjectNameAction(this);
+	private final MuteAction muteAction = new MuteAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -318,6 +319,10 @@ public class App extends JFrame
 	
 	public ChangeProjectNameAction getChangeProjectNameAction(){
 		return changeProjectNameAction;
+	}
+	
+	public MuteAction getMuteAction(){
+		return muteAction;
 	}
 
 	public void closeProject(ProjectController project) {

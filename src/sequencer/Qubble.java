@@ -431,4 +431,10 @@ public class Qubble implements QubbleInterface {
 		playerThread = new Thread((Runnable) player, "Player Thread");
 	}
 
+	@Override
+	public void mute() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

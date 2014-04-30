@@ -20,9 +20,9 @@ public class GlobalSettingsPanel extends JPanel
 	private final App app;
 	private final JProgressBar timeBar;
 	private final JSlider volumeSlider;
-	private final JButton toggleGrid, playPause, panic, recordButton, activeProject;
+	private final JButton toggleGrid, playPause, panic, recordButton, activeProject, mute;
 	private JLabel activeProjectLabel, volumeLabel, panicLabel, playPauseLabel, 
-	toggleGridLabel, time, recordLabel;
+	toggleGridLabel, time, recordLabel, muteLabel;
 
 	public GlobalSettingsPanel(App app)
 	{
@@ -65,6 +65,9 @@ public class GlobalSettingsPanel extends JPanel
 		toggleGridLabel = new JLabel("Grille on/off");
 		toggleGridLabel.setHorizontalAlignment(JLabel.CENTER);
 		toggleGrid = new JButton(this.app.getToggleGridAction());
+		toggleGrid.setOpaque(false);
+		toggleGrid.setContentAreaFilled(false);
+		toggleGrid.setBorderPainted(false);
 
 		//Time Slider : Removed because time synchronization is harddddd
 		time = new JLabel("Time");
@@ -72,19 +75,24 @@ public class GlobalSettingsPanel extends JPanel
 		timeBar = new JProgressBar(0,240);
 		timeBar.setStringPainted(true);
 		
+		//Mute
+		mute = new JButton(this.app.getMuteAction());
+		muteLabel = new JLabel("");
+		muteLabel.setHorizontalAlignment(JLabel.CENTER);
+		
 		//Play/Pause Button
 		playPauseLabel = new JLabel("");
 		playPauseLabel.setHorizontalAlignment(JLabel.CENTER);
 		playPause = new JButton();
 		playPause.setAction(this.app.getPlayPauseAction());
-		ImageIcon img = new ImageIcon("data/ui/PauseButton.png");
-		playPause.setSize(img.getIconWidth(), img.getIconHeight());
+//		ImageIcon img = new ImageIcon("data/ui/PauseButton.png");
+//		playPause.setSize(img.getIconWidth(), img.getIconHeight());
 //		playPause.setOpaque(false);
 //		playPause.setContentAreaFilled(false);
 //		playPause.setBorderPainted(false);
 		
 		//Panic button
-		panicLabel = new JLabel("Redémarrer");
+		panicLabel = new JLabel("");
 		panicLabel.setHorizontalAlignment(JLabel.CENTER);
 		panic = new JButton(this.app.getPanicAction());
 		panic.setPreferredSize(new Dimension(200,50));
@@ -98,20 +106,22 @@ public class GlobalSettingsPanel extends JPanel
 
 		//add in order (left to right)
 		add(activeProjectLabel);
-		add(toggleGridLabel);
+		add(muteLabel);
 //		add(volumeLabel);
 //		add(time);
 		add(panicLabel);
 		add(playPauseLabel);
 		add(recordLabel);
+		add(toggleGridLabel);
 
 		add(activeProject);
-		add(toggleGrid);
+		add(mute);
 //		add(volumeSlider);
 //		add(timeBar);
 		add(panic);
 		add(playPause);
 		add(recordButton);
+		add(toggleGrid);
 
 		hideComponentsWhenNoProject();
 		setBackground(Color.WHITE);
