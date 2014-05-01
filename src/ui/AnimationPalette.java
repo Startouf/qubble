@@ -33,7 +33,7 @@ public class AnimationPalette extends QubjectModifierPalette {
 	}
 
 	@Override
-	protected JLabel label() {
+	protected JLabel labelPalette() {
 		return new JLabel("Choisissez une animation");
 	}
 

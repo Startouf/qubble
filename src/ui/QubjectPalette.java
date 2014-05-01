@@ -31,7 +31,7 @@ import qubject.QRInterface;
  * 
  * TODO : use something else than a JFrame. IT'S VERY BAD.
  */
-public class QubjectPalette extends JFrame implements ActionListener
+public class QubjectPalette extends Palette implements ActionListener
 {
 
 	private App app;
@@ -44,13 +44,12 @@ public class QubjectPalette extends JFrame implements ActionListener
 
 	public QubjectPalette(App app) 
 	{
-        	super("Selection de Qubject");
+        	super(app, "Selection de Qubject");
         	this.app=app;
         	this.setMinimumSize(new Dimension (325,80));
         	this.setSize(325, 300);
         	this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         	//TODO : find a way to display the Palette somewhere on the right and next to the Qubject selection line
-        	this.setLocationRelativeTo(null);
         	try {
 				this.selectedQubject = app.getActiveViewQubjectsTab().getActiveQubject();
 			} catch (NotViewQubjectsTabException e1) {

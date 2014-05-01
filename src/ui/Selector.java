@@ -40,7 +40,7 @@ public class Selector extends JPanel {
 	private final App app;
 	//change the specific object (pattern or patternmodifier)
 	private JPanel imagePanel;
-	private ShadowedJLabel label;
+	private JLabel label;
 	private boolean isModifier;
 	private BufferedImage image;
 
@@ -54,8 +54,6 @@ public class Selector extends JPanel {
 	public Selector(App app, MediaInterface qubject){
 		this.app = app;		
 		tune();
-		add(label = new ShadowedJLabel(qubject.getName(), Color.white, new Color(0,0,0,85)), BorderLayout.WEST);
-		label.setFont(new Font("Cambria", Font.BOLD, 16));
 		image = (BufferedImage) qubject.getImage();
 		setMaximumSize(new Dimension(250,250));
 		imagePanel = new JPanel(){
@@ -70,6 +68,9 @@ public class Selector extends JPanel {
 		};
 		imagePanel.setPreferredSize(new Dimension(100,120));
 		imagePanel.setVisible(false);
+		add(label = new JLabel(qubject.getName()), BorderLayout.WEST);
+		label.setFont(new Font("Cambria", Font.BOLD, 16));
+		label.setForeground(Color.white);
 		add(imagePanel);
 		add(new SelectorButton(app,qubject), BorderLayout.EAST);
 		isModifier = false;
@@ -84,17 +85,18 @@ public class Selector extends JPanel {
 		this.app = app;		
 		tune();
 		isModifier = true;
-		add(label = new ShadowedJLabel(getNameFor(qubject, modifier), Color.white, new Color(0,0,0,85)), BorderLayout.WEST);
+		add(label = new JLabel(getNameFor(qubject, modifier)), BorderLayout.WEST);
+		label.setForeground(Color.white);
 		add(new SelectorButton(app, modifier), BorderLayout.EAST);
 	}
 
 	private void tune(){
-		setPreferredSize(new Dimension(400,40));
+		setPreferredSize(new Dimension(350,60));
 		setBorder(BorderFactory.createCompoundBorder(
 				new EtchedBorder(), 
 				new EmptyBorder(10, 20, 10, 20)));
 		setLayout(new BorderLayout());
-		this.setBackground(new Color(25,25,25,85));
+		this.setBackground(new Color(25,25,25,220));
 	}
 	
 	private String getNameFor(MediaInterface qubject, QubjectProperty selectedParam){

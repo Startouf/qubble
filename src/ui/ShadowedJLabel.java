@@ -8,14 +8,16 @@ import javax.swing.JPanel;
 
 public class ShadowedJLabel extends JPanel{
 	public JLabel label;
-	private static Color shadowColor = new Color(0,0,0,85);
-	private static Color fontColor = Color.white;
+	private final Color shadowColor = new Color(0,0,0,85);
+	private final Color fontColor = Color.white;
+	
 	
 	public ShadowedJLabel(String text, Color textColor, Color shadow){
 		super();
 		add (label = new JLabel(text));
 		this.setBackground(shadow);
 		label.setForeground(textColor);
+		tune();
 	}
 	
 	public ShadowedJLabel(String text){
@@ -23,6 +25,13 @@ public class ShadowedJLabel extends JPanel{
 		add (label = new JLabel(text));
 		this.setBackground(shadowColor);
 		label.setForeground(fontColor);
+		tune();
+	}
+	
+	private void tune(){
+		label.setVerticalAlignment(JLabel.CENTER);
+		label.setVerticalTextPosition(JLabel.CENTER);
+		this.setAlignmentY(CENTER_ALIGNMENT);
 	}
 	
 	public void setText(String text){
