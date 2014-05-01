@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import main.ImageDetection;
+
 /**
  * Représentation du composante connexe
  * Contient les coordonnées extrénums et le pt central
@@ -170,10 +172,12 @@ public class ConnexeComponent {
 			}
 		}
 			if(save > SQUARETRIGGER ){
-				System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
+				if(ImageDetection.PRINTDEBUG)
+					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
 				return true;
 			}else{
-				System.out.println("False : " + save);
+				if(ImageDetection.PRINTDEBUG)
+					System.out.println("False : " + save);
 				return false;
 			}
 	}

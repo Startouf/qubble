@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import org.omg.CORBA._PolicyStub;
 
-import motionEstimation.MotionEstimation;
+import motionEstimation.MotionDetection;
 import qrDetection.QR_Detection;
 import sequencer.QubbleInterface;
 import camera.Camera;
@@ -24,11 +24,12 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	private Thread t_webcam, t_qr, t_mo;
 	private Camera webcam;
 	private QR_Detection qr;
-	private MotionEstimation mo;
+	private MotionDetection mo;
 	
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
 	private boolean qrDetectionDone, motionEstimationDone;
+	public final static boolean PRINTDEBUG = true;
 	
 	// Gestion de l'interface graphique de suivi
 	private Window window;
@@ -46,10 +47,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	
 	
 	public ImageDetection(QubbleInterface qubble){
+		
 		this.qubble = qubble; 
 		webcam = new Camera(this);
 		qr = new QR_Detection(this);
-		mo = new MotionEstimation(this);
+		mo = new MotionDetection(this);
 		t_webcam = new Thread(webcam);
 		t_qr = new Thread(qr);
 		t_mo = new Thread(mo);
