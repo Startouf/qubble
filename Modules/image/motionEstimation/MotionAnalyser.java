@@ -119,7 +119,6 @@ public class MotionAnalyser {
 								min = err;
 								bestX=j; //-lref.get(i).getX();
 								bestY=k; //-lref.get(i).getY();
-
 							}
 							if(ImageDetection.PRINTDEBUG)
 								System.out.println("Move : " + j + " " + k + "  Erreur : " + err);
@@ -128,6 +127,7 @@ public class MotionAnalyser {
 						}
 					}
 				}
+		// Valeur du block central !!!
 		x=bestX; //-lref.get(i).getX();
 		y=bestY;
 		}

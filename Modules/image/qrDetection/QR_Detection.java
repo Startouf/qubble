@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import sequencer.QubbleInterface;
 
+import main.ImageDetection;
 import main.ImageDetectionInterface;
 import main.TerminateThread;
 
@@ -87,11 +88,14 @@ public class QR_Detection implements Runnable, TerminateThread{
 					
 		long endTime = System.currentTimeMillis();
 		
-	/*	System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
-		System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
-		System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
-		System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
-		System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
+	/*
+	 	if(ImageDetection.PRINTDEBUG){
+		 	System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
+			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
+			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
+			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
+		}
 		*/
 		controlImage.setQrDetectionDone(true);
 	}
