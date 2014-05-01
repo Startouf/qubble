@@ -9,10 +9,17 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.swing.AbstractAction;
 
+import qubject.MediaInterface;
 import qubject.SampleInterface;
 
 import ui.App;
+import ui.NotViewQubjectsTabException;
+import ui.SamplePalette;
+import ui.SoundEffectPalette;
+import audio.EffectType;
 import audio.Player;
+import audio.SampleControllerInterface;
+import audio.SoundEffect;
 
 /**
  * Use this action to play a sound from the SamplePalette Play button !
@@ -23,28 +30,33 @@ import audio.Player;
 public class PlaySampleAction extends AbstractAction
 {
 	private App app;
+	private static final Player player = new Player(null); 
 	
 	public PlaySampleAction(App app){
 		this.app = app;
 		putValue(NAME, "Essayer le son");
 	}
-
-
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0){ 
-		try {
-			AudioInputStream sound = AudioSystem.getAudioInputStream
-					(((SampleInterface)this.app.getSamplePalette().getSelectedModifier()).getFile());
-
-			// load the sound into memory (a Clip)
-			DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());
-			Clip clip = (Clip) AudioSystem.getLine(info);
-			clip.open(sound);
-			// play the sound clip
-			clip.start();
-		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
+		if(arg0.getSource() instanceof SamplePalette){
+			player.playSample(
+					(((SampleInterface)this.app.getSamplePalette().getSelectedModifier())));
+		} else if (arg0.getSource() instanceof SoundEffectPalette){
+			//Grab the current qubject of the active view and play its sampleWhenPlayed Effect
+			MediaInterface qubject;
+			try {
+				qubject = this.app.getActiveViewQubjectsTab().getActiveQubject();
+			} catch (NotViewQubjectsTabException e) {
+				//TODO : Show error message no activeViewQUbjects
+				return;
+			}
+			
+			SampleControllerInterface controller = player.playSample(
+					qubject.getSampleWhenPlayed());
+			EffectType effect = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
+			int amount = this.app.getSoundEffectPalette().getAmount();
+			player.tweakSample(controller, effect, amount);
 		}
 	}
 }

@@ -23,6 +23,8 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.swing.*;
 
@@ -41,6 +43,8 @@ public class MainPanel extends JPanel
 	private final GlobalSettingsPanel globalSettingsPanel;
 	private static final Icon closeIcon = new ImageIcon("data/ui/closeTab.png"); 
 	public static final BufferedImage backgroundImage;
+	private final Hashtable<ProjectController, ArrayList<ViewQubjects>> viewQubjectsTab=
+			new Hashtable<ProjectController, ArrayList<ViewQubjects>>();
 	
 	static{
 		BufferedImage tryImage = null;
@@ -81,7 +85,7 @@ public class MainPanel extends JPanel
 	}
 
 	public void addCloseableTab(String title, final Component tab){
-
+		
 		// Add the tab to the pane without any label
 		settingsTabs.addTab(null, tab);
 		int pos = settingsTabs.indexOfComponent(tab);
@@ -149,7 +153,7 @@ public class MainPanel extends JPanel
 	public void setConfigForQubject(ProjectController project, MediaInterface qubject, 
 			QubjectProperty prop, QubjectModifierInterface modifier){
 		for (int i=0; i< settingsTabs.getTabCount(); i++){
-			Component p = settingsTabs.getTabComponentAt(i);
+			Component p = settingsTabs.getComponentAt(i);
 			if (p instanceof ViewQubjects){
 				ViewQubjects view = (ViewQubjects)p;
 				if(view.isLinkedToProject(project)){
@@ -161,7 +165,7 @@ public class MainPanel extends JPanel
 
 	public void closeTabsRelatedTo(ProjectController project) {
 		for(int i=0; i< settingsTabs.getTabCount(); i++){
-			Component c = settingsTabs.getTabComponentAt(i);
+			Component c = settingsTabs.getComponentAt(i);
 			if (c instanceof ViewQubjects){
 				ViewQubjects view = (ViewQubjects)settingsTabs.getTabComponentAt(i);
 				if(view.isLinkedToProject(project)){

@@ -29,7 +29,7 @@ public class SamplePalette extends QubjectModifierPalette
 	}
 
 	@Override
-	protected JLabel label() {
+	protected JLabel labelPalette() {
 		return new JLabel("Choix du sample joué");
 	}
 
