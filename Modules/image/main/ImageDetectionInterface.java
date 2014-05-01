@@ -61,6 +61,20 @@ public interface ImageDetectionInterface{
 	
 	public int getWidthCamera();
 	public int getHeightCamera();
-
+	
+	/**
+	 * Play/Pause de la caméra
+	 */
+	public void switchCamera();
+	
+	/**
+	 * Play/Pause de la détection de QR
+	 */
+	public void switchDetection();
+	
+	/**
+	 * Play/Pause de la détection de mouvement
+	 */
+	public void switchMotion();
 		
 }

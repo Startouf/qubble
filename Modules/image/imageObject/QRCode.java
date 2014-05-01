@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class QRCode {
 	// Taille de la fenêtre pour définir si une zone contient une composante (demi-longueur)
-	public static int sizeWindow = 2;
+	public int SIZEWINDOW = 2, TRESH;
 	
 	private ConnexeComponent border;
 	//private ArrayList<ConnexeComponent> landmark;
@@ -35,6 +35,25 @@ public class QRCode {
 	}
 	
 	/**
+	 * Renvoie le seuil moyen de la zone étudiée
+	 * Coordonnée du centre de la fenêtre à seuiller  
+	 * @param x
+	 * @param y
+	 */
+	private int getTresh(int x, int y, HashMap<Point, Boolean> target){
+		int moy = 0;
+		for(int i = x-SIZEWINDOW ; i<x+SIZEWINDOW ; i++){
+			for(int j = y-SIZEWINDOW ; j<y+SIZEWINDOW ; j++){
+				if(i>=0 && i<greyImage.getWidth() && j >= 0 && j<greyImage.getHeight()){
+						moy += (greyImage.getRGB(i, j) & 0xff);
+				}
+			}
+		}
+		target.put(new Point(x, y), true);
+		return moy/(SIZEWINDOW*SIZEWINDOW*4);
+	}
+	
+	/**
 	 * Renvoie true si la zone est noir
 	 * Fais une moyenne sur une zone de 4*4 pixels
 	 * @param x
@@ -43,19 +62,18 @@ public class QRCode {
 	 */
 	private boolean isBlack(int x, int y, HashMap<Point, Boolean> target){
 		int moy = 0;
-		
-		if(sizeWindow>0){
-			for(int i = x-sizeWindow ; i<x+sizeWindow ; i++){
-				for(int j = y-sizeWindow ; j<y+sizeWindow ; j++){
+	
+			for(int i = x-SIZEWINDOW ; i<x+SIZEWINDOW ; i++){
+				for(int j = y-SIZEWINDOW ; j<y+SIZEWINDOW ; j++){
 					if(i>=0 && i<greyImage.getWidth() && j >= 0 && j<greyImage.getHeight()){
-						if((greyImage.getRGB(i, j) & 0xff) < 120){
+						if((greyImage.getRGB(i, j) & 0xff) < TRESH){
 							moy++;
 						}
 					}
 				}
 			}
 			
-			if(moy/(float)(Math.pow(sizeWindow*2, 2)) > 0.5){
+			if(moy/(float)(Math.pow(SIZEWINDOW*2, 2)) > 0.5){
 				target.put(new Point(x, y), true);
 				return true;
 			}
@@ -65,30 +83,6 @@ public class QRCode {
 				//g.fillRect(x -sizeWindow, y -sizeWindow, sizeWindow*2, sizeWindow*2);
 				return false;
 			}
-			// Recherche sur 1 pixel
-		}else if(sizeWindow == 0){
-					if(x>=0 && x<greyImage.getWidth() && y >= 0 && y<greyImage.getHeight()){
-						if(greyImage.getRGB(x, y) == Color.BLACK.getRGB()){
-							moy++;
-						}
-					}
-			
-			if(moy > 0.5){
-				target.put(new Point(x, y), true);
-				//g.setColor(Color.red);
-				//g.fillRect(x , y , 1, 1);
-				return true;
-			}
-			else{
-				target.put(new Point(x, y), false);
-				//g.setColor(Color.blue);
-				//g.fillRect(x , y , 1, 1);
-				return false;
-			}
-		}else
-			return false;
-
-			
 	}
 	
 	
@@ -104,21 +98,28 @@ public class QRCode {
 		// Coordonnées du point qui controle la valeur de la zone
 		int targetX = 0, targetY = 0;
 		// Coordonnées de la droite directrice
-		int baseX = (xCenter - border.getCorner(0).getX())/3;
-		int baseY = (yCenter - border.getCorner(0).getY())/3;
+		int baseX = (xCenter - border.getCorner().getX())/3;
+		int baseY = (yCenter - border.getCorner().getY())/3;
 		
 		targetX = oldPointX =  (xCenter - baseX);
 		targetY = oldPointY =  (yCenter - baseY);
 				
 		int valeur = 0, masque = 1;
 		
+		// Fixer un seuil qui s'adapte à l'image
+		// Prend en référence le coin pour la couleur noire et le vide pour la couleur blanche
+		int treshIsWhite = getTresh((xCenter - 2*baseX), (yCenter - 2*baseY), target);
+		int treshIsBack = getTresh((xCenter - 4*baseX), (yCenter - 4*baseY), target);
+		TRESH = (treshIsWhite+treshIsBack)/2;
+		System.out.println(TRESH);
+		// Calcul du point central
 		if(isBlack(xCenter, yCenter, target)){
 			valeur |= masque; 
 		}
 		masque = masque << 1;
 		
 		for(int j = 0 ; j < 4; j++){
-			
+				
 				if(isBlack(targetX, targetY, target)){
 					valeur |= masque; 
 				}

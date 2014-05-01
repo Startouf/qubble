@@ -12,6 +12,8 @@ import com.googlecode.javacv.FFmpegFrameGrabber;
 import com.googlecode.javacv.FrameGrabber;
 import com.googlecode.javacv.FrameGrabber.Exception;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
+
+import static com.googlecode.javacv.cpp.opencv_highgui.*;
 /**
  * Gestion de l'acquisition de la caméra dans un thread séparé
  * @author eric
@@ -28,7 +30,7 @@ public class Camera implements Runnable, TerminateThread{
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
-		pause = false;
+		pause = true;
 		this.controlImage = controlImage;
 		grabber = null;
 		// Tentative de démarage de la caméra
@@ -118,5 +120,14 @@ public class Camera implements Runnable, TerminateThread{
 	@Override
 	public void terminate() {
 		run = false;
+	}
+	
+	public boolean switchPause(){
+		if(pause){
+			pause = false;
+		}else{
+			pause = true;
+		}
+		return pause;
 	}
 }

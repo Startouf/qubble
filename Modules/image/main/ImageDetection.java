@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.omg.CORBA._PolicyStub;
+
 import motionEstimation.MotionEstimation;
 import qrDetection.QR_Detection;
 import sequencer.QubbleInterface;
@@ -56,7 +58,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		addedQubbleList = new HashMap<Integer, Point>();
 		addedQubbleList.put(888, new Point(640, 360));
 		if(true){
-			window = new Window(qr, mo, 5, 42 ,80);
+			window = new Window(this,qr, mo, 5, 42 ,80);
 		}
 		
 		mo.addQubbleToList(640, 360, 22);
@@ -130,7 +132,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		
 		HashMap<Integer, Point> qrFound = qr.getQrAnal().getQRList();
 		HashMap<Integer, Point> temp = new HashMap<Integer, Point>();
-		
+		Point pt, pt2;
 		// Ajout des nouveaux qubjects détectés
 		for(int id : qubbleList.keySet()){
 			// Alerter de la suppression des qubjects
@@ -140,6 +142,13 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 			}else{
 				// Le qubject est déjà détecté, on le garde dans la future liste
 				temp.put(id, qrFound.get(id));
+				
+				// Détection du mouvement
+				pt = qrFound.get(id);
+				pt2 = qubbleList.get(id);
+				if(Math.abs(pt.getX()-pt2.getX()) > 10 || Math.abs(pt.getY()-pt2.getY()) > 10)
+					qubble.QubjectHasMoved(id, qrFound.get(id));
+				
 				// On l'enlève de la liste des qr détectés
 				qrFound.remove(id);
 			}
@@ -147,7 +156,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		}
 		// On rajoute les éléments restants et on alerte le processus principale
 		for(int idNew : qrFound.keySet()){
-			Point pt = qrFound.get(idNew);
+			pt = qrFound.get(idNew);
 			qubble.QubjectDetected(idNew, pt);
 			temp.put(idNew, pt);
 			addedQubbleList.put(idNew, pt);
@@ -194,6 +203,21 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 	
 	public int getHeightCamera(){
 		return webcam.IMAGEHEIGHT;
+	}
+
+	@Override
+	public void switchCamera() {
+		webcam.switchPause();
+	}
+
+	@Override
+	public void switchDetection() {
+		qr.switchPause();
+	}
+
+	@Override
+	public void switchMotion() {
+		mo.switchPause();
 	}
 
 }

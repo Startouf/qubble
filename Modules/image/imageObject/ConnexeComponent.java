@@ -18,8 +18,8 @@ public class ConnexeComponent {
 	public static float SQUARETRIGGER = (float) 0.80;
 	
 	private ArrayList<Point> list;
-	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
-	private Point[] corner = new Point[4];
+	private int xCenter, yCenter;
+	private  Point corner;
 	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
@@ -59,10 +59,6 @@ public class ConnexeComponent {
 	
 	public ConnexeComponent(){
 		list = new ArrayList<Point>();
-		xMax = 0;
-		yMax = 0;
-		xMin = Window.imageWidth;
-		yMin = Window.imageHeight;
 		yCenter = xCenter = -1;
 	}
 	
@@ -74,30 +70,6 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			int i = 0;
-			while(i < 4 && corner[i] == null){
-				corner[i] = pt;
-				i++;
-			}
-			// Coin à gauche
-			if(corner[0].getX() > pt.getX()){
-				corner[0] = pt;
-			}
-			
-			// Coin à droite
-			if(corner[1].getX() < pt.getX()){
-				corner[1] = pt;
-			}
-			
-			// Coin en haut
-			if(corner[2].getY() > pt.getY()){
-				corner[2] = pt;
-			}
-			
-			// Coin en bas
-			if(corner[3].getY() < pt.getY()){
-				corner[3] = pt;
-			}
 
 		}
 		
@@ -145,7 +117,7 @@ public class ConnexeComponent {
 			}
 			if(distanceMax < distance){
 				distanceMax = (int)distance;
-				corner[0] = pt;
+				corner = pt;
 			}
 		}
 		
@@ -233,41 +205,7 @@ public class ConnexeComponent {
 		
 	}
 	
-	/**
-	 * Retourne la taille du coté du carré
-	 */
-	@Deprecated
-	public int getLength(){
-		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
-		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
-		return 	(int) (Math.sqrt(Math.pow(corner[0].getX() - corner[2].getX(), 2) + Math.pow(corner[0].getY() - corner[2].getY(), 2)));
-	}
 	
-	/**
-	 * Retourne la distance entre le premier point (un coin et le centre)
-	 * @return
-	 */
-	@Deprecated
-	public int getRayon(){
-		return 	0;
-	}
-
-	public int getxMax() {
-		return xMax;
-	}
-
-	public int getxMin() {
-		return xMin;
-	}
-
-	public int getyMax() {
-		return yMax;
-	}
-
-	public int getyMin() {
-		return yMin;
-	}
-
 	public int getxCenter() {
 		if(xCenter < 0 || yCenter < 0){
 			this.getCenter();
@@ -282,11 +220,8 @@ public class ConnexeComponent {
 		return yCenter;
 	}
 	
-	public Point getCorner(int id){
-		if(id < 4 && id >= 0){
-			return corner[id];
-		}else
-			return null;
+	public Point getCorner(){
+		return corner;
 	}
 	
 

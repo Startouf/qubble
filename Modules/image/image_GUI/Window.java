@@ -52,15 +52,19 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	// Menu 
 	private JMenuBar mainMenu;
 	private JMenu fichier, display, run;
-	private JMenuItem ouvrir, motion, measure, motionRun, qrRun;
+	private JMenuItem ouvrir, motion, measure, motionRun, qrRun, cameraRun;
 	
 	private File currentFolder;
 	
+	private boolean printMeasure, printMotion;
 	
-	public Window(QR_Detection controlDetection, MotionEstimation controlMotion, int binary, int rayon, int square){
+	public Window(ImageDetectionInterface detectionInterface, QR_Detection controlDetection, MotionEstimation controlMotion, int binary, int rayon, int square){
+		this.detectionInterface = detectionInterface;
 		this.controlDetection = controlDetection;
 		this.controlMotion = controlMotion;
 		init(binary, rayon, square);
+		printMeasure = false;
+		printMotion = false;
 	}
 	
 	/**
@@ -86,6 +90,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		measure.addActionListener(this);
 		
 		run = new JMenu("Exécution");
+		cameraRun = new JMenuItem("Camera");
+		cameraRun.addActionListener(this);
 		motionRun = new JMenuItem("Mouvement");
 		motionRun.addActionListener(this);
 		qrRun = new JMenuItem("Detection QR");
@@ -95,8 +101,9 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		fichier.add(ouvrir);
 		display.add(motion);
 		display.add(measure);
-		run.add(motionRun);
+		run.add(cameraRun);
 		run.add(qrRun);
+		run.add(motionRun);
 		mainMenu.add(fichier);
 		mainMenu.add(display);
 		mainMenu.add(run);
@@ -221,6 +228,21 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		if(e.getSource() == motionRun){
 			controlMotion.switchPause();
 		}
+		if(e.getSource() == cameraRun){
+			detectionInterface.switchCamera();
+		}
+		if(e.getSource() == motion){
+			if(printMotion){
+				printMotion = false;
+			}else
+				printMotion = true;
+		}
+		if(e.getSource() == measure){
+			if(printMeasure){
+				printMeasure = false;
+			}else
+				printMeasure = true;
+		}
 		affiche();
 	}
 
@@ -328,13 +350,17 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		Graphics g = cameraToPrint.getGraphics();
 		g.drawImage(camera, 0, 0, null);
 		
-		g.setColor(Color.red);
+		if(printMeasure){
+			g.setColor(Color.red);
+			
+			g.drawLine(100, 100, 120, 100);
+			g.drawLine(100, 200, 160, 200);
+			g.drawLine(100, 300, 200, 300);
+		}
 		
-		g.drawLine(100, 100, 120, 100);
-		g.drawLine(100, 200, 160, 200);
-		g.drawLine(100, 300, 200, 300);
-		
-		//controlMotion.addMotionOnImage(cameraToPrint);
+		if(printMotion){
+			controlMotion.addMotionOnImage(cameraToPrint);
+		}
 		
 		imageView.setCameraImage(cameraToPrint);
 		affiche();
