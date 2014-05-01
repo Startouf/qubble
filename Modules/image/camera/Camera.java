@@ -8,10 +8,10 @@ import javax.imageio.ImageIO;
 import main.ImageDetectionInterface;
 import main.TerminateThread;
 
-import com.googlecode.javacv.FFmpegFrameGrabber;
 import com.googlecode.javacv.FrameGrabber;
 import com.googlecode.javacv.FrameGrabber.Exception;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_highgui;
 /**
  * Gestion de l'acquisition de la caméra dans un thread séparé
  * @author eric
@@ -39,6 +39,7 @@ public class Camera implements Runnable, TerminateThread{
 			//grabber.setFormat("video4linux2");
 			// Windows 2 : USB
 			grabber = (FrameGrabber.createDefault(1));
+			System.out.println("OK");
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setImageHeight(IMAGEHEIGHT);
@@ -68,10 +69,10 @@ public class Camera implements Runnable, TerminateThread{
     			try {
     				tableImage = grabber.grab();
     				if(tableImage != null){
-    	    			//cvSaveImage("picture.jpg", tableImage);
+//    	    			opencv_highgui.cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
-    					//System.out.println("Nouvelle image !");
+//    					System.out.println("Nouvelle image !");
     					
     	    		}
     			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {

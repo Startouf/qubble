@@ -395,7 +395,6 @@ public class Qubble implements QubbleInterface {
 			hasStarted = true;
 			isPlaying = true;
 			startTime = Sys.getTime();
-			cameraThread.start();
 			projection.playPause();
 		}
 	}
@@ -412,6 +411,7 @@ public class Qubble implements QubbleInterface {
 		if(!hasStarted){
 			cameraThread.setPriority(Thread.MIN_PRIORITY);
 			playerThread.setPriority(Thread.MAX_PRIORITY);
+			cameraThread.start();
 			projectionThread.start();
 			playerThread.start();
 		}
