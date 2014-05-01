@@ -110,4 +110,9 @@ public interface QubbleInterface {
 	 * In case the Qubble is desynced (openGL/audio)
 	 */
 	public void resynchronize();
+
+	/**
+	 * Mute/unmute
+	 */
+	public void mute();
 }

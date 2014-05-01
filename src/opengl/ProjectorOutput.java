@@ -57,14 +57,12 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	private final ArrayList<AnimationControllerInterface> needsToBeLoaded
 		= new ArrayList<AnimationControllerInterface>(5);  //Nombre Empirique
 	
-	private final ArrayList<Dimension> occupiedTiles = new ArrayList<Dimension>();	//OLD : to remove ASAP
-	
 	private final Hashtable<QRInterface, QubjectTracker> trackers;
 	
 	/**
 	 * Volatile because those booleans are changed by other Threads
 	 */
-	public volatile boolean isPlaying = false, hasStarted = false;
+	public volatile boolean isPlaying = false, hasStarted = false, closeRequested = false;
 	/**
 	 * Note : dt is always computed even when it's paused
 	 * (The only thing that matters is whether we update the animations with dt or not :) )
@@ -94,7 +92,8 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     	loadResources();
     	
     	//TODO : add another closeRequested boolean check for external change (project closed...)
-        while(!Display.isCloseRequested()){   
+        //while(!Display.isCloseRequested()){
+    	while(!closeRequested){
         	loadNewAnims();
         	glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
@@ -122,19 +121,19 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void highlightQubject(Point qubjectPos) {
-		Dimension tile = new Dimension(Qubble.getTile(qubjectPos), qubjectPos.getY());
-		Iterator<Dimension> iter = occupiedTiles.iterator();
-		while(iter.hasNext()){
-			Dimension dim = iter.next();
-			if (dim.width == tile.width && dim.height == tile.height){
-				//If the tile is already highlighted, remove it
-				iter.remove();
-				return;
-			}
-		}
-		
-		//If not found, then highlight the tile
-		occupiedTiles.add(tile);
+//		Dimension tile = new Dimension(Qubble.getTile(qubjectPos), qubjectPos.getY());
+//		Iterator<Dimension> iter = occupiedTiles.iterator();
+//		while(iter.hasNext()){
+//			Dimension dim = iter.next();
+//			if (dim.width == tile.width && dim.height == tile.height){
+//				//If the tile is already highlighted, remove it
+//				iter.remove();
+//				return;
+//			}
+//		}
+//		
+//		//If not found, then highlight the tile
+//		occupiedTiles.add(tile);
 	}
 
 	/**
@@ -193,13 +192,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		}
 		
 		//Highlight tiles where qubjects are present
-		GL11.glColor3f(0.5f, 0f, 0f);
-		synchronized(occupiedTiles){
-			for (Dimension dim : occupiedTiles){
-				BaseRoutines.HighlightTile(dim);
-			}
-
-		}
+//		GL11.glColor3f(0.5f, 0f, 0f);
+//		synchronized(occupiedTiles){
+//			for (Dimension dim : occupiedTiles){
+//				BaseRoutines.HighlightTile(dim);
+//			}
+//
+//		}
 		
 		//Cursor 
 		//TODO : Curseur stylé avec shader
@@ -348,7 +347,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 
 	@Override
 	public void terminate() {
-		//TODO : use boolean to request close (2x bool :one to check user didn't click on X, on to check user didn't close project)
+		closeRequested = true;
 	}
 
 	/**

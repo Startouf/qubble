@@ -51,7 +51,10 @@ public class QubjectPalette extends JFrame implements ActionListener
         	this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         	//TODO : find a way to display the Palette somewhere on the right and next to the Qubject selection line
         	this.setLocationRelativeTo(null);
-        	this.selectedQubject = app.getActiveTab().getActiveQubject();
+        	try {
+				this.selectedQubject = app.getActiveViewQubjectsTab().getActiveQubject();
+			} catch (NotViewQubjectsTabException e1) {
+			}
         	
         	//Hide on close with a window listener
         	this.addWindowListener(new WindowAdapter() {
@@ -69,7 +72,7 @@ public class QubjectPalette extends JFrame implements ActionListener
         	
         	this.setContentPane(qubjectSelection);
         	pack();
-        	this.setVisible(true); 
+        	this.setVisible(false); 
 	}
 
 	/**

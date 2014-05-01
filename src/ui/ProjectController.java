@@ -2,20 +2,19 @@ package ui;
 
 import java.util.ArrayList;
 
-import qubject.MediaInterface;
 import qubject.Qubject;
 import sequencer.QubbleInterface;
+import database.SaveProject;
 
 public class ProjectController implements ProjectControllerInterface
 {
 	private final App app;
 	private final QubbleInterface qubble;
-	private String projectName;
+	private String projectName = "Nouveau projet";
 	
 	public ProjectController(App app, QubbleInterface qubble){
 		this.app=app;
 		this.qubble = qubble;
-		this.projectName = "New Project";
 	}
 	
 	public ProjectController(App app, QubbleInterface qubble, String name){
@@ -45,15 +44,13 @@ public class ProjectController implements ProjectControllerInterface
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
+	public void save(String path) {
+		SaveProject.saveTo(path, this,  qubble);
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		this.qubble.close();
 	}
 
 	@Override

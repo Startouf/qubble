@@ -9,7 +9,7 @@ package qubject;
 
 public enum QubjectProperty {
 	SAMPLE_WHEN_PLAYED("Son quand joué"),
-	AUDIO_EFFECT_Y_AXIS("Effet quand translaté en Y"),
+	AUDIO_EFFECT_Y_AXIS("Effet de translation Y"),
 	AUDIO_EFFECT_ROTATION("Effet quand tourné"),
 	ANIM_WHEN_DETECTED("Anim. quand détecté"),
 	ANIM_WHEN_PLAYED("Anim. quand joué");

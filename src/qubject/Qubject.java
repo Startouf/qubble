@@ -1,7 +1,13 @@
 package qubject;
 
+import java.awt.Image;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.util.Point;
 
@@ -23,6 +29,7 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	private final String name;
 	private final int bitIdentifier;
 	private Point coords = new Point(0,0);
+	private final Image image;
 
 	/**
 	 * Rotation value used by Qubble in float radians
@@ -47,10 +54,12 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	 * @param name
 	 * @param bitIdentifier
 	 */
-	public Qubject(String name, int bitIdentifier){
+	public Qubject(String name, int bitIdentifier, Image image){
 		this.name = name;
 		this.bitIdentifier = bitIdentifier;
-		//Should not be used
+		//TODO : assign default sample/effect/animation effects 
+		//(done here or somewhere else ?)
+		this.image = image;
 	}
 
 	/**
@@ -67,6 +76,21 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	public Qubject(String name, int bitIdentifier, SampleInterface sampleWhenPlayed, 
 			EffectType yAxisModifier, EffectType rotationModifier,
 			AnimationInterface whenPutOnTable,
+			AnimationInterface animationwhenPlayed,
+			Image image){
+		this.name = name;
+		this.bitIdentifier = bitIdentifier;
+		this.animationwhenPlayed = animationwhenPlayed;
+		this.rotationModifier = rotationModifier;
+		this.sampleWhenPlayed = sampleWhenPlayed;
+		this.whenPutOnTable = whenPutOnTable;
+		this.yAxisModifier = yAxisModifier;
+		this.image = image;
+	}
+	
+	public Qubject(String name, int bitIdentifier, SampleInterface sampleWhenPlayed, 
+			EffectType yAxisModifier, EffectType rotationModifier,
+			AnimationInterface whenPutOnTable,
 			AnimationInterface animationwhenPlayed){
 		this.name = name;
 		this.bitIdentifier = bitIdentifier;
@@ -75,6 +99,31 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 		this.sampleWhenPlayed = sampleWhenPlayed;
 		this.whenPutOnTable = whenPutOnTable;
 		this.yAxisModifier = yAxisModifier;
+		Image tryImage = null;
+		try {
+			tryImage = ImageIO.read(new FileInputStream("data/qubjects/default.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.image = tryImage;
+	}
+	
+	public Qubject(String name, int bitIdentifier, int lastX, int lastY, SampleInterface sampleWhenPlayed, 
+			EffectType yAxisModifier, EffectType rotationModifier,
+			AnimationInterface whenPutOnTable,
+			AnimationInterface animationwhenPlayed, 
+			Image image){
+		this.name = name;
+		this.coords = new Point(lastX, lastY);
+		this.bitIdentifier = bitIdentifier;
+		this.animationwhenPlayed = animationwhenPlayed;
+		this.rotationModifier = rotationModifier;
+		this.sampleWhenPlayed = sampleWhenPlayed;
+		this.whenPutOnTable = whenPutOnTable;
+		this.yAxisModifier = yAxisModifier;
+		this.image = image;
 	}
 	
 	public Qubject(String name, int bitIdentifier, int lastX, int lastY, SampleInterface sampleWhenPlayed, 
@@ -89,6 +138,15 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 		this.sampleWhenPlayed = sampleWhenPlayed;
 		this.whenPutOnTable = whenPutOnTable;
 		this.yAxisModifier = yAxisModifier;
+		Image tryImage = null;
+		try {
+			tryImage = ImageIO.read(new FileInputStream("data/qubjects/default.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.image = tryImage;
 	}
 	
 	@Override
@@ -198,5 +256,10 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 			System.err.println("Not sorting Qubjects!");
 			return 0;
 		}
+	}
+
+	@Override
+	public Image getImage() {
+		return image;
 	}
 }	

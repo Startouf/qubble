@@ -31,7 +31,7 @@ public class InitialiseProject
 	
 	public static ArrayList<Qubject> loadQubjectsFromProject(String savePath){
 		Properties prop;
-		File[] qubjectProperties = InitialiseTools.getDotProperties(savePath +"qubjects/");
+		File[] qubjectProperties = DataTools.getDotProperties(savePath +"qubjects/");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(qubjectProperties.length);
 		for (File entry : qubjectProperties){
 			prop = new Properties();
@@ -49,7 +49,6 @@ public class InitialiseProject
 
 	public static ArrayList<Qubject> loadQubjectsForNewProject(){
 		return InitialiseAssets.loadQubjects();
-		//TODO : initialise default values for Qubjects ?
 	}
 
 	/**
@@ -73,6 +72,7 @@ public class InitialiseProject
 	}
 	
 	private static SampleInterface findSample(String name){
+		//TODO : Hashtable
 		for (SampleInterface sample : Data.getSamples()){
 			if (name.equals(sample.getName())){
 				return sample;
@@ -84,6 +84,7 @@ public class InitialiseProject
 	}
 	
 	private static AnimationInterface findAnimation(String name){
+		//TODO : Hashtable
 		for (AnimationInterface anim : Data.getAnimations()){
 			if (name.equals(anim.getName())){
 				return anim;
@@ -95,6 +96,7 @@ public class InitialiseProject
 	}
 	
 	private static EffectType findEffect(String name){
+		//TODO : Hashtable
 		for (EffectType effect : EffectType.values()){
 			if (name.equals(effect.toString())){
 				return effect;

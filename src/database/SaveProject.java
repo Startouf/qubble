@@ -1,5 +1,6 @@
 package database;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,15 +19,17 @@ import ui.ProjectControllerInterface;
  */
 public class SaveProject
 {	
-	public static void saveTo(String path, ProjectControllerInterface project){
-		saveQubjects(path, project);
+	public static void saveTo(String path, ProjectControllerInterface project, QubbleInterface qubble){
+		DataTools.EnsureDirExists(path);
+		saveQubjects(path, qubble);
 		saveGlobalParams(path, project);
 	}
 	
-	private static void saveQubjects(String path, ProjectControllerInterface project){
-		String QubjectPath = path + "qubjects/";
-		for (Qubject qubject : project.getQubjects()){
-			saveQubject(qubject, QubjectPath);
+	private static void saveQubjects(String path, QubbleInterface qubble){
+		String qubjectPath = path + "qubjects/";
+		DataTools.EnsureDirExists(qubjectPath);
+		for (Qubject qubject : qubble.getAllQubjects()){
+			saveQubject(qubject, qubjectPath);
 		}
 	}
 	
@@ -43,8 +46,8 @@ public class SaveProject
 				prop.setProperty(qubjectProp.toString(), qubject.getModifierForProperty(qubjectProp).getName());
 			}
 			
-			//save properties to project root folder
-			prop.store(new FileOutputStream(qubject.getBitIdentifier()+".properties"), null);
+			String fileName = qubjectPath + qubject.getName() + ".properties";
+			DataTools.saveProperties(prop, fileName);
 		}
 		catch(Exception e){
 			e.printStackTrace();

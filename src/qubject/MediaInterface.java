@@ -1,5 +1,7 @@
 package qubject;
 
+import java.awt.Image;
+
 import audio.EffectType;
 
 
@@ -20,6 +22,7 @@ public interface MediaInterface
 	 * @return
 	 */
 	public String getName();
+	public Image getImage();
 	
 	/**
 	 * Sample played when cursor reaches it

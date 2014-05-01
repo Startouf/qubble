@@ -17,8 +17,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
-
 public class PreviewOutput implements Runnable{
 	
 	private final static AtomicReference<Dimension> newCanvasSize = new AtomicReference<Dimension>();

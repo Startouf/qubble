@@ -14,7 +14,10 @@ import qubject.QubjectModifierInterface;
 import qubject.QubjectProperty;
 import qubject.SampleInterface;
 import ui.App;
+import ui.NotViewQubjectsTabException;
+import ui.QubjectModifierPalette;
 import ui.ReferenceButton;
+import ui.ViewQubjects;
 
 public class ChangeQubjectModifierAction extends AbstractAction {
 private final App app;
@@ -26,52 +29,30 @@ private final App app;
 
 	/**
 	 * 1-Get the selected modifier
-	 * 2-Change the Qubject so he uses this modifier
-	 * 3-Refresh the ViewQubject to reflect the changes
+	 * 2-Change the Qubject so he uses this modifier (internally)
+	 * 3-Refresh the QubjectViews of the corresponding project
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		switch (this.app.getActiveTab().getActiveProperty()){
-		//Proto final
-		case AUDIO_EFFECT_ROTATION:
-			EffectType effect = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setRotationEffect(effect);
-			this.app.getActiveTab().setModifierOfActiveProperty(effect);
-			this.app.getSoundEffectPalette().setVisible(false);
-			break;
-		case SAMPLE_WHEN_PLAYED:
-			SampleInterface sample = (SampleInterface) this.app.getSamplePalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setSampleWhenPlayed(sample);
-			this.app.getActiveTab().setModifierOfActiveProperty(sample);
-			this.app.getSamplePalette().setVisible(false);
-			break;
-		case ANIM_WHEN_PLAYED:
-			AnimationInterface anim = (AnimationInterface) this.app.getAnimationPalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setAnimationWhenPlayed(anim);
-			this.app.getActiveTab().setModifierOfActiveProperty(anim);
-			this.app.getAnimationPalette().setVisible(false);
-			break;
-			//Proto final
-		case ANIM_WHEN_DETECTED:
-			AnimationInterface anim2 = (AnimationInterface) this.app.getAnimationPalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setAnimationWhenDetected(anim2);
-			this.app.getActiveTab().setModifierOfActiveProperty(anim2);
-			this.app.getAnimationPalette().setVisible(false);
-			break;
-		case AUDIO_EFFECT_Y_AXIS:
-			EffectType effect2 = (EffectType) this.app.getSoundEffectPalette().getSelectedModifier();
-			this.app.getActiveTab().getActiveQubject().setYAxisEffect(effect2);
-			this.app.getActiveTab().setModifierOfActiveProperty(effect2);
-			this.app.getSoundEffectPalette().setVisible(false);
-			break;
-		default:
-			//Should never happen !!!
-			System.out.println("Incorrect Modifier");
-			break;
+		if (e.getSource() instanceof ViewQubjects){
+			ViewQubjects view = (ViewQubjects)e.getSource();
+			changeModifier(view.getActiveQubject(), view.getActiveProperty(), view.getActiveModifier());
+		} else if(e.getSource() instanceof QubjectModifierPalette){
+			QubjectModifierPalette palette = (QubjectModifierPalette) e.getSource();
+			//La palette correspond à un tab actif : le chercher :
+			try {
+				ViewQubjects view = app.getActiveViewQubjectsTab();
+				//Récupérer le nouvel attribut choisi de la palette correspondant au Qubject actif
+				changeModifier(view.getActiveQubject(), view.getActiveProperty(), palette.getSelectedModifier());
+				
+			} catch (NotViewQubjectsTabException e1) {
+				System.err.println("Trying to change properties from Palette but active tab isn't a ViewQubjects Tab !");
+				e1.printStackTrace();
+			}
 		}
 	}
 	
-	public void changeModifier(Qubject qubject, QubjectProperty prop, QubjectModifierInterface modifier){
+	public void changeModifier(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
 		switch (prop){
 		//Proto final
 		case AUDIO_EFFECT_ROTATION:
@@ -95,6 +76,6 @@ private final App app;
 			System.out.println("Incorrect Modifier");
 			break;
 		}
-		this.app.setConfigForQubject(qubject, prop, modifier);
+		this.app.refreshConfigForQubject(qubject, prop, modifier);
 	}
 }

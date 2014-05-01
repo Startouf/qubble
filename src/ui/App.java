@@ -1,10 +1,13 @@
 package ui;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.lwjgl.util.glu.Project;
 
@@ -73,6 +76,13 @@ public class App extends JFrame
 	private final PanicAction panicAction = new PanicAction(this);
 	private final SwitchActiveProjectAction switchActivePojectAction 
 		= new SwitchActiveProjectAction(this);
+	private final CloseProjectAction closeProjectAction = 
+			new CloseProjectAction(this);
+	private final SaveProjectAction saveProjectAction = new SaveProjectAction(this);
+	private final RecordAction recordAction = new RecordAction(this);
+	private final ChangeProjectNameAction changeProjectNameAction = 
+			new ChangeProjectNameAction(this);
+	private final MuteAction muteAction = new MuteAction(this);
 	
 	private boolean projectOpened;
 	//TODO The palettes should be final and initialised
@@ -132,7 +142,7 @@ public class App extends JFrame
 				"Accueil", welcomePanel);
 	}
 	
-	public void setConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
+	public void refreshConfigForQubject(MediaInterface qubject, QubjectProperty prop, QubjectModifierInterface modifier){
 		this.mainPanel.setConfigForQubject(activeProject, qubject, prop, modifier);
 	}
 
@@ -173,7 +183,6 @@ public class App extends JFrame
 	 */
 	public QubjectPalette getQubjectPalette() {
 		if(qubjectPalette != null){
-			qubjectPalette.setVisible(true);
 			return qubjectPalette;
 		}
 		else{ 
@@ -184,36 +193,30 @@ public class App extends JFrame
 
 	public SamplePalette getSamplePalette() {
 		if(samplePalette != null){
-			samplePalette.setVisible(true);
 			return samplePalette;
 		}
 		else{
 			samplePalette = new SamplePalette(this);
-			samplePalette.setVisible(false);
 			return samplePalette;
 		}
 	}
 	
 	public AnimationPalette getAnimationPalette() {
 		if(animationPalette != null){
-			animationPalette.setVisible(true);
 			return animationPalette;
 		}
 		else{
 			animationPalette = new AnimationPalette(this);
-			animationPalette.setVisible(false);
 			return animationPalette;
 		}
 	}
 	
 	public SoundEffectPalette getSoundEffectPalette() {
 		if(soundEffectPalette != null){
-			soundEffectPalette.setVisible(true);
 			return soundEffectPalette;
 		}
 		else{
 			soundEffectPalette = new SoundEffectPalette(this);
-			soundEffectPalette.setVisible(false);
 			return soundEffectPalette;
 		}
 	}
@@ -252,6 +255,7 @@ public class App extends JFrame
 	public void setProjectOpened(boolean projectOpened) {
 		this.projectOpened = projectOpened;
 		this.menu.showProjectSettings(projectOpened);
+		this.getMainPanel().getGlobalSettingsPanel().showProjectSettings(projectOpened);
 	}
 
 	public ArrayList<Qubject> getQubjects() {
@@ -262,9 +266,11 @@ public class App extends JFrame
 		this.qubjectPalette = patternSelectionFrame;
 	}
 	
-	public ViewQubjects getActiveTab() {
-		//TODO : handle different type of tab !!!
-		return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
+	public ViewQubjects getActiveViewQubjectsTab() throws NotViewQubjectsTabException{
+		Component selected = mainPanel.getSettingsTabs().getSelectedComponent();
+		if(selected instanceof ViewQubjects){
+			return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
+		} else return null;
 	}
 	
 	public ChangeQubjectAction getChangeQubjectAction() {
@@ -283,6 +289,9 @@ public class App extends JFrame
 		return playPauseAction;
 	}
 	
+	public SaveProjectAction getSaveProjectAction() {
+		return saveProjectAction;
+	}
 
 	public ToggleGridAction getToggleGridAction() {
 		return toggleGridAction;
@@ -290,6 +299,10 @@ public class App extends JFrame
 
 	public PanicAction getPanicAction() {
 		return panicAction;
+	}
+	
+	public CloseProjectAction getCloseProjectAction(){
+		return closeProjectAction;
 	}
 	
 	public ArrayList<ProjectController> getProjects() {
@@ -303,11 +316,34 @@ public class App extends JFrame
 	public WelcomePanel getWelcomePanel() {
 		return welcomePanel;
 	}
+	
+	public ChangeProjectNameAction getChangeProjectNameAction(){
+		return changeProjectNameAction;
+	}
+	
+	public MuteAction getMuteAction(){
+		return muteAction;
+	}
 
+	public void closeProject(ProjectController project) {
+		this.mainPanel.closeTabsRelatedTo(project);
+		project.close();
+		welcomePanel.removeProject(project);
+	}
+	
 	/**
 	 * DEBUG --> Use debug.DebugLaunch
 	 */
 	public static void main(String[] args){
+		try {
+			UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
+		} catch (Exception e) {System.out.println("Erreur de chargement ");}
+		
 		App DJTable = new App();
 	}
+
+	public RecordAction getRecordAction() {
+		return this.recordAction;
+	}
+
 }

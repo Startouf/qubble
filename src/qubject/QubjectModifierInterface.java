@@ -1,6 +1,6 @@
 package qubject;
 
-import java.io.File;
+import java.awt.Image;
 
 /**
  * @author duchon
@@ -12,5 +12,7 @@ import java.io.File;
 public interface QubjectModifierInterface {
 	
 	public String getName();
+	
+	public Image getImage();
 	
 }

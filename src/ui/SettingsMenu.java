@@ -7,9 +7,8 @@ public class SettingsMenu extends JMenu {
 	private final ViewIndividualMenuItem vimi;
 	private final ViewListMenuItem vlmi;
 
-	public SettingsMenu(App app, String string, String string2, int vkS) {
-		super("Settings");
-		//TODO : string & string2 .?????
+	public SettingsMenu(App app, String name, int vkS) {
+		super(name);
 		this.app = app;
 		this.setMnemonic(vkS);
 		vimi = new ViewIndividualMenuItem(app);
@@ -21,9 +20,9 @@ public class SettingsMenu extends JMenu {
 		add(vlmi);
 	}
 
-	public SettingsMenu(App app, String string, String string2, int vkS,
+	public SettingsMenu(App app, String name, int vkS,
 			boolean showAll) {
-		super("Settings");
+		super(name);
 		this.app = app;
 		this.setMnemonic(vkS);
 		vimi = new ViewIndividualMenuItem(app);

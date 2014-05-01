@@ -73,7 +73,7 @@ public abstract class QubjectModifierPalette extends JFrame implements ActionLis
     	
     	this.setContentPane(itemSelectionPanel);
     	pack();
-    	this.setVisible(true);
+    	this.setVisible(false);
 	}
 
 	/**

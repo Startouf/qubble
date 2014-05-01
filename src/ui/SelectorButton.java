@@ -23,53 +23,65 @@ public class SelectorButton extends JButton implements ActionListener{
 	private final App app;
 	private final boolean isQubject;
 	private final QubjectProperty modifier;
+	private static final ImageIcon arrow = new ImageIcon("data/ui/fleche.png");
 
-	//Constructor for the select QUbject selector
+	//Constructor for the select Qubject selector
 	public SelectorButton(App app, MediaInterface Qubject) {
-		super(new ImageIcon("data/ui/arrow.png"));
+		super(arrow);
 		addActionListener(this);
 		this.app=app;
 		isQubject=true;
+		tune();
 		this.modifier = null;
-		//TODO : add action listener with the pattern
-		setPreferredSize(new Dimension(35,35));
+		setPreferredSize(new Dimension(50,35));
 	}
 
 	//Constructor for the select modifier selector
 	public SelectorButton(App app, QubjectProperty modifier){
-		super(new ImageIcon("data/ui/arrow.png"));
+		super(arrow);
+		tune();
 		addActionListener(this);
 		this.app = app;
 		isQubject=false;
 		this.modifier = modifier;
-		setPreferredSize(new Dimension(35,35));
+		setPreferredSize(new Dimension(50,35));
+	}
+	
+	public void tune(){
+		setContentAreaFilled(false);
+		setBorderPainted(false);
+		addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (isQubject == true)
 		{
-			app.getQubjectPalette();
+			app.getQubjectPalette().setVisible(true);
 		}
 		else{
-			this.app.getActiveTab().setActiveProperty(modifier);
+			try {
+				this.app.getActiveViewQubjectsTab().setActiveProperty(modifier);
+			} catch (NotViewQubjectsTabException e) {
+				e.printStackTrace();
+			}
 			switch (modifier){
 			//Proto final
 			case AUDIO_EFFECT_ROTATION:
-				this.app.getSoundEffectPalette();
+				this.app.getSoundEffectPalette().setVisible(true);
 				break;
 			case SAMPLE_WHEN_PLAYED:
-				this.app.getSamplePalette();
+				this.app.getSamplePalette().setVisible(true);
 				break;
 			case ANIM_WHEN_PLAYED:
-				this.app.getAnimationPalette();
+				this.app.getAnimationPalette().setVisible(true);
 				break;
 				//Proto final
 			case ANIM_WHEN_DETECTED:
-				this.app.getAnimationPalette();
+				this.app.getAnimationPalette().setVisible(true);
 				break;
 			case AUDIO_EFFECT_Y_AXIS:
-				this.app.getSoundEffectPalette();
+				this.app.getSoundEffectPalette().setVisible(true);
 				break;
 			default:
 				//Should never happen !!!

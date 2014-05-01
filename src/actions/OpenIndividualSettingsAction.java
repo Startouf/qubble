@@ -19,7 +19,7 @@ public class OpenIndividualSettingsAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ViewIndividualPanel view = new ViewIndividualPanel(app);
-		app.getMainPanel().getSettingsTabs().addTab(
+		app.getMainPanel().addCloseableTab(
 				"Config. indiv. "+app.getActiveProject().getProjectName(), view);
 		app.getMainPanel().getSettingsTabs().setSelectedComponent(view);
 	}

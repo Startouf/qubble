@@ -26,10 +26,9 @@ public interface ProjectControllerInterface {
 	public void setProjectName(String name);
 
 	/**
-	 * Ask to save current config into a path 
-	 * (must bring up a FOLDER selection wizard)
+	 * Save the current configuration to the selected folder
 	 */
-	public void save();
+	public void save(String path);
 
 	/**
 	 * Ask to save on project close ?

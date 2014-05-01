@@ -218,6 +218,7 @@ public class Player implements PlayerInterface, Runnable {
 				e = new Volume(amount);
 			default:
 				e = new Volume(amount);
+				break;
 			}
 			ref.addEffect(e);
 		}

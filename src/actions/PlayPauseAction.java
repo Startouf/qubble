@@ -12,11 +12,12 @@ public class PlayPauseAction extends AbstractAction {
 
 private final App app;
 private boolean play = false;
-private final ImageIcon playIcon = new ImageIcon("data/ui/PauseButton.png"), pauseIcon = null;
+private final ImageIcon playIcon = new ImageIcon("data/ui/play bleu small.png");
+private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge small.png");
 	
 	public PlayPauseAction(App app) {
 		this.app = app;
-//		putValue(NAME, "Play");
+		putValue(NAME, "Play");
 		putValue(LARGE_ICON_KEY, playIcon);
 	}
 
@@ -24,15 +25,17 @@ private final ImageIcon playIcon = new ImageIcon("data/ui/PauseButton.png"), pau
 	public void actionPerformed(ActionEvent arg0) {
 		this.app.getActiveProject().getQubble().playPause();
 		//Qubble checks if the table has already been started
+//		this.app.getActiveProject().getQubble().start();
+		// If was playing, pause, and show Play button
 		if (play){ 
-//			putValue(NAME, "Play");
+			putValue(NAME, "Play");
 			putValue(LARGE_ICON_KEY, playIcon);
 		}
 		else{
 			putValue(NAME, "Pause");
-			putValue(SMALL_ICON, pauseIcon);
-			play = !play;
+			putValue(LARGE_ICON_KEY, pauseIcon);
 		}
+		play = !play;
 			
 	}
 
