@@ -57,8 +57,11 @@ public class QRCodesAnalyser {
 		}
 		// Affichage et calcul des id's de chaque qr
 		for(QRCode qr : listQRcode){
-			if(ImageDetection.PRINTDEBUG)
+			if(ImageDetection.PRINTDEBUG){
 				System.out.println("Valeur du QR Code : " + qr.getValeurByCenter(targetQr));
+			} else{
+				qr.getValeurByCenter(targetQr);
+			}
 			qrFound.put(qr.getID(), new Point(qr.getBorder().getxCenter(), qr.getBorder().getyCenter()));
 		}
 	}

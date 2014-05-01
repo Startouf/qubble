@@ -1,6 +1,9 @@
 package calibration;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.awt.Frame;
+
 import opengl.BaseRoutines;
 import opengl.InitRoutines;
 
@@ -18,10 +21,10 @@ public class CalibrationProjection implements Runnable{
 	private static int HEIGHT = Calibrate.OpenGL_HEIGHT;
 	
 	public void start(){
-		InitRoutines.initDisplayOnSecondDevice(WIDTH, HEIGHT);
+		Frame frame = InitRoutines.initDisplayOnSecondDevice(WIDTH, HEIGHT);
 		glEnable(GL_CULL_FACE);
 
-		while (!Display.isCloseRequested()){
+		while (!Display.isCloseRequested() && !Thread.interrupted()){
 			glClearColor(0f,0f,0f,1f);
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
@@ -31,6 +34,7 @@ public class CalibrationProjection implements Runnable{
 			Display.sync(60); 
 		}
 		Display.destroy();
+		frame.dispose();
 	}
 	
 	private void initGL(){

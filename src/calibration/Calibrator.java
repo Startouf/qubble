@@ -10,42 +10,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.UIManager;
 
 import qrDetection.ComponentsAnalyser;
-
 import ui.App;
 
 public class Calibrator{
 
-	private Thread image, camera;
+	private static Thread image;
 	
 	public Calibrator(){
 		image = new Thread(new CalibrationProjection());
+		image.setName("Projection calibrator");
 		image.start();
-		
-	}
-	
-	public static void main(String[] args) {
-		
-		Calibrator calib = new Calibrator();
-		
-		//TODO : reconnaissance d'images
-		TabImage image;
-		/*image = new TabImage(ImageIO.read(new File("test/calibration/photo miroir sale.png")));
-		 */			
-		
-		//à faire manuellement
-		Calibrate.CAMERA_PIXEL_LOWER_RIGHT = new Point (1100,860);
-		Calibrate.CAMERA_PIXEL_LOWER_LEFT = new Point (119,860);
-		Calibrate.CAMERA_PIXEL_UPPER_LEFT = new Point (35,250);
-		Calibrate.CAMERA_PIXEL_UPPER_RIGHT = new Point (1187,250);
-		
-		//test
-		Point point = new Point (35, 300);
-		Calibrate.mapToOpenGL(point);
-		
-		//TODO : close image
-//		App app = new App();
 	}
 
+	public void terminate() {
+		image.interrupt();
+	}
 }

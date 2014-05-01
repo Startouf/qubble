@@ -172,12 +172,14 @@ public class ConnexeComponent {
 			}
 		}
 			if(save > SQUARETRIGGER ){
-				if(ImageDetection.PRINTDEBUG)
+				if(ImageDetection.PRINTDEBUG){
 					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
+				}
 				return true;
 			}else{
-				if(ImageDetection.PRINTDEBUG)
+				if(ImageDetection.PRINTDEBUG){
 					System.out.println("False : " + save);
+				}
 				return false;
 			}
 	}

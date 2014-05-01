@@ -29,7 +29,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
 	private boolean qrDetectionDone, motionEstimationDone;
-	public final static boolean PRINTDEBUG = true;
+	public final static boolean PRINTDEBUG = false;
 	
 	// Gestion de l'interface graphique de suivi
 	private Window window;
@@ -62,7 +62,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 		countBeforeRemoved  = new HashMap<Integer, Integer>();
 		//addedQubbleList.put(888, new Point(640, 360));
 		if(true){
-			window = new Window(this,qr, mo, 60, 72 ,80);
+			window = new Window(this,qr, mo, 8, 42 ,80);
 		}
 		
 		//mo.addQubbleToList(640, 360, 22);
@@ -148,6 +148,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 					int tempCont = countBeforeRemoved.get(id)-1;
 					// Supprime définitevement le qr
 					if(tempCont <= 0){
+						System.out.println("######### Remove " + id + " #########");
 						countBeforeRemoved.remove(id);
 						qubble.QubjectRemoved(id);
 						// Actualise la valeur
@@ -168,8 +169,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 				// Détection du mouvement
 				pt = qrFound.get(id);
 				pt2 = qubbleList.get(id);
-				if(Math.abs(pt.getX()-pt2.getX()) > 5 || Math.abs(pt.getY()-pt2.getY()) > 5)
-					qubble.QubjectHasMoved(id, qrFound.get(id));
+				if(Math.abs(pt.getX()-pt2.getX()) > 5 || Math.abs(pt.getY()-pt2.getY()) > 5){
+					System.out.println("######### Move " + id + " #########");
+					//qubble.QubjectHasMoved(id, qrFound.get(id));
+				}
+					
 				
 				// On l'enlève de la liste des qr détectés
 				qrFound.remove(id);
@@ -182,6 +186,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			qubble.QubjectDetected(idNew, pt);
 			temp.put(idNew, pt);
 			addedQubbleList.put(idNew, pt);
+			System.out.println("######### Add " + idNew + " #########");
 		}
 		
 		qubbleList = temp;

@@ -3,6 +3,7 @@ package sequencer;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -75,6 +76,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	private final ArrayList<Qubject> configuredQubjects;
 	private final ArrayList<Qubject> qubjectsOnTable;
+	private Comparator<Qubject> comparator;
 	
 	/*
 	 * Variables de temps
@@ -96,7 +98,7 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Attributs coeur
 	 */
-	private final PlayerInterface player = new Player(this);
+	private final PlayerInterface player;
 	private final OutputImageInterface projection;
 	private final ImageDetectionInterface camera;
 	/**
@@ -138,6 +140,7 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
+		player = new Player(this);
 		camera = new ImageDetection(this);
 		projection = new ProjectorOutput(this);
 		initialise();
@@ -162,6 +165,7 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
+		player = new Player(this);
 		camera = new ImageDetection(this);
 		projection = new ProjectorOutput(this);
 		initialise();
@@ -184,6 +188,17 @@ public class Qubble implements QubbleInterface {
 			sampleControllers.put(qubject, new LinkedList<SampleControllerInterface>());
 			qrCodes.put(qubject.getBitIdentifier(), qubject);
 		}
+		comparator = new Comparator<Qubject>() {
+		    public int compare(Qubject o1, Qubject o2) {
+		        int diff = o1.getCoords().getX() - o2.getCoords().getX();
+		        if (diff > 0)
+		           return 1;
+		        else if (diff <0)
+		           return -1;
+		        else
+		           return 0;
+		    }
+		};
 	}
 	
 	/**
@@ -199,8 +214,8 @@ public class Qubble implements QubbleInterface {
 		/* 
 		//Make sure the starting time is POSITIVE
 		//Use  (a % b + b) % b (when a can be negative) 
-		updateCurrentTime();
 		 */
+		updateCurrentTime();
 		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS)+totalPauseTime;
 		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS;
 		
@@ -236,7 +251,9 @@ public class Qubble implements QubbleInterface {
 		//play!
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		//adjust effect
-		player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
+		if(!(player instanceof FakePlayer)){
+			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
+		}
 		//add it to the list of sampleControllers
 		synchronized(sampleControllers){
 			sampleControllers.get(qubject).add(qubjectSoundController);
@@ -288,7 +305,7 @@ public class Qubble implements QubbleInterface {
 			qubjectsOnTable.add(qubject);		
 			
 			//Pour l'affichage dans le GUI : on trie :
-			Collections.sort(qubjectsOnTable);
+			Collections.sort(qubjectsOnTable, comparator);
 		}
 	}
 	
@@ -317,7 +334,7 @@ public class Qubble implements QubbleInterface {
 			qubjectsOnTable.remove(qubject);
 			
 			//Pour l'affichage dans le GUI : on trie :
-			Collections.sort(qubjectsOnTable);
+			Collections.sort(qubjectsOnTable, comparator);
 		}
 		return;
 	}
@@ -337,8 +354,10 @@ public class Qubble implements QubbleInterface {
 		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
 		qubject.setCoords(glCoords);
 		
-		for(SampleControllerInterface sample : sampleControllers.get(qubject)){
-			player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+		if (!(player instanceof FakePlayer)){
+			for(SampleControllerInterface sample : sampleControllers.get(qubject)){
+				player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+			}
 		}
 
 		//On replanifie
@@ -346,11 +365,13 @@ public class Qubble implements QubbleInterface {
 		
 		//On trie
 		synchronized (qubjectsOnTable){
-			Collections.sort(qubjectsOnTable);
+			Collections.sort(qubjectsOnTable, comparator);
 		}
 		
-		for(SampleControllerInterface sample : sampleControllers.get(qrCodes.get(qubject))){
-			player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+		if(!(player instanceof FakePlayer)){
+			for(SampleControllerInterface sample : sampleControllers.get(qrCodes.get(qubject))){
+				player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+			}
 		}
 
 		//On indique son nouvel emplacement OLD
@@ -368,8 +389,10 @@ public class Qubble implements QubbleInterface {
 		
 		qubject.setRotation((float) ((qubject.getRotation()+dR)%(2*Math.PI)));
 		
-		for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
-			player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
+		if(!(player instanceof FakePlayer)){
+			for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
+				player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
+			}
 		}
 	}
 	
@@ -494,8 +517,7 @@ public class Qubble implements QubbleInterface {
 	}
 		
 	public void mute() {
-		// TODO Auto-generated method stub
-		
+		player.mute();
 	}
 
 }

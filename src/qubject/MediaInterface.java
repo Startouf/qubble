@@ -22,6 +22,11 @@ public interface MediaInterface
 	 * @return
 	 */
 	public String getName();
+	
+	/**
+	 * An Image representing the Qubject
+	 * @return
+	 */
 	public Image getImage();
 	
 	/**

@@ -29,8 +29,8 @@ public class Calibrate{
 	static public Point CAMERA_PIXEL_UPPER_RIGHT = new Point(OpenGL_WIDTH,OpenGL_HEIGHT);
 	static public Point CAMERA_PIXEL_UPPER_LEFT = new Point(0,OpenGL_HEIGHT);
 	
-	static public int Camera_WIDTH_Px = 1024; //??
-	static public int Camera_Height_Px = 600;
+	static public int Camera_WIDTH_Px = 1280; //??
+	static public int Camera_Height_Px = 720;
 	
 	static public float ratioX =1, ratioY =1;
 	
@@ -53,17 +53,42 @@ public class Calibrate{
 	 * @return OpenGL position (lwjgl.util.point)
 	 */
 	static public org.lwjgl.util.Point mapToOpenGL(Point pos){
-		int x = pos.getX();
-		int y = pos.getY();
-		int yGL = (y - CAMERA_PIXEL_UPPER_LEFT.getY());
+//		int x = pos.getX() - CAMERA_PIXEL_UPPER_LEFT.getX();
+//		int y = pos.getY() - CAMERA_PIXEL_UPPER_LEFT.getY();
+//		int yGL = pos.getY() - CAMERA_PIXEL_LOWER_LEFT.getY();
+//		
+//		int dBordRect = Math.abs(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX()) 
+//				* Math.abs(y - CAMERA_PIXEL_LOWER_LEFT.getY()) 
+//				/ Math.abs(CAMERA_PIXEL_UPPER_LEFT.getY() 
+//						- CAMERA_PIXEL_LOWER_LEFT.getY());
+//		int dBordPoint = Math.abs(x-CAMERA_PIXEL_LOWER_LEFT.getX()) + dBordRect; 
+//		int dBordBord = 2 * dBordRect + CAMERA_PIXEL_LOWER_RIGHT.getX() - CAMERA_PIXEL_LOWER_LEFT.getX();
+//		int dRectBord = CAMERA_PIXEL_LOWER_LEFT.getX() - CAMERA_PIXEL_UPPER_LEFT.getX() - dBordRect;
+//		int xGL = (x -dRectBord) * dBordPoint/dBordBord;
 		
-		int dBordRect = Math.abs(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX()) * Math.abs(y - CAMERA_PIXEL_LOWER_LEFT.getY()) / Math.abs(CAMERA_PIXEL_UPPER_LEFT.getY() - CAMERA_PIXEL_LOWER_LEFT.getY());
-		int dBordPoint = Math.abs(x-CAMERA_PIXEL_LOWER_LEFT.getX()) + dBordRect; 
-		int dBordBord = 2 * dBordRect + CAMERA_PIXEL_LOWER_RIGHT.getX() - CAMERA_PIXEL_LOWER_LEFT.getX();
-		int dRectBord = CAMERA_PIXEL_LOWER_LEFT.getX() - CAMERA_PIXEL_UPPER_LEFT.getX() - dBordRect;
-		int xGL = (x -dRectBord) * dBordPoint/dBordBord;
+//		float fy =  (float)(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX())*(float)y
+//				/(float)(CAMERA_PIXEL_LOWER_LEFT.getY()-CAMERA_PIXEL_UPPER_LEFT.getY());
+//		int xGL = (int) ((float)(x-fy)/(float)(OpenGL_WIDTH-2*fy)*(float)OpenGL_WIDTH);
+//		xGL = Camera_WIDTH_Px - xGL;
+		float xC = pos.getX();
+		float yC = Camera_Height_Px - pos.getY();
+		float yLL = CAMERA_PIXEL_LOWER_LEFT.getY(), yUL = CAMERA_PIXEL_UPPER_LEFT.getY();
+		float xLL = CAMERA_PIXEL_LOWER_LEFT.getX(), xUL= CAMERA_PIXEL_UPPER_LEFT.getX();
+		float xUR = CAMERA_PIXEL_UPPER_RIGHT.getX();
 		
-		System.out.println ("("+x+" ," + y +") camera --> (" + xGL + ", " + yGL+") openGL");
+		float yG = yUL - yC - yLL;
+		float dx = xLL - xUL;
+		float DY = yUL - yLL;
+		
+		float fY = (yG*dx) /(yUL-yLL);
+		float y2 = yC - yLL;
+		float x2 = xC-xUL-2*fY;
+		float x3 = xUR - xUL - 2*fY;
+		
+		int xGL = (int)(OpenGL_WIDTH - x2/x3*OpenGL_WIDTH);
+		int yGL = (int)(  (yC-yLL)/DY*(float)OpenGL_HEIGHT);
+		
+		System.out.println ("("+pos.getX()+" ," + pos.getY() +") camera --> (" + xGL + ", " + yGL+") openGL");
 		org.lwjgl.util.Point point = new org.lwjgl.util.Point (xGL, yGL);
 		return point;
 		

@@ -39,11 +39,12 @@ public class InitRoutines
 		}
 	}
 	
-	public static void initDisplayOnSecondDevice(int width, int height){
+	public static Frame initDisplayOnSecondDevice(int width, int height){
 		GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		Frame frame = null;
 				if (gd.length >= 2){
 					try {
-						Frame frame = new Frame(gd[1].getDefaultConfiguration());
+						frame = new Frame(gd[1].getDefaultConfiguration());
 						frame.setUndecorated(true); 
 						Canvas c = new Canvas(gd[1].getDefaultConfiguration());
 						c.setSize(1280, 800);
@@ -63,6 +64,7 @@ public class InitRoutines
 					System.err.println("Second monitor not detected !");
 					System.err.println("Opening OpenGL output on first device");
 				}
-		initDisplay(width, height);		
+		initDisplay(width, height);	
+		return frame;
 	}
 }
