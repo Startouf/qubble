@@ -1,17 +1,12 @@
 package image_GUI;
 
-import imageTransform.ComponentsAnalyser;
-import imageTransform.MyImage;
-import imageTransform.QRCodesAnalyser;
-import imageTransform.SquaresAnalyser;
+import imageObject.ConnexeComponent;
+import imageTransform.TabImage;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -19,36 +14,93 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
+
+import main.ImageDetectionInterface;
+import motionEstimation.MotionEstimation;
+import qrDetection.ComponentsAnalyser;
+import qrDetection.QRCodesAnalyser;
+import qrDetection.QR_Detection;
 
 /**
- * Affiche une fenetre
+ * Affiche une fenetre pour suivre la réception de la caméra, la détection de forme et le mouvement
  * @author masseran
  *
  */
 public class Window extends JFrame implements ActionListener, DocumentListener{
 	
+	private QR_Detection controlDetection;
+	private MotionEstimation controlMotion;
+	private ImageDetectionInterface detectionInterface;
+		
 	public static int imageWidth, imageHeight;
 	private ImageView imageView;
+	// Barre de contrôle du bas
 	private JPanel control;
 	private JButton suivant, action, precedent;
-	private JTextField binaryLevelJTF, bigSquareSizeJTF, smallSquareSizeJTF;
-	private boolean qrCodesSearch;
+	private JTextField binaryLevelJTF, squareSizeJTF, squareTriggerJTF;
+	// Menu 
+	private JMenuBar mainMenu;
+	private JMenu fichier, display, run;
+	private JMenuItem ouvrir, motion, measure, motionRun, qrRun;
 	
-	public Window(){
+	private File currentFolder;
+	
+	
+	public Window(QR_Detection controlDetection, MotionEstimation controlMotion, int binary, int rayon, int square){
+		this.controlDetection = controlDetection;
+		this.controlMotion = controlMotion;
+		init(binary, rayon, square);
+	}
+	
+	/**
+	 * Initialisation de la fenêtre et création des composants
+	 */
+	private void init(int binary, int rayon, int square){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-		this.setTitle("Reconnaissance de QR Code");
+		this.setTitle("Détection et mouvement");
+		currentFolder = null;
+		// Menu
+		mainMenu = new JMenuBar();
+		fichier = new JMenu("Fichier");
+		ouvrir = new JMenuItem("Ouvrir");
+		ouvrir.addActionListener(this);
+		
+		display = new JMenu("Affichage");
+		motion = new JMenuItem("Mouvement");
+		motion.addActionListener(this);
+		measure = new JMenuItem("Règle");
+		measure.addActionListener(this);
+		
+		run = new JMenu("Exécution");
+		motionRun = new JMenuItem("Mouvement");
+		motionRun.addActionListener(this);
+		qrRun = new JMenuItem("Detection QR");
+		qrRun.addActionListener(this);
+		
+		
+		fichier.add(ouvrir);
+		display.add(motion);
+		display.add(measure);
+		run.add(motionRun);
+		run.add(qrRun);
+		mainMenu.add(fichier);
+		mainMenu.add(display);
+		mainMenu.add(run);
+		this.setJMenuBar(mainMenu);
 		
 		control = new JPanel();
 		control.setLayout(new GridLayout(3, 3));
@@ -65,25 +117,28 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(precedent);
 		control.add(action);
 		control.add(suivant);
-		control.add(new JLabel("Niveau de gris (0-255)"));
-		control.add(new JLabel("Taille petit carré"));
-		control.add(new JLabel("Taille grand carré"));
-		binaryLevelJTF = new JTextField(String.valueOf(MyImage.BINARY_LEVEL));
-		bigSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.BIGSQUARESIZE));
-		smallSquareSizeJTF = new JTextField(String.valueOf(QRCodesAnalyser.SMALLSQUARESIZE));
+		control.add(new JLabel("Binarisation (0-255)"));
+		control.add(new JLabel("Détection du carré (0-100)"));
+		control.add(new JLabel("Taille rayon"));
+		binaryLevelJTF = new JTextField(String.valueOf(binary));
+		squareSizeJTF = new JTextField(String.valueOf(rayon));
+		squareTriggerJTF = new JTextField(String.valueOf(square));
+		changeBinaryLevel(binary);
+		changeSquareSize(rayon);
+		changeSquareTrigger(square);
 		
 		// Ajouter la relation entre le document et le jtextfield
 		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
-		bigSquareSizeJTF.getDocument().putProperty("parent", bigSquareSizeJTF);
-		smallSquareSizeJTF.getDocument().putProperty("parent", smallSquareSizeJTF);
+		squareSizeJTF.getDocument().putProperty("parent", squareSizeJTF);
+		squareTriggerJTF.getDocument().putProperty("parent", squareTriggerJTF);
 		
 		binaryLevelJTF.getDocument().addDocumentListener(this);
-		bigSquareSizeJTF.getDocument().addDocumentListener(this);
-		smallSquareSizeJTF.getDocument().addDocumentListener(this);
+		squareSizeJTF.getDocument().addDocumentListener(this);
+		squareTriggerJTF.getDocument().addDocumentListener(this);
 		
 		control.add(binaryLevelJTF);
-		control.add(smallSquareSizeJTF);
-		control.add(bigSquareSizeJTF);
+		control.add(squareTriggerJTF);
+		control.add(squareSizeJTF);
 		
 		imageView = new ImageView();
 		this.setLayout(new BorderLayout());
@@ -92,27 +147,20 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		this.setVisible(true);
 	}
 	
-	/** Lit une image de l'ordinateur avec en spécification si la recherche porte sur des qr codes ou sur des carrés
-	 * 
+	/**
+	 * Lis une image sur le disque dur puis effectue la détection des composantes connexes
 	 * @param fichier
 	 */
-	public void readImage(File fichier, boolean qrCodesSearch, int binaryLevel, int bigSquare, int smallSquare){
+	public void readImage(File fichier){
 		try {
-			imageView.setImage(new MyImage(ImageIO.read(fichier)), imageView.COLOR);
-			imageWidth = imageView.getImage(imageView.COLOR).getWidth();
-			imageHeight = imageView.getImage(imageView.COLOR).getHeight();
-			affiche();
+			BufferedImage loadImage = ImageIO.read(fichier);
+			controlDetection.analyseTable(new TabImage(loadImage));
+			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.qrCodesSearch = qrCodesSearch;
-		this.changeBinaryLevel(binaryLevel);
-		this.binaryLevelJTF.setText(String.valueOf(binaryLevel));
-		this.changeBigSquareSize(bigSquare);
-		this.bigSquareSizeJTF.setText(String.valueOf(bigSquare));
-		this.changeSmallSquareSize(smallSquare);
-		this.smallSquareSizeJTF.setText(String.valueOf(smallSquare));
 	}
 	
 	private void affiche(){
@@ -126,46 +174,52 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * Gestion des actions lors d'un appui sur un bouton de la fênetre
 	 */
 	public void actionPerformed(ActionEvent e) {
-		// Lancement de la reconnaissance de forme
+		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
-			long startTime = System.currentTimeMillis();
-			// Transformation en niveau de gris
-			imageView.setImage(imageView.getImage(imageView.COLOR).getGreyMyImage(), imageView.GREY);
-			long greyTime = System.currentTimeMillis();
-			// Transformation binaire
-			imageView.setImage(imageView.getImage(imageView.GREY).getBinaryMyImage(), imageView.BINARY);
-			long binaryTime = System.currentTimeMillis();
-			// Recherche des composantes connexes
-			ComponentsAnalyser compoConnex = new ComponentsAnalyser(imageView.getImage(imageView.BINARY));
-			imageView.setImage(compoConnex.getCCMyImage(), imageView.CONNEXE);
-			long componentTime = System.currentTimeMillis();
-			
-			if(qrCodesSearch){
-				// Recherche des QR codes
-				QRCodesAnalyser qrImage = new QRCodesAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
-				imageView.setImage(qrImage.getQRCodesImage(), imageView.QR_CODE);
-			}else{
-				// Recherche des carrés
-				SquaresAnalyser squareImage = new SquaresAnalyser(imageView.getImage(imageView.BINARY), compoConnex);
-				imageView.setImage(squareImage.getQRCodesImage(), imageView.QR_CODE);
-				squareImage.getSquarePosition();
-			}
-			
-			long qrTime = System.currentTimeMillis();
-						
-			long endTime = System.currentTimeMillis();
-			System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
-			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
-			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
-			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
-			
+			displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 		}
 		if(e.getSource() == suivant){
 			imageView.next();
 		}
 		if(e.getSource() == precedent){
 			imageView.previous();
+		}
+		if(e.getSource() == ouvrir){
+	        // Boîte de sélection de fichier à partir du répertoire courant
+			if(currentFolder == null){
+		        try {
+		            // obtention d'un objet File qui désigne le répertoire courant. Le
+		            // "getCanonicalFile" : meilleurs formatage
+		        	// Ecole
+		        	currentFolder = new File("/cal/homes/masseran/EclipseWorkspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        	// Portable Dell
+		        	//currentFolder = new File("/home/eric/workspace/java/PACT/Modules/image/database/test").getCanonicalFile();
+		        	// Portable Lenovo
+		        	//currentFolder = new File("/home/eric/workspace/Pact/Modules/image/database/test").getCanonicalFile();
+		        } catch(IOException err) {
+					currentFolder = new File(".");
+					
+		        }
+			}
+	        // création de la boîte de dialogue dans ce répertoire courant
+	        JFileChooser dialogue = new JFileChooser(currentFolder);
+	         
+	        // affichage
+	        dialogue.showOpenDialog(null);
+	        // récupération du fichier sélectionné
+	        if(dialogue.getSelectedFile() != null){
+	        	File selected = dialogue.getSelectedFile();
+	        	System.out.println("Fichier choisi : " + selected);
+		        // Mémorisation du dossier en cours
+		        currentFolder = new File(selected.getParent());
+		        readImage(selected);
+	        }
+		}
+		if(e.getSource() == qrRun){
+			controlDetection.switchPause();
+		}
+		if(e.getSource() == motionRun){
+			controlMotion.switchPause();
 		}
 		affiche();
 	}
@@ -205,10 +259,10 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		//System.out.println(value);
 		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
 			changeBinaryLevel(value);			
-		}else if(e.getDocument().equals(bigSquareSizeJTF.getDocument())){
-			changeBigSquareSize(value);	
-		}else if(e.getDocument().equals(smallSquareSizeJTF.getDocument())){
-			changeSmallSquareSize(value);	
+		}else if(e.getDocument().equals(squareSizeJTF.getDocument())){
+			changeSquareSize(value);	
+		}else if(e.getDocument().equals(squareTriggerJTF.getDocument())){
+			changeSquareTrigger(value);	
 		}
 	}
 	
@@ -224,7 +278,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		if(value < 0 || value > 255){
 			return false;
 		}else{
-			MyImage.BINARY_LEVEL = value;
+			TabImage.BINARY_LEVEL = value;
 			return true;
 		}
 	}
@@ -234,11 +288,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value sinon false
 	 */
-	private boolean changeBigSquareSize(int value){
+	private boolean changeSquareSize(int value){
 		if(value < 0){
 			return false;
 		}else{
-			QRCodesAnalyser.BIGSQUARESIZE = value;
+			QRCodesAnalyser.SQUARESIZE = value;
 			return true;
 		}
 	}
@@ -248,15 +302,43 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 	 * @param value
 	 * @return true si 0 <= value sinon false
 	 */
-	private boolean changeSmallSquareSize(int value){
-		if(value < 0){
+	private boolean changeSquareTrigger(int value){
+		if(value < 0 || value > 100){
 			return false;
 		}else{
-			QRCodesAnalyser.SMALLSQUARESIZE = value;
+			ConnexeComponent.SQUARETRIGGER = value/(float)(100);
 			return true;
 		}
 	}
 	
+	public void displayQRDetection(BufferedImage lastDetection, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal){
+		// Supprime les images en cours
+		imageView.resetList();
+		
+		imageView.setLastDetectionImage(lastDetection);
+		imageView.addImage(grey.ColorArrayToBufferedImage());
+		imageView.addImage(variance.ColorArrayToBufferedImage());
+		imageView.addImage(compo.getCCMyImage());
+		imageView.addImage(qrAnal.getQRCodesImage());
+		affiche();
+	}
+	
+	public void displayCamera(BufferedImage camera){
+		BufferedImage cameraToPrint = new BufferedImage(camera.getWidth(), camera.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = cameraToPrint.getGraphics();
+		g.drawImage(camera, 0, 0, null);
+		
+		g.setColor(Color.red);
+		
+		g.drawLine(100, 100, 120, 100);
+		g.drawLine(100, 200, 160, 200);
+		g.drawLine(100, 300, 200, 300);
+		
+		//controlMotion.addMotionOnImage(cameraToPrint);
+		
+		imageView.setCameraImage(cameraToPrint);
+		affiche();
+	}
 
 
 }

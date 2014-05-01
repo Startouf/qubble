@@ -8,12 +8,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledFuture;
 
+import main.ImageDetection;
+import main.ImageDetectionInterface;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.util.Point;
 
 import calibration.Calibrate;
-import camera.CameraInterface;
 import camera.FakeCamera;
 import opengl.BaseRoutines;
 import opengl.OutputImageInterface;
@@ -96,7 +98,7 @@ public class Qubble implements QubbleInterface {
 	 */
 	private final PlayerInterface player = new Player(this);
 	private final OutputImageInterface projection;
-	private final CameraInterface camera;
+	private final ImageDetectionInterface camera;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonnanceur 
 	 * qui associera des threads à l'éxécution des tâches
@@ -136,7 +138,7 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
-		camera = new FakeCamera(this);
+		camera = new ImageDetection(this);
 		projection = new ProjectorOutput(this);
 		initialise();
 
@@ -160,7 +162,7 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
-		camera = new FakeCamera(this);
+		camera = new ImageDetection(this);
 		projection = new ProjectorOutput(this);
 		initialise();
 		

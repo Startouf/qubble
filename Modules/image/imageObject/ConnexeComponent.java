@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ConnexeComponent {
 	// Coefficient pour accepter qu'une composante est un carré
-	public static final float SQUARETRIGGER = (float) 0.60;
+	public static float SQUARETRIGGER = (float) 0.80;
 	
 	private ArrayList<Point> list;
 	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
@@ -63,8 +63,7 @@ public class ConnexeComponent {
 		yMax = 0;
 		xMin = Window.imageWidth;
 		yMin = Window.imageHeight;
-		for(int i = 0 ; i<4 ; i++)
-			corner[i] = new Point(0, 0);
+		yCenter = xCenter = -1;
 	}
 	
 	/**
@@ -75,23 +74,31 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			if(pt.getX() > xMax || (pt.getX() == xMax && pt.getY() > corner[2].getY())){
-				xMax = pt.getX();
+			int i = 0;
+			while(i < 4 && corner[i] == null){
+				corner[i] = pt;
+				i++;
+			}
+			// Coin à gauche
+			if(corner[0].getX() > pt.getX()){
+				corner[0] = pt;
+			}
+			
+			// Coin à droite
+			if(corner[1].getX() < pt.getX()){
+				corner[1] = pt;
+			}
+			
+			// Coin en haut
+			if(corner[2].getY() > pt.getY()){
 				corner[2] = pt;
 			}
-			if(pt.getY() > yMax){
-				yMax = pt.getY();
+			
+			// Coin en bas
+			if(corner[3].getY() < pt.getY()){
 				corner[3] = pt;
 			}
-			if(pt.getX() < xMin){
-				xMin = pt.getX();
-				corner[1] = pt;
-			}	
-			if(pt.getY() < yMin || (pt.getY() == yMin && pt.getX() > corner[0].getX())){
-				yMin = pt.getY();
-				corner[0] = pt;				
-			}
-				
+
 		}
 		
 	}
@@ -102,28 +109,70 @@ public class ConnexeComponent {
 	
 	/**
 	 * Returne true si la composante connexe à l'allure d'un carré
+	 * rayon : valeur du rayon/2 désiré pour filtrer les carrés
 	 * @return
 	 */
-	public boolean isSquare(){
-		this.getCenter();
-		
-		float[] mySquare = new float[180];
+	public boolean isSquare(int rayon){
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
+				
+		float[] mySquare = new float[180]; //pas de 2
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
 		float distance = 0;
+		int distanceMax = 0;
 		// Calculer la distance
 		for(Point pt : list){
-			distance = (float) Math.sqrt((Math.pow((pt.getX()-xCenter), 2)+Math.pow((pt.getY()- yCenter), 2)));
+			distance = (float) Math.sqrt((pt.getX()-xCenter)*(pt.getX()-xCenter) + (pt.getY()- yCenter)*(pt.getY()- yCenter));
 			// Calcul de l'angle : produit sca / diviser par les distances ==> transformer le cosinus
 			// le deuxième vecteur est (1, 0)
-			angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)%180;
+			
+			//entre 0 et 180 degres
+			if ((pt.getY()-yCenter)/(float)distance >= 0) {
+				angle = (int) ((Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)/2) %180;
+			}
+			//entre 180 et 360 degres 
+			else if ((pt.getY()-yCenter)/(float)distance < 0) {						
+				angle = (360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2 %180;
+			}
+
 			//System.out.println(angle);
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
 				mySquare[angle] = distance;
 			}
+			if(distanceMax < distance){
+				distanceMax = (int)distance;
+				corner[0] = pt;
+			}
 		}
+		
+		//si mySquare[angle] nul, barycentre entre les deux valeurs non nulles superieure et inferieure
+		for (int i=0; i<180; i++) {
+			if(mySquare[angle] ==0) {
+				int ind_inf=angle - 1;
+				int ind_sup = angle + 1;
+				while (mySquare[ind_inf]==0) {
+					ind_inf --;
+				}
+				while (mySquare[ind_sup] == 0) {
+					ind_sup ++;
+				}
+			
+				mySquare[angle] = (mySquare[ind_inf]*(ind_sup-angle) + mySquare[ind_sup]*(angle-ind_inf)) /(ind_sup-ind_inf);
+			}
+		}
+
+		
+		// La composante étudiée est top grande
+		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
+		if(Math.abs(distanceMax-rayon) > 3){
+			return false;
+		}
+		
+		
 		
 /*		 //Afficher la composante connexe sous forme de courbe.
 		for(int i = 0; i<180; i += 2){
@@ -136,6 +185,7 @@ public class ConnexeComponent {
 		}
 		mySquareAverage /= 180;
 		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
+		
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0;
@@ -186,10 +236,20 @@ public class ConnexeComponent {
 	/**
 	 * Retourne la taille du coté du carré
 	 */
+	@Deprecated
 	public int getLength(){
 		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
 		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
-		return 	(int) (Math.sqrt(Math.pow(corner[2].getY() - corner[0].getY(), 2) + Math.pow(corner[2].getX() - corner[0].getX(), 2)));
+		return 	(int) (Math.sqrt(Math.pow(corner[0].getX() - corner[2].getX(), 2) + Math.pow(corner[0].getY() - corner[2].getY(), 2)));
+	}
+	
+	/**
+	 * Retourne la distance entre le premier point (un coin et le centre)
+	 * @return
+	 */
+	@Deprecated
+	public int getRayon(){
+		return 	0;
 	}
 
 	public int getxMax() {
@@ -209,10 +269,16 @@ public class ConnexeComponent {
 	}
 
 	public int getxCenter() {
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
 		return xCenter;
 	}
 
 	public int getyCenter() {
+		if(xCenter < 0 || yCenter < 0){
+			this.getCenter();
+		}
 		return yCenter;
 	}
 	
