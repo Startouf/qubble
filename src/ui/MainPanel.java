@@ -39,7 +39,7 @@ public class MainPanel extends JPanel
 	private final App app;
 	private final JTabbedPane settingsTabs;	//Utilisation d'onglets
 	private final GlobalSettingsPanel globalSettingsPanel;
-	private static final Icon closeIcon = new ImageIcon("data/ui/closeTab.png"); 
+	private static final Icon closeIcon = new ImageIcon("data/ui/croix.png"); 
 	public static final BufferedImage backgroundImage;
 	
 	static{

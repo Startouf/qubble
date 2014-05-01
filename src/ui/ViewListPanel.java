@@ -8,7 +8,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -38,6 +42,19 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 	private BidirectionalMap<Integer, QubjectProperty> propertyMap;
 	private BidirectionalMap<Integer, MediaInterface> qubjectMap;
 	private JPanel content;
+	
+	public static final BufferedImage backgroundImage;
+	static{
+		BufferedImage tryImage = null;
+		try {
+			tryImage = ImageIO.read(new FileInputStream("data/ui/fond 5.png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		backgroundImage = tryImage;
+	}
 	
 	/**
 	 * Additional columns
@@ -96,8 +113,8 @@ public class ViewListPanel extends ViewQubjects implements ActionListener {
 		super.paintComponent(g);
 
 		if(MainPanel.backgroundImage != null){
-			BufferedImage bf = MainPanel.backgroundImage;
-			BufferedImage dest = MainPanel.backgroundImage.getSubimage(0, 0, 
+			BufferedImage bf = backgroundImage;
+			BufferedImage dest = backgroundImage.getSubimage(0, 0, 
 					bf.getWidth(), bf.getHeight());
 			g.drawImage(dest, 0, 0, getWidth(), getHeight(), this);
 		}

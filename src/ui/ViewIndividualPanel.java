@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -70,14 +71,14 @@ public class ViewIndividualPanel extends ViewQubjects {
 		//Display selected Qubject
 		c.gridy = 0;
 		c.gridx = 0;
-		add(new JLabel("Options pour :"), c);
+		add(new ShadowedJLabel("Options pour :"), c);
 		c.gridx = 1;
 		add(qubjectSelector = new Selector(app, activeQubject), c);
 		
 		//Display Current position : NOT POSSIBLE WITH MEDIAINTERFACE !!!
 		c.gridy=1;
 		c.gridx=0;
-		add(new JLabel("Position : "));
+		add(new ShadowedJLabel("Position : "));
 		Dimension dim = this.app.getActiveProject().getQubble().getPosition(activeQubject);
 		qubjectPosition = new JLabel("t = " + dim.getWidth() + " Intensité = " + dim.getHeight());
 		c.gridx = 1;
@@ -106,7 +107,7 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private void addOption(String title, QubjectProperty modifier){
 		c.gridy = qubjectModifiers+3;
 		c.gridx = 0;
-		add(new JLabel(title), c);
+		add(new ShadowedJLabel(title, Color.white, new Color(0,0,0,85)), c);
 		c.gridx = 1;
 		Selector selector = new Selector(app, activeQubject, modifier);
 		add(selector, c);

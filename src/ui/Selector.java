@@ -57,6 +57,7 @@ public class Selector extends JPanel {
 		add(label = new ShadowedJLabel(qubject.getName(), Color.white, new Color(0,0,0,85)), BorderLayout.WEST);
 		label.setFont(new Font("Cambria", Font.BOLD, 16));
 		image = (BufferedImage) qubject.getImage();
+		setMaximumSize(new Dimension(250,250));
 		imagePanel = new JPanel(){
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -67,7 +68,7 @@ public class Selector extends JPanel {
 				}
 			}
 		};
-		imagePanel.setPreferredSize(new Dimension(100,100));
+		imagePanel.setPreferredSize(new Dimension(100,120));
 		imagePanel.setVisible(false);
 		add(imagePanel);
 		add(new SelectorButton(app,qubject), BorderLayout.EAST);
