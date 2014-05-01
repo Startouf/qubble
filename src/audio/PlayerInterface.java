@@ -48,4 +48,6 @@ public interface PlayerInterface
 	 * Stop recording the sound
 	 */
 	public void stopRecording();
+	
+	public void mute();
 }

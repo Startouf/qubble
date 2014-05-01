@@ -27,8 +27,9 @@ public class Player implements PlayerInterface, Runnable {
 	private final int bufferSize; //taille en octet du buffer. Contient donc 2*moins d'échantillons
 	//private ArrayList<Integer> samples;
 	private int cursor;
-	boolean running;
-	boolean paused;
+	private boolean running;
+	private boolean paused;
+	private boolean muted;
 	
 	public Player(Qubble qubble) {
 		
@@ -41,6 +42,7 @@ public class Player implements PlayerInterface, Runnable {
 		bufferSize = 2048;
 		running = false;
 		paused = false;
+		muted = false;
 		cursor = 0;
 		try {
 			format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 1, 2, 44100, false);
@@ -118,7 +120,8 @@ public class Player implements PlayerInterface, Runnable {
 				d[i] = -32767;
 			}
 			
-			else d[i] = (short) (dataInt[i]);
+			else if (!muted) d[i] = (short) (dataInt[i]);
+			else d[i] = 0;
 		}
 		if (isRecording) {
 			for (int i = 0; i < dataInt.length; i++) {
@@ -261,6 +264,11 @@ public class Player implements PlayerInterface, Runnable {
 	public void stopRecording() {
 		isRecording = false;
 		writeFile(toRecord, recording);
+	}
+	
+	@Override
+	public void mute() {
+		muted=muted?false:true;
 	}
 	
 	public static void writeFile(File file, ArrayList<Integer> samplesTab) {
