@@ -76,7 +76,7 @@ public class QubjectTracker {
 			glVertex3d(x+(OFFSET+RADIUS+Qubject.SIZE/2d)*cos, y+(OFFSET+RADIUS+Qubject.SIZE/2d)*sin, -2d);
 		}
 		glEnd();
-//		GL20.glUseProgram(0);
+		GL20.glUseProgram(0);
 	}
 	
 	/**
@@ -96,14 +96,6 @@ public class QubjectTracker {
 			glVertex3d(x+(Qubject.SIZE/2d+OFFSET)*cos, y+(Qubject.SIZE/2d+OFFSET)*sin, -3d);
 		}
 		glEnd();
-		
-//		glColor4f(0f,0f,0f,1f);
-//		glBegin(GL_QUADS);
-//		glVertex3f(x-Qubject.SIZE/2f, y-Qubject.SIZE/2f, -3f);
-//		glVertex3f(x+Qubject.SIZE/2f, y-Qubject.SIZE/2f, -3f);
-//		glVertex3f(x+Qubject.SIZE/2f, y+Qubject.SIZE/2f, -3f);
-//		glVertex3f(x-Qubject.SIZE/2f, y+Qubject.SIZE/2f, -3f);
-//		glEnd();
 	}
 	
 	public void setActive(boolean active){
