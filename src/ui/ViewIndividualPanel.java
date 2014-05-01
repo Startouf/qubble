@@ -1,9 +1,11 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -12,8 +14,11 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 import qubject.MediaInterface;
 import qubject.Qubject;
@@ -40,7 +45,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private final Selector qubjectSelector; 
 	private final Hashtable<QubjectProperty, Selector> selectors 
 		= new Hashtable<QubjectProperty, Selector>();
-	private final JLabel qubjectPosition;
+	private final ShadowedJLabel qubjectPosition;
+	private final JPanel content;
 	
 	public static final BufferedImage backgroundImage;
 	
@@ -62,7 +68,27 @@ public class ViewIndividualPanel extends ViewQubjects {
 		this.project = app.getActiveProject();
 		this.activeQubject = (Qubject) project.getQubjects().get(0);
 		
-		this.setLayout(new GridBagLayout());
+		content = new ScrollablePanel(this, new Dimension(600, 500), 600, 500);
+		content.setOpaque(false);
+		content.setLayout(new GridLayout(HEIGHT,WIDTH));
+		
+		JScrollPane scroll = new JScrollPane();
+		scroll.setOpaque(false);
+		
+		JViewport view = new JViewport();
+		view.setView(content);
+		view.setOpaque(false);
+		
+		scroll.setViewport(view);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setViewportBorder(
+	                BorderFactory.createLineBorder(Color.black));
+		this.add(scroll);
+		setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+		this.revalidate();
+		
+		
+		content.setLayout(new GridBagLayout());
 		c.insets = new Insets(10, 20, 10, 20);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 20;
@@ -70,18 +96,18 @@ public class ViewIndividualPanel extends ViewQubjects {
 		//Display selected Qubject
 		c.gridy = 0;
 		c.gridx = 0;
-		add(new JLabel("Options pour :"), c);
+		content.add(new ShadowedJLabel("Options pour :"), c);
 		c.gridx = 1;
-		add(qubjectSelector = new Selector(app, activeQubject), c);
+		content.add(qubjectSelector = new Selector(app, activeQubject), c);
 		
 		//Display Current position : NOT POSSIBLE WITH MEDIAINTERFACE !!!
 		c.gridy=1;
 		c.gridx=0;
-		add(new JLabel("Position : "));
 		Dimension dim = this.app.getActiveProject().getQubble().getPosition(activeQubject);
-		qubjectPosition = new JLabel("t = " + dim.getWidth() + " Intensité = " + dim.getHeight());
+		qubjectPosition = new ShadowedJLabel("t = " + dim.getWidth() + " Intensité = " + dim.getHeight());
 		c.gridx = 1;
-		add(qubjectPosition);
+//		content.add(new ShadowedJLabel("Position : "));
+//		content.add(qubjectPosition);
 		
 		for(QubjectProperty prop : QubjectProperty.values()){
 			addOption(prop.getUserFriendlyString(), prop);
@@ -106,10 +132,10 @@ public class ViewIndividualPanel extends ViewQubjects {
 	private void addOption(String title, QubjectProperty modifier){
 		c.gridy = qubjectModifiers+3;
 		c.gridx = 0;
-		add(new JLabel(title), c);
+		content.add(new ShadowedJLabel(title), c);
 		c.gridx = 1;
 		Selector selector = new Selector(app, activeQubject, modifier);
-		add(selector, c);
+		content.add(selector, c);
 		qubjectModifiers++;
 		selectors.put(modifier, selector);
 	}
