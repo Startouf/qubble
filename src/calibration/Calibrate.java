@@ -18,7 +18,7 @@ public class Calibrate{
 	 * Dimensions openGL
 	 */
 	static public int OpenGL_WIDTH = 1280;
-	static public int OpenGL_HEIGHT = 720;
+	static public int OpenGL_HEIGHT = 800;
 
 	/*
 	 * Les points doivent être donnés par le module image

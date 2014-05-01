@@ -18,6 +18,7 @@ import camera.FakeCamera;
 import opengl.BaseRoutines;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
+import audio.FakePlayer;
 import audio.Player;
 import audio.PlayerInterface;
 import audio.SampleController;
@@ -47,10 +48,10 @@ public class Qubble implements QubbleInterface {
 	 * Constantes de projection
 	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
 	 */
-	public static final int TABLE_LENGTH = 1200;
-	public static final int TABLE_HEIGHT = 600;
 	public static final int TABLE_OFFSET_X = 50; 
 	public static final int TABLE_OFFSET_Y=50;
+	public static final int TABLE_LENGTH = Calibrate.OpenGL_WIDTH - 2*TABLE_OFFSET_X;
+	public static final int TABLE_HEIGHT = Calibrate.OpenGL_HEIGHT - 2*TABLE_OFFSET_Y;
 	
 	/**
 	 * One measure displayed on Qubble
@@ -96,7 +97,7 @@ public class Qubble implements QubbleInterface {
 	 * Attributs coeur
 	 */
 	private final PlayerInterface player = new Player(this);
-	private final OutputImageInterface projection = new ProjectorOutput();
+	private final OutputImageInterface projection = new ProjectorOutput(this);
 	private final CameraInterface camera;
 	/**
 	 * Utilise un gestionnaire d'évènements /ordonnanceur 
@@ -187,12 +188,12 @@ public class Qubble implements QubbleInterface {
 		float absoluteStartingTime = 
 				((float)(getTile(qubject.getCoords()))*LOOP_MS/GRID_COLUMNS);
 		/* 
-		 * Make sure the starting time is POSITIVE
-		 * Use  (a % b + b) % b (when a can be negative) 
-		 * updateCurrentTime();
+		//Make sure the starting time is POSITIVE
+		//Use  (a % b + b) % b (when a can be negative) 
+		updateCurrentTime();
 		 */
-		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS);
-		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS + totalPauseTime;
+		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS)+totalPauseTime;
+		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS;
 		
 		//-----DEBUG
 		System.out.println("Demarrage Qubject <<" + qubject.getName() 
@@ -267,7 +268,8 @@ public class Qubble implements QubbleInterface {
 		tasks.put(qubject, sequencer.schedule(qubject));
 
 		//On indique a openGL qu'on a un Qubject 
-		projection.highlightQubject(qubject.getCoords());
+		//projection.highlightQubject(qubject.getCoords());
+		projection.trackQubject(qubject);
 
 		//On joue l'animation posé sur la table
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenDetected());
@@ -298,7 +300,8 @@ public class Qubble implements QubbleInterface {
 		//TODO : dire au player d'arrêter le son ?? (A discuter)
 
 		//On masque son ancien emplacement 
-		projection.highlightQubject(qubject.getCoords());
+		//projection.highlightQubject(qubject.getCoords());
+		projection.trackQubject(qubject);
 
 		//On l'enlève de la liste des qubjects présents sur la table
 		synchronized (qubjectsOnTable){
@@ -318,8 +321,8 @@ public class Qubble implements QubbleInterface {
 			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
 			return;
 		}
-		//On masque son ancien emplacement 
-		projection.highlightQubject(qubject.getCoords());
+		//On masque son ancien emplacement OLD
+//		projection.highlightQubject(qubject.getCoords());
 
 		//on change les coordonnées caméra -> OpenGL
 		org.lwjgl.util.Point glCoords = Calibrate.mapToOpenGL(position);
@@ -330,15 +333,19 @@ public class Qubble implements QubbleInterface {
 		}
 
 		//On replanifie
-//		sequencer.reschedule(tasks.get(qubject), qubject);
-
-		//On indique son nouvel emplacement
-		projection.highlightQubject(qubject.getCoords());
+		sequencer.reschedule(tasks.get(qubject), qubject);
 		
 		//On trie
 		synchronized (qubjectsOnTable){
 			Collections.sort(qubjectsOnTable);
 		}
+		
+		for(SampleControllerInterface sample : sampleControllers.get(qrCodes.get(qubject))){
+			player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+		}
+
+		//On indique son nouvel emplacement OLD
+//		projection.highlightQubject(qubject.getCoords());
 	}
 
 	@Override
@@ -421,7 +428,7 @@ public class Qubble implements QubbleInterface {
 	 * @return the column where the point is (column from <b>1</b> to 8 !)
 	 */
 	public static int getTile(org.lwjgl.util.Point pos){
-		return (int) Math.ceil((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
+		return (int) Math.floor((float)(pos.getX()-Qubble.TABLE_OFFSET_X)/Qubble.SPACING_X);
 	}
 
 	@Override

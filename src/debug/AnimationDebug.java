@@ -26,6 +26,7 @@ import explosion.FireExplosion;
 import explosion.PixelSpray;
 import fissure.Fissure;
 import qubject.AnimationInterface;
+import qubject.QRInterface;
 import routines.Time;
 import routines.VBO;
 import sequencer.Qubble;
@@ -310,15 +311,27 @@ public class AnimationDebug implements OutputImageInterface {
 		//TODO : ass boolean to request close
 	}
 
-	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-		
-	}
+@Override
+public void trackQubject(QRInterface qubject) {
+	// TODO Auto-generated method stub
+	
+}
 
-	@Override
-	public void resynchronize(float currentTime) {
-		// TODO Auto-generated method stub
-		
-	}
+@Override
+public void stopTrackingQubject(QRInterface qubject) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void stop() {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void resynchronize(float currentTime) {
+	// TODO Auto-generated method stub
+	
+}
 }

@@ -20,15 +20,14 @@ public interface QRInterface {
 	public int getBitIdentifier();
 
 	/**
-	 * Notclear whether this value is a pixel (int) value, a float
-	 * ... leave it a classical java Point (double) for now 
-	 * @return Pixel coordinates of the point on the table
+	 * The position of the qubject in the openGL world (lwjgl point)
+	 * @return Qubject center position in the GL world (lwjgl Point)
 	 */
 	public Point getCoords();
 
 	/**
-	 * Set the position of the QUbject on the table
-	 * @param pos currently a Java.awt.Point
+	 * Set the position of the Qubject in the GL world
+	 * @param pos lwjgl Point
 	 */
 	public void setCoords(Point pos);
 

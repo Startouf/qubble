@@ -4,6 +4,7 @@ package opengl;
 import org.lwjgl.util.Point;
 
 import qubject.AnimationInterface;
+import qubject.QRInterface;
 
 public interface OutputImageInterface 
 {
@@ -12,6 +13,19 @@ public interface OutputImageInterface
 	 * @param spacing
 	 */
 	public void toggleGrid();
+	
+	/**
+	 * Show status for qubject on the table
+	 * (statusbar, shading effect...)
+	 * @param qubject that should be tracked
+	 */
+	public void trackQubject(QRInterface qubject);
+	
+	/**
+	 * @see trackQubject
+	 * @param qubject
+	 */
+	public void stopTrackingQubject(QRInterface qubject);
 
 	/**
 	 * Render the shadow/contour of a qubject
