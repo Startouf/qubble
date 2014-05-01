@@ -1,22 +1,16 @@
 package camera;
 
-import static com.googlecode.javacv.cpp.opencv_highgui.cvSaveImage;
-
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import sequencer.QubbleInterface;
-
 import main.ImageDetectionInterface;
 import main.TerminateThread;
 
 import com.googlecode.javacv.FFmpegFrameGrabber;
+import com.googlecode.javacv.FrameGrabber;
 import com.googlecode.javacv.FrameGrabber.Exception;
-import com.googlecode.javacv.OpenCVFrameGrabber;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 /**
  * Gestion de l'acquisition de la caméra dans un thread séparé
@@ -27,7 +21,7 @@ public class Camera implements Runnable, TerminateThread{
 	public final int IMAGEHEIGHT = 720, IMAGEWIDTH = 1280;
 	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
-	private FFmpegFrameGrabber grabber;
+	private FrameGrabber grabber;
 	private IplImage tableImage;
 	private int i = 0;
 	
@@ -40,10 +34,13 @@ public class Camera implements Runnable, TerminateThread{
 		// Tentative de démarage de la caméra
 		try{
 			// Ouverture de la caméra sur le port 0 
-			grabber = new FFmpegFrameGrabber("/dev/video1");
+			// Linux
+			//grabber = new FFmpegFrameGrabber("/dev/video1");
+			//grabber.setFormat("video4linux2");
+			// Windows 2 : USB
+			grabber = (FrameGrabber.createDefault(2));
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
-			grabber.setFormat("video4linux2");
 			grabber.setImageHeight(IMAGEHEIGHT);
 			grabber.setImageWidth(IMAGEWIDTH);
 			grabber.start();
