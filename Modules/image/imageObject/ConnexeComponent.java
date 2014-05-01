@@ -107,7 +107,7 @@ public class ConnexeComponent {
 			}
 			//entre 180 et 360 degres 
 			else if ((pt.getY()-yCenter)/(float)distance < 0) {						
-				angle = (360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2 %180;
+				angle = ((360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2) %180;
 			}
 
 			//System.out.println(angle);
@@ -140,7 +140,7 @@ public class ConnexeComponent {
 		
 		// La composante étudiée est top grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
-		if(Math.abs(distanceMax-rayon) > 3){
+		if(Math.abs(distanceMax-rayon) > 5){
 			return false;
 		}
 		
@@ -160,17 +160,22 @@ public class ConnexeComponent {
 		
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
-		float save = 0;
+		float save = 0, temp = 0;
+		int bestAngle = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
-			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > SQUARETRIGGER ){
-				System.out.println("True : " + save);
-				return true;
+			temp = calculError(mySquare, mySquareAverage, mySquareSD, dephasage);
+			if(temp > save){
+				save = temp;	
+				bestAngle = dephasage;
 			}
-				
 		}
-		System.out.println("False : " + save);
-		return false;
+			if(save > SQUARETRIGGER ){
+				System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
+				return true;
+			}else{
+				System.out.println("False : " + save);
+				return false;
+			}
 	}
 	
 	/**
@@ -184,7 +189,7 @@ public class ConnexeComponent {
 		float result = 0;
 		
 		for(int i = 0 ; i < 180 ; i++){
-			result += Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[i%90]-perfectSquare_Average);
+			result += Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
 		}
 		
 		return result/(perfectSquareSD*realSD*180);

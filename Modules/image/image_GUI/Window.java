@@ -1,6 +1,7 @@
 package image_GUI;
 
 import imageObject.ConnexeComponent;
+import imageObject.Point;
 import imageTransform.TabImage;
 
 import java.awt.BorderLayout;
@@ -9,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +40,7 @@ import qrDetection.QR_Detection;
  * @author masseran
  *
  */
-public class Window extends JFrame implements ActionListener, DocumentListener{
+public class Window extends JFrame implements ActionListener, DocumentListener, MouseListener{
 	
 	private QR_Detection controlDetection;
 	private MotionEstimation controlMotion;
@@ -148,6 +151,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		control.add(squareSizeJTF);
 		
 		imageView = new ImageView();
+		imageView.addMouseListener(this);
 		this.setLayout(new BorderLayout());
 		this.getContentPane().add(imageView, BorderLayout.CENTER);
 		this.getContentPane().add(control, BorderLayout.SOUTH);
@@ -366,5 +370,23 @@ public class Window extends JFrame implements ActionListener, DocumentListener{
 		affiche();
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		controlMotion.addQubbleToList((int)(e.getX()*1.6), (int)(e.getY()*1.4), 888);
+		System.out.println("Souris");
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {		}
+
+	@Override
+	public void mousePressed(MouseEvent e) {	
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {	}
 
 }

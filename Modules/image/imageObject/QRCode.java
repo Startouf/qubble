@@ -109,9 +109,9 @@ public class QRCode {
 		// Fixer un seuil qui s'adapte à l'image
 		// Prend en référence le coin pour la couleur noire et le vide pour la couleur blanche
 		int treshIsWhite = getTresh((xCenter - 2*baseX), (yCenter - 2*baseY), target);
-		int treshIsBack = getTresh((xCenter - 4*baseX), (yCenter - 4*baseY), target);
+		int treshIsBack = getTresh((int)(xCenter - (3.5)*baseX), (int)(yCenter - (3.5)*baseY), target);
 		TRESH = (treshIsWhite+treshIsBack)/2;
-		System.out.println(TRESH);
+
 		// Calcul du point central
 		if(isBlack(xCenter, yCenter, target)){
 			valeur |= masque; 

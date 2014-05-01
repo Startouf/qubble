@@ -43,15 +43,16 @@ public class QR_Detection implements Runnable, TerminateThread{
 					e.printStackTrace();
 				}
 			}
+			
+			if(controlImage.isNewImageQR()){
+				analyseTable(new TabImage(controlImage.getLastImage()));
+			}
+			
 			try {
-				Thread.sleep(300);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			if(controlImage.isNewImageQR()){
-				analyseTable(new TabImage(controlImage.getLastImage()));
-				//controlImage.setQrDetectionDone(true);
 			}
 		}
 	}
@@ -86,12 +87,12 @@ public class QR_Detection implements Runnable, TerminateThread{
 					
 		long endTime = System.currentTimeMillis();
 		
-		System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
+	/*	System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
 		System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
 		System.out.println("Temps de calcul pour trouver les composantes connexes: " + (componentTime-binaryTime) + " ms.");
 		System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
 		System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
-		
+		*/
 		controlImage.setQrDetectionDone(true);
 	}
 
