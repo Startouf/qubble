@@ -1,6 +1,8 @@
 package calibration;
 
 import static org.lwjgl.opengl.GL11.*;
+import opengl.BaseRoutines;
+import opengl.InitRoutines;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -16,7 +18,7 @@ public class CalibrationProjection implements Runnable{
 	private static int HEIGHT = Calibrate.OpenGL_HEIGHT;
 	
 	public void start(){
-		initDisplay();
+		InitRoutines.initDisplayOnSecondDevice(WIDTH, HEIGHT);
 		glEnable(GL_CULL_FACE);
 
 		while (!Display.isCloseRequested()){

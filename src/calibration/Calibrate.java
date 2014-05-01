@@ -52,10 +52,23 @@ public class Calibrate{
 	 * @return OpenGL position (lwjgl.util.point)
 	 */
 	static public org.lwjgl.util.Point mapToOpenGL(Point pos){
-		return new org.lwjgl.util.Point(mapXToOpenGL(pos.getX()), mapYToOpenGL(pos.getY()));
+		int x = pos.getX();
+		int y = pos.getY();
+		int yGL = (y - CAMERA_PIXEL_UPPER_LEFT.getY());
+		
+		int dBordRect = Math.abs(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX()) * Math.abs(y - CAMERA_PIXEL_LOWER_LEFT.getY()) / Math.abs(CAMERA_PIXEL_UPPER_LEFT.getY() - CAMERA_PIXEL_LOWER_LEFT.getY());
+		int dBordPoint = Math.abs(x-CAMERA_PIXEL_LOWER_LEFT.getX()) + dBordRect; 
+		int dBordBord = 2 * dBordRect + CAMERA_PIXEL_LOWER_RIGHT.getX() - CAMERA_PIXEL_LOWER_LEFT.getX();
+		int dRectBord = CAMERA_PIXEL_LOWER_LEFT.getX() - CAMERA_PIXEL_UPPER_LEFT.getX() - dBordRect;
+		int xGL = (x -dRectBord) * dBordPoint/dBordBord;
+		
+		System.out.println (xGL + " " + yGL);
+		org.lwjgl.util.Point point = new org.lwjgl.util.Point (xGL, yGL);
+		return point;
+		
 	}
 
-	static private int mapXToOpenGL(int x){
+/*	static private int mapXToOpenGL(int x){
 		int xGL = (int) ((x-CAMERA_PIXEL_LOWER_LEFT.getX())*ratioX);
 		if (xGL > OpenGL_WIDTH) //Point outside of openGL display
 			System.out.println("Point outside openGL window");
@@ -67,5 +80,5 @@ public class Calibrate{
 		if (yGL > OpenGL_HEIGHT) //Point outside of openGL display
 			System.out.println("Point outside openGL window");
 		return(yGL);
-	}
+	}*/
 }
