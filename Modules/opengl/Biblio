@@ -2,8 +2,7 @@
 #    Bibliographie Module Synthèse 2D/3D   
 ##############################################
 
-####1- Explication du modèle OpenGL pour le fonctionnement du processeur graphique: quels sont les blocs fonctionnels du GPU et
-à quoi servent-ils
+####1- Explication du modèle OpenGL pour le fonctionnement du processeur graphique: quels sont les blocs fonctionnels du GPU et à quoi servent-ils
 ####2- Principes de base de OpenGL: Représentation des données et des transformations géometriques: Matrices, vertex, lignes/triangles/..., projection et modèle de caméra
 ####3- Principes de base de OpenGL: Texture et système de coordonnées
 ####4- Principes de base de OpenGL: Modèle de lumière            
@@ -92,11 +91,13 @@ Permet d'indiquer sur quelle partie de la fenêtre on va occuper
 Projection Perspective :
 Analogie : choisir la lentille de la caméra
 Spécifier la transformation qui rend les objets plus petits quand il sont loin, et borner l'espace qui sera rendu
-		glFrustum(-x1,x1,-y1,y1, distance au plan1, distance au plan2) 
+
+	glFrustum(-x1,x1,-y1,y1, distance au plan1, distance au plan2) 
 
 Projection Orthonormale :
 Analogie : Observation à l'infini
-		glOrtho(-x,x,-y,y-,z,z)
+
+	glOrtho(-x,x,-y,y-,z,z)
 
 ### Les transformations Viewing 
 Analogie : positioner et viser avec la caméra
@@ -185,22 +186,34 @@ Il est intéressant alors, de charger une DisplayList (~une macro) qui va enregi
 Les étapes sont :
 
 +	Créer un ID unique pour al liste (avec un équivalent lwjgl des Gl[type])
+
     		myList = glGenLists(1);
+    		
     Start recording the display list
+    
     		glNewList(myList, GL_COMPILE); // just record for now
+    		
     Start rendering the display list
+    
        		glBegin (GL_POLYGON);
           	... ... 
+          	
     Finish rendering the stock scene
+    
        		glEnd ();
     		glEndList();
+    		
 +	Render : on demande au GPU de rendre une ou plusieurs listes
+
 			(transformations)
 			glCallList(theTorus);
 			glFlush();
 			(/transformations)
+			
 	+ executing multiple display lists 
+	
 			glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
+			
 +	 La ou on gagne avec les DisplayLists : si des routines complexes sont utilisées
 	+ 	Opérations matricielles
 	+ 	Rasterisation bitmaps et images
@@ -232,18 +245,25 @@ Permet de stocker des données de vertex dans la VRAM (mémoire GPU)
 Permet un accès très rapide par le GPU et évite les échanges CPU <--> GPU qui sont souvent sources de lenteur
 
 ### Création d'un VBO
+
 +	Sous lwjgl, il faut recréer l'équivalent des GLint, GLfloat, etc...
 	Créer un [Type]Buffer en spécifiant la taille ou un tableau déjà rempli (BufferUtils.create[TYPE]Buffer(SIZE || Float[]);
 +	Réserver un buffer GPU (et récupérer son ID) à l'aide de glGenBuffersARB(buffer) (méthode de ARBVertexBufferObject)
 	(renvoi d'un int id)				OU avec glGenBuffers(buffer) (méthode de GL15)
-+	Choisir le buffer GPU actif à l'aide de l'ID généré si le GPU sait faire *
++	Choisir le buffer GPU actif à l'aide de l'ID généré si le GPU sait faire 
+
 			GL15/ARB.glBindBuffer(GL15/ARB.GL_ARRAY_BUFFER, id); 
+			
 +	Envoyer les données dans le Buffer GPU (équivalent java : [Type]Buffer)
- ...En précisant l'utilisation des données et la fréquence de leur usage/modif**
+ ...En précisant l'utilisation des données et la fréquence de leur usage/modif
+ 
 			GL15/ARB.glBufferData(GL15/ARB.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	
 On peut demander si le GPU sait faire avec :
-		if(GLContext.getCapabilities().GL_ARB_vertex_buffer_object)	(équivalent GL15 aussi ?)
+
+		if(GLContext.getCapabilities().GL_ARB_vertex_buffer_object)	(équivalent GL15 aussi)
+		
+		
 GL_(STATIC | STREAM | DYNAMIC)_(DRAW | READ | COPY). From the OpenGL docs:
 
 +	STATIC - The data store contents will be modified once and used many times.
@@ -254,21 +274,35 @@ GL_(STATIC | STREAM | DYNAMIC)_(DRAW | READ | COPY). From the OpenGL docs:
 +	COPY - The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.
 
 ### Utilisation d'un VBO (render)
+
 +	Dire au client d'activer les vertexArray, colorArray, etc...
+
 			glEnableClientState(int param) param = GL_VERTEX_ARRAY, GL_COLOR_ARRAY, etc.
+			
 	Pour les Shaders, utiliser 
+	
 			glEnableVertexAttribArray(int index)
+			
 +	Spécifier le type d'objet à rendre (Vertex, etc...) et sa position dans l'array
+
 			gl(Vertex|Color|Normal)Pointer(int size, int type, int stride, long offset)
+			
 	size = dimension (2,3,4), type = GL_[type], stride = distance entre 2 objets du même type (for interleawed arrays), offset = position du premier objet cherché
 	Version shaders : 
+	
 			glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
+			
 +	Dire de tracer :
+
 			glVertexAttribPointer(int index, int size, int type, boolean normalize, int stride, long offset)
+			
 	pour les IBO : 
+	
 			glDrawElements(int mode, int count, int type, long offset)
+			
 	(Il existe aussi d'autres fonctions : glDrawRangeElements, glMultiDrawArray, glMultiDrawElements
 +	!! Ne pas oublier de détruire le VBO après utilisation
+
 ##################################################
 #6- Principes de fonctionnement des shaders
 ##################################################
@@ -279,15 +313,19 @@ Il caractérise la "programmable pipeline" du GPU : on remplace le traitement no
 
 ## Chargement des Shader
 On regroupe plusieurs shaders dans un "program", qui sera attaché au moment du rendu des primitives / tracé via glDrawElements
+
 +	Compilation des fichiers textes contenant le code des shaders
 	(Il y a donc une pré-phase de lecture du fichier)
 +	Creation du programme, on y attache les shaders
 +	Definition des attributs : ils permettent de mettre à jour le shader 
+
 			GL20.glBindAttribLocation(pID, i, attrib[i]);
+			
 +	Validation du programme
 
 ## Utilisation
 Il suffit de faire 
+
 		glUseShaderProgram(id) 
 		...
 		// Mise à jour
