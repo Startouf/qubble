@@ -115,20 +115,13 @@ public class Block {
 		return yCorner;
 	}
 
-	public void setRbest(BufferedImage rbest, int motionX, int motionY) {
-		bestMotion = new BufferedImage(rbest.getWidth(), rbest.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = bestMotion.getGraphics();
-		g.drawImage(rbest, 0, 0, rbest.getWidth(), rbest.getHeight(), null);
-		this.motionX = motionX*3;
-		this.motionY = motionY*3;
-	}
-
-
 	public void move(int bestX, int bestY) {
-		int xMove = bestX-xCorner;
-		int yMove = bestY-yCorner;
-		xCorner = bestX;
-		yCorner = bestY;		
+		int xMove = bestX-xCenter;
+		int yMove = bestY-yCenter;
+		xCorner += xMove;
+		yCorner += yMove;
+		xCenter = bestX;
+		yCenter = bestY;		
 	}
 
 }

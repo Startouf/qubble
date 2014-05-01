@@ -77,8 +77,8 @@ public class MotionAnalyser {
 		for (Block bl : list){
 			if(isActive(bl)){
 				// Recherche du mouvement de translation
-				//getLogMotion(bl);
-				getAllMotion(bl);
+				getLogMotion(bl);
+				//getAllMotion(bl);
 				// Recherche de mouvement de rotation
 			}else{
 				// Le block n'a pas bougé
@@ -142,7 +142,7 @@ public class MotionAnalyser {
 	 */
 	public boolean isActive(Block block){
 		boolean result = true;
-		valeurType = 1200000;
+		valeurType = 600000;
 		float test = Erreur.errQM(cur,ref, block, block);
 		if(ImageDetection.PRINTDEBUG)
 			System.out.println("Is active " + test);
@@ -182,7 +182,7 @@ public class MotionAnalyser {
 					// Surveiller les bords de l'image
 					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
 						try {
-							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
+							err = Erreur.errQM(cur, ref, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow), bl);
 							if (err < min){
 								min = err;
 								bestX=j; //-lref.get(i).getX();

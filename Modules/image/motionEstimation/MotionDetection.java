@@ -37,7 +37,7 @@ public class MotionDetection implements Runnable, TerminateThread{
 		pause = true;
 		run = true;
 		listBlock = new HashMap<Integer, Block>();
-		motionAnalyse = new MotionAnalyser(new BlockMatching(SQUARESIZE,SQUARESIZE, 4, 0));
+		motionAnalyse = new MotionAnalyser(new BlockMatching(SQUARESIZE,SQUARESIZE, SQUARESIZE*2, 0));
 		imageWidth = controlImage.getWidthCamera();
 		imageHeight = controlImage.getHeightCamera();
 	}
@@ -75,7 +75,7 @@ public class MotionDetection implements Runnable, TerminateThread{
 				analyseTable();
 			}
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -74,7 +74,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	 * Initialisation de la fenêtre et création des composants
 	 */
 	private void init(int binary, int rayon, int square){
-		this.setSize(800, 696);
+		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
@@ -156,7 +156,6 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		this.getContentPane().add(imageView, BorderLayout.CENTER);
 		this.getContentPane().add(control, BorderLayout.SOUTH);
 		this.setVisible(true);
-		System.out.println(imageView.getHeight());
 	}
 	
 	/**
@@ -373,7 +372,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		controlMotion.addQubbleToList((int)(e.getX()*1.6), (int)(e.getY()*1.2), 888);
+		controlMotion.addQubbleToList((int)(e.getX()*1.6), (int)(e.getY()*1.43), 888);
 	}
 
 	@Override
