@@ -41,8 +41,8 @@ public class Calibrator{
 		Calibrate.CAMERA_PIXEL_UPPER_RIGHT = new Point (1187,250);
 		
 		//test
-		//Point point = new Point (119, 300);
-		//Calibrate.mapToOpenGL(point);
+		Point point = new Point (35, 300);
+		Calibrate.mapToOpenGL(point);
 		
 		//TODO : close image
 //		App app = new App();

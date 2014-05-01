@@ -22,6 +22,7 @@ public class Calibrate{
 
 	/*
 	 * Les points doivent être donnés par le module image
+	 * <html> !! ON FILME LE MIROIR
 	 */
 	static public Point CAMERA_PIXEL_LOWER_LEFT = new Point(0,0);
 	static public Point CAMERA_PIXEL_LOWER_RIGHT = new Point(OpenGL_WIDTH,0);
@@ -62,7 +63,7 @@ public class Calibrate{
 		int dRectBord = CAMERA_PIXEL_LOWER_LEFT.getX() - CAMERA_PIXEL_UPPER_LEFT.getX() - dBordRect;
 		int xGL = (x -dRectBord) * dBordPoint/dBordBord;
 		
-		System.out.println (xGL + " " + yGL);
+		System.out.println ("("+x+" ," + y +") camera --> (" + xGL + ", " + yGL+") openGL");
 		org.lwjgl.util.Point point = new org.lwjgl.util.Point (xGL, yGL);
 		return point;
 		
