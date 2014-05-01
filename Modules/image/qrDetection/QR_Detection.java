@@ -92,7 +92,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
 		System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 		
-		//controlImage.setQrDetectionDone(true);
+		controlImage.setQrDetectionDone(true);
 	}
 
 	public void terminate() {
