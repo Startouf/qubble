@@ -1,234 +1,161 @@
 package motionEstimation;
 
 import imageObject.Point;
-import imageTransform.TabImage;
+import image_GUI.Window;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.color.CMMException;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
-/**
- * Gestionnaire de mouvement entre 2 images
- *
- */
-public class MotionDetection {
+import main.ImageDetection;
+import main.ImageDetectionInterface;
+import main.TerminateThread;
 
-	private TabImage cur;
-	private TabImage ref;
-	private BlockMatching param;
-	private BufferedImage prediction;
-	private int valeurType;
+
+public class MotionDetection implements Runnable, TerminateThread{
+	private Window motionWindow;
+	private boolean run, pause, firstTime;
+	private MotionAnalyser motionAnalyse;
+	private ImageDetectionInterface controlImage;
+	// Liste des blocks à analyser
+	HashMap<Integer, Block> listBlock;
 	
-	public MotionDetection(BlockMatching param){
-		this.param = param;
+	public static int SQUARESIZE = 52;
+	
+	// Varaible de mémorisation de l'analyse
+	private int imageHeight, imageWidth;
+	BufferedImage ref;
+	BufferedImage cur;
+	
+	public MotionDetection(ImageDetectionInterface controlImage){
+		this.controlImage = controlImage;
+		// Bloquer le démarrage tant que au moins deux images n'ont pas été récupérés
+		firstTime = true;
+		pause = true;
+		run = true;
+		listBlock = new HashMap<Integer, Block>();
+		motionAnalyse = new MotionAnalyser(new BlockMatching(SQUARESIZE,SQUARESIZE, 4, 0));
+		imageWidth = controlImage.getWidthCamera();
+		imageHeight = controlImage.getHeightCamera();
 	}
 	
-	
-
-	/**
-	 * Affiche l'image de référence avec un quadrillage des différents blocks
-	 * Affiche les vecteurs de mouvements
-	 * @return
-	 */
-	public BufferedImage printMotion(ArrayList<Block> list){
-		//prediction = new BufferedImage(cur.getWidth(), cur.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics g = prediction.getGraphics();
-		//g.drawImage(ref, 0, 0, ref.getWidth(), ref.getHeight(), null);
-
-		g.setColor(Color.YELLOW);
-
-		// Affichage du quadrillage
-		for(int i =1 ; i <= cur.getHeight()/param.getBlockSizeCol()+1 ; i++){
-			g.drawLine(param.getBlockSizeCol()* i, 0, param.getBlockSizeCol()* i, cur.getHeight());
-		}
-		for(int i =1 ; i <= cur.getWidth()/param.getBlockSizeRow()+1 ; i++){
-			g.drawLine(0, param.getBlockSizeRow()* i, cur.getWidth(), param.getBlockSizeRow()* i);
-		}
-
-		g.setColor(Color.RED);
-
-		// Affichage des vecteurs
-		for(Block bl : list){
-			if(bl.getRbest() != null){
-				g.setColor(Color.RED);
-				g.drawLine(bl.getxCenter() + param.getBlockSizeCol()/2, bl.getyCenter() + param.getBlockSizeRow()/2, bl.getxCenter() + param.getBlockSizeCol()/2 + bl.getMotionX(), bl.getyCenter() + param.getBlockSizeRow()/2 + bl.getMotionY());
-				g.setColor(Color.BLUE);
-				g.fillOval(bl.getxCenter() + param.getBlockSizeCol()/2 + bl.getMotionX()-1, bl.getyCenter() + param.getBlockSizeRow()/2 + bl.getMotionY()-1, 2, 2);
-			}else
-				System.out.println("Pas de block correspondant trouvé ...");
-
-		}	
-		return prediction;
-	}
-
-	/**
-	 * @param : La liste contient des points qui représentent le centre du block à analyser
-	 * La fonction recherche les meilleurs déplacements pour une liste de quelques blocks de l'image.
-	 * Les blocks sont déterminés par les paramètres d'un objet BlockMatching
-	 */
-	public void searchMotion(Collection<Block> list){
-		
-		// Parcours des points centraux
-		for (Block bl : list){
-			if(isActive(bl)){
-				// Recherche du mouvement de translation
-				//getLogMotion(bl);
-				getAllMotion(bl);
-				// Recherche de mouvement de rotation
-			}else{
-				// Le block n'a pas bougé
-				System.out.println("Le cube n'a pas bougé.");
-			}
-		}
-
-	}
-
-	/**
-	 * Recherche parmis tous les blocks de l'image courante
-	 * @param i
-	 */
-	/*
-	 * ce que j'ai modifié : rajout d'un attribut list pour réaliser le getAllMotion sur la liste qubbles et pas uniquement sur lref, 
-	 * là ou il y a list, remplacer par lref
-	 */
-	public void getAllMotion(Block bl){
-		// Parcours des blocks de l'image de suivante
-		int brow = param.getBlockSizeRow();
-		int bcol = param.getBlockSizeCol();
-		int search = param.getSearch();
-		
-		int min = Integer.MAX_VALUE;
-		int err =0;
-		boolean result =false;
-		int x = bl.getxCenter();
-		int y = bl.getyCenter();
-		int bestX = bl.getxCorner(), bestY = bl.getyCorner();
-		for (int j = x-search; j <=x+search; j++){
-			for (int k = y-search; k<=y+search; k++){
-					// Surveiller les bords de l'image
-					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
-						try {
-							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
-							if (err < min){
-								min = err;
-								bestX=j; //-lref.get(i).getX();
-								bestY=k; //-lref.get(i).getY();
-
-							}
-							System.out.println("Move : " + j + " " + k + "  Erreur : " + err);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
+	public void run() {	
+		while(run){
+			// Attente d'une nouvelle image
+			while(!controlImage.isNewImageMotion() || pause || firstTime){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-		x=bestX; //-lref.get(i).getX();
-		y=bestY;
-		}
-		System.out.println("Move : " + x + " " + y);
-		bl.move(x, y);
-	}
-	
-	/**
-	 * cette fonction determine si un block est en mouvement, pour qu'elle marche convenablement,
-	 * il faut faire des tests pour déterminer une valeur type
-	 */
-	public boolean isActive(Block block){
-		boolean result = true;
-		valeurType = 1200000;
-		float test = Erreur.errQM(cur,ref, block, block);
-		System.out.println("Is active " + test);
-		try {
-			// Comparaison de l'erreur sur le même block dans les deux images
-			if (Erreur.errQM(cur,ref, block, block) < valeurType){
-				result = false;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-
-
-	/**
-	 * Recherche uniquement les blocks selon la recherche de type log 
-	 * @param i, brow, bcol, search
-	 */
-	public void getLogMotion(Block bl){
-		// Parcours des blocks de l'image de suivante
-		int brow = param.getBlockSizeRow();
-		int bcol = param.getBlockSizeCol();
-		int search = param.getSearch();
-		
-		int min = Integer.MAX_VALUE;
-		int err =0;
-		boolean result =false;
-		int x = bl.getxCenter();
-		int y = bl.getyCenter();
-		int bestX = bl.getxCorner(), bestY = bl.getyCorner();
-		while (result == false){
-			for (int j = x-search; j <=x+search; j=j+search){
-				for (int k = y-search; k<=y+search; k=k+search){
-					// Surveiller les bords de l'image
-					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
-						try {
-							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
-							if (err < min){
-								min = err;
-								bestX=j; //-lref.get(i).getX();
-								bestY=k; //-lref.get(i).getY();
-
-							}
-							System.out.println("Move : " + j + " " + k + "  Erreur : " + err);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
+				if(controlImage.isNewImageMotion()){
+					motionAnalyse.setNewImage(controlImage.getLastImage());
+					firstTime = false;
 				}
+			}			
+			// Mise à jour de la liste des blocks à suivre
+			HashMap<Integer, Point> temp = controlImage.getAddedQubbleList();
+			for(int id : temp.keySet()){
+				addQubbleToList(temp.get(id).getX(), temp.get(id).getY(), id);
 			}
-			x=bestX; //-lref.get(i).getX();
-			y=bestY;
-			if (search >= 2){
-				search = (int)(search/2);// ici je veux la partie entiere donc à vérifier
-			} else {
-				result = true;
+			controlImage.resetAddedQubbleList();
+			for(int id : controlImage.getRemovedQubbleList().keySet()){
+				removeQubbleToList(id);
+			}
+			controlImage.resetRemovedQubbleList();
+			
+			// Récupération du mouvement
+			if(controlImage.isNewImageMotion()){
+				motionAnalyse.setNewImage(controlImage.getLastImage());
+				
+				analyseTable();
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		System.out.println("Move : " + x + " " + y);
-		bl.move(x, y);
 	}
-
-	public void setNewImage(BufferedImage cur) {
-		this.ref = this.cur;
-		this.cur = (new TabImage(cur)).getGrey(false);
-	}
-
-
-
-	/*	public int[] getVector(Block a){
-		int[] vector = new int[2];
-		Block b = a.getRbest();
-		vector[0]= (b.getX()-a.getX());
-		vector[1]=(b.getY()-a.getY());
-		return vector;
-	}
-	public float[] getSpeed(Block a, BlockMatching param){
-		int[] vector = getVector(a);
-		float[] speed = new float[2];
-		speed[0] = 60*vector[0]/param.getFps();
-		speed[1]= 60*vector[1]/param.getFps();
-		return speed;
-
-	}
-	public float getNormalSPeed(Block a , BlockMatching param){
-		float[] speed = getSpeed(a,param);
-		return (float)Math.sqrt(speed[0]*speed[0]+speed[1]*speed[1]);
-	}*/
 	
 	
+	
+	/**
+	 * Recherche tous les QR codes parmis screen 
+	 * @param screen
+	 *
+	 */
+	public void analyseTable(){
+		// Démarre la détection de mouvement
+		long startTime = System.currentTimeMillis();
+		
+		motionAnalyse.searchMotion(listBlock.values());
+
+		long endTime = System.currentTimeMillis();
+		if(ImageDetection.PRINTDEBUG)
+			System.out.println("Temps de calcul du Block Matching : " + (endTime-startTime) + " ms.");
+	
+		controlImage.setMotionEstimationDone(true);
+	}
+
+	public void terminate() {
+	
+	}
+
+	public BufferedImage getRef() {
+		return ref;
+	}
+
+	public BufferedImage getCur() {
+		return cur;
+	}
+	
+	/**
+	 * prend en entrée la position du qubble et l'incorpore dans la liste des blocs dont nous voulons déterminer le mouvement
+	 * ainsi on ne fait le block matching que sur quelques blocs aulieu de le faire sur tous
+	 */
+	public void addQubbleToList(int positionX, int positionY,int id){
+		// Création du cadre/Block qui englobe le Qr code
+		listBlock.put(id, new Block(positionX, positionY, imageWidth, imageHeight, SQUARESIZE, SQUARESIZE));
+	}
+	
+	public void removeQubbleToList(int id){
+		for(Integer num : listBlock.keySet()){
+			if(num == id){
+				listBlock.remove(num);
+			}
+		}
+	}
+	
+	/**
+	 * Dessine le contour des blocks sur l'image en paramètre
+	 * @param camera
+	 */
+	public void addMotionOnImage(BufferedImage camera){
+		if(camera != null){
+			Graphics g = camera.getGraphics();
+			g.setColor(Color.green);
+			for(Block bl : listBlock.values()){
+				g.drawRect(bl.getxCorner(), bl.getyCorner(), bl.getWidth(), bl.getWidth());
+			}
+		}
+	}
+	
+	public boolean switchPause(){
+		if(pause){
+			pause = false;
+		}else{
+			pause = true;
+		}
+		return pause;
+	}
+
+	
+
 
 }

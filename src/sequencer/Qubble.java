@@ -96,7 +96,7 @@ public class Qubble implements QubbleInterface {
 	/*
 	 * Attributs coeur
 	 */
-	private final PlayerInterface player = new FakePlayer(this);
+	private final PlayerInterface player = new Player(this);
 	private final OutputImageInterface projection;
 	private final ImageDetectionInterface camera;
 	/**
@@ -387,6 +387,7 @@ public class Qubble implements QubbleInterface {
 				this.totalPauseTime += BaseRoutines.convertSysTimeToMS(Sys.getTime()-startPauseTime);
 			}
 			isPlaying = !isPlaying;
+			camera.switchCamera();
 			sequencer.playPause();
 			projection.playPause();
 			player.playPause();
@@ -396,6 +397,8 @@ public class Qubble implements QubbleInterface {
 			isPlaying = true;
 			startTime = Sys.getTime();
 			projection.playPause();
+			camera.switchCamera();
+			camera.switchDetection();
 		}
 	}
 
@@ -410,7 +413,7 @@ public class Qubble implements QubbleInterface {
 	public void prepare() {
 		if(!hasStarted){
 			cameraThread.setPriority(Thread.MIN_PRIORITY);
-			playerThread.setPriority(Thread.MAX_PRIORITY);
+//			playerThread.setPriority(Thread.MAX_PRIORITY);
 			cameraThread.start();
 			projectionThread.start();
 			playerThread.start();

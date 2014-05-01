@@ -23,9 +23,28 @@ import java.util.Set;
  */
 public class ComponentsAnalyser {
 	
-	private int imageHeight, imageWidth;
 	private ArrayList<ConnexeComponent> listCC;
 	private TabImage image;
+	/** Les dimensions de l'image ou du tableau traite.*/
+	private int width, height, size = -1 ;
+	/** Le tableau contenant la numerotation des composantes.*/
+	private int[][] Labels = null ;
+	 
+	/** La derniere image sur laquelle on a compte le nombre de composantes.*/
+	private BufferedImage source = null ;
+	 
+	/** Tableau contenant la taille des composantes connexes.*/
+	private int[] Sizes = null ;
+	 
+	/** Nombre de composantes connexes denombrees lors du dernier appel de la methode Label.*/
+	private int Counter = -1 ;
+	 
+	/** Tableau qui contient les valeurs des racines.*/
+	private int[] roots = null ;
+	/** Constante du fond.*/
+	private final int BACKGROUND = -2 ;
+	/** Constante de l'absence de racine.*/
+	private final int NOROOT = -1 ;
 	
 	/**
 	 * Analyse l'image pour récupérer les composantes connexes
@@ -33,15 +52,15 @@ public class ComponentsAnalyser {
 	 */
 	public ComponentsAnalyser(TabImage binaryImage){
 		
-		imageHeight = binaryImage.getHeight();
-		imageWidth = binaryImage.getWidth();
+		height = binaryImage.getHeight();
+		width = binaryImage.getWidth();
 		
 		// Tableau de référence
-		int[][] labels = new int[imageWidth][imageHeight];
-		int[] corresp = new int[imageWidth*imageHeight];
+		/*int[][] labels = new int[imageWidth][imageHeight];
+		int[] corresp = new int[imageWidth*imageHeight];*/
 		
 		int nbLabels = 1;
-		
+		/*
 		//premiere case i=0, j=0
 		if (binaryImage.getRGB(0, 0) == new Color(0,0,0).getRGB()) {
 			labels[0][0] = nbLabels;
@@ -72,10 +91,7 @@ public class ComponentsAnalyser {
 			}
 		}
 
-		/*ArrayList<Integer> corresp = new ArrayList<Integer>(nbLabels);
-		for (int k=0 ; k<nbLabels ; k++) {
-			corresp.add(k);
-		}*/
+
 		//Reste du tableau
 		for (int j=1 ; j<imageHeight ; j++){
 			for (int i=1; i<imageWidth ; i++) {
@@ -130,7 +146,7 @@ public class ComponentsAnalyser {
 			for (int j=0 ; j<imageHeight ; j++) {
 					labels[i][j] = corresp[labels[i][j]];
 			}
-		}*/
+		}
 
 		
 		// Parcours de l'image de haut en bas puis de bas en haut tant qu'il y a des fusions de composantes connexes
@@ -188,17 +204,21 @@ public class ComponentsAnalyser {
 		System.out.println("Nombre de parcours dans la recherche des composantes connexes : " + x);
 		
 		
-		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
+		
 		/**
 		 * Création des différents ensembles connexes grâce à l'indice
 		 */
-		for (int i=0; i<imageWidth ; i++) {
-			for (int j=0 ; j<imageHeight ; j++){
-				if(labels[i][j] != 0){
-					if(!component.containsKey(labels[i][j])){
-						component.put(labels[i][j], new ConnexeComponent());
+		
+		int[][] tab = binaryImage.getImg();
+		Label(tab, 0xffffffff, false);
+		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
+		for (int i=0; i<width ; i++) {
+			for (int j=0 ; j<height ; j++){
+				if(Labels[i][j] != 0){
+					if(!component.containsKey(Labels[i][j])){
+						component.put(Labels[i][j], new ConnexeComponent());
 					}
-					component.get(labels[i][j]).addPoint(new Point(i, j));
+					component.get(Labels[i][j]).addPoint(new Point(i, j));
 				}
 				
 			}
@@ -217,14 +237,18 @@ public class ComponentsAnalyser {
 	 * @return
 	 */
 	public BufferedImage getCCMyImage() {
-		BufferedImage CCMyImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage CCMyImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Color compoColor = null;
 		
 		// Affichage d'un fond blanc
 		Graphics g = CCMyImage.getGraphics();
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, imageWidth, imageHeight);
-		
+		g.fillRect(0, 0, width, height);
+		/*for (int y=0 ; y < height ; y++)
+			for (int x=0 ; x < width ; x++){
+				if(Labels[x][y]> 0)
+					CCMyImage.setRGB(x, y, Color.black.getRGB());
+			}*/
 		
 		for (ConnexeComponent listPoint : listCC) {
 			compoColor = new Color ((int) (Math.random()*255), ((int) Math.random()*255), (int) (Math.random()*255) );
@@ -240,17 +264,17 @@ public class ComponentsAnalyser {
 						if(CCMyImage.getRGB(pixel.getX(), pixel.getY()) == Color.WHITE.getRGB())
 							CCMyImage.setRGB(pixel.getX(), pixel.getY(), compoColor.getRGB());
 				}
-				
 			}
 			
 			if(listPoint.getConnexePoints().size()> 100){
 				g.setColor(Color.green);
-				g.fillRect(listPoint.getCorner(0).getX()-4, listPoint.getCorner(0).getY()-4, 8, 8);
+				g.fillRect(listPoint.getCorner().getX()-4, listPoint.getCorner().getY()-4, 8, 8);
 				
 				g.setColor(Color.green);
 				g.fillRect(listPoint.getxCenter()-4, listPoint.getyCenter()-4, 8, 8);
 				
 			}
+			
 		}
 		
 		return CCMyImage;
@@ -263,99 +287,6 @@ public class ComponentsAnalyser {
 	}
 	
 	
-	
-	
-	/** Les dimensions de l'image ou du tableau traite.*/
-	private int width, height, size = -1 ;
-	/** Le tableau contenant la numerotation des composantes.*/
-	private int[][] Labels = null ;
-	 
-	/** La derniere image sur laquelle on a compte le nombre de composantes.*/
-	private BufferedImage source = null ;
-	 
-	/** Tableau contenant la taille des composantes connexes.*/
-	private int[] Sizes = null ;
-	 
-	/** Nombre de composantes connexes denombrees lors du dernier appel de la methode Label.*/
-	private int Counter = -1 ;
-	 
-	/** Tableau qui contient les valeurs des racines.*/
-	private int[] roots = null ;
-	/** Constante du fond.*/
-	private final int BACKGROUND = -2 ;
-	/** Constante de l'absence de racine.*/
-	private final int NOROOT = -1 ;
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	/** Calcule le nombre de composantes connexes dans l'image.
-	 * @param Original L'image dans laquelle on doit compter les composantes connexes.
-	 * @param Background Couleur du fond, donc a ne pas prendre en compte.
-	 * @param EightConnex Booleen qui permet de savoir si le calcul se fait en quatre ou huit connexites.
-	 * @param Chrono Le chronometre pour mesurer la duree.
-	 * @return Le nombre de composantes connexes de l'image.*/
-	public int Label(BufferedImage Original, int Background, boolean EightConnex)
-		{
-		int x, y, pos, root, marker = 0 ;
-		WritableRaster wr = Original.getRaster() ;
-		width = Original.getWidth() ;
-		height = Original.getHeight() ;
-		size = width * height ;
-		source = Original ;
-	 
-	 
-		//if ( ImageTools.isColored(Original) ) throw new IllegalArgumentException("Only gray level or binary image supported.") ;
-	 
-		if ( roots == null || roots.length != size )
-			{
-			roots = null ;
-			roots = new int[size] ;
-			}
-	 
-		if ( Labels == null || Labels.length != height || Labels[0].length != width)
-			{
-			Labels = null ;
-			Labels = new int[height][width] ; // copy label to new array
-			}
-	 
-		//ArraysOperations.SetConstant(roots, 0) ;
-		//ArraysOperations.SetConstant(Labels, 0) ;
-	 
-		for (y=pos=0 ; y < height ; y++)
-			for (x=0 ; x < width ; x++, pos++)
-				if ( wr.getSample(x, y, 0) == Background ) add(pos, BACKGROUND) ;
-				else
-					{
-					root = NOROOT ;
-	 
-					if ( (x > 0) && (wr.getSample(x-1, y, 0) == wr.getSample(x, y, 0)) ) root = union(find(pos-1), root) ;
-					if ( (y > 0) && (wr.getSample(x, y-1, 0) == wr.getSample(x, y, 0)) ) root = union(find(pos-width), root) ;
-	 
-					if ( EightConnex )
-						{
-						if ( (x > 0 && y > 0) && (wr.getSample(x-1, y-1, 0) == wr.getSample(x, y, 0)) )
-							root = union(find(pos-1-width), root) ;
-						if ( (x < width-1 && y > 0) && (wr.getSample(x+1, y-1, 0) == wr.getSample(x, y, 0)) )
-							root = union(find(pos+1-width), root) ;
-						}
-	 
-					add(pos, root) ;
-					}
-	 
-		buildLabelArray() ;
-	 
-	 
-		Counter = Sizes.length-1 ; 
-		return Counter ;
-		}
-	 
-	 
-	 
 	/** Calcule le nombre de composantes connexes dans l'image.
 	 * @param Original Le tableau dans lequel on doit compter les composantes connexes.
 	 * @param Background Couleur du fond, donc a ne pas prendre en compte.
@@ -365,8 +296,8 @@ public class ComponentsAnalyser {
 	public int Label(int[][] Original, int Background, boolean EightConnex)
 		{
 		int x, y, pos, root, marker = 0 ;
-		width = Original[0].length ;
-		height = Original.length ;
+		/*width = Original[0].length ;
+		height = Original.length ;*/
 		size = width * height ;
 	 
 	 
@@ -376,24 +307,26 @@ public class ComponentsAnalyser {
 			roots = new int[size] ;
 			}
 	 
-		if ( Labels == null || Labels.length != height || Labels[0].length != width)
+		/*if ( Labels == null || Labels.length != height || Labels[0].length != width)
 			{
 			Labels = null ;
 			Labels = new int[height][width] ; // copy label to new array
-			}
+			}*/
+		
+		Labels = new int[width][height] ;
 	 
 		//ArraysOperations.SetConstant(roots, 0) ;
 		//ArraysOperations.SetConstant(Labels, 0) ;
 	 
 		for (y=pos=0 ; y < height ; y++)
 			for (x=0 ; x < width ; x++, pos++)
-				if ( Original[y][x] == Background ) add(pos, BACKGROUND) ;
+				if ( Original[x][y] == Background ) add(pos, BACKGROUND) ;
 				else
 					{
 					root = NOROOT ;
 	 
-					if ( (x > 0) && (Original[y][x-1] == Original[y][x]) ) root = union(find(pos-1), root) ;
-					if ( (y > 0) && (Original[y-1][x] == Original[y][x]) ) root = union(find(pos-width), root) ;
+					if ( (x > 0) && (Original[x-1][y] == Original[x][y]) ) root = union(find(pos-1), root) ;
+					if ( (y > 0) && (Original[x][y-1] == Original[x][y]) ) root = union(find(pos-width), root) ;
 	 
 					if ( EightConnex )
 						{
@@ -411,35 +344,7 @@ public class ComponentsAnalyser {
 		return Counter ;
 		}
 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	/* ----------------------------------------------------- 3D ----------------------------------------------------- */
-	/** Calcule le nombre de composantes connexes dans l'image.
-	 * @param Original Le tableau dans lequel on doit compter les composantes connexes.
-	 * @param Background Couleur du fond, donc a ne pas prendre en compte.
-	 * @param TwentySixConnex Booleen qui permet de savoir si le calcul se fait en six ou vingt six connexites.
-	 * @param Chrono Le chronometre pour mesurer la duree.
-	 * @return Le nombre de composantes connexes de l'image.*/
-	public int Label(int[][][] Original, int Background, boolean TwentySixConnex)
-		{
-		throw new Error("Method not yet implemented.") ;
-		}
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
+
 	/* ----------------------------------------------------- Méthodes utiles ----------------------------------------------------- */
 	/** Find the root of the node at position pos. 
 	 * @param pos
@@ -494,13 +399,13 @@ public class ComponentsAnalyser {
 		int label = 1 ; // relabel the root
 		for (y=pos=0 ; y < height ; y++)
 			for (x=0 ; x < width ; x++, pos++)
-				if ( roots[pos] == BACKGROUND ) Labels[y][x] = 0 ;
+				if ( roots[pos] == BACKGROUND ) Labels[x][y] = 0 ;
 				else
 					{
 					if ( roots[pos] == pos ) roots[pos] = label++ ;
 					else roots[pos] = roots[roots[pos]] ;
 	 
-					Labels[y][x] = roots[pos] ;
+					Labels[x][y] = roots[pos] ;
 					}
 		max = 0;
 		for(int i =0; i<width; i++){
@@ -518,8 +423,8 @@ public class ComponentsAnalyser {
 	 
 		for (y=0 ; y < height ; y++)
 			for(x=0 ; x < width ; x++)
-				if ( Labels[y][x] > 0 )
-					Sizes[Labels[y][x]]++ ;
+				if ( Labels[x][y] > 0 )
+					Sizes[Labels[x][y]]++ ;
 		}
 	 
 	 
@@ -549,15 +454,7 @@ public class ComponentsAnalyser {
 		{
 		return Sizes.length-1 ;
 		}
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
+	
 	/* ----------------------------------------------------- Les getters ----------------------------------------------------- */
 	/** Method which return sizes of connected components.
 	 * @return Array.*/
@@ -573,15 +470,6 @@ public class ComponentsAnalyser {
 		{
 		return Labels ;
 		}
-	 
-	 
-	/** Method which return array of labels.
-	 * @return Array.*/
-	public int[][][] Labels3D()
-		{
-		return null ;
-		}
-	 
-	
+
 	
 }

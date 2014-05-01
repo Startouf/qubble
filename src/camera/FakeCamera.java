@@ -139,5 +139,23 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void switchCamera() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void switchDetection() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void switchMotion() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

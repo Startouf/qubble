@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import main.ImageDetection;
+
 
 import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
 
@@ -55,7 +57,8 @@ public class QRCodesAnalyser {
 		}
 		// Affichage et calcul des id's de chaque qr
 		for(QRCode qr : listQRcode){
-			System.out.println("Valeur du QR Code : " + qr.getValeurByCenter(targetQr));
+			if(ImageDetection.PRINTDEBUG)
+				System.out.println("Valeur du QR Code : " + qr.getValeurByCenter(targetQr));
 			qrFound.put(qr.getID(), new Point(qr.getBorder().getxCenter(), qr.getBorder().getyCenter()));
 		}
 	}

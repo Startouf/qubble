@@ -3,7 +3,6 @@ package main;
 import imageObject.Point;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,7 +13,7 @@ import java.util.HashMap;
  * 		QubjectHasTurned(int ID, float dR)
  * @author Cyril
  */
-public interface ImageDetectionInterface {
+public interface ImageDetectionInterface{
 
 	/**
 	 * Ajouter la dernière image reçue par la caméra
@@ -67,5 +66,19 @@ public interface ImageDetectionInterface {
 	 */
 	public void terminate();
 
+	 /**
+	  * Play/Pause de la caméra
+	  */
+	public void switchCamera();
+	
+	/**
+	 * Play/Pause de la détection de QR
+	 */
+	public void switchDetection();
+	
+	/**
+	 * Play/Pause de la détection de mouvement
+	 */
+	public void switchMotion();
 		
 }

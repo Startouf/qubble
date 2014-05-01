@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import main.ImageDetection;
+
 /**
  * Représentation du composante connexe
  * Contient les coordonnées extrénums et le pt central
@@ -18,8 +20,8 @@ public class ConnexeComponent {
 	public static float SQUARETRIGGER = (float) 0.80;
 	
 	private ArrayList<Point> list;
-	private int xMax, xMin, yMax, yMin, xCenter, yCenter;
-	private Point[] corner = new Point[4];
+	private int xCenter, yCenter;
+	private  Point corner;
 	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
@@ -59,10 +61,6 @@ public class ConnexeComponent {
 	
 	public ConnexeComponent(){
 		list = new ArrayList<Point>();
-		xMax = 0;
-		yMax = 0;
-		xMin = Window.imageWidth;
-		yMin = Window.imageHeight;
 		yCenter = xCenter = -1;
 	}
 	
@@ -74,30 +72,6 @@ public class ConnexeComponent {
 		
 		if(pt != null){
 			list.add(pt);
-			int i = 0;
-			while(i < 4 && corner[i] == null){
-				corner[i] = pt;
-				i++;
-			}
-			// Coin à gauche
-			if(corner[0].getX() > pt.getX()){
-				corner[0] = pt;
-			}
-			
-			// Coin à droite
-			if(corner[1].getX() < pt.getX()){
-				corner[1] = pt;
-			}
-			
-			// Coin en haut
-			if(corner[2].getY() > pt.getY()){
-				corner[2] = pt;
-			}
-			
-			// Coin en bas
-			if(corner[3].getY() < pt.getY()){
-				corner[3] = pt;
-			}
 
 		}
 		
@@ -135,7 +109,7 @@ public class ConnexeComponent {
 			}
 			//entre 180 et 360 degres 
 			else if ((pt.getY()-yCenter)/(float)distance < 0) {						
-				angle = (360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2 %180;
+				angle = ((360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2) %180;
 			}
 
 			//System.out.println(angle);
@@ -145,7 +119,7 @@ public class ConnexeComponent {
 			}
 			if(distanceMax < distance){
 				distanceMax = (int)distance;
-				corner[0] = pt;
+				corner = pt;
 			}
 		}
 		
@@ -168,7 +142,7 @@ public class ConnexeComponent {
 		
 		// La composante étudiée est top grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
-		if(Math.abs(distanceMax-rayon) > 3){
+		if(Math.abs(distanceMax-rayon) > 5){
 			return false;
 		}
 		
@@ -188,17 +162,24 @@ public class ConnexeComponent {
 		
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
-		float save = 0;
+		float save = 0, temp = 0;
+		int bestAngle = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
-			save = Math.max(save, calculError(mySquare, mySquareAverage, mySquareSD, dephasage));
-			if(calculError(mySquare, mySquareAverage, mySquareSD, dephasage) > SQUARETRIGGER ){
-				System.out.println("True : " + save);
-				return true;
+			temp = calculError(mySquare, mySquareAverage, mySquareSD, dephasage);
+			if(temp > save){
+				save = temp;	
+				bestAngle = dephasage;
 			}
-				
 		}
-		System.out.println("False : " + save);
-		return false;
+			if(save > SQUARETRIGGER ){
+				if(ImageDetection.PRINTDEBUG)
+					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
+				return true;
+			}else{
+				if(ImageDetection.PRINTDEBUG)
+					System.out.println("False : " + save);
+				return false;
+			}
 	}
 	
 	/**
@@ -212,7 +193,7 @@ public class ConnexeComponent {
 		float result = 0;
 		
 		for(int i = 0 ; i < 180 ; i++){
-			result += Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[i%90]-perfectSquare_Average);
+			result += Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
 		}
 		
 		return result/(perfectSquareSD*realSD*180);
@@ -233,41 +214,7 @@ public class ConnexeComponent {
 		
 	}
 	
-	/**
-	 * Retourne la taille du coté du carré
-	 */
-	@Deprecated
-	public int getLength(){
-		//System.out.println((int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2)));
-		//return 	(int) Math.sqrt(Math.pow(xMax-xMin, 2) + Math.pow(yMax-yMin, 2));
-		return 	(int) (Math.sqrt(Math.pow(corner[0].getX() - corner[2].getX(), 2) + Math.pow(corner[0].getY() - corner[2].getY(), 2)));
-	}
 	
-	/**
-	 * Retourne la distance entre le premier point (un coin et le centre)
-	 * @return
-	 */
-	@Deprecated
-	public int getRayon(){
-		return 	0;
-	}
-
-	public int getxMax() {
-		return xMax;
-	}
-
-	public int getxMin() {
-		return xMin;
-	}
-
-	public int getyMax() {
-		return yMax;
-	}
-
-	public int getyMin() {
-		return yMin;
-	}
-
 	public int getxCenter() {
 		if(xCenter < 0 || yCenter < 0){
 			this.getCenter();
@@ -282,11 +229,8 @@ public class ConnexeComponent {
 		return yCenter;
 	}
 	
-	public Point getCorner(int id){
-		if(id < 4 && id >= 0){
-			return corner[id];
-		}else
-			return null;
+	public Point getCorner(){
+		return corner;
 	}
 	
 

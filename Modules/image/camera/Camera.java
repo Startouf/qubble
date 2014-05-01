@@ -11,7 +11,8 @@ import main.TerminateThread;
 import com.googlecode.javacv.FrameGrabber;
 import com.googlecode.javacv.FrameGrabber.Exception;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
-import com.googlecode.javacv.cpp.opencv_highgui;
+
+import static com.googlecode.javacv.cpp.opencv_highgui.*;
 /**
  * Gestion de l'acquisition de la caméra dans un thread séparé
  * @author eric
@@ -28,7 +29,7 @@ public class Camera implements Runnable, TerminateThread{
 	public Camera(ImageDetectionInterface controlImage){
 		cameraOK = true;
 		run = true;
-		pause = false;
+		pause = true;
 		this.controlImage = controlImage;
 		grabber = null;
 		// Tentative de démarage de la caméra
@@ -39,7 +40,6 @@ public class Camera implements Runnable, TerminateThread{
 			//grabber.setFormat("video4linux2");
 			// Windows 2 : USB
 			grabber = (FrameGrabber.createDefault(1));
-			System.out.println("OK");
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setImageHeight(IMAGEHEIGHT);
@@ -69,10 +69,10 @@ public class Camera implements Runnable, TerminateThread{
     			try {
     				tableImage = grabber.grab();
     				if(tableImage != null){
-//    	    			opencv_highgui.cvSaveImage("picture.jpg", tableImage);
+    	    			//cvSaveImage("picture.jpg", tableImage);
     	    			//i++;
     	    			controlImage.setImage(tableImage.getBufferedImage());
-//    					System.out.println("Nouvelle image !");
+    					//System.out.println("Nouvelle image !");
     					
     	    		}
     			} catch (com.googlecode.javacv.FrameGrabber.Exception e) {
@@ -119,5 +119,14 @@ public class Camera implements Runnable, TerminateThread{
 	@Override
 	public void terminate() {
 		run = false;
+	}
+	
+	public boolean switchPause(){
+		if(pause){
+			pause = false;
+		}else{
+			pause = true;
+		}
+		return pause;
 	}
 }
