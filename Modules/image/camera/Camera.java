@@ -40,7 +40,7 @@ public class Camera implements Runnable, TerminateThread{
 		// Tentative de démarage de la caméra
 		try{
 			// Ouverture de la caméra sur le port 0 
-			grabber = new FFmpegFrameGrabber("/dev/video0");
+			grabber = new FFmpegFrameGrabber("/dev/video1");
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setFormat("video4linux2");

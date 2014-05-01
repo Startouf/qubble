@@ -75,7 +75,8 @@ public class MotionDetection {
 		for (Block bl : list){
 			if(isActive(bl)){
 				// Recherche du mouvement de translation
-				getLogMotion(bl);
+				//getLogMotion(bl);
+				getAllMotion(bl);
 				// Recherche de mouvement de rotation
 			}else{
 				// Le block n'a pas bougé
@@ -93,30 +94,42 @@ public class MotionDetection {
 	 * ce que j'ai modifié : rajout d'un attribut list pour réaliser le getAllMotion sur la liste qubbles et pas uniquement sur lref, 
 	 * là ou il y a list, remplacer par lref
 	 */
-	/*public void getAllMotion(int i, int brow, int bcol, int search, ArrayList<Block> list){
+	public void getAllMotion(Block bl){
 		// Parcours des blocks de l'image de suivante
-		float min = Float.MAX_VALUE;
-		float err =0;
-		BufferedImage subImage;
-		for (int j = list.get(i).getxCenter()()-search; j <list.get(i).getxCenter()()+search; j++){
-			for (int k = list.get(i).getyCenter()()-search; k <list.get(i).getyCenter()()+search; k++){
-				// Surveiller les bords de l'image
-				if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
-					subImage = cur.getSubimage(j, k, bcol, brow);
-					try {
-						err = motion.Erreur.errQM(list.get(i).getImage(),subImage);
-						if (err < min){
-							min = err;
-							list.get(i).setRbest(subImage, j-list.get(i).getxCenter()(), k-list.get(i).getyCenter()());
+		int brow = param.getBlockSizeRow();
+		int bcol = param.getBlockSizeCol();
+		int search = param.getSearch();
+		
+		int min = Integer.MAX_VALUE;
+		int err =0;
+		boolean result =false;
+		int x = bl.getxCenter();
+		int y = bl.getyCenter();
+		int bestX = bl.getxCorner(), bestY = bl.getyCorner();
+		for (int j = x-search; j <=x+search; j++){
+			for (int k = y-search; k<=y+search; k++){
+					// Surveiller les bords de l'image
+					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
+						try {
+							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
+							if (err < min){
+								min = err;
+								bestX=j; //-lref.get(i).getX();
+								bestY=k; //-lref.get(i).getY();
 
+							}
+							System.out.println("Move : " + j + " " + k + "  Erreur : " + err);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
 				}
-			}
+		x=bestX; //-lref.get(i).getX();
+		y=bestY;
 		}
-	}*/
+		System.out.println("Move : " + x + " " + y);
+		bl.move(x, y);
+	}
 	
 	/**
 	 * cette fonction determine si un block est en mouvement, pour qu'elle marche convenablement,
@@ -124,7 +137,9 @@ public class MotionDetection {
 	 */
 	public boolean isActive(Block block){
 		boolean result = true;
-		
+		valeurType = 1200000;
+		float test = Erreur.errQM(cur,ref, block, block);
+		System.out.println("Is active " + test);
 		try {
 			// Comparaison de l'erreur sur le même block dans les deux images
 			if (Erreur.errQM(cur,ref, block, block) < valeurType){
@@ -149,43 +164,47 @@ public class MotionDetection {
 		int bcol = param.getBlockSizeCol();
 		int search = param.getSearch();
 		
-		float min = Float.MAX_VALUE;
-		float err =0;
+		int min = Integer.MAX_VALUE;
+		int err =0;
 		boolean result =false;
-		int x = bl.getxCenter()-search;
-		int y = bl.getyCenter()-search;
+		int x = bl.getxCenter();
+		int y = bl.getyCenter();
 		int bestX = bl.getxCorner(), bestY = bl.getyCorner();
 		while (result == false){
-			for (int j = x; j <x+search; j=j+search){
-				for (int k = y; k<y+search; k=k+search){
+			for (int j = x-search; j <=x+search; j=j+search){
+				for (int k = y-search; k<=y+search; k=k+search){
 					// Surveiller les bords de l'image
 					if(k >= 0 && j >= 0 && k+brow < ref.getHeight() && j+bcol < ref.getWidth()){
 						try {
 							err = Erreur.errQM(ref, cur, bl, new Block(j, k, cur.getWidth(), cur.getHeight(), bcol, brow));
 							if (err < min){
 								min = err;
-								System.out.println("Erreur : " + err);
-								x=j; //-lref.get(i).getX();
-								y=k; //-lref.get(i).getY();
+								bestX=j; //-lref.get(i).getX();
+								bestY=k; //-lref.get(i).getY();
 
 							}
+							System.out.println("Move : " + j + " " + k + "  Erreur : " + err);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						if (search >= 2){
-							search = (int)(search/2);// ici je veux la partie entiere donc à vérifier
-						} else {result = true;}
 					}
 				}
 			}
+			x=bestX; //-lref.get(i).getX();
+			y=bestY;
+			if (search >= 2){
+				search = (int)(search/2);// ici je veux la partie entiere donc à vérifier
+			} else {
+				result = true;
+			}
 		}
-		System.out.println("Move : " + bestX + " " + bestY);
+		System.out.println("Move : " + x + " " + y);
 		bl.move(x, y);
 	}
 
 	public void setNewImage(BufferedImage cur) {
 		this.ref = this.cur;
-		this.cur = new TabImage(cur);
+		this.cur = (new TabImage(cur)).getGrey(false);
 	}
 
 

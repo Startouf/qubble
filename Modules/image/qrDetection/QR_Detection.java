@@ -29,7 +29,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 	public QR_Detection(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
 		run = true;
-		pause = false;
+		pause = true;
 	}
 	
 	public void run() {
@@ -67,7 +67,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		long startTime = System.currentTimeMillis();
 		
 		// Transformation en niveau de gris
-		grey = camera.getGrey();
+		grey = camera.getGrey(true);
 		long greyTime = System.currentTimeMillis();
 		
 		// Transformation par le filtre de variance
@@ -119,8 +119,13 @@ public class QR_Detection implements Runnable, TerminateThread{
 		return variance;
 	}
 	
-	
-
-
+	public boolean switchPause(){
+		if(pause){
+			pause = false;
+		}else{
+			pause = true;
+		}
+		return pause;
+	}
 
 }

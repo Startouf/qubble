@@ -9,21 +9,23 @@ import java.awt.image.BufferedImage;
  */
 public class Erreur {
 	
-	public static float errQM(TabImage cur, TabImage ref, Block blockCur, Block blockRef)
-			throws Exception{
+	public static int errQM(TabImage cur, TabImage ref, Block blockCur, Block blockRef){
 		
 		int[][] tabCur = cur.getImg();
 		int[][] tabRef = ref.getImg();
-		float err = 0;
-		
+		int err = 0;
+		int errSave = 0;
 		/*
 		 * je calcule l'erreur quadratique moyenne de deux blocs de meme taille
 		 */
 		// par difference des deux images
+		int xBlCur = blockCur.getxCorner(), yBlCur = blockCur.getyCorner();
+		int xBlRef = blockRef.getxCorner(), yBlRef = blockRef.getyCorner();
 		
-		for(int i = blockCur.getxCorner(); i < blockCur.getxCorner()+blockCur.getWidth(); i++){
-			for(int j = blockCur.getyCorner(); j < blockCur.getyCorner()+blockCur.getHeight(); j++){
-				err = err + (Math.abs(tabCur[i][j] - tabRef[i][j])*Math.abs(tabCur[i][j] - tabRef[i][j]));
+		for(int i = 0; i < blockCur.getWidth(); i++){
+			for(int j = 0; j < blockCur.getHeight(); j++){
+				errSave = ((tabCur[xBlCur+i][yBlCur+j] - tabRef[xBlRef+i][yBlRef+j])*(tabCur[xBlCur+i][yBlCur+j] - tabRef[xBlRef+i][yBlRef+j]));
+				err = err + errSave;
 			}
 		}
 		

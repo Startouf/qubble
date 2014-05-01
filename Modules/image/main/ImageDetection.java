@@ -59,6 +59,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 			window = new Window(qr, mo, 5, 42 ,80);
 		}
 		
+		mo.addQubbleToList(640, 360, 22);
 		run = true;
 	}
 	
@@ -80,7 +81,6 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 				motionEstimationDone();
 				motionEstimationDone = false;
 			}
-			mo.addMotionOnImage(lastImage);
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {

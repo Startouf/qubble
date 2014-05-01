@@ -36,7 +36,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 		pause = true;
 		run = true;
 		listBlock = new HashMap<Integer, Block>();
-		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 80, 0));
+		motionAnalyse = new MotionDetection(new BlockMatching(SQUARESIZE,SQUARESIZE, 40, 0));
 		imageWidth = controlImage.getWidthCamera();
 		imageHeight = controlImage.getHeightCamera();
 	}
@@ -74,7 +74,7 @@ public class MotionEstimation implements Runnable, TerminateThread{
 				analyseTable();
 			}
 			try {
-				Thread.sleep(200);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -142,6 +142,15 @@ public class MotionEstimation implements Runnable, TerminateThread{
 				g.drawRect(bl.getxCorner(), bl.getyCorner(), bl.getWidth(), bl.getWidth());
 			}
 		}
+	}
+	
+	public boolean switchPause(){
+		if(pause){
+			pause = false;
+		}else{
+			pause = true;
+		}
+		return pause;
 	}
 
 	

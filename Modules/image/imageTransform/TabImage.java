@@ -51,9 +51,10 @@ public class TabImage {
 	
 	/**
 	 * Transforme une image couleur en image niveau de gris
+	 * @param : color :: true : 3 canal de gris, false : 1 canal 
 	 * @return
 	 */
-	public TabImage getGrey(){
+	public TabImage getGrey(boolean color){
 		int greyValue = 0, red = 0, green = 0, blue = 0;
 		int[][] greyImage = new int [width][height];
 		for(int i = 0 ; i < width ; i++){
@@ -65,7 +66,12 @@ public class TabImage {
 				blue  = pix & 0xff;
 				//greyValue = (int) (0.114 * red +  0.299 * green + 0.587 * blue);
 				greyValue = (int)((299 * red +  587 * green + 114 * blue)/1000);
-				greyImage[i][j] = (new Color(greyValue, greyValue, greyValue)).getRGB();
+				if(color){
+					greyImage[i][j] = (new Color(greyValue, greyValue, greyValue)).getRGB();
+				}else{
+					greyImage[i][j] = greyValue;
+				}
+				
 			}
 		}
 		return new TabImage(greyImage, width,height);
