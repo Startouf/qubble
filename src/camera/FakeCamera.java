@@ -11,6 +11,7 @@ import sequencer.QubbleInterface;
 public class FakeCamera implements ImageDetectionInterface, Runnable
 {
 	private final QubbleInterface qubble;
+	private volatile boolean start = false;
 	
 	public FakeCamera(QubbleInterface qubble){
 		this.qubble = qubble;
@@ -18,17 +19,25 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 
 	@Override
 	public synchronized void run() {
+		while( start == false){
+			try {
+				wait(500); //in milliseconds
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
 		try {
 			wait(100); //in milliseconds
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-//		qubble.QubjectDetected(0, new Point(800, 800));
-//		qubble.QubjectDetected(30, new Point(850, 550));
-//		qubble.QubjectDetected(511, new Point(450, 350));
-//		qubble.QubjectDetected(0, new Point(760, 550));
-//		qubble.QubjectDetected(511, new Point(950, 150));
-//		qubble.QubjectDetected(511, new Point(1100, 250));
+		qubble.QubjectDetected(0, new Point(800, 800));
+		qubble.QubjectDetected(30, new Point(850, 550));
+		qubble.QubjectDetected(511, new Point(450, 350));
+		qubble.QubjectDetected(0, new Point(760, 550));
+		qubble.QubjectDetected(511, new Point(950, 150));
+		qubble.QubjectDetected(511, new Point(1100, 250));
 		try {
 			wait(5000);
 		} catch (InterruptedException e) {
@@ -148,7 +157,7 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 
 	@Override
 	public void switchDetection() {
-		// TODO Auto-generated method stub
+		this.start  = true;
 		
 	}
 

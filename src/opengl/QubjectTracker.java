@@ -49,10 +49,13 @@ public class QubjectTracker {
 		if(!active && !shadow){
 			return;
 		}
-		
+		glColor4f(0f,0f,0f,1f);
 //		GL20.glUseProgram(shader[2]);
 //		GL20.glUniform2f(sourceAddress, (float)x+Qubject.SIZE/2, (float)y+Qubject.SIZE/2); 
 		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
+		if(x <= 0 || y <= 0){
+			return;
+		}
 		double cos, sin, theta;
 		
 		glBegin(GL_TRIANGLE_STRIP);
@@ -83,8 +86,12 @@ public class QubjectTracker {
 	 * Hide the are under the qubject so that it's easier to detect movement
 	 */
 	public void renderShadow(){
+		glColor4f(0f,0f,0f,1f);
 		double cos, sin, theta;
 		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
+		if(x <= 0 || y <= 0){
+			return;
+		}
 		glColor4f(0f,0f,0f,1f);
 		glBegin(GL_TRIANGLE_FAN);
 		glVertex3d(x,y,-2d);

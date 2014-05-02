@@ -8,6 +8,7 @@ import opengl.BaseRoutines;
 import opengl.InitRoutines;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -19,22 +20,33 @@ public class CalibrationProjection implements Runnable{
 	
 	private static int WIDTH = Calibrate.OpenGL_WIDTH;
 	private static int HEIGHT = Calibrate.OpenGL_HEIGHT;
+	private boolean done = false;
+	private long time = Sys.getTime();
 	
 	public void start(){
 		Frame frame = InitRoutines.initDisplayOnSecondDevice(WIDTH, HEIGHT);
 		glEnable(GL_CULL_FACE);
 
-		while (!Display.isCloseRequested() && !Thread.interrupted()){
+		while (!Display.isCloseRequested() && !Thread.interrupted() && !done){
 			glClearColor(0f,0f,0f,1f);
 			glClear(GL_COLOR_BUFFER_BIT | 
 					GL_DEPTH_BUFFER_BIT);
+			time();
 			initGL();
 			renderGL();
 			Display.update(); 
 			Display.sync(60); 
 		}
 		Display.destroy();
-		frame.dispose();
+		if (frame != null){
+			frame.dispose();
+		}
+	}
+	
+	private void time(){
+		if (BaseRoutines.getDt(time) >= 1500){
+			done = true;
+		}
 	}
 	
 	private void initGL(){

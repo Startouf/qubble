@@ -39,6 +39,8 @@ import qubject.Qubject;
  */
 public class Qubble implements QubbleInterface {
 	
+	public static boolean fakeCamera = true, fakePlayer = false;
+	
 	public static final int BPM = 128;
 	public static final float BPS = BPM*60f/(float)BPM;
 	/** 
@@ -140,8 +142,17 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
-		player = new Player(this);
-		camera = new ImageDetection(this);
+		if (fakePlayer){
+			player = new FakePlayer(this);
+		} else{
+			player = new Player(this);
+		}
+		
+		if (fakeCamera){
+			camera = new FakeCamera(this);
+		} else{
+			camera = new ImageDetection(this);
+		}
 		projection = new ProjectorOutput(this);
 		initialise();
 
@@ -252,7 +263,7 @@ public class Qubble implements QubbleInterface {
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		//adjust effect
 		if(!(player instanceof FakePlayer)){
-			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
+//			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
 		}
 		//add it to the list of sampleControllers
 		synchronized(sampleControllers){
