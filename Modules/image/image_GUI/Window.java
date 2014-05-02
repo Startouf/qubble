@@ -374,6 +374,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		controlMotion.addQubbleToList((int)(e.getX()*1.6), (int)(e.getY()*1.2), 888);
+		System.out.println("X : " + (int)(e.getX()*1.4) + "//" + "Y : " + (int)(e.getY()*1.24));
 	}
 
 	@Override
