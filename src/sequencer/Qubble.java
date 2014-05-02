@@ -367,7 +367,7 @@ public class Qubble implements QubbleInterface {
 		
 		if (!(player instanceof FakePlayer)){
 			for(SampleControllerInterface sample : sampleControllers.get(qubject)){
-				player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+//				player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
 			}
 		}
 
@@ -380,9 +380,10 @@ public class Qubble implements QubbleInterface {
 		}
 		
 		if(!(player instanceof FakePlayer)){
-			for(SampleControllerInterface sample : sampleControllers.get(qrCodes.get(qubject))){
-				player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+			for(SampleControllerInterface sample : sampleControllers.get(qubject)){
+//				player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
 			}
+			
 		}
 
 		//On indique son nouvel emplacement OLD
@@ -402,7 +403,7 @@ public class Qubble implements QubbleInterface {
 		
 		if(!(player instanceof FakePlayer)){
 			for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
-				player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
+//				player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
 			}
 		}
 	}

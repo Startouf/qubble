@@ -44,9 +44,9 @@ public class CalibrationProjection implements Runnable{
 	}
 	
 	private void time(){
-		if (BaseRoutines.getDt(time) >= 1500){
-			done = true;
-		}
+			if (BaseRoutines.getDt(time) >= 1500){
+				done = true;
+			}
 	}
 	
 	private void initGL(){

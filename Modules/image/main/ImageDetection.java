@@ -155,7 +155,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 					}else
 						countBeforeRemoved.put(id, tempCont);
 				}else
-					countBeforeRemoved.put(id, 2);
+					countBeforeRemoved.put(id, 0);
 				// ????
 				removedQubbleList.put(id, qubbleList.get(id));
 			}else{
@@ -169,9 +169,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 				// Détection du mouvement
 				pt = qrFound.get(id);
 				pt2 = qubbleList.get(id);
-				if(Math.abs(pt.getX()-pt2.getX()) > 5 || Math.abs(pt.getY()-pt2.getY()) > 5){
+				if(Math.abs(pt.getX()-pt2.getX()) > 10 || Math.abs(pt.getY()-pt2.getY()) > 10){
 					System.out.println("######### Move " + id + " #########");
-					//qubble.QubjectHasMoved(id, qrFound.get(id));
+					qubble.QubjectHasMoved(id, qrFound.get(id));
 				}
 					
 				
