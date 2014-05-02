@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -187,7 +188,12 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	public void actionPerformed(ActionEvent e) {
 		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
-			displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			controlDetection.switchPause();
+			HashMap<ConnexeComponent, Color> list = controlDetection.getCompo().getSignatureList();
+			for(ConnexeComponent cc : list.keySet()){
+				imageView.addSignatureView(cc, list.get(cc));
+			}
+			//displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
 		}
 		if(e.getSource() == suivant){
 			imageView.next();

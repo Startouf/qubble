@@ -24,8 +24,10 @@ public class Erreur {
 		
 		for(int i = 0; i < blockCur.getWidth(); i++){
 			for(int j = 0; j < blockCur.getHeight(); j++){
-				errSave = ((tabCur[xBlCur+i][yBlCur+j] - tabRef[xBlRef+i][yBlRef+j])*(tabCur[xBlCur+i][yBlCur+j] - tabRef[xBlRef+i][yBlRef+j]));
-				err = err + errSave;
+				int errR = Math.abs((tabCur[xBlCur+i][yBlCur+j]>>16 - tabRef[xBlRef+i][yBlRef+j]>>16));
+				int errG = Math.abs((tabCur[xBlCur+i][yBlCur+j]>>8 & 0xff) - (tabRef[xBlRef+i][yBlRef+j]>>8 & 0xff));
+				int errB = Math.abs((tabCur[xBlCur+i][yBlCur+j] & 0xff) - (tabRef[xBlRef+i][yBlRef+j] & 0xff));
+				err += (errR + errG + errB) / 3;
 			}
 		}
 		

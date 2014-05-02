@@ -24,6 +24,7 @@ import java.util.Set;
 public class ComponentsAnalyser {
 	
 	private ArrayList<ConnexeComponent> listCC;
+	private HashMap<ConnexeComponent, Color> signature;
 	private TabImage image;
 	/** Les dimensions de l'image ou du tableau traite.*/
 	private int width, height, size = -1 ;
@@ -51,7 +52,7 @@ public class ComponentsAnalyser {
 	 * @param binaryImage
 	 */
 	public ComponentsAnalyser(TabImage binaryImage){
-		
+		signature = new HashMap<ConnexeComponent, Color>();
 		height = binaryImage.getHeight();
 		width = binaryImage.getWidth();
 		
@@ -210,7 +211,7 @@ public class ComponentsAnalyser {
 		 */
 		
 		int[][] tab = binaryImage.getImg();
-		Label(tab, 0xffffffff, false);
+		Label(tab, 0x00ffffff, false);
 		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
 		for (int i=0; i<width ; i++) {
 			for (int j=0 ; j<height ; j++){
@@ -266,6 +267,11 @@ public class ComponentsAnalyser {
 				}
 			}
 			
+			// Enregistrement de sa signature pour un affichage ultérieur
+			if(listPoint.isSquareTest())
+				signature.put(listPoint, compoColor);
+			
+			// Affichage du centre et du point le plus loin
 			if(listPoint.getConnexePoints().size()> 100){
 				g.setColor(Color.green);
 				g.fillRect(listPoint.getCorner().getX()-4, listPoint.getCorner().getY()-4, 8, 8);
@@ -286,6 +292,12 @@ public class ComponentsAnalyser {
 		
 	}
 	
+	public HashMap<ConnexeComponent, Color> getSignatureList(){
+		return signature;
+	}
+	
+	
+	////// Rechercher des composantes connexes
 	
 	/** Calcule le nombre de composantes connexes dans l'image.
 	 * @param Original Le tableau dans lequel on doit compter les composantes connexes.

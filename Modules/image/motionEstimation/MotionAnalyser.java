@@ -142,7 +142,7 @@ public class MotionAnalyser {
 	 */
 	public boolean isActive(Block block){
 		boolean result = true;
-		valeurType = 600000;
+		valeurType = 6000;
 		float test = Erreur.errQM(cur,ref, block, block);
 		if(ImageDetection.PRINTDEBUG)
 			System.out.println("Is active " + test);
@@ -210,7 +210,7 @@ public class MotionAnalyser {
 
 	public void setNewImage(BufferedImage cur) {
 		this.ref = this.cur;
-		this.cur = (new TabImage(cur)).getGrey(false);
+		this.cur = (new TabImage(cur));
 	}
 
 

@@ -23,7 +23,7 @@ public class MotionDetection implements Runnable, TerminateThread{
 	// Liste des blocks à analyser
 	HashMap<Integer, Block> listBlock;
 	
-	public static int SQUARESIZE = 52;
+	public static int SQUARESIZE = 100;
 	
 	// Varaible de mémorisation de l'analyse
 	private int imageHeight, imageWidth;
@@ -37,7 +37,7 @@ public class MotionDetection implements Runnable, TerminateThread{
 		pause = true;
 		run = true;
 		listBlock = new HashMap<Integer, Block>();
-		motionAnalyse = new MotionAnalyser(new BlockMatching(SQUARESIZE,SQUARESIZE, SQUARESIZE*2, 0));
+		motionAnalyse = new MotionAnalyser(new BlockMatching(SQUARESIZE,SQUARESIZE, SQUARESIZE*3, 0));
 		imageWidth = controlImage.getWidthCamera();
 		imageHeight = controlImage.getHeightCamera();
 	}
@@ -125,10 +125,14 @@ public class MotionDetection implements Runnable, TerminateThread{
 	}
 	
 	public void removeQubbleToList(int id){
+		int save = -1;
 		for(Integer num : listBlock.keySet()){
 			if(num == id){
-				listBlock.remove(num);
+				save = id;
 			}
+		}
+		if(save >= 0){
+			listBlock.remove(save);
 		}
 	}
 	
@@ -141,7 +145,7 @@ public class MotionDetection implements Runnable, TerminateThread{
 			Graphics g = camera.getGraphics();
 			g.setColor(Color.green);
 			for(Block bl : listBlock.values()){
-				g.drawRect(bl.getxCorner(), bl.getyCorner(), bl.getWidth(), bl.getWidth());
+				g.drawRect(bl.getxCorner(), bl.getyCorner(), bl.getWidth(), bl.getHeight());
 			}
 		}
 	}

@@ -23,6 +23,13 @@ public class ConnexeComponent {
 	private int xCenter, yCenter;
 	private  Point corner;
 	
+	// Information sur la signature
+	private boolean squareTest;
+	private float[] courbe;
+	private float[] aliasing;
+	private int bestAngle, maxDistance, bestTresh;
+
+	
 	// Forme pour un carré parfait
 	public static float[] perfectSquare;
 	public static float perfectSquareSD, perfectSquare_Average;
@@ -90,13 +97,14 @@ public class ConnexeComponent {
 		if(xCenter < 0 || yCenter < 0){
 			this.getCenter();
 		}
+		aliasing = new float[180];
+		courbe = new float[180];
 				
 		float[] mySquare = new float[180]; //pas de 2
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
 		float distance = 0;
-		int distanceMax = 0;
 		// Calculer la distance
 		for(Point pt : list){
 			distance = (float) Math.sqrt((pt.getX()-xCenter)*(pt.getX()-xCenter) + (pt.getY()- yCenter)*(pt.getY()- yCenter));
@@ -117,8 +125,8 @@ public class ConnexeComponent {
 				// Ajout de la distance
 				mySquare[angle] = distance;
 			}
-			if(distanceMax < distance){
-				distanceMax = (int)distance;
+			if(maxDistance < distance){
+				maxDistance = (int)distance;
 				corner = pt;
 			}
 		}
@@ -140,19 +148,12 @@ public class ConnexeComponent {
 		}
 
 		
-		// La composante étudiée est top grande
+		// La composante étudiée est trop grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
-		if(Math.abs(distanceMax-rayon) > 5){
+		if(Math.abs(maxDistance-rayon) > 5){
 			return false;
 		}
-		
-		
-		
-/*		 //Afficher la composante connexe sous forme de courbe.
-		for(int i = 0; i<180; i += 2){
-			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}*/
-		
+		squareTest = true;
 		
 		for(int i = 0; i<180; i++){
 			mySquareAverage += mySquare[i];
@@ -163,7 +164,6 @@ public class ConnexeComponent {
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0, temp = 0;
-		int bestAngle = 0;
 		for(int dephasage = 0; dephasage < 90 ; dephasage++){
 			temp = calculError(mySquare, mySquareAverage, mySquareSD, dephasage);
 			if(temp > save){
@@ -171,6 +171,8 @@ public class ConnexeComponent {
 				bestAngle = dephasage;
 			}
 		}
+		courbe = mySquare;
+		bestTresh = (int) (save*100);
 			if(save > SQUARETRIGGER ){
 				if(ImageDetection.PRINTDEBUG)
 					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
@@ -193,7 +195,8 @@ public class ConnexeComponent {
 		float result = 0;
 		
 		for(int i = 0 ; i < 180 ; i++){
-			result += Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
+			aliasing[i] = Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
+			result += aliasing[i];
 		}
 		
 		return result/(perfectSquareSD*realSD*180);
@@ -232,6 +235,12 @@ public class ConnexeComponent {
 	public Point getCorner(){
 		return corner;
 	}
+
+	public boolean isSquareTest() {
+		return squareTest;
+	}
+	
+	
 	
 
 }
