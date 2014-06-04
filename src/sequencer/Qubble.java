@@ -39,7 +39,7 @@ import qubject.Qubject;
  */
 public class Qubble implements QubbleInterface {
 	
-	public static boolean fakeCamera = false, fakePlayer = false;
+	public static boolean fakeCamera = true, fakePlayer = false;
 	
 	public static final int BPM = 128;
 	public static final float BPS = BPM*60f/(float)BPM;
@@ -448,7 +448,7 @@ public class Qubble implements QubbleInterface {
 	public void prepare() {
 		if(!hasStarted){
 			cameraThread.setPriority(Thread.MIN_PRIORITY);
-//			playerThread.setPriority(Thread.MAX_PRIORITY);
+			playerThread.setPriority(Thread.MAX_PRIORITY);
 			cameraThread.start();
 			projectionThread.start();
 			playerThread.start();
@@ -509,6 +509,8 @@ public class Qubble implements QubbleInterface {
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
 		playerThread = new Thread((Runnable) player, "Player Thread");
+		
+		prepare();
 	}
 
 	@Override

@@ -23,6 +23,9 @@ public class QubjectTracker {
 	private static final double OFFSET = 20d;
 	private static final double RADIUS = 5d;
 	private static final int TESSELATION = 500; 
+	private static final boolean USE_SHADER = false;
+	private static final float PULSE_FREQ = 1f;
+	private static int ID = 0;
 	
 	//Shader : one per tracker
 	private int[] shader;
@@ -33,77 +36,95 @@ public class QubjectTracker {
 	private boolean active = false;
 	private boolean shadow = false;
 	private static String SHADER_PATH = "data/animations/shaders/";
+	private final int trackerID;
+	private float playingTime = 0f;
 
 	public QubjectTracker(QRInterface q) {
 		this.qubject = q;
+		trackerID = ID;	ID++;
 	}
 	
 	public void update(float dt){
 		this.lastTimeMoved += dt;
+		this.playingTime -= dt;
 	}
 	
 	/**
-	 * Show that the qubject has been detected
+	 * Shows that the qubject has been detected
 	 */
 	public void renderStatus(){
 		if(!active && !shadow){
 			return;
 		}
 		glColor4f(0f,0f,0f,1f);
-//		GL20.glUseProgram(shader[2]);
-//		GL20.glUniform2f(sourceAddress, (float)x+Qubject.SIZE/2, (float)y+Qubject.SIZE/2); 
+		
 		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		if(x <= 0 || y <= 0){
 			return;
 		}
-		double cos, sin, theta;
 		
+		if (USE_SHADER){
+			GL20.glUseProgram(shader[2]);
+			GL20.glUniform2f(sourceAddress, (float)x+Qubject.SIZE/2, (float)y+Qubject.SIZE/2); 
+		}
+		
+		double cos, sin, theta;
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int i=0; i<=TESSELATION; i++){
 			theta = i*2*Math.PI/(double)TESSELATION;
 			cos = Math.cos(theta);
 			sin = Math.sin(theta);
 			if(shadow){
-				glColor4f(0.9f, 0.1f, 0.1f, 1f);
+				glColor4f(0.9f, 0.1f, 0.1f, 0.5f);
 			} else{
-				GL20.glUniform4f(colorNearAddress, 0.1f, 0.5f, 0.1f, 0.8f);
+				if(USE_SHADER){
+					GL20.glUniform4f(colorNearAddress, 0.1f, 0.5f, 0.1f, 0.8f);
+				}
 				glColor4f(0.1f, 0.5f, 0.1f, 0.3f);
 			}
 			glVertex3d(x+(OFFSET+Qubject.SIZE/2d)*cos, y+(OFFSET+Qubject.SIZE/2d)*sin, -2d);
 			if(shadow){
-				glColor4f(0.9f, 0.1f, 0.1f, 1f);
+				glColor4f(0.9f, 0.1f, 0.1f, 0.5f);
 			} else{
-				GL20.glUniform4f(colorNearAddress, 0.1f, 1.0f, 0.1f, 0.8f);
+				if(USE_SHADER){
+					GL20.glUniform4f(colorNearAddress, 0.1f, 1.0f, 0.1f, 0.8f);
+				}
 				glColor4f(0.1f, 1.0f, 0.1f, 0.3f);
 			}
 			glVertex3d(x+(OFFSET+RADIUS+Qubject.SIZE/2d)*cos, y+(OFFSET+RADIUS+Qubject.SIZE/2d)*sin, -2d);
 		}
 		glEnd();
-		GL20.glUseProgram(0);
+		
+		if (playingTime >= 0){
+			//Todo : shade
+		}
+		
+		if(USE_SHADER){
+			GL20.glUseProgram(0);
+		}
 	}
 	
 	/**
-	 * Hide the are under the qubject so that it's easier to detect movement
+	 * Hide the area under the qubject so that it's easier to detect movement
 	 */
 	public void renderShadow(){
-		glColor4f(0f,0f,0f,1f);
 		double cos, sin, theta;
 		float x = qubject.getCoords().getX(), y=qubject.getCoords().getY();
 		if(x <= 0 || y <= 0){
 			return;
 		}
-		glColor4f(0f,0f,0f,1f);
+		glColor4f(0f,0f,0f,0.9f);
 		glBegin(GL_TRIANGLE_FAN);
-		glVertex3d(x,y,-2d);
-		for (int i=0; i<=TESSELATION; i++){
-			theta = i*2*Math.PI/(double)TESSELATION;
-			cos = Math.cos(theta);
-			sin = Math.sin(theta);
-			glColor4f(0f,0f,0f,1f);
-			glVertex3d(x+(Qubject.SIZE/2d+OFFSET)*cos, y+(Qubject.SIZE/2d+OFFSET)*sin, -3d);
-			glColor4f(0f,0f,0f,1f);
-			glVertex3d(x+(Qubject.SIZE/2d+OFFSET)*cos, y+(Qubject.SIZE/2d+OFFSET)*sin, -3d);
-		}
+			glVertex3f(x,y,-5f);
+			for (int i=0; i<=TESSELATION; i++){
+				theta = i*2*Math.PI/(double)TESSELATION;
+				cos = Math.cos(theta);
+				sin = Math.sin(theta);
+				glColor4f(0f,0f,0f,0.9f);
+				glVertex3f((float)(x+(Qubject.SIZE/2f+OFFSET)*cos), (float)(y+(Qubject.SIZE/2f+OFFSET)*sin), -5f);
+				glColor4f(0f,0f,0f,0.9f);
+				glVertex3f((float)(x+(Qubject.SIZE/2f+OFFSET)*cos), (float)(y+(Qubject.SIZE/2f+OFFSET)*sin), -5f);
+			}
 		glEnd();
 	}
 	
@@ -113,6 +134,9 @@ public class QubjectTracker {
 	}
 	
 	public void loadShader(){
+		if(!USE_SHADER)
+			return;
+		
 		String[] attrib = new String[]{"source", "maxRadius", "minRadius", "colorNear", "colorFar"};
 		shader = Shaders.loadShadersGL(SHADER_PATH + "lazyVertex.vp", SHADER_PATH + "gradation.fp", attrib);
 		GL20.glUseProgram(shader[2]);
