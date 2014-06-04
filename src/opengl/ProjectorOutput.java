@@ -207,7 +207,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		
 		//Trackers
 		for(QubjectTracker tracker : trackers.values()){
-			glColor4f(0,0,0,1);
 			tracker.renderStatus();
 		}
 		
@@ -216,7 +215,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			anim.renderAnimation();
 		}
 		
-		//Trackers
+		//Trackers shadow
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderShadow();
 		}
