@@ -99,7 +99,9 @@ public class QubjectTracker {
 			theta = i*2*Math.PI/(double)TESSELATION;
 			cos = Math.cos(theta);
 			sin = Math.sin(theta);
+			glColor4f(0f,0f,0f,1f);
 			glVertex3d(x+(Qubject.SIZE/2d+OFFSET)*cos, y+(Qubject.SIZE/2d+OFFSET)*sin, -3d);
+			glColor4f(0f,0f,0f,1f);
 			glVertex3d(x+(Qubject.SIZE/2d+OFFSET)*cos, y+(Qubject.SIZE/2d+OFFSET)*sin, -3d);
 		}
 		glEnd();

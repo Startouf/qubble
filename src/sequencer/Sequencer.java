@@ -32,7 +32,7 @@ import qubject.Qubject;
 public class Sequencer implements SequencerInterface
 {
 	//TODO : store these variables somewhere else
-	private final int NUM_THREADS = 2;
+	private final int NUM_THREADS = 1;
 	
 	private final ScheduledExecutorService fScheduler;
 	/**
