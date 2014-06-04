@@ -19,6 +19,7 @@ import org.lwjgl.util.Point;
 import calibration.Calibrate;
 import camera.FakeCamera;
 import opengl.BaseRoutines;
+import opengl.FakeProjector;
 import opengl.OutputImageInterface;
 import opengl.ProjectorOutput;
 import audio.FakePlayer;
@@ -39,7 +40,7 @@ import qubject.Qubject;
  */
 public class Qubble implements QubbleInterface {
 	
-	public static boolean fakeCamera = true, fakePlayer = false;
+	public static boolean fakeCamera = true, fakePlayer = false, fakeProjection = true;
 	
 	public static final int BPM = 128;
 	public static final float BPS = BPM*60f/(float)BPM;
@@ -48,7 +49,7 @@ public class Qubble implements QubbleInterface {
 	 * Samples are 128 bpm
 	 * -> total period of 60s/4 = 15s (/4 because it's nice)
 	 */
-	public static final float LOOP_MS = 15000f; //	= 15000f; 
+	public static final float LOOP_MS = 7500f/4f; //	= 15000f; 
 	/*
 	 * Constantes de projection
 	 * (Pour les variables de calibration, utiliser les variables de calibration.Calibrate)
@@ -61,7 +62,7 @@ public class Qubble implements QubbleInterface {
 	/**
 	 * One measure displayed on Qubble
 	 */
-	public static final float GRID_COLUMNS = 8f;
+	public static final float GRID_COLUMNS = 16f;
 	public static final float GRID_ROWS = 1f;
 	public static final float SPACING_X = (float)TABLE_LENGTH/GRID_COLUMNS;
 	public static final float SPACING_Y = (float)TABLE_HEIGHT/GRID_ROWS;
@@ -153,7 +154,11 @@ public class Qubble implements QubbleInterface {
 		} else{
 			camera = new ImageDetection(this);
 		}
-		projection = new ProjectorOutput(this);
+		if (fakeProjection){
+			projection = new FakeProjector();
+		} else{
+			projection = new ProjectorOutput(this);
+		}
 		initialise();
 
 		//The sequencer no longer needs to be run
