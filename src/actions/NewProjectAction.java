@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import qubject.QubjectProperty;
-
 import sequencer.Qubble;
 import sequencer.QubbleInterface;
 import ui.App;
@@ -58,6 +58,20 @@ public class NewProjectAction extends AbstractAction
 		this.app.getWelcomePanel().addProjectEntry(this.app.getActiveProject());
 		this.app.setProjectOpened(true);
 		this.app.getChangeProjectNameAction().actionPerformed(arg0, "Nouveau projet");
+		
+		//Tell GUI to remain on top
+		Thread t = new Thread(new Runnable() {
+		    public synchronized void run() {
+		    	try {
+					wait(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	app.toFront();
+		    }
+		});
+		t.start();
 	}
 	
 	private void fastNewProject(){
