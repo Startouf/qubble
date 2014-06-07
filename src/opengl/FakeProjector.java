@@ -5,8 +5,10 @@ import org.lwjgl.util.Point;
 import qubject.AnimationInterface;
 import qubject.QRInterface;
 
-public class FakeProjector implements OutputImageInterface {
+public class FakeProjector implements OutputImageInterface, Runnable {
 
+	private volatile boolean stop = false;
+	
 	@Override
 	public void toggleGrid() {
 		// TODO Auto-generated method stub
@@ -58,14 +60,25 @@ public class FakeProjector implements OutputImageInterface {
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void resynchronize(float currentTime) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public synchronized void run() {
+		while(!stop){
+			try {
+				wait(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

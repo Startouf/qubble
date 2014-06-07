@@ -20,8 +20,6 @@ import qubject.QubjectModifierInterface;
 
 public class DataTools
 {
-	private static final String saveFormat = ".properties" ;
-
 	/**
 	 * Returns the files of the current directory that match the saveFormat defined in this class
 	 * @param directory
@@ -29,14 +27,25 @@ public class DataTools
 	 */
 	public static File[] getDotProperties(String directory){
 		File dir = new File(directory);
-		//test
-		boolean ok = dir.isDirectory();
 		File [] files = dir.listFiles(
 				new FilenameFilter() 
 				{
 					@Override
 					public boolean accept(File dir, String name) {
-						return name.endsWith(saveFormat);
+						return name.endsWith(".properties");
+					}
+				});
+		return files;
+	}
+	
+	public static File[] getDotWAV(String directory){
+		File dir = new File(directory);
+		File [] files = dir.listFiles(
+				new FilenameFilter() 
+				{
+					@Override
+					public boolean accept(File dir, String name) {
+						return (name.endsWith(".WAV") || name.endsWith(".wav") || name.endsWith(".Wav"));
 					}
 				});
 		return files;

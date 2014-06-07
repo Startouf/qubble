@@ -35,11 +35,15 @@ public class InitialiseAssets
 {
 	private static final String controllersDir = "data/animations/controllers/";
 
+	public static ArrayList<SampleInterface> loadSamples(){
+		return loadSamplesFromWAV();
+	}
+	
 	/**
 	 * Currently loaded props : name and file
 	 * @return
 	 */
-	public static ArrayList<SampleInterface> loadSamples(){
+	public static ArrayList<SampleInterface> loadSamplesFromProperties(){
 		Properties prop;
 		File[] files = DataTools.getDotProperties("data/samples/");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
@@ -55,7 +59,21 @@ public class InitialiseAssets
 		}
 		return list;
 	}
-
+	
+	/**
+	 * 
+	 * @return Samples loaded from WAV files 
+	 */
+	public static ArrayList<SampleInterface> loadSamplesFromWAV(){
+		Properties prop;
+		File[] files = DataTools.getDotWAV("data/samples/files/TR909convertis");
+		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
+		for (File entry : files){ //TODO : use fileInputStream
+			list.add(new Sample(entry.getName(), entry));
+		}
+		return list;
+	}
+	
 	/**
 	 * Loading Hard-coded EffectTypes
 	 * @return
@@ -163,7 +181,6 @@ public class InitialiseAssets
 	}
 	
 	private static SampleInterface getRandomSample(){
-		ArrayList<SampleInterface> list = Data.getSamples();
 		return Data.getSamples().get(rand.nextInt(Data.getSamples().size()));
 	}
 	
