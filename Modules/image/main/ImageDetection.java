@@ -81,7 +81,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			// Actualiser la liste des QR codes
 			if(qrDetectionDone){
 				qrDetectionDone();
-				window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal());
+				window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal(), qr.getPattern());
 				qrDetectionDone = false;
 			}
 			if(motionEstimationDone){

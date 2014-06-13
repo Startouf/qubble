@@ -167,7 +167,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		try {
 			BufferedImage loadImage = ImageIO.read(fichier);
 			controlDetection.analyseTable(new TabImage(loadImage));
-			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal(), controlDetection.getPattern());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -188,7 +188,8 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	public void actionPerformed(ActionEvent e) {
 		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
-			displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
+			controlDetection.analyseTable(new TabImage(detectionInterface.getLastImage()));
+			displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal(), controlDetection.getPattern());
 		}
 		if(e.getSource() == suivant){
 			imageView.next();
@@ -338,7 +339,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		}
 	}
 	
-	public void displayQRDetection(BufferedImage lastDetection, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal){
+	public void displayQRDetection(BufferedImage lastDetection, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal, BufferedImage Pattern){
 		// Supprime les images en cours
 		imageView.resetList();
 		
@@ -347,6 +348,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		imageView.addImage(variance.ColorArrayToBufferedImage());
 		imageView.addImage(compo.getCCMyImage());
 		imageView.addImage(qrAnal.getQRCodesImage());
+		imageView.addImage(Pattern);
 		affiche();
 	}
 	

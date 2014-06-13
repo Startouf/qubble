@@ -86,7 +86,7 @@ public class ConnexeComponent {
 	 * rayon : valeur du rayon/2 désiré pour filtrer les carrés
 	 * @return
 	 */
-	public boolean isSquare(int rayon){
+	public Integer[] isSquare(int rayon){
 		if(xCenter < 0 || yCenter < 0){
 			this.getCenter();
 		}
@@ -143,15 +143,8 @@ public class ConnexeComponent {
 		// La composante étudiée est top grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
 		if(Math.abs(distanceMax-rayon) > 5){
-			return false;
+			return null;
 		}
-		
-		
-		
-/*		 //Afficher la composante connexe sous forme de courbe.
-		for(int i = 0; i<180; i += 2){
-			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}*/
 		
 		
 		for(int i = 0; i<180; i++){
@@ -175,12 +168,16 @@ public class ConnexeComponent {
 				if(ImageDetection.PRINTDEBUG){
 					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
 				}
-				return true;
+				Integer[] tab = new Integer[180];
+				for(int i = 0; i < 180; i ++){
+					tab[i] = Integer.valueOf((int)mySquare[i]);
+				}
+				return tab;
 			}else{
 				if(ImageDetection.PRINTDEBUG){
 					System.out.println("False : " + save);
 				}
-				return false;
+				return null;
 			}
 	}
 	

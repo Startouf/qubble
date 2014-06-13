@@ -27,6 +27,7 @@ public class QRCodesAnalyser {
 	public static int SQUARESIZE = 88;
 	
 	private ArrayList<QRCode> listQRcode;
+	private ArrayList<Integer[]> patternList;
 	// Liste des points qui ont été analysé pour détecter la valeur du QR
 	private HashMap<Point, Boolean> targetQr;
 	// Contient les ids des QR codes et sa position
@@ -44,12 +45,14 @@ public class QRCodesAnalyser {
 		targetQr = new HashMap<Point, Boolean>();
 		listQRcode = new ArrayList<QRCode>();
 		qrFound = new HashMap<Integer, Point>();
-				
+		patternList = new ArrayList<Integer[]>();
+		Integer[] pattern;		
 		// Garder les compo carré de grande taille // Petite taille + Créer Qr Code
 		for(ConnexeComponent cc : componentResult.getCClist()){
 
 			if(cc.getConnexePoints().size() > 100){
-				if(cc.isSquare(SQUARESIZE)){
+				if((pattern = cc.isSquare(SQUARESIZE)) != null){
+					patternList.add(pattern);
 					listQRcode.add(new QRCode(cc, tableImage));
 				}
 			}
@@ -146,6 +149,27 @@ public class QRCodesAnalyser {
 	
 	public HashMap<Integer, Point> getQRList(){
 		return qrFound;
+	}
+	
+	/**
+	 * Construit l'image qui contient les signatures de qr codes pour analyser
+	 * @return
+	 */
+	public BufferedImage getPatternImage(){
+		BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.getGraphics();
+		g.setColor(Color.BLACK);
+		int countX = 0, countY = 0;
+		for(Integer[] pt : patternList){
+			for(int i = 0; i <180 ; i++){
+				g.drawLine(i+(countX%4*180), pt[i]+(countY)*200, i+(countX%4*180), pt[i]+(countY)*200);
+			}
+			countX++;
+			countY=countX/4;
+		}
+		
+		
+		return img;
 	}
 
 }

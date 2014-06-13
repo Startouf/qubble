@@ -124,6 +124,14 @@ public class QR_Detection implements Runnable, TerminateThread{
 		return variance;
 	}
 	
+	/**
+	 * Renvoie une image avec la signature des qrs détectés
+	 * @return
+	 */
+	public BufferedImage getPattern(){
+		return qrAnal.getPatternImage();
+	}
+	
 	public boolean switchPause(){
 		if(pause){
 			pause = false;
