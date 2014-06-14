@@ -35,7 +35,7 @@ public class Camera implements Runnable, TerminateThread{
 		try{
 			// Ouverture de la caméra sur le port 0 
 			// Linux
-			grabber = new FFmpegFrameGrabber("/dev/video0");
+			grabber = new FFmpegFrameGrabber("/dev/video1");
 			grabber.setFormat("video4linux2");
 			// Windows 2 : USB
 			//grabber = (FrameGrabber.createDefault(1));

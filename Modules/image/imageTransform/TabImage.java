@@ -46,7 +46,8 @@ public class TabImage {
 
 		for(int i = 0; i < width; i++)
 		    for(int j = 0; j < height; j++)
-		    	img[i][j] = buf.getRGB(i, j);
+		    	// Supprimer l'opacité
+		    	img[i][j] = (buf.getRGB(i, j) & 0x00ffffff);
 	}
 	
 	/**
@@ -67,7 +68,7 @@ public class TabImage {
 				//greyValue = (int) (0.114 * red +  0.299 * green + 0.587 * blue);
 				greyValue = (int)((299 * red +  587 * green + 114 * blue)/1000);
 				if(color){
-					greyImage[i][j] = (new Color(greyValue, greyValue, greyValue)).getRGB();
+					greyImage[i][j] = greyValue | (greyValue<<8) | (greyValue<<16);
 				}else{
 					greyImage[i][j] = greyValue;
 				}
@@ -77,25 +78,6 @@ public class TabImage {
 		return new TabImage(greyImage, width,height);
 	}
 	
-	/**
-	 * Transforme une image en niveau de gris en une image binaire
-	 * @return
-	 */
-/*	public TabImage getBinaryMyImage(){
-		int[][] binaryImage = new int [width][height];
-		
-		int binaryLevel = this.getBinaryLevel();
-		for(int i = 0 ; i < width ; i++){
-			for(int j = 0 ; j < height ; j++){
-				// Calcul du niveau de gris
-				if((img[i][j] & 0x000000ff) > binaryLevel)
-					binaryImage[i][j] = (new Color(255, 255, 255).getRGB());
-				else
-					binaryImage[i][j] = (new Color(0, 0, 0).getRGB());
-			}
-		}
-		return new TabImage(binaryImage, width,height);
-	}*/
 	
 	/**
 	 * Transforme une image en niveau de gris en une image binaire en décomposant l'image en sous image
@@ -311,43 +293,8 @@ public class TabImage {
 			windowSize = (window)/2;
 		}
 		
-		int[][] mean = new int [width][height];
 		int[][] varianceImg = new int [width][height];
 		
-		// Parcours de l'image
-		/*for(int i = windowSize; i < width-windowSize; i++){
-			for(int j = windowSize; j < height-windowSize; j++){
-				sum = 0;
-				// Parcours de la fenêtre
-				for(int a = -windowSize; a <= windowSize; a++){
-					for(int b = -windowSize; b <= windowSize; b++){
-						sum += img[i+a][j+b] & 0xff;
-					}
-				}
-				mean[i][j] = (sum/(window*window));
-				//System.out.println("mean : " + mean[i][j]);
-			}
-		}
-		
-		// Parcours de l'image
-		for(int i = windowSize; i < width-windowSize; i++){
-			for(int j = windowSize; j < height-windowSize; j++){
-				sum = 0;
-				// Parcours de la fenêtre
-				for(int a = -windowSize; a <= windowSize; a++){
-					for(int b = -windowSize; b <= windowSize; b++){
-						sum += Math.pow(((img[i+a][j+b] & 0xff) - mean[i][j]), 2);
-					}
-				}
-				var = sum/((window*window)-1);
-				//System.out.println(var);
-				if(var > BINARY_LEVEL){
-					varianceImg[i][j] = 0xffffffff;
-				}else{
-					varianceImg[i][j] = 0;
-				}
-			}
-		}*/
 		int N = window*window;
 		int sumCarre = 0;
 		int temp;
@@ -365,11 +312,11 @@ public class TabImage {
 			}
 			sum = sum*sum;
 			var = (sumCarre - (sum/N))/N;
-			//System.out.println(var);
+			//System.out.println(var)
 			if(var > BINARY_LEVEL){
-				varianceImg[i][j] = 0xff000000;
+				varianceImg[i][j] = 0x00000000;
 			}else{
-				varianceImg[i][j] = 0xffffffff;
+				varianceImg[i][j] = 0x00ffffff;
 			}
 			//System.out.println("mean : " + mean[i][j]);
 		}
@@ -403,12 +350,13 @@ public class TabImage {
 	 * @return
 	 */
 	public BufferedImage ColorArrayToBufferedImage() {
-		BufferedImage bimg = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+		BufferedImage bimg = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		int[] linearbuffer = new int[width*height];
 		int i=0;
 		for(int y=0;y<height;y++)
 			for(int x=0;x<width;x++)
-				linearbuffer[i++]=img[x][y];
+				// Remettre l'opacité
+				linearbuffer[i++]=(img[x][y] | 0xff000000);
 		bimg.getRaster().setDataElements(0, 0, width, height, linearbuffer);
 		return bimg;
 	}

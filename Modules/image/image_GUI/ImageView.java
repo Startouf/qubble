@@ -1,11 +1,13 @@
 package image_GUI;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import imageObject.ConnexeComponent;
 import imageTransform.TabImage;
 
 import javax.swing.JPanel;
@@ -70,6 +72,23 @@ public class ImageView extends JPanel{
 			slide.add(lastDetection);
 			nbrImage = slide.size();
 		}
+	}
+	
+	/**
+	 * Affiche un récapitulatif du calcule de la signature
+	 * @param cc
+	 * @param color
+	 */
+	public void addSignatureView(ConnexeComponent cc, Color color){
+		BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.getGraphics();
+		g.setColor(color);
+		
+		//Afficher la composante connexe sous forme de courbe : distance en fonction de l'angle (pas de 2)
+//		for(int i = 0; i<180; i += 2){
+//			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
+//		}
+		// Afficher le coefficient de réussite 
 	}
 	
 	public BufferedImage getImage(int type){
