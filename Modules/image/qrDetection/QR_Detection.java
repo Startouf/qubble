@@ -17,6 +17,7 @@ import main.TerminateThread;
 
 
 public class QR_Detection implements Runnable, TerminateThread{
+	public static int VAR_WINDOW = 3, VAR_TRESH = 5;
 	private Window qrWindow;
 	private boolean run, pause;
 	private ImageDetectionInterface controlImage;
@@ -26,6 +27,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 	ComponentsAnalyser compo;
 	QRCodesAnalyser qrAnal;
 	TabImage grey, variance;
+	
 	
 	public QR_Detection(ImageDetectionInterface controlImage){
 		this.controlImage = controlImage;
@@ -73,7 +75,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 		long greyTime = System.currentTimeMillis();
 		
 		// Transformation par le filtre de variance
-		variance = grey.getVarianceFilter(3, 5);
+		variance = grey.getVarianceFilter(VAR_WINDOW, VAR_TRESH);
 		long binaryTime = System.currentTimeMillis();
 		
 		// Recherche des composantes connexes

@@ -53,6 +53,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	private JPanel control;
 	private JButton suivant, action, precedent;
 	private JTextField binaryLevelJTF, squareSizeJTF, squareTriggerJTF;
+	private JTextField varWindowJTF, varThreshJTF,  nullJTF;
 	// Menu 
 	private JMenuBar mainMenu;
 	private JMenu fichier, display, run;
@@ -62,11 +63,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	
 	private boolean printMeasure, printMotion;
 	
-	public Window(ImageDetectionInterface detectionInterface, QR_Detection controlDetection, MotionDetection controlMotion, int binary, int rayon, int square){
+	public Window(ImageDetectionInterface detectionInterface, QR_Detection controlDetection, MotionDetection controlMotion, int binary, int rayon, int square, int varWindow, int varThresh, int nothing){
 		this.detectionInterface = detectionInterface;
 		this.controlDetection = controlDetection;
 		this.controlMotion = controlMotion;
-		init(binary, rayon, square);
+		init(binary, rayon, square, varWindow, varThresh, nothing);
 		printMeasure = false;
 		printMotion = false;
 	}
@@ -74,7 +75,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	/**
 	 * Initialisation de la fenêtre et création des composants
 	 */
-	private void init(int binary, int rayon, int square){
+	private void init(int binary, int rayon, int square, int varWindow, int varThresh, int nothing){
 		this.setSize(800, 600);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -114,7 +115,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		this.setJMenuBar(mainMenu);
 		
 		control = new JPanel();
-		control.setLayout(new GridLayout(3, 3));
+		control.setLayout(new GridLayout(5, 3));
 		
 		
 		precedent = new JButton("Précédent");
@@ -129,7 +130,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		control.add(action);
 		control.add(suivant);
 		control.add(new JLabel("Binarisation (0-255)"));
-		control.add(new JLabel("Détection du carré (0-100)"));
+		control.add(new JLabel("Seuil de signature (0-100%)"));
 		control.add(new JLabel("Taille rayon"));
 		binaryLevelJTF = new JTextField(String.valueOf(binary));
 		squareSizeJTF = new JTextField(String.valueOf(rayon));
@@ -150,6 +151,30 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		control.add(binaryLevelJTF);
 		control.add(squareTriggerJTF);
 		control.add(squareSizeJTF);
+		
+		control.add(new JLabel("Taille fenetre variance"));
+		control.add(new JLabel("Seuil de variance"));
+		control.add(new JLabel("Null"));
+		
+		varWindowJTF = new JTextField(String.valueOf(varWindow));
+		varThreshJTF = new JTextField(String.valueOf(varThresh));
+		nullJTF = new JTextField(String.valueOf(nothing));
+		changeBinaryLevel(binary);
+		changeSquareSize(rayon);
+		changeSquareTrigger(square);
+		
+		// Ajouter la relation entre le document et le jtextfield
+		varWindowJTF.getDocument().putProperty("parent", varWindowJTF);
+		varThreshJTF.getDocument().putProperty("parent", varThreshJTF);
+		nullJTF.getDocument().putProperty("parent", nullJTF);
+		
+		varWindowJTF.getDocument().addDocumentListener(this);
+		varThreshJTF.getDocument().addDocumentListener(this);
+		nullJTF.getDocument().addDocumentListener(this);
+		
+		control.add(varWindowJTF);
+		control.add(varThreshJTF);
+		control.add(nullJTF);
 		
 		imageView = new ImageView();
 		imageView.addMouseListener(this);
@@ -188,6 +213,7 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	public void actionPerformed(ActionEvent e) {
 		// Actualiser la visualisation de la dernière reconnaissance de forme
 		if(e.getSource() == action){
+			// Mettre la reconnaissance en pause/marche
 			controlDetection.switchPause();
 			HashMap<ConnexeComponent, Color> list = controlDetection.getCompo().getSignatureList();
 			for(ConnexeComponent cc : list.keySet()){
@@ -295,11 +321,43 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 			changeSquareSize(value);	
 		}else if(e.getDocument().equals(squareTriggerJTF.getDocument())){
 			changeSquareTrigger(value);	
+		}else if(e.getDocument().equals(varWindowJTF.getDocument())){
+			changeVarWindowSize(value);	
+		}else if(e.getDocument().equals(varThreshJTF.getDocument())){
+			changeVarThreshLevel(value);	
+		}else if(e.getDocument().equals(nullJTF.getDocument())){
+
 		}
 	}
 	
 	
+	/**
+	 * Modifie le seuil de variance
+	 * @param value
+	 * @return true si 0 <= value 
+	 */
+	private boolean changeVarThreshLevel(int value){
+		if(value < 0){
+			return false;
+		}else{
+			qrDetection.QR_Detection.VAR_TRESH = value;
+			return true;
+		}
+	}
 	
+	/**
+	 * Modifie la taille de la fenêtre pour la variance
+	 * @param value
+	 * @return true si 0 <= value 
+	 */
+	private boolean changeVarWindowSize(int value){
+		if(value < 0){
+			return false;
+		}else{
+			qrDetection.QR_Detection.VAR_WINDOW = value;
+			return true;
+		}
+	}
 	
 	/**
 	 * Modifie le seuil pour la transformation en image binaire

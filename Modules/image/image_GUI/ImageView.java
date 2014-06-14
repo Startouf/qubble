@@ -85,9 +85,9 @@ public class ImageView extends JPanel{
 		g.setColor(color);
 		
 		//Afficher la composante connexe sous forme de courbe : distance en fonction de l'angle (pas de 2)
-		for(int i = 0; i<180; i += 2){
-			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
-		}
+//		for(int i = 0; i<180; i += 2){
+//			g.drawLine(i, (int)mySquare[i], i, (int)mySquare[i]);
+//		}
 		// Afficher le coefficient de réussite 
 	}
 	

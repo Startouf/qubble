@@ -62,7 +62,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface, Termin
 		countBeforeRemoved  = new HashMap<Integer, Integer>();
 		//addedQubbleList.put(888, new Point(640, 360));
 		if(true){
-			window = new Window(this,qr, mo, 60, 72 ,80);
+			window = new Window(this,qr, mo, 60, 72 ,80, 3, 5, 0);
 		}
 		
 		//mo.addQubbleToList(640, 360, 22);
