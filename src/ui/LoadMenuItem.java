@@ -7,7 +7,7 @@ public class LoadMenuItem extends JMenuItem
 	private final App app;
 	
 	public LoadMenuItem(App app) {
-		super(app.getOpenIndividualSettingsAction());
+		super(app.getLoadAction());
 		this.app = app;
 		this.setText("Charger un projet");
 	}
