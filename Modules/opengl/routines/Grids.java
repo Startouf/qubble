@@ -2,12 +2,34 @@ package routines;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.text.DecimalFormat;
+
+import opengl.ProjectorOutput;
+
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
+import ui.App;
+
 public final class Grids
 {
+	public final static Color labelColor;
+	static {
+		if(ProjectorOutput.WHITE_BACKGROUND){
+			labelColor = Color.black;
+		}else{
+			labelColor = Color.white;
+		}
+	}
+	private static DecimalFormat df = new DecimalFormat();
+	static{
+		if(App.SLOW){
+			df.setMaximumFractionDigits(0);
+		}else{
+			df.setMaximumFractionDigits(1);
+		}
+	}
 	public static int[] labelOffset = new int[] {7,7,7};
 	public static float arrowLenght = 25f, arrowWidth = 5f;
 
@@ -136,7 +158,7 @@ public final class Grids
 			fontOffsetY = font.getHeight();
 			for (int i=0; i<=imax;i+=labelSpacing[0]){
 				//Compute fontOffsetX
-				label = Integer.toString((int)(i*cellSpacing[0]*labelMultiplier[0]));
+				label = df.format(i*cellSpacing[0]*labelMultiplier[0]);
 				fontOffsetX = font.getWidth(label)/2;
 				//render the labels
 				renderMultipleLabel2f(area[0]+cellSpacing[0]*i-fontOffsetX, area[2]-fontOffsetY, font, (label));
@@ -148,7 +170,7 @@ public final class Grids
 			for (int j=0; j<=jmax;j+=labelSpacing[1]){
 				//Compute fontOffsetX. Unlike the X axis, some more space must be added (for now arbitrary)
 				//TODO maybe a more accurate computation could be used. For example using font.getHeight()*something
-				label = Integer.toString((int)(j*cellSpacing[1]*labelMultiplier[1]));
+				label = df.format(j*cellSpacing[1]*labelMultiplier[1]);
 				fontOffsetX = font.getWidth(label) + labelOffset[0];
 				//render the labels
 				renderMultipleLabel2f(area[0]-fontOffsetX, area[2]+j*cellSpacing[1]-fontOffsetY, font, (label));
@@ -164,7 +186,7 @@ public final class Grids
 	 * @param text
 	 */
 	public static void renderMultipleLabel2f(float x, float y, TrueTypeFont font, String text){
-		Fonts.renderMultiple(font, x, y, text, Color.white);
+		Fonts.renderMultiple(font, x, y, text, labelColor);
 	}
 
 	/**
@@ -175,7 +197,7 @@ public final class Grids
 	 * @param text
 	 */
 	public static void renderLabel2f(float x, float y, TrueTypeFont font, String text){
-		Fonts.renderMultiple(font, x, y, text, Color.white);
+		Fonts.renderMultiple(font, x, y, text, labelColor);
 	}
 
 	/**
