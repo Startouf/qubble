@@ -8,6 +8,7 @@ import qubject.*;
 
 public class SampleController implements SampleControllerInterface {
 
+	private static final boolean DEBUG = false;
 	int offSet; //indice du premier échantillon dans la boucle principale
 	int relativeCursor; //echantillon qui sera renvoyé par la fonction getNext.
 	ArrayList<Integer> samples;
@@ -100,7 +101,8 @@ public class SampleController implements SampleControllerInterface {
 			return res;
 		}
 		else {
-			System.out.println(this.sample.getName() + " has finished playing");
+			if (DEBUG)
+				System.out.println(this.sample.getName() + " has finished playing");
 			if (qi != null) {
 				qi.soundHasFinishedPlaying(this);
 			}

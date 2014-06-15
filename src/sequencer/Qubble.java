@@ -39,11 +39,11 @@ import qubject.Qubject;
  *
  */
 public class Qubble implements QubbleInterface {
-	
-	public static boolean fakeCamera = true, fakePlayer = false, fakeProjection = true;
+	private static boolean DEBUG = true;
+	public static boolean fakeCamera = true, fakePlayer = false, fakeProjection = false;
 	
 	public static final int BPM = 128;
-	public static final float BPS = BPM*60f/(float)BPM;
+	public static final float BPS = (float)BPM/60f; //=2,1 +1/30
 	/** 
 	 * Period (time to make a loop) in float milliseconds
 	 * Samples are 128 bpm
@@ -266,6 +266,9 @@ public class Qubble implements QubbleInterface {
 	public void playQubject(Qubject qubject) {
 		//play!
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
+		if (DEBUG){
+			System.out.println("Playing : " + qubject.getSampleWhenPlayed().getName());
+		}
 		//adjust effect
 		if(!(player instanceof FakePlayer)){
 //			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
