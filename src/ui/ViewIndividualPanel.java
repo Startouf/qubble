@@ -119,9 +119,8 @@ public class ViewIndividualPanel extends ViewQubjects {
 		super.paintComponent(g);
 
 		if(this.backgroundImage != null){
-			BufferedImage bf = this.backgroundImage;
-			float scale = (float)bf.getHeight()/(float)this.getHeight();
-			BufferedImage dest = this.backgroundImage.getSubimage(0, 
+			BufferedImage bf = ViewIndividualPanel.backgroundImage;
+			BufferedImage dest = bf.getSubimage(0, 
 					0, 
 					bf.getWidth(), 
 					bf.getHeight());

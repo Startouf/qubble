@@ -62,7 +62,7 @@ public class Selector extends JPanel {
 				super.paintComponent(g);
 
 				if(image != null){
-					g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+					g.drawImage(image, 0, 0, getWidth(), getHeight(), imagePanel);
 				}
 			}
 		};
