@@ -37,6 +37,7 @@ import sequencer.QubbleInterface;
 import wave.WaterWave;
 
 public class ProjectorOutput implements OutputImageInterface, Runnable {
+	public static boolean WHITE_BACKGROUND = true;
 	
 	private int gridDL;
 	private TrueTypeFont fontTNR;
@@ -93,6 +94,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
     	
     	//TODO : add another closeRequested boolean check for external change (project closed...)
         //while(!Display.isCloseRequested()){
+    	
+    	if(WHITE_BACKGROUND){
+    		glClearColor(1f,1f,1f,1f);
+    	}else{
+    		glClearColor(0f,0f,0f,0f);
+    	}
+    	
     	while(!closeRequested){
         	loadNewAnims();
         	glClear(GL_COLOR_BUFFER_BIT | 
@@ -185,7 +193,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//Grid
 		if (showGrid){
 			//Note : comment the below line to make a nice effect with the grid
-			GL11.glColor3f(1f, 1f, 1f);
+			if(WHITE_BACKGROUND){
+				glColor3f(0.7f, 0.7f, 0.7f);
+			}else{
+				glColor3f(0.3f,0.3f,0.3f);
+			}
 			//Below line sucks but no other fix found to 
 			glBindTexture(GL_TEXTURE_2D, 1);
 			BaseRoutines.renderList(gridDL);

@@ -81,7 +81,7 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 				qubble.QubjectRemoved(qub);
 			}
 		});
-		remove.setText("Bouger/Ajouter");
+		remove.setText("Enlever");
 		remove.setHideActionText(false);
 		
 		content.add(validate); content.add(remove);
@@ -103,31 +103,17 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 			}
 		}
 		
+		qubble.QubjectDetected(0, new Point(200, 200)); //cercle jaune
+		qubble.QubjectDetected(30, new Point(850, 550)); //cercle orange
+		qubble.QubjectDetected(511, new Point(450, 350)); //carré rose
+		qubble.QubjectDetected(480, new Point(1100, 350)); //cercle bleu
+		
 		while(!kill){
 			try {
-				wait(100); //in milliseconds
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			qubble.QubjectDetected(0, new Point(800, 800));
-			qubble.QubjectDetected(30, new Point(850, 550));
-			qubble.QubjectDetected(511, new Point(450, 350));
-			qubble.QubjectDetected(0, new Point(760, 550));
-			qubble.QubjectDetected(511, new Point(950, 150));
-			qubble.QubjectDetected(511, new Point(1100, 250));
-			try {
-				wait(5000);
+				wait(400);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-	//		qubble.QubjectHasMoved(100100, new Point(150, 550));
-	//		qubble.QubjectHasMoved(100101, new Point(350, 150));
-	//		qubble.QubjectHasMoved(100110, new Point(550, 350));
-	//		qubble.QubjectHasMoved(100111, new Point(760, 550));
-	//		qubble.QubjectHasMoved(101000, new Point(950, 150));
-			
-			
 		}
 	}
 	

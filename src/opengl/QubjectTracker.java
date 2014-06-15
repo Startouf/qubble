@@ -113,16 +113,16 @@ public class QubjectTracker {
 		if(x <= 0 || y <= 0){
 			return;
 		}
-		glColor4f(0f,0f,0f,0.9f);
+		glColor4f(0f,0f,0f,0.8f);
 		glBegin(GL_TRIANGLE_FAN);
 			glVertex3f(x,y,-5f);
 			for (int i=0; i<=TESSELATION; i++){
 				theta = i*2*Math.PI/(double)TESSELATION;
 				cos = Math.cos(theta);
 				sin = Math.sin(theta);
-				glColor4f(0f,0f,0f,0.9f);
+				glColor4f(0f,0f,0f,0.8f);
 				glVertex3f((float)(x+(Qubject.SIZE/2f+OFFSET)*cos), (float)(y+(Qubject.SIZE/2f+OFFSET)*sin), -5f);
-				glColor4f(0f,0f,0f,0.9f);
+				glColor4f(0f,0f,0f,0.8f);
 				glVertex3f((float)(x+(Qubject.SIZE/2f+OFFSET)*cos), (float)(y+(Qubject.SIZE/2f+OFFSET)*sin), -5f);
 			}
 		glEnd();

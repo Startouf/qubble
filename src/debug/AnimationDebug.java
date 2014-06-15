@@ -66,7 +66,7 @@ public class AnimationDebug implements OutputImageInterface {
 
 	private void debug(){
 		highlightQubject(new Point(400,400));
-		needsToBeLoaded.add(new Fissure(new Point (400,400)));
+		needsToBeLoaded.add(new WaterWave(new Point (400,400)));
 		
 		highlightQubject(new Point(600, 300));
 		needsToBeLoaded.add(new RainDrops(new Point(800,325)));

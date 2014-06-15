@@ -46,6 +46,7 @@ import audio.SoundEffectInterface;
  */
 public class App extends JFrame
 {
+	public static boolean SLOW = false;
 	/**
 	 * Contient références vers les samples, soundEffects... 
 	 */
