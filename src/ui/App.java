@@ -271,7 +271,7 @@ public class App extends JFrame
 		Component selected = mainPanel.getSettingsTabs().getSelectedComponent();
 		if(selected instanceof ViewQubjects){
 			return (ViewQubjects) mainPanel.getSettingsTabs().getSelectedComponent();
-		} else return null;
+		} else throw new NotViewQubjectsTabException();
 	}
 	
 	public ChangeQubjectAction getChangeQubjectAction() {
