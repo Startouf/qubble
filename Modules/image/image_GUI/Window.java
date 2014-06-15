@@ -36,12 +36,15 @@ import qrDetection.ComponentsAnalyser;
 import qrDetection.QRCodesAnalyser;
 import qrDetection.QR_Detection;
 
+
+// Ajouter un choix pour masquer le contrôle de paramètre
+
 /**
  * Affiche une fenetre pour suivre la réception de la caméra, la détection de forme et le mouvement
  * @author masseran
- *
+ * 
  */
-public class Window extends JFrame implements ActionListener, DocumentListener, MouseListener{
+public class Window extends JFrame implements ActionListener, MouseListener{
 	
 	private QR_Detection controlDetection;
 	private MotionDetection controlMotion;
@@ -51,13 +54,11 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	private ImageView imageView;
 	// Barre de contrôle du bas
 	private JPanel control;
-	private JButton suivant, action, precedent;
-	private JTextField binaryLevelJTF, squareSizeJTF, squareTriggerJTF;
-	private JTextField varWindowJTF, varThreshJTF,  nullJTF;
+
 	// Menu 
 	private JMenuBar mainMenu;
-	private JMenu fichier, display, run;
-	private JMenuItem ouvrir, motion, measure, motionRun, qrRun, cameraRun;
+	private JMenu fichier, display, camera, run;
+	private JMenuItem ouvrir, motion, measure, webcam0, webcam1, motionRun, qrRun, cameraRun;
 	
 	private File currentFolder;
 	
@@ -94,6 +95,12 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		measure = new JMenuItem("Règle");
 		measure.addActionListener(this);
 		
+		camera = new JMenu("Caméra");
+		webcam0 = new JMenuItem("Webcam 0");
+		webcam0.addActionListener(this);
+		webcam1 = new JMenuItem("Webcam 1");
+		webcam1.addActionListener(this);
+		
 		run = new JMenu("Exécution");
 		cameraRun = new JMenuItem("Camera");
 		cameraRun.addActionListener(this);
@@ -106,78 +113,20 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		fichier.add(ouvrir);
 		display.add(motion);
 		display.add(measure);
+		camera.add(webcam0);
+		camera.add(webcam1);
 		run.add(cameraRun);
 		run.add(qrRun);
 		run.add(motionRun);
 		mainMenu.add(fichier);
 		mainMenu.add(display);
+		mainMenu.add(camera);
 		mainMenu.add(run);
 		this.setJMenuBar(mainMenu);
-		
-		control = new JPanel();
-		control.setLayout(new GridLayout(5, 3));
-		
-		
-		precedent = new JButton("Précédent");
-		action = new JButton("Transformer !");
-		suivant = new JButton("Suivant");
-		precedent.addActionListener(this);
-		action.addActionListener(this);
-		suivant.addActionListener(this);
-	
-		
-		control.add(precedent);
-		control.add(action);
-		control.add(suivant);
-		control.add(new JLabel("Binarisation (0-255)"));
-		control.add(new JLabel("Seuil de signature (0-100%)"));
-		control.add(new JLabel("Taille rayon"));
-		binaryLevelJTF = new JTextField(String.valueOf(binary));
-		squareSizeJTF = new JTextField(String.valueOf(rayon));
-		squareTriggerJTF = new JTextField(String.valueOf(square));
-		changeBinaryLevel(binary);
-		changeSquareSize(rayon);
-		changeSquareTrigger(square);
-		
-		// Ajouter la relation entre le document et le jtextfield
-		binaryLevelJTF.getDocument().putProperty("parent", binaryLevelJTF);
-		squareSizeJTF.getDocument().putProperty("parent", squareSizeJTF);
-		squareTriggerJTF.getDocument().putProperty("parent", squareTriggerJTF);
-		
-		binaryLevelJTF.getDocument().addDocumentListener(this);
-		squareSizeJTF.getDocument().addDocumentListener(this);
-		squareTriggerJTF.getDocument().addDocumentListener(this);
-		
-		control.add(binaryLevelJTF);
-		control.add(squareTriggerJTF);
-		control.add(squareSizeJTF);
-		
-		control.add(new JLabel("Taille fenetre variance"));
-		control.add(new JLabel("Seuil de variance"));
-		control.add(new JLabel("Null"));
-		
-		varWindowJTF = new JTextField(String.valueOf(varWindow));
-		varThreshJTF = new JTextField(String.valueOf(varThresh));
-		nullJTF = new JTextField(String.valueOf(nothing));
-		changeBinaryLevel(binary);
-		changeSquareSize(rayon);
-		changeSquareTrigger(square);
-		
-		// Ajouter la relation entre le document et le jtextfield
-		varWindowJTF.getDocument().putProperty("parent", varWindowJTF);
-		varThreshJTF.getDocument().putProperty("parent", varThreshJTF);
-		nullJTF.getDocument().putProperty("parent", nullJTF);
-		
-		varWindowJTF.getDocument().addDocumentListener(this);
-		varThreshJTF.getDocument().addDocumentListener(this);
-		nullJTF.getDocument().addDocumentListener(this);
-		
-		control.add(varWindowJTF);
-		control.add(varThreshJTF);
-		control.add(nullJTF);
-		
+				
 		imageView = new ImageView();
 		imageView.addMouseListener(this);
+		control = new ParamControl(this, controlDetection, imageView, binary, rayon, square, varWindow, varThresh, nothing);
 		this.setLayout(new BorderLayout());
 		this.getContentPane().add(imageView, BorderLayout.CENTER);
 		this.getContentPane().add(control, BorderLayout.SOUTH);
@@ -213,21 +162,6 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 	 */
 	public void actionPerformed(ActionEvent e) {
 		// Actualiser la visualisation de la dernière reconnaissance de forme
-		if(e.getSource() == action){
-			// Mettre la reconnaissance en pause/marche
-			controlDetection.switchPause();
-			HashMap<ConnexeComponent, Color> list = controlDetection.getCompo().getSignatureList();
-			for(ConnexeComponent cc : list.keySet()){
-				imageView.addSignatureView(cc, list.get(cc));
-			}
-			//displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal());
-		}
-		if(e.getSource() == suivant){
-			imageView.next();
-		}
-		if(e.getSource() == precedent){
-			imageView.previous();
-		}
 		if(e.getSource() == ouvrir){
 	        // Boîte de sélection de fichier à partir du répertoire courant
 			if(currentFolder == null){
@@ -283,124 +217,6 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 		affiche();
 	}
 
-	@Override
-	public void changedUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("changed");
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("insert");
-		changingValue(arg0);
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("remove");
-		changingValue(arg0);
-	}
-	
-	/**
-	 * Fonction qui gère la modification d'un paramètre après le déclenchement d'une modification d'un JTextfield
-	 * @param e
-	 */
-	private void changingValue(DocumentEvent e){
-		int value = 0;
-		
-		try{
-			value = Integer.parseInt(((JTextField)(e.getDocument().getProperty("parent"))).getText());
-		}catch(NumberFormatException error){
-			
-		}
-		//System.out.println(value);
-		if(e.getDocument().equals(binaryLevelJTF.getDocument())){
-			changeBinaryLevel(value);			
-		}else if(e.getDocument().equals(squareSizeJTF.getDocument())){
-			changeSquareSize(value);	
-		}else if(e.getDocument().equals(squareTriggerJTF.getDocument())){
-			changeSquareTrigger(value);	
-		}else if(e.getDocument().equals(varWindowJTF.getDocument())){
-			changeVarWindowSize(value);	
-		}else if(e.getDocument().equals(varThreshJTF.getDocument())){
-			changeVarThreshLevel(value);	
-		}else if(e.getDocument().equals(nullJTF.getDocument())){
-
-		}
-	}
-	
-	
-	/**
-	 * Modifie le seuil de variance
-	 * @param value
-	 * @return true si 0 <= value 
-	 */
-	private boolean changeVarThreshLevel(int value){
-		if(value < 0){
-			return false;
-		}else{
-			qrDetection.QR_Detection.VAR_TRESH = value;
-			return true;
-		}
-	}
-	
-	/**
-	 * Modifie la taille de la fenêtre pour la variance
-	 * @param value
-	 * @return true si 0 <= value 
-	 */
-	private boolean changeVarWindowSize(int value){
-		if(value < 0){
-			return false;
-		}else{
-			qrDetection.QR_Detection.VAR_WINDOW = value;
-			return true;
-		}
-	}
-	
-	/**
-	 * Modifie le seuil pour la transformation en image binaire
-	 * @param value
-	 * @return true si 0 <= value <= 255 sinon false
-	 */
-	private boolean changeBinaryLevel(int value){
-		if(value < 0 || value > 255){
-			return false;
-		}else{
-			TabImage.BINARY_LEVEL = value;
-			return true;
-		}
-	}
-	
-	/**
-	 * Modifie le seuil de détection des grands carrés qui font le contour des QR codes
-	 * @param value
-	 * @return true si 0 <= value sinon false
-	 */
-	private boolean changeSquareSize(int value){
-		if(value < 0){
-			return false;
-		}else{
-			QRCodesAnalyser.SQUARESIZE = value;
-			return true;
-		}
-	}
-	
-	/**
-	 * Modifie le seuil de détection des petits carrés pour le repère des QR codes
-	 * @param value
-	 * @return true si 0 <= value sinon false
-	 */
-	private boolean changeSquareTrigger(int value){
-		if(value < 0 || value > 100){
-			return false;
-		}else{
-			ConnexeComponent.SQUARETRIGGER = value/(float)(100);
-			return true;
-		}
-	}
 	
 	public void displayQRDetection(BufferedImage lastDetection, TabImage grey, TabImage variance, ComponentsAnalyser compo, QRCodesAnalyser qrAnal, BufferedImage Pattern){
 		// Supprime les images en cours
@@ -454,5 +270,13 @@ public class Window extends JFrame implements ActionListener, DocumentListener, 
 
 	@Override
 	public void mouseReleased(MouseEvent e) {	}
+	
+	/**
+	 * Effectuer qu'une seule fois la reconnaissance sur l'image de la caméra en cours
+	 */
+	public void oneShot(){
+		controlDetection.analyseTable(new TabImage(detectionInterface.getLastImage()));
+		displayQRDetection(controlDetection.getLastDetection(), controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal(), controlDetection.getPattern());
+	}
 
 }

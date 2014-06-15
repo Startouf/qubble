@@ -18,6 +18,7 @@ import main.ImageDetection;
 public class ConnexeComponent {
 	// Coefficient pour accepter qu'une composante est un carré
 	public static float SQUARETRIGGER = (float) 0.80;
+	public static int SQUAREDIFF = 5;
 	
 	private ArrayList<Point> list;
 	private int xCenter, yCenter;
@@ -37,11 +38,13 @@ public class ConnexeComponent {
 		perfectSquare = new float[90];
 		int theta = 0;
 		float total = 0;
+
 		for(int i = 0; i < 90 ; i++){
 			if(i>45)
 				theta = 90 - i;
 			else
 				theta = i;
+			// Diviser par deux : diagonale => rayon
 			perfectSquare[i] = (float) ((float)0.5*(1/Math.cos((theta)%90*Math.PI/(float)180)));
 			total += perfectSquare[i];
 			
@@ -58,7 +61,7 @@ public class ConnexeComponent {
 	 * @param average
 	 * @return
 	 */
-	public static float getStandartDeviation(float[] sample, int size, float average){
+	private static float getStandartDeviation(float[] sample, int size, float average){
 		float  variance = 0;
 		for(int i = 0; i < size ; i++){
 			variance += Math.pow((sample[i] - average), 2);
@@ -112,12 +115,16 @@ public class ConnexeComponent {
 			// le deuxième vecteur est (1, 0)
 			
 			//entre 0 et 180 degres
-			if ((pt.getY()-yCenter)/(float)distance >= 0) {
-				angle = (int) ((Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)/2) %180;
+			if ((pt.getY()-yCenter) >= 0) {
+				angle = (int) (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI);
+				// Prendre un degré sur deux
+				angle = (angle / 2)%180;
 			}
 			//entre 180 et 360 degres 
-			else if ((pt.getY()-yCenter)/(float)distance < 0) {						
-				angle = ((360 - (int) ((float)Math.PI - (Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI)) ) /2) %180;
+			else if ((pt.getY()-yCenter) < 0) {						
+				angle = 360 - (int) ((Math.acos(((pt.getX()-xCenter)/(float)distance))*180/(float)Math.PI));
+				// Prendre un degré sur deux
+				angle = (angle / 2)%180;
 			}
 
 			//System.out.println(angle);
@@ -150,7 +157,7 @@ public class ConnexeComponent {
 		
 		// La composante étudiée est trop grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
-		if(Math.abs(distanceMax-rayon) > 5){
+		if(Math.abs(maxDistance-rayon) > SQUAREDIFF){
 			return null;
 		}
 		
@@ -171,6 +178,7 @@ public class ConnexeComponent {
 				bestAngle = dephasage;
 			}
 		}
+		
 		courbe = mySquare;
 		bestTresh = (int) (save*100);
 			if(save > SQUARETRIGGER ){
@@ -196,7 +204,7 @@ public class ConnexeComponent {
 	 * @param length
 	 * @return
 	 */
-	public float calculError(float[] real, float realAverage, float realSD, int dephasage){
+	private float calculError(float[] real, float realAverage, float realSD, int dephasage){
 		
 		float result = 0;
 		
@@ -244,6 +252,18 @@ public class ConnexeComponent {
 
 	public boolean isSquareTest() {
 		return squareTest;
+	}
+
+	public float[] getCourbe() {
+		return courbe;
+	}
+
+	public float[] getAliasing() {
+		return aliasing;
+	}
+
+	public static float[] getPerfectSquare() {
+		return perfectSquare;
 	}
 	
 	

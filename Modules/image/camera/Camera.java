@@ -35,6 +35,7 @@ public class Camera implements Runnable, TerminateThread{
 		try{
 			// Ouverture de la caméra sur le port 0 
 			// Linux
+			
 			grabber = new FFmpegFrameGrabber("/dev/video1");
 			grabber.setFormat("video4linux2");
 			// Windows 2 : USB
@@ -127,5 +128,21 @@ public class Camera implements Runnable, TerminateThread{
 			pause = true;
 		}
 		return pause;
+	}
+	
+	/**
+	 * Permet de changer le numéro de device qui est écouté (choix lors de plusieurs webcam sur le pc)
+	 * @param device
+	 */
+	public void selectWebcam(int device){
+		try{
+			grabber.stop();
+			grabber = new FFmpegFrameGrabber("/dev/video" + device);
+			grabber.start();
+		}catch(ExceptionInInitializerError | Exception e){
+			e.printStackTrace();
+			System.out.println("Impossible de démarrer la caméra");
+			cameraOK = false;
+	   	}
 	}
 }

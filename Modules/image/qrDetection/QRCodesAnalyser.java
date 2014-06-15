@@ -172,4 +172,10 @@ public class QRCodesAnalyser {
 		return img;
 	}
 
+	public ArrayList<QRCode> getListQRcode() {
+		return listQRcode;
+	}
+	
+	
+
 }

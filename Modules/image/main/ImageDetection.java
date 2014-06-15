@@ -29,7 +29,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
 	private boolean qrDetectionDone, motionEstimationDone;
-	public final static boolean PRINTDEBUG = false;
+	public final static boolean PRINTDEBUG = true;
 	
 	// Gestion de l'interface graphique de suivi
 	private Window window;

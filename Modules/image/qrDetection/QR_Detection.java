@@ -1,15 +1,15 @@
 package qrDetection;
 
-import imageObject.Point;
+import imageObject.ConnexeComponent;
+import imageObject.QRCode;
 import imageTransform.TabImage;
 import image_GUI.Window;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
-
-
-import sequencer.QubbleInterface;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import main.ImageDetection;
 import main.ImageDetectionInterface;
@@ -85,6 +85,31 @@ public class QR_Detection implements Runnable, TerminateThread{
 		// Récupération de la valeur des qr
 		qrAnal = new QRCodesAnalyser(grey, variance, compo);
 		lastDetection = qrAnal.printValeur(camera);
+		
+		// Ecriture des valeurs des signatures dans un fichier texte
+		if(ImageDetection.PRINTDEBUG){
+			int i = 1;
+			for(QRCode qr : qrAnal.getListQRcode()){
+				try {
+					PrintWriter out  = new PrintWriter(new FileWriter("signature" + i + ".txt", false));
+					float[] courbe = qr.getBorder().getCourbe();
+					float[] aliasing = qr.getBorder().getAliasing();
+					float[] perfect = ConnexeComponent.perfectSquare;
+					out.println("COURBE ## PERFECT ## CALCUL");
+					for(int j = 0; j<180; j++){
+						out.println(courbe[j] + " ## " + aliasing[j] + " ## " + perfect[j%90]);
+					}
+					out.close();
+					System.out.println("<Done");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				i++;
+				
+			}
+		}
 		
 		long qrTime = System.currentTimeMillis();
 					
