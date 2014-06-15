@@ -2,6 +2,7 @@ package audio;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -30,6 +31,8 @@ public class Player implements PlayerInterface, Runnable {
 	private boolean running;
 	private boolean paused;
 	private boolean muted;
+	
+	public static Hashtable<Sample, ArrayList<Integer>> hashTable = new Hashtable<Sample, ArrayList<Integer>>();
 	
 	public Player(Qubble qubble) {
 		

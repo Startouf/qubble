@@ -20,21 +20,25 @@ public class MainAudio {
 		
 		sleep(1);
 		
-		SampleInterface beat = new Sample("a", new File("data/samples/files/VEH1 House Loop - 093Mono.wav"));
+		SampleInterface beat = new Sample("a", new File("data/samples/files/TR909convertis/CLavesMono.wav"));
+		/*£
 		SampleInterface sample = new Sample("b", new File("data/samples/files/VEH1 House Loop - 058Mono.wav"));
 		SampleInterface melody = new Sample("c", new File("data/samples/files/VEE Melody Kits 03 128 BPM Root G#Mono.wav"));
 		SampleInterface melody2 = new Sample("d", new File("data/samples/files/VEE Melody Kits 18 128 BPM Root EMono.wav"));
 		SampleInterface sine = new Sample("e", new File("/Users/vincentcouteaux/wavConvertis/beep.wav"));
 		SampleInterface clap = new Sample("e", new File("/Users/vincentcouteaux/wavConvertis/VEC1 Clap 012Mono.wav"));
 		SampleInterface saw = new Sample("f", new File("data/samples/saw2.wav"));
-		
+		*/
 		try {
 			
 			player.playSample(beat);
 			sleep(2);
-			SampleControllerInterface sci = player.playSample(beat);
-			player.tweakSample(sci, EffectType.LPFilter, 5);
+			player.playSample(beat);
+			//player.tweakSample(sci, EffectType.LPFilter, 5);
 			sleep(3);
+			
+			player.playSample(beat);
+			sleep(2);
 			
 			
 			/*
