@@ -142,6 +142,7 @@ public class Window extends JFrame implements ActionListener, MouseListener{
 		try {
 			BufferedImage loadImage = ImageIO.read(fichier);
 			controlDetection.analyseTable(new TabImage(loadImage));
+			displayCamera(loadImage);
 			displayQRDetection(loadImage, controlDetection.getGrey(), controlDetection.getVariance(), controlDetection.getCompo(), controlDetection.getQrAnal(), controlDetection.getPattern());
 			
 		} catch (IOException e) {

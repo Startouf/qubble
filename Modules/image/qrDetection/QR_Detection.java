@@ -94,10 +94,11 @@ public class QR_Detection implements Runnable, TerminateThread{
 					PrintWriter out  = new PrintWriter(new FileWriter("signature" + i + ".txt", false));
 					float[] courbe = qr.getBorder().getCourbe();
 					float[] aliasing = qr.getBorder().getAliasing();
+					int dephasage = qr.getBorder().getBestAngle();
 					float[] perfect = ConnexeComponent.perfectSquare;
 					out.println("COURBE ## PERFECT ## CALCUL");
 					for(int j = 0; j<180; j++){
-						out.println(courbe[j] + " ## " + aliasing[j] + " ## " + perfect[j%90]);
+						out.println(courbe[(j+dephasage)%180] + " ## " + perfect[(j*2)%90] + " ## " + aliasing[j]);
 					}
 					out.close();
 					System.out.println("<Done");

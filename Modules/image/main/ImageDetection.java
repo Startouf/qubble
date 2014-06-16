@@ -155,7 +155,8 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 					}else
 						countBeforeRemoved.put(id, tempCont);
 				}else
-					countBeforeRemoved.put(id, 0);
+					// Indique le nombre de "vies" restantes
+					countBeforeRemoved.put(id, 1);
 				// ????
 				removedQubbleList.put(id, qubbleList.get(id));
 			}else{
