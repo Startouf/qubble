@@ -99,7 +99,7 @@ public class Calibrate{
 		float longueurX = tableX - 2*offsetX;
 		
 		
-		int xGL = (int)(OpenGL_WIDTH * (xC-offsetX-xUL)/longueurX);
+		int xGL = (int)(OpenGL_WIDTH *(1f- (xC-offsetX-xUL)/longueurX));
 		int yGL = (int)(  (dy/tableY) *(float)OpenGL_HEIGHT);
 		
 		System.out.println ("("+pos.getX()+", " + pos.getY() +") camera --> (" + xGL + ", " + yGL+") openGL");
