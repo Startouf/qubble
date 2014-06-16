@@ -1,6 +1,7 @@
 package sequencer;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -115,4 +116,15 @@ public interface QubbleInterface {
 	 * Mute/unmute
 	 */
 	public void mute();
+	
+	/**
+	 * Asks the Player to record in file f
+	 * @param f the file
+	 */
+	public void startRecording(File f);
+	
+	/**
+	 * Stop recording and save the file
+	 */
+	public void stopRecording();
 }

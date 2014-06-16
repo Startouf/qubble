@@ -1,6 +1,7 @@
 package sequencer;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -551,6 +552,16 @@ public class Qubble implements QubbleInterface {
 		
 	public void mute() {
 		player.mute();
+	}
+
+	@Override
+	public void startRecording(File f) {
+		player.startRecording(f);
+	}
+
+	@Override
+	public void stopRecording() {
+		player.stopRecording();
 	}
 
 }
