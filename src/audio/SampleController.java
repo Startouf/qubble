@@ -30,7 +30,12 @@ public class SampleController implements SampleControllerInterface {
 		soundEffects = new ArrayList<SoundEffect>();		
 		
 		try {
-			samples = AudioUtility.getSamples(file);
+			samples = Player.hashTable.get(sample);
+			if (samples == null) {
+				System.out.println("Acces au disque !");
+				samples = AudioUtility.getSamples(file);
+				Player.hashTable.put(sample, samples);
+			}
 			effected = (ArrayList<Integer>)samples.clone();
 			//System.out.println("samples.size() : " + samples.size());
 		} catch (Exception e) {
