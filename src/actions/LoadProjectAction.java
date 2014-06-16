@@ -27,7 +27,7 @@ public class LoadProjectAction extends AbstractAction
 	    
 	    int returnVal = chooser.showOpenDialog(app);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-           path = chooser.getSelectedFile().getPath();
+           path = chooser.getSelectedFile().toString();
         } else return;
 	        
 	        
