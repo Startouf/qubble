@@ -181,11 +181,25 @@ public class Qubble implements QubbleInterface {
 		qubjectsOnTable = new ArrayList<Qubject> (configuredQubjects.size());
 		sampleControllers = new Hashtable<Qubject, LinkedList<SampleControllerInterface>>(configuredQubjects.size());
 		
-		player = new Player(this);
-		camera = new ImageDetection(this);
-		projection = new ProjectorOutput(this);
-		initialise();
+		if (fakePlayer){
+			player = new FakePlayer(this);
+		} else{
+			player = new Player(this);
+		}
 		
+		if (fakeCamera){
+			camera = new FakeCamera(this);
+		} else{
+			camera = new ImageDetection(this);
+		}
+		if (fakeProjection){
+			projection = new FakeProjector();
+		} else{
+			projection = new ProjectorOutput(this);
+		}
+		initialise();
+
+		//The sequencer no longer needs to be run
 		sequencer = new Sequencer(this, LOOP_MS);
 		cameraThread = new Thread((Runnable) camera, "Camera Thread");
 		projectionThread = new Thread((Runnable) projection, "Projection OpenGL");
