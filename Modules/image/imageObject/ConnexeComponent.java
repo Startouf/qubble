@@ -196,8 +196,10 @@ public class ConnexeComponent {
 		}
 		aliasing = new float[180];
 		courbe = new float[180];
-				
+		// Tableau de sauvegarde de la distance maximale par rapport au centre en fonction de l'angle		
 		float[] mySquare = new float[180]; //pas de 2
+		// Avoir un carré de côté 1 et éviter la pondération d'un côté
+		Point[] squarePoint = new Point[180];
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
@@ -225,6 +227,7 @@ public class ConnexeComponent {
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
 				mySquare[angle] = distance;
+				squarePoint[angle] = pt;
 			}
 			if(maxDistance < distance){
 				maxDistance = (int)distance;
@@ -265,13 +268,26 @@ public class ConnexeComponent {
 			return null;
 		}
 		
-		
+		// Calcul de la moyenne
 		for(int i = 0; i<180; i++){
 			mySquareAverage += mySquare[i];
 		}
 		mySquareAverage /= 180;
 		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
 		
+		// Recalcule du centre avec les points extrêmes
+		xCenter = 0;
+		yCenter = 0;
+		int nbrP = 0;
+		for(int j = 0; j < 180; j++){
+			if(squarePoint[j] != null){
+				xCenter += squarePoint[j].getX();
+				yCenter += squarePoint[j].getY();
+				nbrP++;
+			}
+		}
+		xCenter = (int) (xCenter/(float)nbrP);
+		yCenter = (int) (yCenter/(float)nbrP);
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0, temp = 0;
