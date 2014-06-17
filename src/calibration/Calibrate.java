@@ -86,21 +86,36 @@ public class Calibrate{
 //		float x2 = xC-xUL-2*fY;
 //		float x3 = xUR - xUL - 2*fY;
 		
-		// Hauteur de la table par la caméra
-		float tableY = yLL-yUL;
 		
-		float tableX = xUR - xUL; 
+		// Version Eric 1
+//		// Hauteur de la table par la caméra
+//		float tableY = yLL-yUL;
+//		
+//		float tableX = xUR - xUL; 
+//		
+//		// Calcul de dy
+//		float dy = yC - yUL;
+//		// Calcul de dx
+//		float offsetX = (dy/tableY)*(yLL-yUL);
+//		
+//		float longueurX = tableX - 2*offsetX;
+//		
+//		
+//		int xGL = (int)(OpenGL_WIDTH *(1f- (xC-offsetX-xUL)/longueurX));
+//		int yGL = (int)(  (dy/tableY) *(float)OpenGL_HEIGHT);
 		
-		// Calcul de dy
-		float dy = yC - yUL;
-		// Calcul de dx
-		float offsetX = (dy/tableY)*(yLL-yUL);
+		// Version Eric 2 : Y reste constant et X varie en fct de X
+		// (dX/dY) * Yc = offset de X causé par la déformation optique
+		float offsetX = ((xLL - xUL)/(yLL - yUL)) * yC;
 		
-		float longueurX = tableX - 2*offsetX;
+		// Xc - PtOrigine - offsetX = longueur X avec comme origine le bord de la table déformée
+		float xTable = xC - offsetX - xUL;
 		
+		// Longueur Max de la table = xUR-xUL/ Longueur réelle en fct de Y : Lmax - 2*offsetX
+		// Logueur X sous openGL / longuer réelle => Ratio pour passer de coord réelle > coord OpenGL
 		
-		int xGL = (int)(OpenGL_WIDTH *(1f- (xC-offsetX-xUL)/longueurX));
-		int yGL = (int)(  (dy/tableY) *(float)OpenGL_HEIGHT);
+		int xGL = (int) (xTable * (OpenGL_WIDTH/(xUR-xUL-2*offsetX)));
+		int yGL = (int) ((yC - yUL) * OpenGL_HEIGHT / (yLL - yUL));
 		
 		System.out.println ("("+pos.getX()+", " + pos.getY() +") camera --> (" + xGL + ", " + yGL+") openGL");
 		org.lwjgl.util.Point point = new org.lwjgl.util.Point (xGL, yGL);
