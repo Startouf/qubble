@@ -31,8 +31,7 @@ public class InitialiseProject
 	
 	public static ArrayList<Qubject> loadQubjectsFromProject(String savePath){
 		Properties prop;
-		
-		File[] qubjectProperties = DataTools.getDotProperties(savePath +"\\qubjects");
+		File[] qubjectProperties = DataTools.getDotProperties(savePath +"/qubjects");
 		ArrayList<Qubject> list = new ArrayList<Qubject>(qubjectProperties.length);
 		for (File entry : qubjectProperties){
 			prop = new Properties();

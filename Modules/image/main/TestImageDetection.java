@@ -119,5 +119,11 @@ public class TestImageDetection implements QubbleInterface{
 		
 	}
 
+	@Override
+	public void QubjectMayBeMissing(int bitIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

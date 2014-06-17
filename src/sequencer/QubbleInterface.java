@@ -61,6 +61,12 @@ public interface QubbleInterface {
 	public void QubjectRemoved(int bitIdentifier);
 	
 	/**
+	 * Indicate a Qubject might have been removed from Qubble
+	 * @param bitIdentifier
+	 */
+	public void QubjectMayBeMissing(int bitIdentifier);
+	
+	/**
 	 * Trigger all the effects of a given Qubject when it is activated by the cursor
 	 * (Might be used as a debug function, otherwise this is done by the sequencer)
 	 * @param qubject

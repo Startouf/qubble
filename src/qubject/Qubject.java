@@ -24,7 +24,7 @@ import audio.EffectType;
  * The Qubject class
  *
  */
-public final class Qubject implements QRInterface, MediaInterface, Comparable {
+public final class Qubject implements QRInterface, MediaInterface, Comparable<Qubject> {
 
 	private final String name;
 	private final int bitIdentifier;
@@ -46,7 +46,7 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	private AnimationInterface whenPutOnTable;
 	private AnimationInterface animationwhenPlayed;
 	
-	public static final float SIZE = 130f;
+	public static final float SIZE = 150f;
 
 	/**
 	 * TODO : this constructor should NOT be used 
@@ -249,7 +249,7 @@ public final class Qubject implements QRInterface, MediaInterface, Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(Qubject o) {
 		if (o instanceof Qubject){
 			return(this.getCoords().getX()-((Qubject)o).getCoords().getX());
 		} else{

@@ -52,7 +52,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 			}
 			
 			try {
-				Thread.sleep(500);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,7 +101,6 @@ public class QR_Detection implements Runnable, TerminateThread{
 						out.println(courbe[(j+dephasage)%180] + " ## " + perfect[(j*2)%90] + " ## " + aliasing[j]);
 					}
 					out.close();
-					System.out.println("<Done");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

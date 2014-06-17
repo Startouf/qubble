@@ -132,6 +132,7 @@ public class Qubble implements QubbleInterface {
 	//Variables de référence Thread
 	private Thread playerThread, projectionThread, cameraThread;
 	private boolean hasStarted = false, isPlaying = false;
+	private boolean showFootprints = false;
 
 	/**
 	 * New project overload
@@ -196,6 +197,7 @@ public class Qubble implements QubbleInterface {
 			projection = new FakeProjector();
 		} else{
 			projection = new ProjectorOutput(this);
+			showFootprints = true;
 		}
 		initialise();
 
@@ -249,10 +251,10 @@ public class Qubble implements QubbleInterface {
 		float relativeStartingTime = absoluteStartingTime-(currentTime%LOOP_MS)+totalPauseTime;
 		relativeStartingTime = (relativeStartingTime + LOOP_MS) % LOOP_MS;
 		
-		//-----DEBUG
-		System.out.println("Demarrage Qubject <<" + qubject.getName() 
-				+ ">> at relative time : <<"+ relativeStartingTime/1000f + ">> seconds");
-		//----->> END DEBUG
+		if(DEBUG){
+			System.out.println("Demarrage Qubject <<" + qubject.getName() 
+					+ ">> at relative time : <<"+ relativeStartingTime/1000f + ">> seconds");
+		}
 		
 		return (long) (relativeStartingTime);
 	}
@@ -342,13 +344,27 @@ public class Qubble implements QubbleInterface {
 		}
 	}
 	
+
+	@Override
+	public void QubjectMayBeMissing(int bitIdentifier) {
+		Qubject qubject = qrCodes.get(bitIdentifier);
+
+		if (qubject == null){
+			System.err.print("Qubject inconnu déclaré comme manquant ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			return;
+		}
+		
+	}
+	
 	@Override
 	public void QubjectRemoved(int bitIdentifier) {
 		Qubject qubject = qrCodes.get(bitIdentifier);
 
 		if (qubject == null){
-			System.err.print("Qubject inconnu détecté ! Pas de qubject chargé pour l'id " + bitIdentifier);
+			System.err.print("Qubject inconnu déclaré comme manquant ! Pas de qubject chargé pour l'id " + bitIdentifier);
 			return;
+		} else if(DEBUG && !qubjectsOnTable.contains(qubject)){
+			System.err.print("Attention qubject enlevé alors qu'il n'était pas sur la table (ID : " + bitIdentifier + ")");
 		}
 		
 		qrCodes.get(bitIdentifier).setCoords(new Point(-1,-1));
@@ -452,6 +468,7 @@ public class Qubble implements QubbleInterface {
 		else{
 			hasStarted = true;
 			isPlaying = true;
+			projection.showFootprints(showFootprints);
 			startTime = Sys.getTime();
 			projection.playPause();
 			camera.switchCamera();
@@ -470,6 +487,7 @@ public class Qubble implements QubbleInterface {
 	public void prepare() {
 		if(!hasStarted){
 			cameraThread.setPriority(Thread.MIN_PRIORITY);
+			projectionThread.setPriority(Thread.MIN_PRIORITY);
 			playerThread.setPriority(Thread.MAX_PRIORITY);
 			cameraThread.start();
 			projectionThread.start();
@@ -544,16 +562,15 @@ public class Qubble implements QubbleInterface {
 		player.stopAllSounds();
 		projection.resynchronize(currentTime);
 		
+		resynchronizeSequencer();
+	}
+	
+	public void resynchronizeSequencer(){
 		sequencer.destroyScheduledtasks(tasks);
-		synchronized(qubjectsOnTable){
-			for (Qubject qubject : qubjectsOnTable){
-				sequencer.schedule(qubject);
-			}
-		}
+		sequencer.rescheduleAll(tasks);
 	}
 		
 	public void mute() {
 		player.mute();
 	}
-
 }

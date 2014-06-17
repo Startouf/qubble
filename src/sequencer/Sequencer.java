@@ -54,13 +54,14 @@ public class Sequencer implements SequencerInterface
 	public Sequencer(Qubble qubble, float tempo){
 		this.qubble = qubble;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
+		addResyncTask();
 	}
 
 	/**
-	 * Reschedule the actions for EVERY Qubject (destroys every existing Schedule Actions)
+	 * Reschedule the actions for EVERY Qubject 
 	 * DOES NOT ASSUME TASKS HAVE BEEN CLEARED
 	 */
-	private void recalculate(Hashtable<Qubject, ScheduledFuture<?>> tasks){
+	public void rescheduleAll(Hashtable<Qubject, ScheduledFuture<?>> tasks){
 		ArrayList<Qubject> list;
 		synchronized(list = this.qubble.getQubjectsOnTable()){
 			for (Qubject qubject : list){
@@ -101,6 +102,15 @@ public class Sequencer implements SequencerInterface
 	public void destroy() {
 		fScheduler.shutdownNow();
 	}
+	
+	private void addResyncTask(){
+		fScheduler.scheduleAtFixedRate(new Runnable(){
+			@Override
+			public void run() {
+				qubble.resynchronizeSequencer();
+			}
+		}, 10000l, 5000l, TimeUnit.MILLISECONDS);
+	}
 
 	@Override
 	public void playPause() {
@@ -108,7 +118,7 @@ public class Sequencer implements SequencerInterface
 			destroyScheduledtasks(this.qubble.getTasks());
 		}
 		else{
-			recalculate(this.qubble.getTasks());
+			rescheduleAll(this.qubble.getTasks());
 		}
 		play = !play;
 		System.out.println("Sequencer is playing" + play);

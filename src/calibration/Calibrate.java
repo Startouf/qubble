@@ -29,7 +29,7 @@ public class Calibrate{
 	static public Point CAMERA_PIXEL_UPPER_RIGHT = new Point(OpenGL_WIDTH,OpenGL_HEIGHT);
 	static public Point CAMERA_PIXEL_UPPER_LEFT = new Point(0,OpenGL_HEIGHT);
 	
-	static public int Camera_WIDTH_Px = 1280; //??
+	static public int Camera_WIDTH_Px = 1280;
 	static public int Camera_Height_Px = 720;
 	
 	static public float ratioX =1, ratioY =1;
@@ -53,29 +53,12 @@ public class Calibrate{
 	 * @return OpenGL position (lwjgl.util.point)
 	 */
 	static public org.lwjgl.util.Point mapToOpenGL(Point pos){
-//		int x = pos.getX() - CAMERA_PIXEL_UPPER_LEFT.getX();
-//		int y = pos.getY() - CAMERA_PIXEL_UPPER_LEFT.getY();
-//		int yGL = pos.getY() - CAMERA_PIXEL_LOWER_LEFT.getY();
-//		
-//		int dBordRect = Math.abs(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX()) 
-//				* Math.abs(y - CAMERA_PIXEL_LOWER_LEFT.getY()) 
-//				/ Math.abs(CAMERA_PIXEL_UPPER_LEFT.getY() 
-//						- CAMERA_PIXEL_LOWER_LEFT.getY());
-//		int dBordPoint = Math.abs(x-CAMERA_PIXEL_LOWER_LEFT.getX()) + dBordRect; 
-//		int dBordBord = 2 * dBordRect + CAMERA_PIXEL_LOWER_RIGHT.getX() - CAMERA_PIXEL_LOWER_LEFT.getX();
-//		int dRectBord = CAMERA_PIXEL_LOWER_LEFT.getX() - CAMERA_PIXEL_UPPER_LEFT.getX() - dBordRect;
-//		int xGL = (x -dRectBord) * dBordPoint/dBordBord;
-		
-//		float fy =  (float)(CAMERA_PIXEL_LOWER_LEFT.getX()-CAMERA_PIXEL_UPPER_LEFT.getX())*(float)y
-//				/(float)(CAMERA_PIXEL_LOWER_LEFT.getY()-CAMERA_PIXEL_UPPER_LEFT.getY());
-//		int xGL = (int) ((float)(x-fy)/(float)(OpenGL_WIDTH-2*fy)*(float)OpenGL_WIDTH);
-//		xGL = Camera_WIDTH_Px - xGL;
-		// 
 		float xC = pos.getX();
 		float yC = pos.getY();
 		float yLL = CAMERA_PIXEL_LOWER_LEFT.getY(), yUL = CAMERA_PIXEL_UPPER_LEFT.getY();
+		float yUR = CAMERA_PIXEL_UPPER_RIGHT.getY();
 		float xLL = CAMERA_PIXEL_LOWER_LEFT.getX(), xUL= CAMERA_PIXEL_UPPER_LEFT.getX();
-		float xUR = CAMERA_PIXEL_UPPER_RIGHT.getX();
+		float xUR = CAMERA_PIXEL_UPPER_RIGHT.getX();		
 		
 //		float yG = yUL - yC - yLL;
 //		float dx = xLL - xUL;
@@ -114,11 +97,17 @@ public class Calibrate{
 		// Longueur Max de la table = xUR-xUL/ Longueur réelle en fct de Y : Lmax - 2*offsetX
 		// Logueur X sous openGL / longuer réelle => Ratio pour passer de coord réelle > coord OpenGL
 		
-		int xGL = (int) (xTable * (OpenGL_WIDTH/(xUR-xUL-2*offsetX)));
-		int yGL = (int) ((yC - yUL) * OpenGL_HEIGHT / (yLL - yUL));
+		float xGL = (int) (xTable * (OpenGL_WIDTH/(xUR-xUL-2*offsetX)));
+		float yGL = (int) ((yC - yUL) * OpenGL_HEIGHT / (yLL - yUL));
+		
+		yGL = (yC - yUR)*(OpenGL_HEIGHT/(yLL-yUL));
+		yGL -= 50;
+		
+		yGL -= yGL/3f;
+		xGL -= xGL/6f;
 		
 		System.out.println ("("+pos.getX()+", " + pos.getY() +") camera --> (" + xGL + ", " + yGL+") openGL");
-		org.lwjgl.util.Point point = new org.lwjgl.util.Point (xGL, yGL);
+		org.lwjgl.util.Point point = new org.lwjgl.util.Point ((int)xGL, (int)yGL);
 		return point;
 		
 	}

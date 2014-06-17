@@ -79,7 +79,7 @@ public class Camera implements Runnable, TerminateThread{
     			}
     			// Pause de 200 ms avant la prochaine capture
     			try {
-    				Thread.sleep(50);
+    				Thread.sleep(80);
     			} catch (InterruptedException e) {
     				e.printStackTrace();
     			}

@@ -28,8 +28,8 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
-	private boolean qrDetectionDone, motionEstimationDone;
-	public final static boolean PRINTDEBUG = true;
+	private boolean qrDetectionDone, motionEstimationDone, GUI = false;
+	public final static boolean PRINTDEBUG = false;
 	
 	// Gestion de l'interface graphique de suivi
 	private Window window;
@@ -61,7 +61,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 		addedQubbleList = new HashMap<Integer, Point>();
 		countBeforeRemoved  = new HashMap<Integer, Integer>();
 		//addedQubbleList.put(888, new Point(640, 360));
-		if(true){
+		if(GUI){
 			window = new Window(this,qr, mo, 60, 42 ,80, 3, 5, 0);
 		}
 		
@@ -81,7 +81,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			// Actualiser la liste des QR codes
 			if(qrDetectionDone){
 				qrDetectionDone();
-				window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal(), qr.getPattern());
+				if(GUI){
+					window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal(), qr.getPattern());
+				}
 				qrDetectionDone = false;
 			}
 			if(motionEstimationDone){
@@ -109,7 +111,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	@Override
 	public void setImage(BufferedImage Image) {
 		lastImage = Image;
-		window.displayCamera(lastImage);
+		if(GUI){
+			window.displayCamera(lastImage);
+		}
 		newImage = newImageQR = newImageMotion = true;
 	}
 
@@ -156,7 +160,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 						countBeforeRemoved.put(id, new Integer(tempCont));
 				}else{
 					// Indique le nombre de "vies" restantes
-					countBeforeRemoved.put(id, new Integer(3));
+					//countBeforeRemoved.put(id, new Integer(1));
+					qubble.QubjectRemoved(id);
+					System.out.println("######### Remove " + id + " #########");
 				}
 				// ????
 //				removedQubbleList.put(id, qubbleList.get(id));
