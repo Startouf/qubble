@@ -2,6 +2,7 @@ package main;
 import imageObject.Point;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.util.ArrayList;
 
 import qubject.MediaInterface;
@@ -117,5 +118,6 @@ public class TestImageDetection implements QubbleInterface{
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
