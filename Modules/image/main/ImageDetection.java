@@ -28,7 +28,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
-	private boolean qrDetectionDone, motionEstimationDone, GUI = false;
+	private boolean qrDetectionDone, motionEstimationDone, GUI = true;
 	public final static boolean PRINTDEBUG = false;
 	
 	// Gestion de l'interface graphique de suivi
@@ -160,9 +160,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 						countBeforeRemoved.put(id, new Integer(tempCont));
 				}else{
 					// Indique le nombre de "vies" restantes
-					//countBeforeRemoved.put(id, new Integer(1));
-					qubble.QubjectRemoved(id);
-					System.out.println("######### Remove " + id + " #########");
+					countBeforeRemoved.put(id, new Integer(3));
 				}
 				// ????
 //				removedQubbleList.put(id, qubbleList.get(id));

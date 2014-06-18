@@ -31,7 +31,7 @@ public class QubjectTracker {
 	 * 		-O Shader
 	 * 		-X Optimise with VBOs
 	 */
-	private static final double OFFSET = 30d;
+	private static final double OFFSET = 50d;
 	private static final double RADIUS = 5d;
 	private static final int TESSELATION = 500; 
 	private static final boolean USE_SHADER = false;
@@ -127,7 +127,7 @@ public class QubjectTracker {
 		if(footprint){
 			glColor4f(1f,0.8f,0.8f,1f);
 		} else{
-			glColor4f(1f,1f,1f,0.8f);
+			glColor4f(1f,1f,1f,1f);
 		}
 			glVertex3f(x,y,-5f);
 			for (int i=0; i<=TESSELATION; i++){
