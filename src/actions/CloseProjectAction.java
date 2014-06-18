@@ -23,6 +23,8 @@ public class CloseProjectAction extends AbstractAction {
 		
 		//TODO : close confirmation/save popup
 		
+		this.app.getPlayPauseAction().setPlay(false);
+		
 		if(e.getSource() instanceof ReferenceButton){
 			ReferenceButton r =((ReferenceButton)e.getSource());
 				if(r.getReference() instanceof ProjectPanel)

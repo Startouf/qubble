@@ -29,10 +29,11 @@ public class Run {
 		 */			
 		
 		//à faire manuellement
-		Calibrate.CAMERA_PIXEL_UPPER_RIGHT = new Point (1110,647);
-		Calibrate.CAMERA_PIXEL_UPPER_LEFT = new Point (113,650);
-		Calibrate.CAMERA_PIXEL_LOWER_LEFT = new Point (182,40);
-		Calibrate.CAMERA_PIXEL_LOWER_RIGHT = new Point (1029,37);
+		int HEIGHT = 720;
+		Calibrate.CAMERA_PIXEL_UPPER_RIGHT = new Point (1073, 66);
+		Calibrate.CAMERA_PIXEL_UPPER_LEFT = new Point (75, 59);
+		Calibrate.CAMERA_PIXEL_LOWER_LEFT = new Point (137, 477);
+		Calibrate.CAMERA_PIXEL_LOWER_RIGHT = new Point (992, 479);
 		
 		//test
 		Point point = new Point (35, 300);

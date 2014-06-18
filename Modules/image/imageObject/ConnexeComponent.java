@@ -28,7 +28,11 @@ public class ConnexeComponent {
 	private boolean squareTest;
 	private float[] courbe;
 	private float[] aliasing;
+	private float[] bestAliasing;
 	private int bestAngle, maxDistance, bestTresh;
+	
+	static float perfectDistanceMin;
+	float distanceMin;
 
 	
 	// Forme pour un carré parfait
@@ -128,6 +132,7 @@ public class ConnexeComponent {
 		perfectSquare[87] = (float) 101.24229;
 		perfectSquare[88] = (float) 101.04455;
 		perfectSquare[89] = (float) 101.04455;
+		perfectDistanceMin = (float)101;
 		for(int i = 0; i < 90 ; i++){
 //			if(i>45)
 //				theta = 90 - i;
@@ -191,8 +196,10 @@ public class ConnexeComponent {
 		}
 		aliasing = new float[180];
 		courbe = new float[180];
-				
+		// Tableau de sauvegarde de la distance maximale par rapport au centre en fonction de l'angle		
 		float[] mySquare = new float[180]; //pas de 2
+		// Avoir un carré de côté 1 et éviter la pondération d'un côté
+		Point[] squarePoint = new Point[180];
 		float mySquareAverage = 0;
 		float mySquareSD = 0;
 		int angle = 0; 
@@ -220,6 +227,7 @@ public class ConnexeComponent {
 			if(mySquare[angle] < distance){
 				// Ajout de la distance
 				mySquare[angle] = distance;
+				squarePoint[angle] = pt;
 			}
 			if(maxDistance < distance){
 				maxDistance = (int)distance;
@@ -227,21 +235,31 @@ public class ConnexeComponent {
 			}
 		}
 		
+		distanceMin = Float.MAX_VALUE;
 		//si mySquare[angle] nul, barycentre entre les deux valeurs non nulles superieure et inferieure
 		for (int i=0; i<180; i++) {
-			if(mySquare[angle] ==0) {
-				int ind_inf=angle - 1;
-				int ind_sup = angle + 1;
-				while (mySquare[ind_inf]==0) {
-					ind_inf --;
-				}
-				while (mySquare[ind_sup] == 0) {
-					ind_sup ++;
-				}
-			
-				mySquare[angle] = (mySquare[ind_inf]*(ind_sup-angle) + mySquare[ind_sup]*(angle-ind_inf)) /(ind_sup-ind_inf);
+			if(mySquare[i] ==0) {
+				int ind_inf=i - 1;
+				int ind_sup = i + 1;
+//				while (mySquare[ind_inf]==0) {
+//					ind_inf --;
+//				}
+//				while (mySquare[ind_sup] == 0) {
+//					ind_sup ++;
+//				}
+				// Remplacement du barycentre par la moyenne
+				if(ind_inf < 0)
+					ind_inf = 1;
+				if(ind_sup >= 179)
+					ind_sup = 178;
+				mySquare[i] = (mySquare[ind_inf] + mySquare[ind_sup]) /(2);
 			}
+			//Sauvegarde la distance minimale
+			if(mySquare[i] < distanceMin)
+				distanceMin = mySquare[i];
 		}
+		
+		//System.out.println("Distance minimale : " + distanceMin);
 
 		
 		// La composante étudiée est trop grande
@@ -250,21 +268,36 @@ public class ConnexeComponent {
 			return null;
 		}
 		
-		
+		// Calcul de la moyenne
 		for(int i = 0; i<180; i++){
 			mySquareAverage += mySquare[i];
 		}
 		mySquareAverage /= 180;
 		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
 		
+		// Recalcule du centre avec les points extrêmes
+		xCenter = 0;
+		yCenter = 0;
+		int nbrP = 0;
+		for(int j = 0; j < 180; j++){
+			if(squarePoint[j] != null){
+				xCenter += squarePoint[j].getX();
+				yCenter += squarePoint[j].getY();
+				nbrP++;
+			}
+		}
+		xCenter = (int) (xCenter/(float)nbrP);
+		yCenter = (int) (yCenter/(float)nbrP);
 		
 		// Calcul de la ressemblance pour le carré en le déphasant jusqu'à 90° (robuste à la rotation)
 		float save = 0, temp = 0;
-		for(int dephasage = 0; dephasage < 90 ; dephasage++){
+		for(int dephasage = 0; dephasage < 45 ; dephasage++){
 			temp = calculError(mySquare, mySquareAverage, mySquareSD, dephasage);
+			//System.out.println(dephasage + " : " + temp);
 			if(temp > save){
 				save = temp;	
 				bestAngle = dephasage;
+				bestAliasing = aliasing;
 			}
 		}
 		
@@ -272,7 +305,7 @@ public class ConnexeComponent {
 		bestTresh = (int) (save*100);
 			if(save > SQUARETRIGGER ){
 				if(ImageDetection.PRINTDEBUG){
-					System.out.println("True : " + save + " (Angle : " + bestAngle + ")");
+					System.out.println("True : " + save + " (Angle : " + bestAngle*2 + ")");
 				}
 				Integer[] tab = new Integer[180];
 				for(int i = 0; i < 180; i ++){
@@ -298,11 +331,14 @@ public class ConnexeComponent {
 		float result = 0;
 		
 		for(int i = 0 ; i < 180 ; i++){
-			aliasing[i] = Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
+//			aliasing[i] = Math.abs(real[(i+dephasage)%180]-realAverage)*Math.abs(perfectSquare[(i*2)%90]-perfectSquare_Average);
+//			result += aliasing[i];
+			aliasing[i] = Math.abs(((real[(i+dephasage)%180]/realAverage) / (perfectSquare[(i*2)%90]/perfectSquare_Average)) - 1);
 			result += aliasing[i];
 		}
 		
-		return result/(perfectSquareSD*realSD*180);
+		//return result/(perfectSquareSD*realSD*180);
+		return (1 - result/(float)(180.0));
 	}
 	
 	/**
@@ -348,7 +384,11 @@ public class ConnexeComponent {
 	}
 
 	public float[] getAliasing() {
-		return aliasing;
+		return bestAliasing;
+	}
+
+	public int getBestAngle() {
+		return bestAngle;
 	}
 
 	public static float[] getPerfectSquare() {

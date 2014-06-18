@@ -36,12 +36,11 @@ public class Camera implements Runnable, TerminateThread{
 		// Tentative de démarage de la caméra
 		try{
 			// Ouverture de la caméra sur le port 0 
-			// Linux
-			
-			grabber = new FFmpegFrameGrabber("/dev/video1");
+			// Linux		
+			grabber = new FFmpegFrameGrabber("/dev/video0");
 			grabber.setFormat("video4linux2");
 			// Windows 2 : USB
-			//grabber = (FrameGrabber.createDefault(1));
+//			grabber = (FrameGrabber.createDefault(0));
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setImageHeight(IMAGEHEIGHT);
@@ -82,7 +81,7 @@ public class Camera implements Runnable, TerminateThread{
     			}
     			// Pause de 200 ms avant la prochaine capture
     			try {
-    				Thread.sleep(50);
+    				Thread.sleep(80);
     			} catch (InterruptedException e) {
     				e.printStackTrace();
     			}
@@ -93,7 +92,6 @@ public class Camera implements Runnable, TerminateThread{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-    					
     					// Image de la table réelle
     					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 62);
     					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
@@ -108,10 +106,13 @@ public class Camera implements Runnable, TerminateThread{
     					//Useless : 
     						//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
     		}
-    			
-			
     	}
-
+    	try {
+			grabber.release();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/*public BufferedImage getImage(){
@@ -121,6 +122,7 @@ public class Camera implements Runnable, TerminateThread{
 	@Override
 	public void terminate() {
 		run = false;
+		controlImage.closeGUI();
 	}
 	
 	public boolean switchPause(){

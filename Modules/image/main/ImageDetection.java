@@ -28,11 +28,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
-	private boolean qrDetectionDone, motionEstimationDone;
-	public final static boolean PRINTDEBUG = true;
+	private boolean qrDetectionDone, motionEstimationDone, GUI = Camera.GUI;
+	public final static boolean PRINTDEBUG = false;
 	
 	// Gestion de l'interface graphique de suivi
-	private Window window;
+	private static Window window;
 	
 	// Liste actuelle des cubes détectés
 	private volatile HashMap<Integer, Point> qubbleList;
@@ -61,8 +61,8 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 		addedQubbleList = new HashMap<Integer, Point>();
 		countBeforeRemoved  = new HashMap<Integer, Integer>();
 		//addedQubbleList.put(888, new Point(640, 360));
-		if(true){
-			window = new Window(this,qr, mo, 60, 72 ,80, 3, 5, 0);
+		if(GUI){
+			window = new Window(this,qr, mo, 60, 42 ,80, 3, 5, 0);
 		}
 		
 		//mo.addQubbleToList(640, 360, 22);
@@ -81,7 +81,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			// Actualiser la liste des QR codes
 			if(qrDetectionDone){
 				qrDetectionDone();
-				window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal(), qr.getPattern());
+				if(GUI){
+					window.displayQRDetection(qr.getLastDetection(), qr.getGrey(), qr.getVariance(), qr.getCompo(), qr.getQrAnal(), qr.getPattern());
+				}
 				qrDetectionDone = false;
 			}
 			if(motionEstimationDone){
@@ -109,7 +111,9 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	@Override
 	public void setImage(BufferedImage Image) {
 		lastImage = Image;
-		window.displayCamera(lastImage);
+		if(GUI){
+			window.displayCamera(lastImage);
+		}
 		newImage = newImageQR = newImageMotion = true;
 	}
 
@@ -145,7 +149,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 				//S'il a déjà été détecté comme supprimé
 				if(countBeforeRemoved.containsKey(id)){
 					// Diminuer de 1 le compteur
-					int tempCont = countBeforeRemoved.get(id)-1;
+					int tempCont = (int)(countBeforeRemoved.get(id))-1;
 					// Supprime définitevement le qr
 					if(tempCont <= 0){
 						System.out.println("######### Remove " + id + " #########");
@@ -153,11 +157,15 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 						qubble.QubjectRemoved(id);
 						// Actualise la valeur
 					}else
-						countBeforeRemoved.put(id, tempCont);
-				}else
-					countBeforeRemoved.put(id, 0);
+						countBeforeRemoved.put(id, new Integer(tempCont));
+				}else{
+					// Indique le nombre de "vies" restantes
+					countBeforeRemoved.put(id, new Integer(3));
+				}
 				// ????
-				removedQubbleList.put(id, qubbleList.get(id));
+//				removedQubbleList.put(id, qubbleList.get(id));
+//				System.out.println("######### Remove " + id + " #########");
+//				qubble.QubjectRemoved(id);
 			}else{
 				// S'il avait été perdu précedemment, on annule le compteur de suppression
 				if(countBeforeRemoved.containsKey(id)){
@@ -169,16 +177,15 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 				// Détection du mouvement
 				pt = qrFound.get(id);
 				pt2 = qubbleList.get(id);
-				if(Math.abs(pt.getX()-pt2.getX()) > 10 || Math.abs(pt.getY()-pt2.getY()) > 10){
-					System.out.println("######### Move " + id + " #########");
-					qubble.QubjectHasMoved(id, qrFound.get(id));
+				if(pt != null && pt2 != null){
+					if(Math.abs(pt.getX()-pt2.getX()) > 10 || Math.abs(pt.getY()-pt2.getY()) > 10){
+						System.out.println("######### Move " + id + " #########");
+						qubble.QubjectHasMoved(id, qrFound.get(id));
 				}
-					
-				
+			}
 				// On l'enlève de la liste des qr détectés
 				qrFound.remove(id);
 			}
-				
 		}
 		// On rajoute les éléments restants et on alerte le processus principale
 		for(int idNew : qrFound.keySet()){
@@ -188,9 +195,12 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			addedQubbleList.put(idNew, pt);
 			System.out.println("######### Add " + idNew + " #########");
 		}
-		
+		// On garde en mémoire ceux en passe de mourir
+		for(int idNew : countBeforeRemoved.keySet()){
+			pt = qrFound.get(idNew);
+			temp.put(idNew, pt);
+		}
 		qubbleList = temp;
-		
 	}
  
 	@Override
@@ -245,6 +255,13 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	@Override
 	public void switchMotion() {
 		mo.switchPause();
+	}
+
+	@Override
+	public void closeGUI() {
+		if(window != null){
+			window.dispose();
+		}
 	}
 
 }

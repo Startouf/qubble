@@ -19,6 +19,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import calibration.Calibrate;
+
 public class InitRoutines
 {
 	public static void initView(int width, int height){
@@ -47,7 +49,7 @@ public class InitRoutines
 						frame = new Frame(gd[1].getDefaultConfiguration());
 						frame.setUndecorated(true); 
 						Canvas c = new Canvas(gd[1].getDefaultConfiguration());
-						c.setSize(1280, 800);
+						c.setSize(Calibrate.OpenGL_WIDTH, Calibrate.OpenGL_HEIGHT);
 						c.setFocusable(true);
 						c.requestFocus();
 						c.setIgnoreRepaint(true);

@@ -64,6 +64,7 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	 * Volatile because those booleans are changed by other Threads
 	 */
 	public volatile boolean isPlaying = false, hasStarted = false, closeRequested = false;
+	public volatile boolean tellToShowFootprints = false;
 	/**
 	 * Note : dt is always computed even when it's paused
 	 * (The only thing that matters is whether we update the animations with dt or not :) )
@@ -204,15 +205,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		
-		//Highlight tiles where qubjects are present
-//		GL11.glColor3f(0.5f, 0f, 0f);
-//		synchronized(occupiedTiles){
-//			for (Dimension dim : occupiedTiles){
-//				BaseRoutines.HighlightTile(dim);
-//			}
-//
-//		}
-		
 		//Cursor 
 		//TODO : Curseur stylé avec shader
 		VBORoutines.drawQuadsVBO(cursorPosVBO, cursorColorVBO, 4);
@@ -230,6 +222,13 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//Trackers shadow
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderShadow();
+			
+			GL11.glDisable(GL_DEPTH_TEST);
+			GL11.glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 1);
+			tracker.writeFootprintLabel(this.fontTNR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			GL11.glEnable(GL_DEPTH_TEST);
 		}
 			
 	}
@@ -257,8 +256,11 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		//trackers
 		for (QubjectTracker tracker : trackers.values()){
 			tracker.update(dt);
+			if(tellToShowFootprints){
+				tracker.showFootPrint(true);
+			}
 		}
-		
+		tellToShowFootprints = false;
 	}
 
 	/**
@@ -394,5 +396,17 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 	@Override
 	public void stopTrackingQubject(QRInterface qubject) {
 		trackers.get(qubject).setActive(false);
+	}
+
+	@Override
+	public void showFootprints(boolean show) {
+		this.tellToShowFootprints = show;
+	}
+
+	@Override
+	public void hideFootprint(QRInterface qubject) {
+		//TODO : currently not used by Qubble. 
+		//Instead, tracker sets footprint to false in the method setActive
+		this.trackers.get(qubject).showFootPrint(false);
 	}
 }

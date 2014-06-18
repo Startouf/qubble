@@ -24,7 +24,7 @@ import com.googlecode.javacv.cpp.ARToolKitPlus.CornerPoint;
 public class QRCodesAnalyser {
 	
 	// Longueur du demi-rayon du carré attendu
-	public static int SQUARESIZE = 88;
+	public static int SQUARESIZE = 42;
 	
 	private ArrayList<QRCode> listQRcode;
 	private ArrayList<Integer[]> patternList;

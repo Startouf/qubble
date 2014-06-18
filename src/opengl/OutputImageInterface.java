@@ -60,6 +60,22 @@ public interface OutputImageInterface
 
 	public void stop();
 
+	/**
+	 * CURRENTLY NOT USED
+	 * @param currentTime
+	 */
 	public void resynchronize(float currentTime);
 	
+	/**
+	 * Show Qubject Footprints, ie show a circle where qubjects should be, 
+	 * and eventually show their image (red circle, etc.)
+	 * @param show true to show the footprints
+	 */
+	public void showFootprints(boolean show);
+	
+	/**
+	 * When a qubject is detected, make sure to disable its footprint
+	 * @param qubject
+	 */
+	public void hideFootprint(QRInterface qubject);
 }

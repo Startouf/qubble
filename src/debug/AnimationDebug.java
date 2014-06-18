@@ -334,4 +334,16 @@ public void resynchronize(float currentTime) {
 	// TODO Auto-generated method stub
 	
 }
+
+@Override
+public void showFootprints(boolean show) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void hideFootprint(QRInterface qubject) {
+	// TODO Auto-generated method stub
+	
+}
 }
