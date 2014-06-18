@@ -28,11 +28,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	
 	private BufferedImage lastImage;
 	private volatile boolean newImageQR, newImageMotion, newImage;
-	private boolean qrDetectionDone, motionEstimationDone, GUI = true;
+	private boolean qrDetectionDone, motionEstimationDone, GUI = Camera.GUI;
 	public final static boolean PRINTDEBUG = false;
 	
 	// Gestion de l'interface graphique de suivi
-	private Window window;
+	private static Window window;
 	
 	// Liste actuelle des cubes détectés
 	private volatile HashMap<Integer, Point> qubbleList;
@@ -181,15 +181,11 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 					if(Math.abs(pt.getX()-pt2.getX()) > 10 || Math.abs(pt.getY()-pt2.getY()) > 10){
 						System.out.println("######### Move " + id + " #########");
 						qubble.QubjectHasMoved(id, qrFound.get(id));
-					
 				}
 			}
-					
-				
 				// On l'enlève de la liste des qr détectés
 				qrFound.remove(id);
 			}
-				
 		}
 		// On rajoute les éléments restants et on alerte le processus principale
 		for(int idNew : qrFound.keySet()){
@@ -204,9 +200,7 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 			pt = qrFound.get(idNew);
 			temp.put(idNew, pt);
 		}
-		
 		qubbleList = temp;
-		
 	}
  
 	@Override
@@ -261,6 +255,13 @@ public class ImageDetection implements Runnable, ImageDetectionInterface{
 	@Override
 	public void switchMotion() {
 		mo.switchPause();
+	}
+
+	@Override
+	public void closeGUI() {
+		if(window != null){
+			window.dispose();
+		}
 	}
 
 }

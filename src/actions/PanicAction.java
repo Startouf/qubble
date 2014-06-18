@@ -20,7 +20,7 @@ public class PanicAction extends AbstractAction
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.app.getPlayPauseAction().actionPerformed(arg0);
+		this.app.getPlayPauseAction().setPlay(false);
 		this.app.getActiveProject().getQubble().panic();
 	}
 

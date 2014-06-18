@@ -18,6 +18,8 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  *
  */
 public class Camera implements Runnable, TerminateThread{
+	public static final boolean GUI = false;
+	public static final int WAIT_TIME_CAPTURE = 300;
 	public final int IMAGEHEIGHT = 720, IMAGEWIDTH = 1280;
 	private boolean run, cameraOK, pause;
 	private ImageDetectionInterface controlImage;
@@ -90,7 +92,6 @@ public class Camera implements Runnable, TerminateThread{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-    					
     					// Image de la table réelle
     					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m36s195.png"), true, 180, 21, 62);
     					//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h11m25s168.png"), true, 180, 21, 62);
@@ -105,10 +106,13 @@ public class Camera implements Runnable, TerminateThread{
     					//Useless : 
     						//wind.readImage(new File("Modules/image/database/test/vlcsnap-2014-04-08-16h13m17s0.png"), true, 180, 21, 62);
     		}
-    			
-			
     	}
-
+    	try {
+			grabber.release();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/*public BufferedImage getImage(){
@@ -118,6 +122,7 @@ public class Camera implements Runnable, TerminateThread{
 	@Override
 	public void terminate() {
 		run = false;
+		controlImage.closeGUI();
 	}
 	
 	public boolean switchPause(){

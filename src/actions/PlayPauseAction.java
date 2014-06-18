@@ -38,5 +38,18 @@ private final ImageIcon pauseIcon = new ImageIcon("data/ui/pause rouge small.png
 		play = !play;
 			
 	}
+	
+	public void setPlay(boolean play) {
+		this.app.getActiveProject().getQubble().playPause();
+		if (!play){ 
+			putValue(NAME, "Play");
+			putValue(LARGE_ICON_KEY, playIcon);
+		}
+		else{
+			putValue(NAME, "Pause");
+			putValue(LARGE_ICON_KEY, pauseIcon);
+		}
+		this.play = play;
+	}
 
 }

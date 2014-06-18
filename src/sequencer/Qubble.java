@@ -477,10 +477,12 @@ public class Qubble implements QubbleInterface {
 	}
 
 	@Override
-	public void close() {
+	public void close(){
+		sequencer.destroyScheduledtasks(tasks);
 		sequencer.destroy();
 		player.destroy();
 		projection.terminate();
+		camera.terminate();
 	}
 
 	@Override

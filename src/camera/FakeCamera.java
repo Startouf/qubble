@@ -228,5 +228,11 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void closeGUI() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

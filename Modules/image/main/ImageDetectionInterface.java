@@ -80,5 +80,7 @@ public interface ImageDetectionInterface{
 	 * Play/Pause de la détection de mouvement
 	 */
 	public void switchMotion();
+
+	public void closeGUI();
 		
 }
