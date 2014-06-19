@@ -118,6 +118,9 @@ public class QRCode {
 		}
 		masque = masque << 1;
 		
+		// Calcul des pts extrémités # #
+		//
+		//							 # #
 		for(int j = 0 ; j < 4; j++){
 				
 				if(isBlack(targetX, targetY, target)){
@@ -131,6 +134,9 @@ public class QRCode {
 			
 		}
 		
+		// Calcul des pts extrémités  #
+		//							 # #
+		//							  #
 		targetX = (int) (Math.cos(Math.PI/4) * (oldPointX-xCenter)/Math.sqrt(2) - Math.sin(Math.PI/4) * (oldPointY-yCenter)/Math.sqrt(2) + xCenter);
 		targetY = (int) (Math.sin(Math.PI/4) * (oldPointX-xCenter)/Math.sqrt(2) + Math.cos(Math.PI/4) * (oldPointY-yCenter)/Math.sqrt(2) + yCenter);
 		oldPointX = targetX;
@@ -150,6 +156,7 @@ public class QRCode {
 			masque = masque << 1;
 		
 		}
+		valeur = qrDetection.CorrectQrCodeID.correctQrCodeID(valeur);
 		iD = valeur;
 		
 		return valeur;
