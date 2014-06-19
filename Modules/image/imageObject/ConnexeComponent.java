@@ -145,7 +145,7 @@ public class ConnexeComponent {
 			
 		}	
 		perfectSquare_Average = total/90;
-		perfectSquareSD = getStandartDeviation(perfectSquare, 90, perfectSquare_Average);
+		//perfectSquareSD = getStandartDeviation(perfectSquare, 90, perfectSquare_Average);
 	}
 	
 	/**
@@ -224,11 +224,12 @@ public class ConnexeComponent {
 			}
 
 			//System.out.println(angle);
+			// Ajout de la distance si elle est plus petite
 			if(mySquare[angle] < distance){
-				// Ajout de la distance
 				mySquare[angle] = distance;
 				squarePoint[angle] = pt;
 			}
+			// Recherche de la distance par rapport au centre la plus grande
 			if(maxDistance < distance){
 				maxDistance = (int)distance;
 				corner = pt;
@@ -257,23 +258,20 @@ public class ConnexeComponent {
 			//Sauvegarde la distance minimale
 			if(mySquare[i] < distanceMin)
 				distanceMin = mySquare[i];
+			
+			// Calcul de la moyenne
+			mySquareAverage += mySquare[i];
 		}
+		
+		mySquareAverage /= 180;
 		
 		//System.out.println("Distance minimale : " + distanceMin);
 
-		
 		// La composante étudiée est trop grande
 		//System.out.println("Distance maximale par rapport au centre : " + distanceMax);
 		if(Math.abs(maxDistance-rayon) > SQUAREDIFF){
 			return null;
 		}
-		
-		// Calcul de la moyenne
-		for(int i = 0; i<180; i++){
-			mySquareAverage += mySquare[i];
-		}
-		mySquareAverage /= 180;
-		mySquareSD = getStandartDeviation(mySquare, 180, mySquareAverage);
 		
 		// Recalcule du centre avec les points extrêmes
 		xCenter = 0;
@@ -298,6 +296,10 @@ public class ConnexeComponent {
 				save = temp;	
 				bestAngle = dephasage;
 				bestAliasing = aliasing;
+				// En cas d'erreur faible
+				if(save > SQUARETRIGGER){
+					break;
+				}
 			}
 		}
 		

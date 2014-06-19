@@ -80,11 +80,21 @@ public class QR_Detection implements Runnable, TerminateThread{
 		
 		// Recherche des composantes connexes
 		compo = new ComponentsAnalyser(variance);
+		
 		long componentTime = System.currentTimeMillis();
 		
 		// Récupération de la valeur des qr
 		qrAnal = new QRCodesAnalyser(grey, variance, compo);
-		lastDetection = qrAnal.printValeur(camera);
+		
+		if(ImageDetection.GUI){
+			lastDetection = qrAnal.printValeur(camera);
+		}
+		if(!ImageDetection.GUI){
+			variance = null;
+			grey = null;
+			compo = null;
+			qrAnal = null;
+		}
 		
 		// Ecriture des valeurs des signatures dans un fichier texte
 		if(ImageDetection.PRINTDEBUG){
@@ -115,7 +125,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 					
 		long endTime = System.currentTimeMillis();
 		
-	/*
+
 	 	if(ImageDetection.PRINTDEBUG){
 		 	System.out.println("Temps de calcul de la transformation en niveau de gris : " + (greyTime-startTime) + " ms.");
 			System.out.println("Temps de calcul de la transformation en binaire : " + (binaryTime-greyTime) + " ms.");
@@ -123,7 +133,7 @@ public class QR_Detection implements Runnable, TerminateThread{
 			System.out.println("Temps de calcul pour trouver le qr code : " + (qrTime-componentTime) + " ms.");
 			System.out.println("Temps de calcul de la reconnaissance : " + (endTime-startTime) + " ms.");
 		}
-		*/
+
 		controlImage.setQrDetectionDone(true);
 	}
 

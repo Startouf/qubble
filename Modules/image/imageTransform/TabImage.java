@@ -21,7 +21,6 @@ public class TabImage {
 	
 	// Niveau de sensibilité pour l'image binaire
 	public static int BINARY_LEVEL = 180; 
-	private int[] histogramme;
 	private int[][] img;
 	private int width, height;
 	private boolean height_bit;
@@ -79,196 +78,6 @@ public class TabImage {
 	}
 	
 	
-	/**
-	 * Transforme une image en niveau de gris en une image binaire en décomposant l'image en sous image
-	 * @return
-	 */
-	/*public TabImage getBinaryMyImageByBlock(){
-		// Paramètre des blocs de l'image
-		int blockX = 5, blockY = 4;
-		int sizeBlockX = width/blockX, sizeBlockY = height/blockY;
-		
-		int[][] binaryTable = new int[blockX][blockY];
-		int[][] binaryImage = new int [width][height];
-		
-		// Calcul des seuils pour chaque bloc
-		for(int X = 0 ; X < blockX ; X++){
-			for(int Y = 0 ; Y < blockY ; Y++){
-				TabImage sub = new TabImage(this.getSubimage(X*sizeBlockX, Y*sizeBlockY, sizeBlockX-1, sizeBlockY-1));
-				sub.getHistogramme();
-				binaryTable[X][Y] = sub.otsuTreshold();
-			}
-		}
-		// Binarisation
-		// Variable pour pondérer en fonction de la distance
-		int a = 0, b = 0, c = 0, d = 0;
-		// Mémorisation du coefficient de binarisation
-		int Ta = 0, Tb = 0, Tc = 0, Td =0;
-		int offsetX = 0, offsetY = 0;
-		int binaryLevel = 0;
-		for(int X = 0 ; X < blockX ; X++){
-			for(int Y = 0 ; Y < blockY ; Y++){
-				for(int i = X*sizeBlockX ; i < (X+1)*sizeBlockX ; i++){
-					for(int j = Y*sizeBlockY ; j < (Y+1)*sizeBlockY ; j++){
-						// Choix des coefficients avec gestion de l'effet de bord
-						if(X == blockX-1){
-							offsetX = -1;
-						}else{
-							offsetX = 1;
-						}
-						if(Y == 0){
-							offsetY = 1;
-						}else{
-							offsetY= -1;
-						}
-						// grande distance selon y
-						a = (int) Math.abs((Y+offsetY+0.5)*sizeBlockY-j);
-						b = (int) Math.abs((Y+0.5)*sizeBlockY-j);
-						c = (int) Math.abs((X+0.5)*sizeBlockX-i);
-						d = (int) Math.abs((X+offsetX+0.5)*sizeBlockX-i);
-						Ta = binaryTable[X][Y+offsetY];
-						Tb = binaryTable[X+offsetX][Y+offsetY];
-						Tc = binaryTable[X][Y];
-						Td = binaryTable[X+offsetX][Y];
-						
-						// Calcul du niveau de gris
-						binaryLevel = (int) ((a*d*Ta + b*c*Tb+ c*a*Td +d*b*Ta)/(float)((a + b)*(c +d)));
-						//System.out.println("X : "+i+"//"+"Y : "+j+"//"+binaryLevel);
-						if((this.getRGB(i, j) & 0x000000ff) > binaryLevel)
-							binaryImage.setRGB(i, j, (new Color(255, 255, 255).getRGB()));
-						else
-							binaryImage.setRGB(i, j, (new Color(0, 0, 0).getRGB()));
-					}
-				}
-			}
-		}
-		
-		return binaryImage;
-	}*/
-	
-	
-	/** A IMPLEMENTER
-	 * Calcule le meilleur niveau de binarisation pour l'image afin d'avoir les bonnes composantes en noires
-	 * @param greyImage
-	 * @return
-	 */
-	/*private int getBinaryLevel(){		
-		if(histogramme == null){
-			getHistogramme();
-		}
-		int i, l, totl, g=0;
-        double toth, h;
-        for (i = 1; i < 256; i++) {
-            if (histogramme[i] > 0){
-                g = i + 1;
-                break;
-            }
-        }
-        while (true){
-            l = 0;
-            totl = 0;
-            for (i = 0; i < g; i++) {
-                 totl = totl + histogramme[i];
-                 l = l + (histogramme[i] * i);
-            }
-            h = 0;
-            toth = 0;
-            for (i = g + 1; i < 256; i++){
-                toth += histogramme[i];
-                h += ((double)histogramme[i]*i);
-            }
-            if (totl > 0 && toth > 0){
-                l /= totl;
-                h /= toth;
-                if (g == (int) Math.round((l + h) / 2.0))
-                    break;
-            }
-            g++;
-            if (g > 254)
-                return -1;
-        }
-        BINARY_LEVEL = g;
-        return g;
-	}*/
-	
-	// Get binary treshold using Otsu's method
-	/*private int otsuTreshold() {
-		
-	    int[] histogram = histogramme;
-	    int total = height * width;
-	 
-	    float sum = 0;
-	    for(int i=0; i<256; i++) sum += i * histogram[i];
-	 
-	    float sumB = 0;
-	    int wB = 0;
-	    int wF = 0;
-	 
-	    float varMax = 0;
-	    int threshold = 0;
-	 
-	    for(int i=0 ; i<256 ; i++) {
-	        wB += histogram[i];
-	        if(wB == 0) continue;
-	        wF = total - wB;
-	 
-	        if(wF == 0) break;
-	 
-	        sumB += (float) (i * histogram[i]);
-	        float mB = sumB / wB;
-	        float mF = (sum - sumB) / wF;
-	 
-	        float varBetween = (float) wB * (float) wF * (mB - mF) * (mB - mF);
-	 
-	        if(varBetween > varMax) {
-	            varMax = varBetween;
-	            threshold = i;
-	        }
-	    }
-	 
-	    return threshold;
-	 
-	}*/
-	
-	/**
-	 * Construction de l'histogramme
-	 */
-	public void getHistogramme(){
-		histogramme = new int[256];
-		for(int i = 0 ; i < width ; i++){
-			for(int j = 0 ; j < height ; j++){
-				histogramme[img[i][j] & 0x000000ff]++;
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @return une image de l'histogramme
-	 */
-	public BufferedImage getHistogramImage(){
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		if(true){
-			
-			int max = 0;
-			for(int j = 0 ; j < 256 ; j++){
-				max = Math.max(max, histogramme[j]);
-			}
-			int columnWidth = width/256;
-			float stepHeight = (float)(height)/(float)(max);
-			
-			Graphics g = image.getGraphics();
-			for(int j = 0 ; j < 256 ; j++){
-				if(j == BINARY_LEVEL)
-					g.setColor(Color.red);
-				else
-					g.setColor(Color.black);
-				g.fillRect(j*columnWidth, height-(int) (histogramme[j]*stepHeight), columnWidth, (int) (histogramme[j]*stepHeight));
-			}
-		}
-			
-		return image;
-	}
 	
 	/*% *************************************************************************
 	% Title: Function-Compute Variance map of the image
@@ -284,7 +93,7 @@ public class TabImage {
 	 * @return
 	 */
 	public TabImage getVarianceFilter(int window, int thresh){
-		int windowSize, sum, var;
+		int windowSize, var;
 		
 		// Vérification que windowSize est un nombre impair
 		if(window%2 == 1 && window>2){
@@ -296,31 +105,61 @@ public class TabImage {
 		int[][] varianceImg = new int [width][height];
 		
 		int N = window*window;
-		int sumCarre = 0;
-		int temp;
-	for(int i = windowSize; i < width-windowSize; i++){
-		for(int j = windowSize; j < height-windowSize; j++){
-			sum = 0;
-			sumCarre = 0;
-			// Parcours de la fenêtre
+		int sumCarre = 0, sum = 0;
+		int temp = 0;
+		
+		// Calcul de la fenêtre initiale
+		// Augmenter perf :
+		for(int a = -windowSize; a <= windowSize; a++){
+			for(int b = -windowSize; b <= windowSize; b++){
+				temp = img[windowSize+a][windowSize+b] & 0xff;
+				sum += temp;
+				sumCarre += temp*temp;
+			}
+		}
+		sum = sum*sum;
+		var = (sumCarre - (sum/N))/N;
+		//System.out.println(var)
+		if(var > BINARY_LEVEL){
+			varianceImg[windowSize][windowSize] = 0x00000000;
+		}else{
+			varianceImg[windowSize][windowSize] = 0x00ffffff;
+		}
+					
+		// Parcours sur x
+		for(int i = windowSize+1; i < width-windowSize; i++){
+			
+			// Enlever la colonne de gauche
+			// Ajouter la colonne de droite
 			for(int a = -windowSize; a <= windowSize; a++){
-				for(int b = -windowSize; b <= windowSize; b++){
-					temp = img[i+a][j+b] & 0xff;
+				temp = temp - (img[i-windowSize][windowSize+a] & 0xff) + (img[i+windowSize][windowSize+a] & 0xff);
+			}
+			
+			// Parcours sur y
+			for(int j = windowSize+1; j < height-windowSize; j++){
+				sum = 0;
+				sumCarre = 0;
+				
+				
+				// Enlever la ligne du dessus
+				// Ajouter la ligne du dessous
+				for(int a = -windowSize; a <= windowSize; a++){
+					temp = temp - (img[i+a][j-windowSize] & 0xff) + (img[i+a][j+windowSize] & 0xff);
 					sum += temp;
 					sumCarre += temp*temp;
 				}
+				
+				sum = sum*sum;
+				var = (sumCarre - (sum/N))/N;
+				//System.out.println(var)
+				if(var > BINARY_LEVEL){
+					varianceImg[i][j] = 0x00000000;
+				}else{
+					varianceImg[i][j] = 0x00ffffff;
+				}
+				//System.out.println("mean : " + mean[i][j]);
 			}
-			sum = sum*sum;
-			var = (sumCarre - (sum/N))/N;
-			//System.out.println(var)
-			if(var > BINARY_LEVEL){
-				varianceImg[i][j] = 0x00000000;
-			}else{
-				varianceImg[i][j] = 0x00ffffff;
-			}
-			//System.out.println("mean : " + mean[i][j]);
 		}
-	}
 	
 		return new TabImage(varianceImg, width, height);
 		

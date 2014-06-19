@@ -53,10 +53,6 @@ public interface ImageDetectionInterface{
 	
 	public void setMotionEstimationDone(boolean motionEstimationDone);
 		
-	public HashMap<Integer, Point> getRemovedQubbleList();
-	public HashMap<Integer, Point> getAddedQubbleList();
-	public void resetRemovedQubbleList();
-	public void resetAddedQubbleList();
 	
 	public int getWidthCamera();
 	public int getHeightCamera();
