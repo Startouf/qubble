@@ -223,12 +223,12 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 		for(QubjectTracker tracker : trackers.values()){
 			tracker.renderShadow();
 			
-			GL11.glDisable(GL_DEPTH_TEST);
-			GL11.glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, 1);
-			tracker.writeFootprintLabel(this.fontTNR);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			GL11.glEnable(GL_DEPTH_TEST);
+//			GL11.glDisable(GL_DEPTH_TEST);
+//			GL11.glEnable(GL_TEXTURE_2D);
+//			glBindTexture(GL_TEXTURE_2D, 1);
+//			tracker.writeFootprintLabel(this.fontTNR);
+//			glBindTexture(GL_TEXTURE_2D, 0);
+//			GL11.glEnable(GL_DEPTH_TEST);
 		}
 			
 	}

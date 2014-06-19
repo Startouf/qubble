@@ -33,8 +33,9 @@ public class Sequencer implements SequencerInterface
 {
 	//TODO : store these variables somewhere else
 	private final int NUM_THREADS = 1;
+	private ScheduledFuture<?> resyncTask;
 	
-	private final ScheduledExecutorService fScheduler;
+	private ScheduledExecutorService fScheduler;
 	/**
 	 * Time is converted later when it's needed by the Schedule Service
 	 */
@@ -51,10 +52,15 @@ public class Sequencer implements SequencerInterface
 	 * @param qubble
 	 * @param tempo
 	 */
-	public Sequencer(Qubble qubble, float tempo){
+	public Sequencer(final Qubble qubble, float tempo){
 		this.qubble = qubble;
 		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
-		addResyncTask();
+		resyncTask = fScheduler.scheduleAtFixedRate(new Runnable(){
+			@Override
+			public void run() {
+				qubble.resynchronizeSequencer();
+			}
+		}, 10000l, 5000l, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -75,8 +81,16 @@ public class Sequencer implements SequencerInterface
 	 */
 	public void destroyScheduledtasks(Hashtable<Qubject, ScheduledFuture<?>> tasks){
 		for (ScheduledFuture<?> task : tasks.values()){
-			task.cancel(true);
+			task.cancel(false);
 		}
+		fScheduler.shutdownNow();
+		this.fScheduler = Executors.newScheduledThreadPool(NUM_THREADS);
+		resyncTask = fScheduler.scheduleAtFixedRate(new Runnable(){
+			@Override
+			public void run() {
+				qubble.resynchronizeSequencer();
+			}
+		}, 10000l, 5000l, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -100,16 +114,8 @@ public class Sequencer implements SequencerInterface
 	 */
 	@Override
 	public void destroy() {
+		resyncTask.cancel(true);
 		fScheduler.shutdownNow();
-	}
-	
-	private void addResyncTask(){
-		fScheduler.scheduleAtFixedRate(new Runnable(){
-			@Override
-			public void run() {
-				qubble.resynchronizeSequencer();
-			}
-		}, 10000l, 5000l, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

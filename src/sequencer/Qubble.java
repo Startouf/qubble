@@ -287,7 +287,7 @@ public class Qubble implements QubbleInterface {
 		}
 		//adjust effect
 		if(!(player instanceof FakePlayer)){
-//			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
+			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
 		}
 		//add it to the list of sampleControllers
 		synchronized(sampleControllers){
