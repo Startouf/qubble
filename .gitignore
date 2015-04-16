@@ -6,3 +6,6 @@ Thumbs.db
 /lib/
 /data/
 /test/
+*.DS_Store
+/save/
+/Modules/image/database/
