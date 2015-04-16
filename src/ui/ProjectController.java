@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import qubject.Qubject;
@@ -56,5 +57,15 @@ public class ProjectController implements ProjectControllerInterface
 	@Override
 	public void panic() {
 		this.qubble.panic();
+	}
+
+	@Override
+	public void startRecording(File file) {
+		this.qubble.startRecording(file);	
+	}
+
+	@Override
+	public void stopRecording() {
+		this.qubble.stopRecording();		
 	}
 }

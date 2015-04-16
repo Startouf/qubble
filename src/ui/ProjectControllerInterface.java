@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import qubject.MediaInterface;
@@ -39,4 +40,15 @@ public interface ProjectControllerInterface {
 	 * Resets the project (but if possible keep Qubject config)
 	 */
 	public void panic();
+	
+	/**
+	 * Starts recording, output will be saved in File
+	 * @param file where to save
+	 */
+	public void startRecording(File file);
+	
+	/**
+	 * Stop recording and save recorded sound to previously given file
+	 */
+	public void stopRecording();
 }
