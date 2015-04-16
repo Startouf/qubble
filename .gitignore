@@ -2,3 +2,7 @@
 /.settings/
 /.metadata/
 *.log
+Thumbs.db
+/lib/
+/data/
+/test/
