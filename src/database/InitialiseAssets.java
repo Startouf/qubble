@@ -35,11 +35,18 @@ public class InitialiseAssets
 {
 	private static final String controllersDir = "data/animations/controllers/";
 
+	/**
+	 * Convenience methods that allows to quickly change how samples should be loaded
+	 * Historically used to swap from long samples to quick samples
+	 * (PAN4 to Innovation Day)
+	 * @return An ArrayList of Loaded Samples to be assigned to Qubjects
+	 */
 	public static ArrayList<SampleInterface> loadSamples(){
 		return loadSamplesFromWAV();
 	}
 	
 	/**
+	 * NOTE : the following method was used to load long samples (~10secs)
 	 * Currently loaded props : name and file
 	 * @return
 	 */
@@ -61,12 +68,12 @@ public class InitialiseAssets
 	}
 	
 	/**
-	 * 
+	 * This method is used to load short samples (~1sec)
 	 * @return Samples loaded from WAV files 
 	 */
 	public static ArrayList<SampleInterface> loadSamplesFromWAV(){
 		Properties prop;
-		File[] files = DataTools.getDotWAV("data/samples/files/TR909convertis");
+		File[] files = DataTools.getDotWAV("data/samples/files/short");
 		ArrayList<SampleInterface> list = new ArrayList<SampleInterface>(files.length);
 		for (File entry : files){ //TODO : use fileInputStream
 			list.add(new Sample(entry.getName(), entry));
@@ -147,7 +154,7 @@ public class InitialiseAssets
 	}
 
 	/**
-	 * Load Qubjects from the available Qubjects list, and initialise them with default settings
+	 * Load Qubjects from the available Qubjects .properties, and initialise them with default settings
 	 * !! Should only be used when starting a new blank project !!
 	 * @return Qubject ArrayList
 	 */
@@ -171,6 +178,12 @@ public class InitialiseAssets
 	
 	private static Random rand = new Random();
 	
+	/**
+	 * Used to generate Qubjects with random properties 
+	 * @param name Qubject name
+	 * @param id Qubject ID
+	 * @return
+	 */
 	public static Qubject getRandomlyConfiguredQubject(String name, int id){
 		return(new Qubject(name, id, 
 				getRandomSample(),

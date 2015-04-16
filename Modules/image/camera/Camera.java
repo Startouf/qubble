@@ -94,7 +94,7 @@ public class Camera implements Runnable, TerminateThread{
     		// Sinon récupérer une image prédéfinie sur le disque dur
     		}else{
     			try {
-					controlImage.setImage(ImageIO.read(new File("Modules/image/database/test/picture6.jpg")));
+					controlImage.setImage(ImageIO.read(new File("Modules/image/camera/fallback_picture.jpg")));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

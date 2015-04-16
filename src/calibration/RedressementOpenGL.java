@@ -14,14 +14,7 @@ public class RedressementOpenGL {
 	 * D':
 	 * 
 	 */
-	
-	
-	
-	
-	
-	
 	public static int TABLE_OFFSET_X_PIXELS;
 	public static int TABLE_OFFSET_Y_PIXELS;
-	
 	public static int TABLE_WIDTH_PIXELS;
 }

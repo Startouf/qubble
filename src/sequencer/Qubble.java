@@ -41,7 +41,7 @@ import qubject.Qubject;
  */
 public class Qubble implements QubbleInterface {
 	private static boolean DEBUG = false;
-	public static boolean fakeCamera = false, fakePlayer = false, fakeProjection = false;
+	public static boolean fakeCamera = true, fakePlayer = false, fakeProjection = false;
 	
 	public static final int BPM = 128;
 	public static final float BPS = (float)BPM/60f; //=2,1 +1/30

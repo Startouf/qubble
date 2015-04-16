@@ -125,5 +125,17 @@ public class TestImageDetection implements QubbleInterface{
 		
 	}
 
+	@Override
+	public void startRecording(File f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopRecording() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

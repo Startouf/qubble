@@ -103,14 +103,14 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 			}
 		}
 		
-		qubble.QubjectDetected(0, new Point(200, 200)); //cercle jaune
-		qubble.QubjectDetected(30, new Point(850, 550)); //cercle orange
-		qubble.QubjectDetected(511, new Point(450, 350)); //carré rose
-		qubble.QubjectDetected(480, new Point(1100, 350)); //cercle bleu
-		qubble.QubjectDetected(1, new Point(300, 350)); //cercle bleu
-		qubble.QubjectDetected(190, new Point(100, 350)); //cercle bleu
-		qubble.QubjectDetected(10, new Point(500, 350)); //cercle bleu
-		qubble.QubjectDetected(31, new Point(600, 350)); //cercle bleu
+		qubble.QubjectDetected(190, new Point(450, 350)); //cercle bleu
+		qubble.QubjectDetected(0, new Point(250, 600)); //cercle jaune
+		qubble.QubjectDetected(1, new Point(300, 200)); //cercle bleu
+		qubble.QubjectDetected(511, new Point(450, 850)); //carré rose
+		qubble.QubjectDetected(10, new Point(600, 550)); //cercle bleu
+		qubble.QubjectDetected(31, new Point(700, 350)); //cercle bleu
+		qubble.QubjectDetected(30, new Point(850, 600)); //cercle orange
+		qubble.QubjectDetected(480, new Point(1100, 550)); //cercle bleu
 
 		while(!kill){
 			try {
