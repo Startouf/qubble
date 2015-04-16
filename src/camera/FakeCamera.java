@@ -170,29 +170,6 @@ public class FakeCamera implements ImageDetectionInterface, Runnable
 		
 	}
 
-	@Override
-	public HashMap<Integer, Point> getRemovedQubbleList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<Integer, Point> getAddedQubbleList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void resetRemovedQubbleList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resetAddedQubbleList() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public int getWidthCamera() {

@@ -18,7 +18,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
  *
  */
 public class Camera implements Runnable, TerminateThread{
-	public static final boolean GUI = false;
+	public static final boolean GUI = true;
 	public static final int WAIT_TIME_CAPTURE = 300;
 	public final int IMAGEHEIGHT = 720, IMAGEWIDTH = 1280;
 	private boolean run, cameraOK, pause;

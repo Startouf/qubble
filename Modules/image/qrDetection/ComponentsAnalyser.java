@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import main.ImageDetection;
+
 /**
  * Prend en entrée une image binarisée
  * Enumération les différentes composantes connexes de l'image
@@ -56,160 +58,12 @@ public class ComponentsAnalyser {
 		height = binaryImage.getHeight();
 		width = binaryImage.getWidth();
 		
-		// Tableau de référence
-		/*int[][] labels = new int[imageWidth][imageHeight];
-		int[] corresp = new int[imageWidth*imageHeight];*/
 		
-		int nbLabels = 1;
-		/*
-		//premiere case i=0, j=0
-		if (binaryImage.getRGB(0, 0) == new Color(0,0,0).getRGB()) {
-			labels[0][0] = nbLabels;
-			nbLabels ++;
-		}
-		
-		//premiere colonne i=0
-		for (int j=1 ; j < imageHeight ; j++) {
-			if (binaryImage.getRGB(0, j) == new Color(0,0,0).getRGB()){
-				if(labels[0][j-1] == 0) {
-					labels[0][j] = 0;
-					nbLabels ++;
-				}else{
-					labels[0][j] = labels[0][j-1];
-				}
-			}
-		}
-		
-		//premiere ligne j=0
-		for (int i=1 ; i < imageWidth ; i++) {
-			if (binaryImage.getRGB(i, 0) == new Color(0,0,0).getRGB()){
-				if(labels[i-1][0] == 0) {
-					labels[i][0] = nbLabels;
-					nbLabels ++;
-				}else{
-					labels[i][0] = labels [i-1][0];
-				}
-			}
-		}
-
-
-		//Reste du tableau
-		for (int j=1 ; j<imageHeight ; j++){
-			for (int i=1; i<imageWidth ; i++) {
-				if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
-					if(labels[i][j-1] == 0 && labels[i-1][j] == 0) {
-						labels[i][j] = nbLabels;
-						nbLabels ++;
-					}else if (labels[i][j-1] > 0 && labels[i-1][j] == 0){
-						labels[i][j] = labels[i][j-1];
-					}else if (labels[i][j-1] == 0 && labels[i-1][j] > 0){
-						labels[i][j] = labels[i-1][j];
-						
-					}else if (labels[i][j-1] > 0 && labels[i-1][j] > 0){
-						labels[i][j] = Math.min(labels[i-1][j], labels[i][j-1]);
-						//garder en memoire que max doit etre associe � min :
-						corresp[Math.max(labels[i-1][j], labels[i][j-1])] = Math.min(labels[i-1][j], labels[i][j-1]);
-						
-					}
-				}	
-			}
-		}
-		   
-		
-		//Trouver les correspondances finales, code de M Roux
-		/*
-		for (int objet = 0; objet < nbLabels; objet++) {
-			int i = objet;
-			int j;
-			do {
-				j = i;
-				i = corresp[i]; 
-			} while (i != j);
-			
-			corresp[objet] = i;
-		}
-		
-		int objet = 1;
-		for (int i = 0; i < nbLabels; i++) {
-			int j;
-			j = corresp[i]; 
-			if ( j == i ){
-				corresp[i] = corresp[j];
-			}
-			else {
-				corresp[i] = objet++;
-			}
-		}
-		
-		//Appliquer les correspondances d�finitives � l'image
-		
-		for (int i=0 ; i<imageWidth ; i++) {
-			for (int j=0 ; j<imageHeight ; j++) {
-					labels[i][j] = corresp[labels[i][j]];
-			}
-		}
-
-		
-		// Parcours de l'image de haut en bas puis de bas en haut tant qu'il y a des fusions de composantes connexes
-		// Je néglige les bords de l'image x = 0 ou y = 0
-		boolean modif = true;
-		int labelSave = 0;
-		int x = 0;
-		
-		while(modif){
-			modif = false;
-			x++;
-			for (int j=imageHeight-2 ; j >= 0 ; j--){
-				for (int i=imageWidth-2; i >= 0 ; i--) {
-					labelSave = labels[i][j];
-					if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
-						if (labels[i][j+1] != 0 && labels[i+1][j] == 0){
-							labels[i][j] = Math.min(labels[i][j+1], labels[i][j]);
-							
-						}else if (labels[i][j+1] == 0 && labels[i+1][j] != 0){
-							labels[i][j] = Math.min(labels[i+1][j], labels[i][j]);
-							
-						}else if (labels[i][j+1] != 0 && labels[i+1][j] != 0){
-							labels[i][j] = Math.min(labels[i][j],Math.min(labels[i+1][j], labels[i][j+1]));
-						}
-					}
-					if(labelSave != labels[i][j])
-						modif = true;					
-				}
-			}
-			
-			
-			if(modif){
-				for (int j= 1 ; j < imageHeight ; j++){
-					for (int i= 1; i < imageWidth ; i++) {
-						labelSave = labels[i][j];
-						if (binaryImage.getRGB(i, j) == new Color(0,0,0).getRGB()){
-							if (labels[i][j-1] != 0 && labels[i-1][j] == 0){
-								labels[i][j] = Math.min(labels[i][j-1], labels[i][j]);
-								
-							}else if (labels[i][j-1] == 0 && labels[i-1][j] != 0){
-								labels[i][j] = Math.min(labels[i-1][j], labels[i][j]);
-								
-							}else if (labels[i][j-1] != 0 && labels[i-1][j] != 0){
-								labels[i][j] = Math.min(labels[i][j],Math.min(labels[i-1][j], labels[i][j-1]));
-							}
-						}	
-						if(labelSave != labels[i][j])
-							modif = true;	
-					}
-				}
-			}
-				
-		}
-		// Affichage du nombre de parcours
-		System.out.println("Nombre de parcours dans la recherche des composantes connexes : " + x);
-		
-		
+		int nbLabels = 1;		
 		
 		/**
 		 * Création des différents ensembles connexes grâce à l'indice
 		 */
-		
 		int[][] tab = binaryImage.getImg();
 		Label(tab, 0x00ffffff, false);
 		HashMap<Integer, ConnexeComponent> component = new HashMap<Integer, ConnexeComponent>();
@@ -268,7 +122,7 @@ public class ComponentsAnalyser {
 			}
 			
 			// Enregistrement de sa signature pour un affichage ultérieur
-			if(listPoint.isSquareTest())
+			if(listPoint.isSquareTest() && ImageDetection.GUI)
 				signature.put(listPoint, compoColor);
 			
 			// Affichage du centre et du point le plus loin

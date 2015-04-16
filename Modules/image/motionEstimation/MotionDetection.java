@@ -57,15 +57,15 @@ public class MotionDetection implements Runnable, TerminateThread {
 				}
 			}			
 			// Mise à jour de la liste des blocks à suivre
-			HashMap<Integer, Point> temp = controlImage.getAddedQubbleList();
-			for(int id : temp.keySet()){
-				addQubbleToList(temp.get(id).getX(), temp.get(id).getY(), id);
-			}
-			controlImage.resetAddedQubbleList();
-			for(int id : controlImage.getRemovedQubbleList().keySet()){
-				removeQubbleToList(id);
-			}
-			controlImage.resetRemovedQubbleList();
+//			HashMap<Integer, Point> temp = controlImage.getAddedQubbleList();
+//			for(int id : temp.keySet()){
+//				addQubbleToList(temp.get(id).getX(), temp.get(id).getY(), id);
+//			}
+//			controlImage.resetAddedQubbleList();
+//			for(int id : controlImage.getRemovedQubbleList().keySet()){
+//				removeQubbleToList(id);
+//			}
+//			controlImage.resetRemovedQubbleList();
 			
 			// Récupération du mouvement
 			if(controlImage.isNewImageMotion()){
