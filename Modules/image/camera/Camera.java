@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import main.ImageDetectionInterface;
 import main.TerminateThread;
 
@@ -15,7 +17,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 /**
  * Gestion de l'acquisition de la caméra dans un thread séparé
  * @author eric
- *
+ * 
  */
 public class Camera implements Runnable, TerminateThread{
 	public static final boolean GUI = true;
@@ -36,11 +38,15 @@ public class Camera implements Runnable, TerminateThread{
 		// Tentative de démarage de la caméra
 		try{
 			// Ouverture de la caméra sur le port 0 
-			// Linux		
-			grabber = new FFmpegFrameGrabber("/dev/video0");
-			grabber.setFormat("video4linux2");
-			// Windows 2 : USB
-//			grabber = (FrameGrabber.createDefault(0));
+			if(SystemUtils.IS_OS_LINUX){
+				grabber = new FFmpegFrameGrabber("/dev/video0");
+				grabber.setFormat("video4linux2");
+			} else if(SystemUtils.IS_OS_WINDOWS){
+				grabber = (FrameGrabber.createDefault(0));
+				
+			} else {
+				throw new UnsupportedOperationException("Camera currently only supports Windows & Linux");
+			}
 			// A conserver : ancienne méthode
 			//OpenCVFrameGrabber(0);
 			grabber.setImageHeight(IMAGEHEIGHT);

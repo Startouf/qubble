@@ -42,5 +42,6 @@
 	<classpathentry kind="lib" path="lib/javacv6/opencv-2.4.6.1-linux-x86_64.jar"/>
 	<classpathentry kind="lib" path="lib/javacv6/opencv-2.4.6.1-linux-x86.jar"/>
 	<classpathentry kind="lib" path="lib/javacv6/opencv-2.4.6.1-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/apache commons/commons-lang3-3.4/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
