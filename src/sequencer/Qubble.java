@@ -280,14 +280,21 @@ public class Qubble implements QubbleInterface {
 	 */
 	@Override
 	public void playQubject(Qubject qubject) {
+		if(DEBUG){
+			System.out.print(qubject.getName() + " |");
+		}
+		
 		//play!
 		SampleController qubjectSoundController = (SampleController) player.playSample(qubject.getSampleWhenPlayed());
 		if (DEBUG){
-			System.out.println("Playing : " + qubject.getSampleWhenPlayed().getName());
+			System.out.print("| " + qubject.getSampleWhenPlayed().getName() + " |");
 		}
 		//adjust effect
 		if(!(player instanceof FakePlayer)){
 			player.tweakSample(qubjectSoundController, qubject.getYAxisEffect(), (int)(getYAsPercentage(qubject)*100f));
+			if (DEBUG){
+				System.out.print("| EffectY : " + qubject.getYAxisEffect().getName() + " |");
+			}
 		}
 		//add it to the list of sampleControllers
 		synchronized(sampleControllers){
@@ -295,6 +302,10 @@ public class Qubble implements QubbleInterface {
 		}
 		//show its animation
 		projection.triggerEffect(qubject.getCoords(), qubject.getAnimationWhenPlayed());
+		if (DEBUG){
+			System.out.print("| Anim : " + qubject.getAnimationWhenPlayed().getName() + " |");
+			System.out.println();
+		}
 	}
 	
 	@Override
@@ -405,7 +416,7 @@ public class Qubble implements QubbleInterface {
 		
 		if (!(player instanceof FakePlayer)){
 			for(SampleControllerInterface sample : sampleControllers.get(qubject)){
-//				player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
+				player.tweakSample(sample, qubject.getYAxisEffect(), (int)qubject.getCoords().getY());
 			}
 		}
 
@@ -419,7 +430,7 @@ public class Qubble implements QubbleInterface {
 		
 		if(!(player instanceof FakePlayer)){
 			for(SampleControllerInterface sample : sampleControllers.get(qubject)){
-//				player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
+				player.tweakSample(sample, qubject.getYAxisEffect(), qubject.getCoords().getY());
 			}
 			
 		}
@@ -441,7 +452,7 @@ public class Qubble implements QubbleInterface {
 		
 		if(!(player instanceof FakePlayer)){
 			for(SampleControllerInterface controller : sampleControllers.get(qrCodes.get(bitIdentifier))){
-//				player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
+				player.tweakSample(controller, qubject.getRotationEffect(), (int) (qubject.getRotation()*100/(2*Math.PI)));
 			}
 		}
 	}

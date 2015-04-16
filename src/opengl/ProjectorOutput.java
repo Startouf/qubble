@@ -38,6 +38,7 @@ import wave.WaterWave;
 
 public class ProjectorOutput implements OutputImageInterface, Runnable {
 	public static boolean WHITE_BACKGROUND = true;
+	public static boolean DEBUG = true;
 	
 	private int gridDL;
 	private TrueTypeFont fontTNR;
@@ -163,9 +164,6 @@ public class ProjectorOutput implements OutputImageInterface, Runnable {
 			synchronized(needsToBeLoaded){
 				needsToBeLoaded.add(controller);
 			}
-			
-			return;
-			
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
