@@ -61,13 +61,13 @@ Enjoy some cool music !
 
 This project was started in the context of Télécom ParisTech PACT (Projet d'Apprentissage Collaboratif Thématique), a 6-month collaborative self-learning school project during which we built a project from scratch.
 
-And from scratch, we really mean from nothing, not even the idea. This 6-month duration included the time needed to build a team, suggest ideas, ask experts about the technical feasability, designing, implementating, prototyping, etc. 
+And from scratch, we really mean from nothing, not even the idea. This 6-month duration included the time needed to build a team, suggest ideas, ask experts about the technical feasability, designing, implementing, prototyping, etc. 
 
 The school projects was divided into 4 examination milestones (called PAN), during which we had to progress through the aforementionned steps. Our project was selected as the most innovative one, and we were motivated enough to bring it to the next level by participating to Telecom ParisTech's Innovation Day, during which the project was selected as the first-year best student project, and rewarded a generous 2000$.
 
 [<img src="https://www.facebook.com/photo.php?fbid=485297998282598&set=exp.485300278282370.unitary&type=1&theater" />](https://www.facebook.com/photo.php?fbid=485297998282598&set=exp.485300278282370.unitary&type=1&theater)
 
-Therefore we thank Télécom ParisTech for giving us such an opportunity
+We thank Télécom ParisTech for giving us such an opportunity
 
 ### Task repartition
 
@@ -87,10 +87,12 @@ After the school project was graded, we were offered the opportunity to present 
 
 Cyril Duchon-Doris, Eric Masseran, Vincent Couteaux, Karl Bertoli
 
+GG Guys :) !
+
 
 ## Special thanks
 
-We would like to give special thank the following people who have given us inaluable help for the project
+We would like to give special thanks to the following people who have given us invaluable help
 
 *  Tarki Graba, our project mentor at Telecom ParisTech
 *  Télécom ParisTech experts who have shouldered us for the different modules
@@ -102,6 +104,6 @@ We would like to give special thank the following people who have given us inalu
   *  Michel Roux - Expert in Image Processing
   *  Marco Cagnazzo - Expert in Movement estimation
   *  Rémi Maniak - Expert in Business Models
-  *  Thomas Houy - Organiser of Télécom ParisTech Innovation Day
+*  Thomas Houy - Organiser of Télécom ParisTech Innovation Day
 *  Guénolé Lallement, who helped us reuse the table for the demos, and who lent us the mirrors
 
