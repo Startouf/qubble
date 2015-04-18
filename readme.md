@@ -11,6 +11,8 @@ The actual mechanics involved inscribing QR-Codes under the objects, and detecti
 The main program was coded in Java, and split in different modules : Image Detection & Recognition, Audio Synthesis, UI Design, OpenGL, Movement estimation.
 Some attention was also brought to defining a valid Business Model, and the overall integration implied using synchronisation techniques.
 
+![Screenshot of Qubble durin the innovation Day](screenshot_qubble_innovation_day.jpg?raw=true "Screenshot of Qubble during the Innovation Day"))
+
 ## Setup
 
 Only the main source code is available on this github. In order to reduce the repository size, multimedia object, libraries and other binaries have been removed from the git repository.
