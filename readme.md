@@ -1,5 +1,9 @@
 # Project Qubble
 
+## Poster
+
+You can have a look at [the poster (French)](https://drive.google.com/file/d/0B8EhxTyDP6M-RUN2QWJneGdVQVE/view?usp=sharing) we used for the presentation of our project
+
 ## Summary - What is Qubble ?
 
 Creating an innovative music instrument from scratch, and easy to play with.
@@ -11,7 +15,7 @@ The actual mechanics involved inscribing QR-Codes under the objects, and detecti
 The main program was coded in Java, and split in different modules : Image Detection & Recognition, Audio Synthesis, UI Design, OpenGL, Movement estimation.
 Some attention was also brought to defining a valid Business Model, and the overall integration implied using synchronisation techniques.
 
-![Screenshot of Qubble durin the innovation Day](screenshot_qubble_innovation_day.jpg?raw=true "Screenshot of Qubble during the Innovation Day"))
+![Screenshot of Qubble durin the innovation Day](screenshot_qubble_innovation_day.jpg?raw=true "Screenshot of Qubble during the Innovation Day")
 
 ## Setup
 
