@@ -19,24 +19,44 @@ Some attention was also brought to defining a valid Business Model, and the over
 
 ## Setup
 
-Only the main source code is available on this github. In order to reduce the repository size, multimedia object, libraries and other binaries have been removed from the git repository.
+Only the source code is available on this github. In order to reduce the repository size, multimedia object, libraries and other binaries have been removed from the git repository.
 
-The libraries can be downloaded [TODO : link](#)
+If you would like to run the project, we can give you some links to archives with the data and the libraries used for the project, please contact us.
 
-The data can be downloaded [TODO : link](#)
+Below short explanations, see "About the showcase setup" for more information
 
+### Fake mode
+
+It is possible to run the project without a camera and a projector. A "fake camera" GUI will let you simulate the detection of Qubjects and the opengl output will just open on your main display
+
+### Real mode
+
+If you want to run the project with a real camera, you might have to change some lines of code in the camera class that implements CameraInterface. Typically, depending whether you are running Windows/Linux, you will have to comment/uncomment the specific line of code, and make sure opencv grabs the good "device number" corresponding to the camera.
+
+The code auto-detects a secondary display if available and opens the opengl output there. We assumed HD quality for the output, if you want to change the resolution there should be some hard-coded values in the code at several places... (check in Calibration classes)
 
 ## Usage
 
 ### Compile and run
 
-...will most likely fail (or then we are gonna be jealous)
-
 The project was developped using Eclipse. The files .project and .classpath have been commited so you don't have to worry about rebuilding everything as it should. 
 
-The main()s you want to run is the one in the class `calibration.Run`
+There are several main() that you can run, TL;DR : You can use the main in `calibration.Run`.
 
-### Wy is it not that simple ?
+*  Main in `calibration.Run`. That main is supposed to automatically recalibrate the display (however automatic adjustment was not implemented and calibration data was actually hard-coded for the showcases with manual tuning). 
+*  (...)
+
+### After it compiles and executes
+
+Click "Nouveau Projet". It should open the OpenGL window. Now press Play.
+
+Avoid hitting the stop button. It is most likely broken, and it safer to just exit the program (note : clicking exit on the main GUI *should* also close the OpenGL Output)
+
+It is possible to click "vue individuelle" or "vue tableur" to access new tabs where you can configure the Qubjects
+
+Enjoy some cool music !
+
+## About the showcase setup
 
 Normally, the prototype consists of a semi-transparent table with a Full HD projector + a somewhat HD camera. That is, the system under which you run the project is expected to have a second monitor connected, as well as a camera.
 Also, you would need some special QR-like codes to put on the table, calibrate the camera and the image recognition, which is quite a pain in the ass, and we actually had to do it manually.
@@ -50,16 +70,6 @@ However for the camera, the project uses OpenCV, which is not cross-platform fri
 Note howevr, that the program has be configured to use a FakeCamera by default, which will open an additional UI where you can decide to simulate the presence of Qubjects (and some will be simulated by default) 
 
 Also, some threads are quite CPU intensive (image recognition + audio synthesis), so don't expect to run it with a bad computer
-
-### After it compiles and executes
-
-Click "Nouveau Projet". It should open the OpenGL window. Now press Play.
-
-Avoid hitting the stop button. It is most likely broken, and it safer to just exit the program (note : clicking exit on the main GUI *should* also close the OpenGL Output)
-
-It is possible to click "vue individuelle" or "vue tableur" to access new tabs where you can configure the Qubjects
-
-Enjoy some cool music !
 
 ## More info about the project
 
